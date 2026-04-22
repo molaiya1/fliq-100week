@@ -494,14 +494,14 @@ function getScenarios() {
       day: 1,
       tag: 'temptation',
       tagLabel: 'Day 1 — Temptation',
-      title: 'The Fresh Kicks Drop',
-      text: `It's Monday morning and your friend just texted you. The new limited-edition sneakers you've been wanting just dropped online — $80. You have exactly $100 for the whole week. Rent for your room is due Friday. So is your phone bill.`,
-      contextPill: `💰 Your balance: $${b}`,
+      title: 'The Cool Shoes',
+      text: `It's Monday. Your friend just texted you. The shoes you really want are on sale — right now. They cost $80. You have $100 for the whole week. You want to save some for later. But these shoes are SO cool.`,
+      contextPill: `💰 Your money: $${b}`,
       choices: [
         {
           letter: 'A',
-          label: 'Buy the sneakers now',
-          detail: 'Get them before they sell out. You\'ll figure out the rest of the week.',
+          label: 'Buy the shoes now!',
+          detail: 'Get them before they\'re gone. You\'ll figure out the rest later.',
           costLabel: '− $80',
           costType: 'spend',
           cost: 80,
@@ -509,8 +509,8 @@ function getScenarios() {
         },
         {
           letter: 'B',
-          label: 'Wait — save your money',
-          detail: 'They might restock. Your bills come first.',
+          label: 'Wait and save my money',
+          detail: 'They might come back. Hold on to your money for now.',
           costLabel: 'Keep $100',
           costType: 'save',
           cost: 0,
@@ -520,13 +520,13 @@ function getScenarios() {
       getOutcome: (choice) => {
         if (choice === 0) return {
           type: 'negative',
-          title: 'You got the sneakers.',
-          text: 'They look incredible. But you\'ve got $20 left for the entire week — rent and phone bill still pending. This week just got a lot tighter.',
+          title: 'You got the shoes!',
+          text: 'They look amazing. But now you only have $20 left for the whole week. That\'s not much. Things just got harder.',
         };
         return {
           type: 'positive',
-          title: 'You held off.',
-          text: 'Your $100 is intact. You\'ve got room to handle whatever comes next. Smart.',
+          title: 'You waited. Good job!',
+          text: 'Your $100 is safe. You still have money for anything that comes up this week. Smart move!',
         };
       },
     },
@@ -536,14 +536,14 @@ function getScenarios() {
       day: 2,
       tag: 'social',
       tagLabel: 'Day 2 — Social Pressure',
-      title: 'Everyone\'s Going Out',
-      text: `Your whole friend group is going to an escape room tonight — $30 per person. The group chat is blowing up. "You coming?" "Don't be lame." Your balance is $${b}.${b < 40 ? ' You know your bills are still due.' : ''}`,
-      contextPill: `💰 Your balance: $${b}${b < 40 ? ' ⚠️ Bills still due' : ''}`,
+      title: 'Everyone is Going!',
+      text: `Your friends are all going to the movies and the snack bar tonight. It costs $30. Your phone keeps buzzing. "Come on!" "Don't miss it!" "Everyone is going!" Your money is $${b}.${b < 40 ? ' You don\'t have a lot left.' : ''}`,
+      contextPill: `💰 Your money: $${b}${b < 40 ? ' ⚠️ Running low!' : ''}`,
       choices: [
         {
           letter: 'A',
-          label: 'Go with the group',
-          detail: b < 40 ? 'Spend $30 even though you\'re tight. At least you\'re not missing out.' : 'Spend $30. You can afford it.',
+          label: 'Go with my friends!',
+          detail: b < 40 ? 'Spend $30 even with low money. You don\'t want to miss out.' : 'Spend $30. You can handle it.',
           costLabel: '− $30',
           costType: 'spend',
           cost: 30,
@@ -551,8 +551,8 @@ function getScenarios() {
         },
         {
           letter: 'B',
-          label: 'Skip it this time',
-          detail: b < 40 ? 'You\'re too tight right now. Protect what you have left.' : 'Save the $30 for something more important.',
+          label: 'Stay home this time',
+          detail: b < 40 ? 'You don\'t have much left. Keep your money safe.' : 'Save the $30 for something you really need.',
           costLabel: 'Keep $' + b,
           costType: 'save',
           cost: 0,
@@ -562,18 +562,18 @@ function getScenarios() {
       getOutcome: (choice) => {
         if (choice === 0 && b < 40) return {
           type: 'negative',
-          title: 'You went out.',
-          text: `You had fun — but now you have $${b - 30} left. Your bills are still coming. This could get really difficult.`,
+          title: 'You went — but it cost you.',
+          text: `You had fun! But now you only have $${b - 30} left. That\'s really low. The rest of the week is going to be tough.`,
         };
         if (choice === 0) return {
           type: 'neutral',
           title: 'You went out.',
-          text: `You spent $30. Your balance is $${b - 30}. Still manageable — but keep an eye on it.`,
+          text: `You had a great time! You spent $30. You have $${b - 30} left. Keep an eye on it.`,
         };
         return {
           type: 'positive',
-          title: 'You skipped it.',
-          text: b < 40 ? `Smart call. With $${b} left, protecting your money was the right move.` : `Your $${b} is safe. A little FOMO now, a lot more peace later.`,
+          title: 'You stayed home.',
+          text: b < 40 ? `Good thinking! With only $${b} left, keeping your money was the right call.` : `Your $${b} is still safe. It\'s okay to miss out sometimes. Your money will thank you later.`,
         };
       },
     },
@@ -583,14 +583,14 @@ function getScenarios() {
       day: 3,
       tag: 'unexpected',
       tagLabel: 'Day 3 — Unexpected',
-      title: 'Your Phone Screen Cracked',
-      text: `You dropped your phone on concrete. The screen cracked and it's barely usable. The cheapest fix is $25 at the repair shop down the street. You need your phone for work messages. Your balance is $${b}.`,
-      contextPill: `💰 Your balance: $${b}`,
+      title: 'Uh Oh. Your Bike Tire Popped.',
+      text: `You were riding your bike and — POP! Your tire is flat. You need your bike to get to practice. The bike shop can fix it for $25. You didn\'t plan for this. Your money is $${b}.`,
+      contextPill: `💰 Your money: $${b}`,
       choices: [
         {
           letter: 'A',
-          label: `Pay the $25 repair`,
-          detail: b >= 25 ? 'You have enough. Fix it and keep moving.' : 'You don\'t have enough. You\'ll have to borrow it.',
+          label: 'Pay $25 to fix the tire',
+          detail: b >= 25 ? 'You have enough. Fix it and get back on your bike.' : 'You don\'t have enough. You\'ll need to ask someone for help.',
           costLabel: b >= 25 ? '− $25' : 'Need to borrow',
           costType: b >= 25 ? 'spend' : 'spend',
           cost: b >= 25 ? 25 : 0,
@@ -598,9 +598,9 @@ function getScenarios() {
         },
         {
           letter: 'B',
-          label: 'Deal with the cracked screen',
-          detail: 'Tough it out. You can\'t afford to spend more right now.',
-          costLabel: b >= 25 ? 'Keep $' + b : 'Keep $' + b,
+          label: 'Leave the tire flat for now',
+          detail: 'Keep your money. You\'ll figure out another way to get there.',
+          costLabel: 'Keep $' + b,
           costType: 'save',
           cost: 0,
           optionType: 'save',
@@ -609,18 +609,18 @@ function getScenarios() {
       getOutcome: (choice) => {
         if (choice === 0 && b < 25) return {
           type: 'negative',
-          title: 'You couldn\'t cover it.',
-          text: `Your balance was too low. This is what happens when early spending leaves no buffer. You had to borrow — which means next week starts in the red.`,
+          title: 'You didn\'t have enough.',
+          text: `Your money was too low to fix it. You had to ask someone to help pay. Spending early in the week made this harder.`,
         };
         if (choice === 0) return {
           type: 'neutral',
-          title: 'Fixed.',
-          text: `$25 gone, but the problem is solved. Your balance is $${b - 25}. You had the buffer — that\'s planning.`,
+          title: 'Tire is fixed!',
+          text: `$25 gone — but you solved the problem. Your money is $${b - 25}. You had enough because you planned ahead.`,
         };
         return {
           type: 'negative',
-          title: 'Toughing it out.',
-          text: `You kept the money, but a cracked screen affects everything. Sometimes the "save" choice creates other costs.`,
+          title: 'You left it flat.',
+          text: `You kept your money — but now you can\'t ride your bike. Sometimes not spending causes other problems too.`,
         };
       },
     },
@@ -630,14 +630,14 @@ function getScenarios() {
       day: 4,
       tag: 'opportunity',
       tagLabel: 'Day 4 — Opportunity',
-      title: 'The Investment Question',
-      text: `Your coworker is selling pre-orders for a product that could double in value — or flop entirely. It's a $20 buy-in, and the results come in next week. It's real risk. It could return $40. Or nothing. Your balance is $${b}.`,
-      contextPill: `💰 Your balance: $${b} · 50/50 chance`,
+      title: 'A Chance to Make More Money',
+      text: `Your friend has a plan. If you give them $20, they\'ll try to flip it and give you $40 back by next week. It might work. It might not. It\'s a 50/50 chance. Your money is $${b}.`,
+      contextPill: `💰 Your money: $${b} · 50/50 chance`,
       choices: [
         {
           letter: 'A',
-          label: 'Invest $20',
-          detail: b > 60 ? 'You\'re resourced. A calculated risk when you can absorb the loss.' : 'High risk when you\'re already tight. Could leave you with nothing.',
+          label: 'Give them $20 and try it',
+          detail: b > 60 ? 'You have enough to take the chance. If it works, great!' : 'You don\'t have much left. This is risky.',
           costLabel: '− $20 (maybe +$40)',
           costType: 'risk',
           cost: 20,
@@ -645,8 +645,8 @@ function getScenarios() {
         },
         {
           letter: 'B',
-          label: 'Pass on it',
-          detail: b < 40 ? 'With your balance this low, protecting what you have is the right call.' : 'Not every opportunity is worth taking.',
+          label: 'No thanks — keep my money',
+          detail: b < 40 ? 'You don\'t have much left. Keeping it is the safe choice.' : 'Not every chance is worth taking.',
           costLabel: 'Keep $' + b,
           costType: 'save',
           cost: 0,
@@ -656,28 +656,28 @@ function getScenarios() {
       getOutcome: (choice) => {
         if (choice === 0 && b > 60) return {
           type: 'positive',
-          title: 'A thoughtful risk.',
-          text: `You had the resources to absorb the downside. Whether it pays off or not, this was an informed decision — not recklessness.`,
+          title: 'You took a chance!',
+          text: `You had enough money to try it. Win or lose, you thought it through first. That\'s smart risk-taking.`,
         };
         if (choice === 0 && state.priorImpulsiveCount >= 2) return {
           type: 'negative',
-          title: 'Risk on top of risk.',
-          text: `After a week of tight decisions, adding more uncertainty is a red flag. You invested $20 you may not be able to spare.`,
+          title: 'That was risky.',
+          text: `After a tough week, putting more money at risk is a tough call. You gave away $20 you might really need.`,
         };
         if (choice === 0) return {
           type: 'neutral',
-          title: 'You took the bet.',
-          text: `A $20 risk with $${b} in your pocket. The outcome isn\'t known yet — but you made a choice. Was it informed?`,
+          title: 'You went for it.',
+          text: `You put $20 on the line. You\'ll find out next week. Was it the right call?`,
         };
         if (b < 40) return {
           type: 'positive',
-          title: 'Smart pass.',
-          text: `With $${b} left, protecting your resources was the right call. Caution when constrained is strength, not fear.`,
+          title: 'Good thinking!',
+          text: `With only $${b} left, keeping your money was the right call. Staying safe when you\'re low is a smart move.`,
         };
         return {
           type: 'neutral',
-          title: 'You passed.',
-          text: `Not every opportunity needs to be taken. You kept $${b} safe. Whether that was the right call depends on what comes next.`,
+          title: 'You said no.',
+          text: `You kept your $${b} safe. Not every chance needs to be taken. Sometimes saying no is the smart play.`,
         };
       },
     },
@@ -687,14 +687,14 @@ function getScenarios() {
       day: 5,
       tag: 'recovery',
       tagLabel: 'Day 5 — Recovery',
-      title: 'End of the Week',
-      text: `It\'s Friday. You can see exactly how the week played out. Your balance is $${b}.${b < 30 ? ' That\'s below where you need to be.' : b >= 60 ? ' You managed this week well.' : ' You got through it.'}  There\'s a sale happening — things you don\'t need but kind of want. What do you do with what you have left?`,
-      contextPill: `💰 Final balance: $${b}${b < 30 ? ' ⚠️ Low' : b >= 60 ? ' ✅ Strong' : ''}`,
+      title: 'Last Day of the Week!',
+      text: `It\'s Friday! The week is almost over. You have $${b} left.${b < 30 ? ' That\'s not much — it was a tough week.' : b >= 60 ? ' You did a great job this week!' : ' You made it through!'} On your way home you pass a store. There\'s a sale on stuff you kind of want. What do you do?`,
+      contextPill: `💰 Your money: $${b}${b < 30 ? ' ⚠️ Running low!' : b >= 60 ? ' ✅ Great job!' : ''}`,
       choices: [
         {
           letter: 'A',
-          label: b < 30 ? 'Keep spending — one more thing' : 'Treat yourself a little',
-          detail: b < 30 ? 'Same pattern as earlier in the week, even after a rough run.' : 'You\'ve earned it. Spend a little on yourself.',
+          label: b < 30 ? 'Buy one more thing' : 'Treat yourself — you earned it!',
+          detail: b < 30 ? 'Keep spending even after a hard week.' : 'You did well. Spend a little on yourself.',
           costLabel: '− $20',
           costType: 'spend',
           cost: 20,
@@ -702,8 +702,8 @@ function getScenarios() {
         },
         {
           letter: 'B',
-          label: b < 30 ? 'Stop. Protect what\'s left.' : 'Save it for next week',
-          detail: b < 30 ? 'You recognize the pattern and pull back. That\'s recovery.' : 'Build the buffer. Next week starts stronger.',
+          label: b < 30 ? 'Stop and save what\'s left' : 'Save it for next week',
+          detail: b < 30 ? 'You notice the pattern and stop. That takes courage.' : 'Next week starts stronger with more in your pocket.',
           costLabel: 'Keep $' + b,
           costType: 'save',
           cost: 0,
@@ -713,23 +713,23 @@ function getScenarios() {
       getOutcome: (choice) => {
         if (choice === 0 && b < 30) return {
           type: 'negative',
-          title: 'Same pattern.',
-          text: `Even with a low balance and a rough week behind you, you spent again. The week ends the same way it started.`,
+          title: 'You kept spending.',
+          text: `Even after a tough week, you spent again. The week ends the same way it started. Next time, you\'ll know what to do differently.`,
         };
         if (choice === 0) return {
           type: 'neutral',
-          title: 'You spent a little.',
-          text: `You had the room. $${b - 20} remains. Not a bad week overall — but next week starts a little tighter.`,
+          title: 'You treated yourself!',
+          text: `You had the money for it. $${b - 20} is left. Not a bad week — but next week starts a little smaller.`,
         };
         if (b < 30) return {
           type: 'positive',
-          title: 'You pulled back.',
-          text: `That\'s the recovery signal. You recognized what was happening and changed course. That\'s one of the hardest things to do — and you did it.`,
+          title: 'You stopped! Great job!',
+          text: `You saw the pattern and changed it. That is one of the hardest things to do — and you did it. That\'s what bouncing back looks like.`,
         };
         return {
           type: 'positive',
-          title: 'Strong finish.',
-          text: `$${b} going into next week. You ended with a buffer. That\'s what planning looks like in practice.`,
+          title: 'Strong finish!',
+          text: `You end the week with $${b}. You saved money when it was hard. That\'s what good planning looks like. Be proud of yourself!`,
         };
       },
     },
@@ -828,8 +828,8 @@ function renderJoin() {
     <div class="card join-screen">
       <div class="join-title">Ready to take<br>the challenge?</div>
       <div class="join-sub">
-        You have $100. Five days. Real decisions.<br>
-        How you handle it reveals how your financial mind works.
+        You have $100. Five days. Five choices.<br>
+        What you decide shows how your money brain works!
       </div>
       <input class="join-input" id="codeInput" type="text" maxlength="6"
         placeholder="Enter session code" autocomplete="off" spellcheck="false" />
