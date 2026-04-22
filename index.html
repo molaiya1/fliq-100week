@@ -375,24 +375,28 @@
       gap: 14px;
       margin: 20px 0;
       text-align: left;
+      align-items: stretch;
     }
     .trait-card {
       background: #F7F9FF;
       border: 1.5px solid rgba(27,42,74,0.08);
       border-radius: 16px;
       padding: 18px;
+      display: flex;
+      flex-direction: column;
     }
     .trait-card .trait-name {
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 2px;
       color: var(--text2);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       font-weight: 600;
     }
     .trait-card .trait-label {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
+      flex: 1;
     }
     .trait-label.strong     { color: #166534; }
     .trait-label.developing { color: #92400E; }
@@ -633,6 +637,36 @@
     @keyframes flashIn  { from { opacity: 0; } to { opacity: 1; } }
     @keyframes flashOut { from { opacity: 1; } to { opacity: 0; } }
 
+    /* ── Page transitions ── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounceIn {
+      0%   { opacity: 0; transform: scale(0.92); }
+      60%  { opacity: 1; transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(-12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .card      { animation: bounceIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .balance-bar { animation: slideUp 0.35s ease both; }
+    .progress-stars { animation: slideUp 0.3s 0.1s ease both; }
+
+    /* Milo bubble slide-in from left */
+    .milo-bubble.show {
+      animation: fadeSlide 0.35s ease both;
+    }
+
+    /* Choice buttons stagger */
+    .choice-btn:nth-child(1) { animation: slideUp 0.3s 0.05s ease both; }
+    .choice-btn:nth-child(2) { animation: slideUp 0.3s 0.12s ease both; }
+
+    /* Outcome card pop */
+    .outcome-card.show { animation: bounceIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+
     /* ── Footer ── */
     .page-footer {
       display: flex;
@@ -676,7 +710,14 @@
 
   <footer class="page-footer">
     <img src="./milo.png" alt="Milo" />
-    WealthWise Kids™ · FLIQ Score™ Platform · © 2026
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--navy);opacity:0.5;letter-spacing:0.5px;">WealthWise Kids™ · FLIQ Score™ Platform</div>
+      <div style="font-size:10px;color:var(--text2);opacity:0.45;margin-top:3px;line-height:1.6;">
+        © 2026 WealthWise Kids LLC. All rights reserved. &nbsp;·&nbsp; The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>
+        All simulation content, scoring methodology, and behavioral data are proprietary and confidential. Unauthorized reproduction is prohibited.<br>
+        This platform is intended for authorized educational pilots only. No personally identifiable student information is collected.
+      </div>
+    </div>
   </footer>
 
 <script>
@@ -1121,7 +1162,7 @@ function renderSim() {
       </div>
 
       <div class="milo-bubble" id="miloBubble">
-        <img src="./milo.png" alt="Milo" />
+        <img id="miloImg" src="./milo-curious.png" alt="Milo" />
         <div class="milo-speech" id="miloText"></div>
       </div>
 
@@ -1166,6 +1207,12 @@ function renderScore() {
     { id: 'rb', name: 'Recovery',        ...p.traits?.rb },
   ];
 
+  const traitDefs = {
+    ic: { icon: '🛑', kid: 'Can you stop and think before you spend?' },
+    po: { icon: '📅', kid: 'Do you think about tomorrow, not just today?' },
+    ra: { icon: '👀', kid: 'Can you tell when something is a bad idea?' },
+    rb: { icon: '💪', kid: 'Can you bounce back after a tough choice?' },
+  };
   const traitCards = traits.map(t => {
     const label = t.label || 'Emerging';
     const cls   = label.toLowerCase().replace(' ', '-');
@@ -1173,11 +1220,13 @@ function renderScore() {
     const dots  = [0,1,2].map(i =>
       `<div class="trait-dot ${i < score ? `filled ${cls}` : ''}"></div>`
     ).join('');
+    const def = traitDefs[t.id] || {};
     return `
       <div class="trait-card">
-        <div class="trait-name">${t.name}</div>
+        <div class="trait-name">${def.icon || ''} ${t.name}</div>
         <div class="trait-label ${cls}">${label}</div>
         <div class="trait-dots">${dots}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5;">${def.kid || ''}</div>
       </div>`;
   }).join('');
 
@@ -1193,6 +1242,7 @@ function renderScore() {
   app.innerHTML = `
     <div class="card score-screen">
       <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:8px;">Your FLIQ Profile</div>
+      <img src="./milo-proud.png" style="width:88px;margin:8px auto;display:block;animation:starPop 0.5s ease both;" alt="Milo proud" />
       <div class="profile-badge">${badge}</div>
       <div class="profile-label">${p.profile_label}</div>
       <div class="profile-sub">${profileDescriptions[p.profile_label] || 'Your behavioral intelligence profile has been recorded.'}</div>
@@ -1326,17 +1376,28 @@ async function makeChoice(choiceIndex) {
     outcomeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Milo reaction
-  const miloLines = {
-    positive: ["Smart move! 🦉", "Your money brain is ON! 🧠", "That's how you do it! 💪", "Yes! Great thinking! ⭐"],
-    negative: ["Oops! It happens 😅", "Tough one... you'll get it next time!", "Don't worry — you can bounce back! 🙌"],
-    neutral:  ["Interesting choice... 🤔", "Let's see how this plays out!", "Hmm, I wonder... 🦉"],
+  // Milo reaction — expression + speech
+  const miloData = {
+    positive: {
+      img: './milo-proud.png',
+      lines: ["Smart move! 🦉", "Your money brain is ON! 🧠", "That's how you do it! 💪", "Yes! Great thinking! ⭐"],
+    },
+    negative: {
+      img: './milo-concerned.png',
+      lines: ["Oops! It happens 😅", "Tough one... you'll bounce back!", "Don't worry — every choice teaches you something. 🙌"],
+    },
+    neutral: {
+      img: './milo-curious.png',
+      lines: ["Interesting choice... 🤔", "Let's see how this plays out!", "Hmm, I wonder... 🦉"],
+    },
   };
-  const lines = miloLines[outcome?.type] || miloLines.neutral;
+  const md = miloData[outcome?.type] || miloData.neutral;
   const miloText = document.getElementById('miloText');
   const miloBubble = document.getElementById('miloBubble');
-  if (miloText && miloBubble) {
-    miloText.textContent = lines[Math.floor(Math.random() * lines.length)];
+  const miloImg = document.getElementById('miloImg');
+  if (miloText && miloBubble && miloImg) {
+    miloImg.src = md.img;
+    miloText.textContent = md.lines[Math.floor(Math.random() * md.lines.length)];
     miloBubble.classList.add('show');
   }
   if (outcome?.type === 'positive') confetti(25);
@@ -1360,7 +1421,7 @@ async function nextDay() {
     confetti(30);
     const flash = document.createElement('div');
     flash.className = 'day-flash';
-    flash.innerHTML = `<div class="flash-star">⭐</div><div class="flash-label">Day ${state.day} Complete!</div>`;
+    flash.innerHTML = `<img src="./milo-encouraging.png" style="width:80px;margin-bottom:8px;animation:starPop 0.4s 0.1s ease both;" /><div class="flash-star">⭐</div><div class="flash-label">Day ${state.day} Complete!</div>`;
     document.body.appendChild(flash);
     setTimeout(() => {
       flash.remove();
