@@ -472,6 +472,7 @@ let state = {
   screen: 'join',       // join | sim | score
   studentId: null,
   sessionId: null,
+  cohortId: null,       // resolved from join code
   balance: STARTING_BALANCE,
   day: 1,
   priorImpulsiveCount: 0,
@@ -752,9 +753,10 @@ async function apiPost(path, body) {
   }
 }
 
-async function createStudent() {
+async function createStudent(cohortId = null) {
   const data = await apiPost('/students', {
     org_id: PILOT_ORG_ID,
+    cohort_id: cohortId || undefined,
     age_band: '13-17',
     grade: 'mixed',
   });
@@ -986,7 +988,7 @@ async function startSolo() {
   state.screen = 'loading';
   render();
 
-  const studentId = await createStudent();
+  const studentId = await createStudent(state.cohortId);
   const sessionId = studentId ? await startSession(studentId) : null;
 
   state.studentId = studentId;
@@ -1001,16 +1003,35 @@ async function startSolo() {
 }
 
 async function joinWithCode() {
-  // For v1, code join is treated the same as solo — code is cosmetic for classroom context
-  // Future: look up cohort session by code
-  const code = document.getElementById('codeInput')?.value?.trim();
+  const code = document.getElementById('codeInput')?.value?.trim().toUpperCase();
   if (!code || code.length < 4) {
     const err = document.getElementById('codeError');
     if (err) err.classList.add('show');
     return;
   }
+
+  // Resolve code to a real cohort_id
+  try {
+    const res = await fetch(`${API_BASE}/cohorts/by-code/${code}`);
+    if (res.ok) {
+      const data = await res.json();
+      state.cohortId = data.cohort_id;
+    }
+    // If code lookup fails, proceed as solo (graceful fallback)
+  } catch (e) { /* silent fallback */ }
+
   await startSolo();
 }
+
+// Auto-fill code from URL param ?code=XXXXXXXX
+(function autoFillCode() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if (code) {
+    const el = document.getElementById('codeInput');
+    if (el) el.value = code.toUpperCase();
+  }
+})();
 
 async function makeChoice(choiceIndex) {
   const scenarios = getScenarios();

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The $100 Week™ — Facilitator Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1B2A4A;
+      --cyan:   #00B4D8;
+      --gold:   #F5A623;
+      --green:  #2E7D32;
+      --red:    #C62828;
+      --gray:   #4A4A4A;
+      --light:  #F7F9FC;
+      --white:  #FFFFFF;
+      --card:   rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f1b35 0%, #1B2A4A 60%, #0d2233 100%);
+      min-height: 100vh;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 48px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding: 20px 0 16px;
+      width: 100%;
+      max-width: 720px;
+    }
+    .header .badge {
+      display: inline-block;
+      background: rgba(0,180,216,0.15);
+      border: 1px solid rgba(0,180,216,0.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 800;
+      color: var(--white);
+    }
+    .header h1 span { color: var(--gold); }
+    .header p {
+      margin-top: 6px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── Screen container ── */
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 680px;
+      animation: fadeIn 0.3s ease;
+    }
+    .screen.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--cyan);
+      margin-bottom: 16px;
+    }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 18px; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 7px;
+    }
+    input, select {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+      color: var(--white);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input::placeholder { color: rgba(255,255,255,0.25); }
+    input:focus, select:focus { border-color: var(--cyan); }
+    select option { background: #1B2A4A; color: #fff; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #0090b0);
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(0,180,216,0.3);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #d4891a);
+      color: var(--navy);
+      box-shadow: 0 4px 20px rgba(245,166,35,0.3);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      padding: 10px;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-row { display: flex; gap: 10px; }
+    .btn-row .btn { flex: 1; }
+
+    /* ── Code display ── */
+    .code-display {
+      text-align: center;
+      padding: 24px 0 16px;
+    }
+    .code-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+    .join-code {
+      font-size: clamp(40px, 10vw, 60px);
+      font-weight: 900;
+      letter-spacing: 12px;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(245,166,35,0.4);
+      font-variant-numeric: tabular-nums;
+      font-family: 'Courier New', monospace;
+    }
+    .code-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 6px;
+    }
+
+    /* ── URL display ── */
+    .url-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,180,216,0.08);
+      border: 1px solid rgba(0,180,216,0.25);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 16px 0;
+    }
+    .url-box span {
+      flex: 1;
+      font-size: 13px;
+      color: var(--cyan);
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+    }
+    .copy-btn {
+      background: rgba(0,180,216,0.15);
+      border: 1px solid rgba(0,180,216,0.3);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--cyan);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover { background: rgba(0,180,216,0.25); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+    /* ── Progress ring ── */
+    .progress-ring-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 0;
+    }
+    .ring-svg { flex-shrink: 0; }
+    .ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 8; }
+    .ring-fill {
+      fill: none; stroke: var(--cyan); stroke-width: 8;
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+    .ring-text { font-size: 24px; font-weight: 800; fill: var(--white); }
+    .ring-sub { font-size: 10px; fill: rgba(255,255,255,0.4); }
+    .progress-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .progress-info p { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .status-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .dot-green { background: #4CAF50; box-shadow: 0 0 6px #4CAF50; }
+    .dot-yellow { background: var(--gold); }
+    .dot-gray { background: rgba(255,255,255,0.2); }
+
+    /* ── Poll indicator ── */
+    .poll-indicator {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      text-align: right;
+      padding: 4px 0;
+    }
+    .poll-indicator .dot-pulse {
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+    /* ── Report cards ── */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .metric-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .metric-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── Trait bars ── */
+    .trait-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .trait-name {
+      width: 130px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      flex-shrink: 0;
+    }
+    .trait-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .trait-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+    .trait-score {
+      width: 32px;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .trait-out {
+      width: 22px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+
+    /* ── Label distribution ── */
+    .label-list { list-style: none; }
+    .label-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .label-item:last-child { border-bottom: none; }
+    .label-emoji { font-size: 20px; width: 28px; text-align: center; }
+    .label-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--white); }
+    .label-count {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cyan);
+      background: rgba(0,180,216,0.1);
+      border-radius: 20px;
+      padding: 2px 10px;
+    }
+    .label-bar-wrap {
+      width: 80px;
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .label-bar-fill {
+      height: 100%;
+      background: var(--cyan);
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+
+    /* ── Score band chart ── */
+    .band-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      height: 80px;
+      padding-bottom: 4px;
+    }
+    .band-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .band-bar {
+      width: 100%;
+      background: var(--cyan);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.8s ease;
+      min-height: 4px;
+    }
+    .band-label { font-size: 9px; color: rgba(255,255,255,0.4); text-align: center; }
+    .band-n { font-size: 13px; font-weight: 700; color: var(--white); }
+
+    /* ── Alert box ── */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin: 12px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .alert-warn {
+      background: rgba(245,166,35,0.1);
+      border: 1px solid rgba(245,166,35,0.25);
+      color: var(--gold);
+    }
+    .alert-info {
+      background: rgba(0,180,216,0.08);
+      border: 1px solid rgba(0,180,216,0.2);
+      color: rgba(255,255,255,0.7);
+    }
+    .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      max-width: 680px;
+    }
+
+    /* ── Step indicator ── */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transition: background 0.3s;
+    }
+    .step-dot.active { background: var(--cyan); }
+    .step-dot.done { background: rgba(0,180,216,0.4); }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: rgba(27,42,74,0.95);
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: var(--cyan);
+      transition: transform 0.3s;
+      z-index: 999;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">Facilitator Dashboard</div>
+  <h1>The <span>$100</span> Week™</h1>
+  <p>WealthWise Kids™ · FLIQ Score™ Classroom Simulation</p>
+</div>
+
+<!-- Step dots -->
+<div class="steps" id="stepDots">
+  <div class="step-dot active" id="dot1"></div>
+  <div class="step-dot" id="dot2"></div>
+  <div class="step-dot" id="dot3"></div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCREEN 1 — Setup
+═══════════════════════════════════════ -->
+<div class="screen active" id="screen-setup">
+  <div class="card">
+    <div class="card-title">Step 1 of 3 — Create Your Cohort</div>
+
+    <div class="form-group">
+      <label>Facilitator Name</label>
+      <input type="text" id="facilName" placeholder="e.g. Ms. Johnson" />
+    </div>
+    <div class="form-group">
+      <label>Class / Group Name</label>
+      <input type="text" id="cohortName" placeholder="e.g. 5th Grade — Period 2" />
+    </div>
+    <div class="form-group">
+      <label>Grade Band</label>
+      <select id="gradeBand">
+        <option value="">— Select grade band —</option>
+        <option value="K-2">K–2 (Ages 5–7)</option>
+        <option value="3-5">3–5 (Ages 8–10)</option>
+        <option value="6-8">6–8 (Ages 11–13)</option>
+        <option value="9-12">9–12 (Ages 14–18)</option>
+        <option value="mixed">Mixed grades</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Organization Name <span style="color:rgba(255,255,255,0.3);font-weight:400">(optional)</span></label>
+      <input type="text" id="orgName" placeholder="e.g. PEACE Academy" />
+    </div>
+
+    <button class="btn btn-primary" id="btnCreate" onclick="createCohort()">
+      Create Class Session →
+    </button>
+  </div>
+
+  <div class="alert alert-info">
+    <span class="alert-icon">ℹ️</span>
+    <span>No student names or personal information are collected. All data is anonymous by design.</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCREEN 2 — Active Session (Launch)
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-launch">
+  <div class="card">
+    <div class="card-title">Step 2 of 3 — Share With Students</div>
+
+    <div class="code-display">
+      <div class="code-label">Class Join Code</div>
+      <div class="join-code" id="displayCode">––––</div>
+      <div class="code-sub">Students enter this code on the join screen</div>
+    </div>
+
+    <div style="margin: 4px 0 12px; text-align:center; font-size:13px; color:rgba(255,255,255,0.5)">— or share the direct link —</div>
+
+    <div class="url-box">
+      <span id="displayUrl">https://molaiya1.github.io/fliq-100week/</span>
+      <button class="copy-btn" id="copyBtn" onclick="copyUrl()">Copy</button>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:16px">
+      <span class="alert-icon">📋</span>
+      <span>Tell students to go to the URL above and enter the join code when prompted. Each student completes the simulation individually — it takes 15–20 minutes per day for 5 days.</span>
+    </div>
+  </div>
+
+  <!-- Live completion counter -->
+  <div class="card">
+    <div class="card-title">Live Completion Status</div>
+
+    <div class="progress-ring-wrap">
+      <svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80">
+        <circle class="ring-track" cx="40" cy="40" r="32"/>
+        <circle class="ring-fill" id="ringFill" cx="40" cy="40" r="32"
+          stroke-dasharray="201" stroke-dashoffset="201"/>
+        <text x="40" y="38" text-anchor="middle" class="ring-text" id="ringNum">0</text>
+        <text x="40" y="52" text-anchor="middle" class="ring-sub">done</text>
+      </svg>
+      <div class="progress-info">
+        <h3 id="progressHeadline">Waiting for students to join…</h3>
+        <p id="progressDetail" style="margin-top:4px"></p>
+        <p style="margin-top:10px">
+          <span class="status-dot dot-green"></span><span id="completedNum">0</span> completed &nbsp;
+          <span class="status-dot dot-yellow"></span><span id="inProgressNum">0</span> in progress
+        </p>
+      </div>
+    </div>
+
+    <div class="poll-indicator">
+      <span class="dot-pulse">●</span> Auto-refreshing every 20 seconds
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-gold" id="btnReport" onclick="loadReport()" disabled>
+      View Class Report →
+    </button>
+    <button class="btn btn-ghost" onclick="forceRefresh()">Refresh Now</button>
+  </div>
+  <p style="text-align:center; font-size:12px; color:rgba(255,255,255,0.3); margin-top:10px">
+    The report button unlocks after at least 5 students complete the simulation.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCREEN 3 — Class Report
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-report">
+  <div class="card">
+    <div class="card-title">Class FLIQ Score™ Report</div>
+
+    <div class="metric-grid" id="metricGrid">
+      <!-- filled by JS -->
+    </div>
+
+    <div id="weakestAlert" style="display:none" class="alert alert-warn">
+      <span class="alert-icon">⚡</span>
+      <span id="weakestText"></span>
+    </div>
+  </div>
+
+  <!-- Score band distribution -->
+  <div class="card">
+    <div class="card-title">Score Distribution</div>
+    <div class="band-chart" id="bandChart"><!-- filled by JS --></div>
+    <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.3); text-align:center">
+      FLIQ Score bands: 0–2 Low · 3–4 Developing · 5–6 Proficient · 7–8 Advanced
+    </div>
+  </div>
+
+  <!-- Trait averages -->
+  <div class="card">
+    <div class="card-title">Trait Averages (Class)</div>
+    <div id="traitBars"><!-- filled by JS --></div>
+    <div style="margin-top:14px; font-size:12px; color:rgba(255,255,255,0.35); line-height:1.5">
+      Each trait is scored 0–2. A class average of 1.5+ indicates strength in that domain.
+      Scores below 1.0 indicate a pressure point worth addressing in your facilitation.
+    </div>
+  </div>
+
+  <!-- Label distribution -->
+  <div class="card">
+    <div class="card-title">Profile Label Distribution</div>
+    <ul class="label-list" id="labelList"><!-- filled by JS --></ul>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goToScreen('launch')">← Back to Session</button>
+    <button class="btn btn-ghost" onclick="window.print()">Print Report</button>
+  </div>
+</div>
+
+<div class="footer">
+  WealthWise Kids™ · The $100 Week™ · FLIQ Score™ · The Carter &amp; Olay Foundation™, Inc.<br>
+  All student data is anonymous. No PII is collected or stored. April 2026.
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const API = 'https://fliq-api-production.up.railway.app';
+const TCOF_ORG_ID = '00000000-0000-0000-0000-000000000001';
+const SIM_ID = '100week_v1';
+const STUDENT_URL = 'https://molaiya1.github.io/fliq-100week/';
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let cohortId = null;
+let joinCode  = null;
+let pollTimer = null;
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg, dur = 2200) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), dur);
+}
+
+// ── Screen navigation ─────────────────────────────────────────────────────────
+function goToScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+
+  const map = { setup: 1, launch: 2, report: 3 };
+  const step = map[name] || 1;
+  ['dot1','dot2','dot3'].forEach((id, i) => {
+    const dot = document.getElementById(id);
+    dot.classList.remove('active','done');
+    if (i + 1 < step)  dot.classList.add('done');
+    if (i + 1 === step) dot.classList.add('active');
+  });
+
+  if (name === 'launch') startPolling();
+  if (name !== 'launch' && pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+}
+
+// ── SCREEN 1: Create Cohort ───────────────────────────────────────────────────
+async function createCohort() {
+  const facilName  = document.getElementById('facilName').value.trim();
+  const cohortName = document.getElementById('cohortName').value.trim();
+  const gradeBand  = document.getElementById('gradeBand').value;
+
+  if (!cohortName) { toast('Please enter a class name'); return; }
+
+  const btn = document.getElementById('btnCreate');
+  btn.disabled = true;
+  btn.textContent = 'Creating…';
+
+  // Determine org — use TCOF default; later can be looked up by org name
+  const org_id = TCOF_ORG_ID;
+
+  try {
+    const res = await fetch(`${API}/cohorts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        org_id,
+        cohort_name: cohortName,
+        grade_band:  gradeBand || null,
+        facilitator_name: facilName || null,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'API error');
+
+    cohortId = data.cohort_id;
+    joinCode  = data.code;
+
+    document.getElementById('displayCode').textContent = joinCode;
+    document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+
+    goToScreen('launch');
+  } catch (err) {
+    toast('Error: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Create Class Session →';
+  }
+}
+
+// ── SCREEN 2: Poll Status ─────────────────────────────────────────────────────
+function startPolling() {
+  fetchStatus();
+  pollTimer = setInterval(fetchStatus, 20000);
+}
+
+async function fetchStatus() {
+  if (!cohortId) return;
+  try {
+    const res = await fetch(`${API}/cohorts/${cohortId}/status`);
+    const data = await res.json();
+    updateStatusUI(data);
+  } catch (e) { /* silent fail — will retry */ }
+}
+
+function forceRefresh() {
+  fetchStatus();
+  toast('Refreshed');
+}
+
+function updateStatusUI({ enrolled, completed, in_progress }) {
+  const total = completed + in_progress;
+  const pct   = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  document.getElementById('ringNum').textContent = completed;
+  document.getElementById('completedNum').textContent = completed;
+  document.getElementById('inProgressNum').textContent = in_progress;
+
+  const circumference = 201;
+  const offset = circumference - (circumference * (completed / Math.max(total, 1)));
+  document.getElementById('ringFill').style.strokeDashoffset = offset;
+
+  if (completed === 0 && in_progress === 0) {
+    document.getElementById('progressHeadline').textContent = 'Waiting for students to join…';
+    document.getElementById('progressDetail').textContent = 'Share the join code or URL above.';
+  } else if (completed < 5) {
+    document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} finished`;
+    document.getElementById('progressDetail').textContent = `${in_progress} currently in progress. Report unlocks at 5 completions.`;
+  } else {
+    document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} completed`;
+    document.getElementById('progressDetail').textContent = `${in_progress} still in progress. Your class report is ready.`;
+    document.getElementById('btnReport').disabled = false;
+  }
+}
+
+// ── SCREEN 3: Load Report ─────────────────────────────────────────────────────
+async function loadReport() {
+  const btn = document.getElementById('btnReport');
+  btn.disabled = true;
+  btn.textContent = 'Loading report…';
+
+  try {
+    const res = await fetch(`${API}/cohorts/${cohortId}/report`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load report');
+
+    renderReport(data);
+    goToScreen('report');
+  } catch (err) {
+    toast('Error loading report: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'View Class Report →';
+  }
+}
+
+// ── Profile label metadata ────────────────────────────────────────────────────
+const LABEL_META = {
+  'Strategic Thinker':   { emoji: '🧠', color: '#00B4D8' },
+  'Cautious Builder':    { emoji: '🔨', color: '#F5A623' },
+  'Steady Planner':      { emoji: '📋', color: '#66BB6A' },
+  'Impulsive Learner':   { emoji: '⚡', color: '#FF7043' },
+  'Risk Seeker':         { emoji: '🎲', color: '#AB47BC' },
+  'Resilient Recoverer': { emoji: '💪', color: '#26C6DA' },
+  'Learning Curve':      { emoji: '📈', color: '#FFA726' },
+};
+
+function getLabelMeta(label) {
+  return LABEL_META[label] || { emoji: '⭐', color: '#9E9E9E' };
+}
+
+// ── Trait color (gradient by score 0–2) ──────────────────────────────────────
+function traitColor(avg) {
+  if (avg >= 1.5) return '#66BB6A';
+  if (avg >= 1.0) return '#F5A623';
+  return '#EF5350';
+}
+
+// ── renderReport ──────────────────────────────────────────────────────────────
+function renderReport(data) {
+  const { completed_count, enrolled, class_fliq_score, trait_averages,
+          label_distribution, score_bands, weakest_trait } = data;
+
+  // Metric grid
+  const grid = document.getElementById('metricGrid');
+  grid.innerHTML = '';
+  const metrics = [
+    { value: completed_count, label: 'Students Completed' },
+    { value: (class_fliq_score || 0).toFixed(1) + '/8', label: 'Class FLIQ Score™' },
+    { value: enrolled, label: 'Total Enrolled' },
+    { value: Math.round(((class_fliq_score || 0) / 8) * 100) + '%', label: 'Behavioral Readiness' },
+  ];
+  for (const m of metrics) {
+    grid.innerHTML += `
+      <div class="metric-card">
+        <div class="metric-value">${m.value}</div>
+        <div class="metric-label">${m.label}</div>
+      </div>`;
+  }
+
+  // Weakest trait alert
+  if (weakest_trait && weakest_trait.avg < 1.2) {
+    const wp = document.getElementById('weakestAlert');
+    wp.style.display = 'flex';
+    document.getElementById('weakestText').textContent =
+      `Class pressure point: ${weakest_trait.label} averaged ${weakest_trait.avg}/2. ` +
+      `Consider dedicating additional facilitation time to this domain.`;
+  }
+
+  // Score band chart
+  const bandEl = document.getElementById('bandChart');
+  bandEl.innerHTML = '';
+  const bands = score_bands || {};
+  const maxBand = Math.max(1, ...Object.values(bands));
+  for (const [label, count] of Object.entries(bands)) {
+    const h = Math.round((count / maxBand) * 68);
+    bandEl.innerHTML += `
+      <div class="band-col">
+        <div class="band-n">${count}</div>
+        <div class="band-bar" style="height:${Math.max(h,4)}px"></div>
+        <div class="band-label">${label.split(' ')[0]}</div>
+      </div>`;
+  }
+
+  // Trait bars
+  const traitWrap = document.getElementById('traitBars');
+  traitWrap.innerHTML = '';
+  const traitMap = [
+    { key: 'ic', label: 'Impulse Control' },
+    { key: 'po', label: 'Planning Orientation' },
+    { key: 'ra', label: 'Risk Awareness' },
+    { key: 'rb', label: 'Resilience & Bounce-Back' },
+  ];
+  for (const { key, label } of traitMap) {
+    const avg = (trait_averages || {})[key] || 0;
+    const pct = (avg / 2) * 100;
+    const color = traitColor(avg);
+    traitWrap.innerHTML += `
+      <div class="trait-row">
+        <div class="trait-name">${label}</div>
+        <div class="trait-bar-wrap">
+          <div class="trait-bar-fill" style="width:${pct}%; background:${color}"></div>
+        </div>
+        <div class="trait-score">${avg.toFixed(1)}</div>
+        <div class="trait-out">/ 2</div>
+      </div>`;
+  }
+
+  // Label distribution
+  const labelList = document.getElementById('labelList');
+  labelList.innerHTML = '';
+  const labelEntries = Object.entries(label_distribution || {}).sort((a,b) => b[1]-a[1]);
+  const maxLabel = Math.max(1, ...labelEntries.map(e => e[1]));
+  for (const [lbl, cnt] of labelEntries) {
+    const meta = getLabelMeta(lbl);
+    const pct  = (cnt / maxLabel) * 100;
+    labelList.innerHTML += `
+      <li class="label-item">
+        <span class="label-emoji">${meta.emoji}</span>
+        <span class="label-name">${lbl}</span>
+        <div class="label-bar-wrap">
+          <div class="label-bar-fill" style="width:${pct}%; background:${meta.color}"></div>
+        </div>
+        <span class="label-count">${cnt}</span>
+      </li>`;
+  }
+}
+
+// ── Copy URL ──────────────────────────────────────────────────────────────────
+function copyUrl() {
+  const url = document.getElementById('displayUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── Load from URL param (resume existing cohort) ──────────────────────────────
+(function resumeFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const cid = params.get('cohort');
+  const code = params.get('code');
+  if (cid && code) {
+    cohortId = cid;
+    joinCode  = code;
+    document.getElementById('displayCode').textContent = code;
+    document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + code;
+    goToScreen('launch');
+  }
+})();
+</script>
+</body>
+</html>
