@@ -1262,14 +1262,20 @@ function renderScore() {
     return;
   }
 
-  const badges = {
-    'Financial Starter': '🌱', 'Explorer': '🔭',
-    'Builder': '🏗️', 'Thinker': '💡',
-    'Emerging': '🌱', 'Developing': '🔭', 'Advancing': '🏗️',
-    'Leading': '💡', 'Exceptional': '🌟',
+  // Per-profile Milo image — image IS the badge, no separate emoji needed
+  const profileMilos = {
+    'Explorer':         { img: './milo-explorer.png', blend: true  },
+    'Developing':       { img: './milo-explorer.png', blend: true  },
+    'Thinker':          { img: './milo-curious.png',  blend: true  },
+    'Advancing':        { img: './milo-curious.png',  blend: true  },
+    'Builder':          { img: './milo-happy.png',    blend: true  },
+    'Financial Starter':{ img: './milo.png',          blend: false },
+    'Emerging':         { img: './milo.png',          blend: false },
+    'Leading':          { img: './milo-proud.png',    blend: true  },
+    'Exceptional':      { img: './milo-proud.png',    blend: true  },
   };
-
-  const badge = badges[p.profile_label] || '✨';
+  const miloAsset = profileMilos[p.profile_label] || { img: './milo.png', blend: false };
+  const badge = null; // image replaces emoji badge
 
   const traits = [
     { id: 'ic', name: 'Impulse Control', ...p.traits?.ic },
@@ -1313,8 +1319,7 @@ function renderScore() {
   app.innerHTML = `
     <div class="card score-screen">
       <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:8px;">Your FLIQ Profile</div>
-      <img src="./milo.png" style="width:96px;margin:8px auto 0;display:block;animation:starPop 0.5s ease both;filter:drop-shadow(0 2px 8px rgba(0,180,216,0.25));" alt="Milo" />
-      <div class="profile-badge">${badge}</div>
+      <img src="${miloAsset.img}" style="width:120px;margin:8px auto 0;display:block;animation:starPop 0.5s ease both;${miloAsset.blend ? 'mix-blend-mode:multiply;' : 'filter:drop-shadow(0 2px 10px rgba(0,180,216,0.3));'}" alt="Milo" />
       <div class="profile-label">${p.profile_label}</div>
       <div class="profile-sub">${profileDescriptions[p.profile_label] || 'Your behavioral intelligence profile has been recorded.'}</div>
 
