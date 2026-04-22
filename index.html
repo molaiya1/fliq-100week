@@ -590,7 +590,7 @@
       height: 56px;
       object-fit: contain;
       flex-shrink: 0;
-      filter: drop-shadow(0 2px 6px rgba(0,180,216,0.2));
+      mix-blend-mode: multiply;
     }
     .milo-speech {
       background: #EFF6FF;
@@ -674,6 +674,13 @@
       margin-top: 48px;
       padding: 28px 0 40px;
       border-top: 1px solid rgba(27,42,74,0.10);
+      box-sizing: border-box;
+    }
+    .colophon-section,
+    .colophon-brand,
+    .colophon-text,
+    .colophon-divider {
+      width: 100%;
     }
     .colophon-brand {
       font-size: 12px;
@@ -780,7 +787,7 @@
     <hr class="colophon-divider" />
 
     <div class="colophon-text" style="font-size:10px;">
-      WealthWise Kids LLC &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; michael@versassists.com &nbsp;·&nbsp; play.wealthwiselearning.com &nbsp;·&nbsp; Platform v1.0 &nbsp;·&nbsp; Pilot Release — Not for Public Distribution
+      WealthWise Kids LLC &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; info@wealthwisekids.org &nbsp;·&nbsp; play.wealthwiselearning.com &nbsp;·&nbsp; Platform v1.0 &nbsp;·&nbsp; Pilot Release — Not for Public Distribution
     </div>
   </footer>
 
@@ -1306,7 +1313,7 @@ function renderScore() {
   app.innerHTML = `
     <div class="card score-screen">
       <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:8px;">Your FLIQ Profile</div>
-      <img src="./milo-proud.png" style="width:88px;margin:8px auto;display:block;animation:starPop 0.5s ease both;" alt="Milo proud" />
+      <img src="./milo.png" style="width:96px;margin:8px auto 0;display:block;animation:starPop 0.5s ease both;filter:drop-shadow(0 2px 8px rgba(0,180,216,0.25));" alt="Milo" />
       <div class="profile-badge">${badge}</div>
       <div class="profile-label">${p.profile_label}</div>
       <div class="profile-sub">${profileDescriptions[p.profile_label] || 'Your behavioral intelligence profile has been recorded.'}</div>
@@ -1444,7 +1451,7 @@ async function makeChoice(choiceIndex) {
   const miloData = {
     positive: {
       img: './milo-proud.png',
-      lines: ["Smart move! 🦉", "Your money brain is ON! 🧠", "That's how you do it! 💪", "Yes! Great thinking! ⭐"],
+      lines: ["Smart move!", "Your money brain is ON! 🧠", "That's how you do it! 💪", "Yes! Great thinking! ⭐"],
     },
     negative: {
       img: './milo-concerned.png',
@@ -1452,7 +1459,7 @@ async function makeChoice(choiceIndex) {
     },
     neutral: {
       img: './milo-curious.png',
-      lines: ["Interesting choice... 🤔", "Let's see how this plays out!", "Hmm, I wonder... 🦉"],
+      lines: ["Interesting choice... 🤔", "Let's see how this plays out!", "Hmm, I wonder..."],
     },
   };
   const md = miloData[outcome?.type] || miloData.neutral;
