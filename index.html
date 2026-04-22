@@ -669,21 +669,44 @@
 
     /* ── Footer ── */
     .page-footer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 32px 0 20px;
-      font-size: 11px;
-      color: rgba(27,42,74,0.35);
-      letter-spacing: 1px;
-      font-weight: 600;
+      width: 100%;
+      max-width: 700px;
+      margin-top: 48px;
+      padding: 28px 0 40px;
+      border-top: 1px solid rgba(27,42,74,0.10);
     }
-    .page-footer img {
-      width: 28px;
-      height: 28px;
-      object-fit: contain;
-      opacity: 0.4;
+    .colophon-brand {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--navy);
+      opacity: 0.55;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .colophon-section {
+      margin-bottom: 14px;
+    }
+    .colophon-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--navy);
+      opacity: 0.45;
+      margin-bottom: 4px;
+    }
+    .colophon-text {
+      font-size: 10.5px;
+      color: var(--text2);
+      opacity: 0.55;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+    .colophon-divider {
+      border: none;
+      border-top: 1px solid rgba(27,42,74,0.07);
+      margin: 14px 0;
     }
   </style>
 </head>
@@ -709,14 +732,55 @@
   <div id="app"></div>
 
   <footer class="page-footer">
-    <img src="./milo.png" alt="Milo" />
-    <div>
-      <div style="font-size:12px;font-weight:700;color:var(--navy);opacity:0.5;letter-spacing:0.5px;">WealthWise Kids™ · FLIQ Score™ Platform</div>
-      <div style="font-size:10px;color:var(--text2);opacity:0.45;margin-top:3px;line-height:1.6;">
-        © 2026 WealthWise Kids LLC. All rights reserved. &nbsp;·&nbsp; The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>
-        All simulation content, scoring methodology, and behavioral data are proprietary and confidential. Unauthorized reproduction is prohibited.<br>
-        This platform is intended for authorized educational pilots only. No personally identifiable student information is collected.
+    <div class="colophon-brand">WealthWise Kids™ &nbsp;·&nbsp; FLIQ Score™ Platform &nbsp;·&nbsp; The $100 Week™</div>
+
+    <div class="colophon-section">
+      <div class="colophon-label">Intellectual Property &amp; Copyright</div>
+      <div class="colophon-text">
+        © 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, FLIQ Profile™, Financial Intelligence Quotient™, and Milo Peregrine™ are trademarks and service marks of WealthWise Kids LLC, registered or pending registration in the United States. The WealthWise Kids™ name, logo, and all associated visual identity elements are proprietary marks of WealthWise Kids LLC. All simulation scenarios, behavioral scoring rubrics, trait frameworks, pedagogical content, and platform architecture contained herein are original works protected under United States copyright law and applicable international treaties. No portion of this platform — including but not limited to its content, code, scoring methodology, character likenesses, or user interface — may be reproduced, distributed, publicly displayed, modified, sublicensed, or commercially exploited in any form without the prior express written consent of WealthWise Kids LLC.
       </div>
+    </div>
+
+    <hr class="colophon-divider" />
+
+    <div class="colophon-section">
+      <div class="colophon-label">Privacy, Data Protection &amp; Student Safety</div>
+      <div class="colophon-text">
+        WealthWise Kids LLC is committed to the highest standard of privacy and data stewardship, particularly with respect to minors. This platform is designed with a zero-PII architecture: at no point does it collect, store, transmit, or process any personally identifiable information (PII). No student names, birth dates, ages, grade levels, gender identifiers, photographs, email addresses, device identifiers, IP addresses, geolocation data, or biometric markers are captured at any stage of the simulation experience. All behavioral response data is recorded anonymously using a randomly generated session token that cannot be linked back to any individual student or household. Facilitators and educators receive only aggregated, class-level behavioral insights. No individual student's results, scores, or behavioral profile are ever surfaced, shared, sold, or disclosed to any third party under any circumstance. WealthWise Kids LLC does not engage in any form of student data monetization.
+      </div>
+    </div>
+
+    <hr class="colophon-divider" />
+
+    <div class="colophon-section">
+      <div class="colophon-label">Regulatory Compliance</div>
+      <div class="colophon-text">
+        This platform is designed and operated in compliance with the Children's Online Privacy Protection Act (COPPA), the Family Educational Rights and Privacy Act (FERPA), the Student Online Personal Information Protection Act (SOPIPA), and applicable state-level student data privacy laws including, where applicable, the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA). WealthWise Kids LLC does not knowingly collect any information from children under the age of 13 without verifiable parental or guardian consent as required by COPPA. All data handling practices are reviewed regularly for ongoing compliance with federal and state regulatory requirements.
+      </div>
+    </div>
+
+    <hr class="colophon-divider" />
+
+    <div class="colophon-section">
+      <div class="colophon-label">Authorized Use &amp; Permitted Access</div>
+      <div class="colophon-text">
+        Access to and use of this platform is granted solely to authorized participants in officially sanctioned WealthWise Kids™ educational programs, pilot partnerships, or licensed deployments. Unauthorized access, scraping, reverse engineering, systematic data extraction, or use of this platform outside of a formally authorized educational context is strictly prohibited and may constitute a violation of the Computer Fraud and Abuse Act (CFAA) and other applicable federal and state statutes. This platform is intended for supervised classroom or afterschool program use under the direction of a credentialed facilitator or educator.
+      </div>
+    </div>
+
+    <hr class="colophon-divider" />
+
+    <div class="colophon-section">
+      <div class="colophon-label">Disclaimer &amp; Limitation of Liability</div>
+      <div class="colophon-text">
+        The $100 Week™ simulation is an educational tool designed to build financial awareness and behavioral self-reflection skills in young learners. It is not intended as financial advice, clinical assessment, diagnostic instrument, or substitute for professional educational evaluation. WealthWise Kids LLC makes no warranties, express or implied, regarding the completeness, accuracy, or fitness for any particular purpose of the simulation content. To the maximum extent permitted by applicable law, WealthWise Kids LLC shall not be liable for any direct, indirect, incidental, or consequential damages arising from the use of or reliance upon this platform.
+      </div>
+    </div>
+
+    <hr class="colophon-divider" />
+
+    <div class="colophon-text" style="font-size:10px;">
+      WealthWise Kids LLC &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; michael@versassists.com &nbsp;·&nbsp; play.wealthwiselearning.com &nbsp;·&nbsp; Platform v1.0 &nbsp;·&nbsp; Pilot Release — Not for Public Distribution
     </div>
   </footer>
 
