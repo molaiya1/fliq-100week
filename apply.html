@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply to Be a Pilot Partner — The $100 Week™</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f7f8fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #0B1D3A;
+      padding: 28px 24px 32px;
+      text-align: center;
+    }
+
+    .logo-lockup {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-bottom: 16px;
+    }
+
+    .logo-the {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #F4B942;
+      text-transform: uppercase;
+    }
+
+    .logo-main {
+      font-size: 48px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .logo-main span {
+      display: inline-block;
+      background: #F4B942;
+      color: #0B1D3A;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
+      text-align: center;
+      font-size: 28px;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+
+    .logo-week {
+      font-size: 36px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 6px;
+      line-height: 1;
+    }
+
+    .logo-bar {
+      width: 160px;
+      height: 3px;
+      background: #F4B942;
+      position: relative;
+      margin-top: 6px;
+    }
+
+    .logo-bar::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tick-row {
+      display: flex;
+      justify-content: space-between;
+      width: 160px;
+      margin-top: 2px;
+    }
+
+    .tick {
+      width: 2px;
+      height: 8px;
+      background: #F4B942;
+    }
+
+    .header-headline {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .header-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* ── Spots Banner ── */
+    .spots-banner {
+      background: #F4B942;
+      padding: 10px 24px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0B1D3A;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Main Content ── */
+    .container {
+      max-width: 680px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+
+    /* ── What You Get Card ── */
+    .benefits-card {
+      background: #0B1D3A;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+    }
+
+    .benefits-card h3 {
+      color: #F4B942;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .benefit-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .benefit-row:last-child { margin-bottom: 0; }
+
+    .benefit-dot {
+      width: 8px;
+      height: 8px;
+      background: #F4B942;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .benefit-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.5;
+    }
+
+    .benefit-text strong { color: #ffffff; }
+
+    /* ── Form Card ── */
+    .form-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 36px 36px;
+      box-shadow: 0 2px 20px rgba(11,29,58,0.08);
+    }
+
+    .form-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0B1D3A;
+      margin-bottom: 6px;
+    }
+
+    .form-card .form-intro {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #F4B942;
+      margin: 28px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #F4B942;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .field-full { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0B1D3A;
+      margin-bottom: 6px;
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: #999;
+      font-size: 11px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #dde2ea;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: #1a1a2e;
+      background: #fafbfd;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #0B1D3A;
+      box-shadow: 0 0 0 3px rgba(11,29,58,0.08);
+      background: #fff;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230B1D3A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+
+    /* Grade checkboxes */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid #dde2ea;
+      border-radius: 4px;
+      cursor: pointer;
+      accent-color: #0B1D3A;
+      flex-shrink: 0;
+    }
+
+    .checkbox-item span {
+      font-size: 13px;
+      color: #1a1a2e;
+      font-weight: 500;
+    }
+
+    /* Submit */
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: #F4B942;
+      color: #0B1D3A;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 28px;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+
+    .submit-btn:hover { background: #e8a830; }
+    .submit-btn:active { transform: scale(0.99); }
+
+    .submit-note {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* ── Success State ── */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: #F4B942;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 32px;
+    }
+
+    .success-screen h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0B1D3A;
+      margin-bottom: 12px;
+    }
+
+    .success-screen p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto 24px;
+    }
+
+    .back-link {
+      font-size: 13px;
+      color: #0B1D3A;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 2px solid #F4B942;
+      padding-bottom: 2px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: #0B1D3A;
+      padding: 20px 24px;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    .footer a {
+      color: #F4B942;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .field-row { grid-template-columns: 1fr; }
+      .form-card { padding: 24px 20px; }
+      .logo-main { font-size: 36px; }
+      .logo-main span { width: 36px; height: 36px; line-height: 36px; font-size: 22px; }
+      .logo-week { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-lockup">
+      <div class="logo-the">The</div>
+      <div class="logo-main">$10<span>$</span></div>
+      <div class="logo-week">WEEK<sup style="font-size:14px;vertical-align:super;">™</sup></div>
+      <div class="logo-bar"></div>
+      <div class="tick-row">
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+      </div>
+    </div>
+    <div class="header-headline">Apply to Be a Pilot Partner</div>
+    <div class="header-sub">Join a small group of educators running The $100 Week™ this spring. Free, supported, and done in one school week.</div>
+  </div>
+
+  <!-- Spots Banner -->
+  <div class="spots-banner">⚡ 10 pilot spots available — Spring 2026</div>
+
+  <!-- Main -->
+  <div class="container">
+
+    <!-- Benefits -->
+    <div class="benefits-card">
+      <h3>What Pilot Partners Get</h3>
+      <div class="benefit-row">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Full facilitator support</strong> throughout the entire week — we're with you.</div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Early access</strong> to the complete WealthWise Kids™ curriculum at launch.</div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Recognition</strong> as a founding partner of the program.</div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Zero cost.</strong> No hidden fees, no trials, no strings attached — ever.</div>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+      <h2>Tell Us About Your Program</h2>
+      <p class="form-intro">Takes about 3 minutes. We'll follow up within 2 business days.</p>
+
+      <form id="applyForm" action="https://formspree.io/f/xykozedk" method="POST">
+
+        <!-- Hidden fields -->
+        <input type="hidden" name="_subject" value="New $100 Week™ Pilot Application" />
+        <input type="hidden" name="_next" value="" />
+
+        <!-- Contact Info -->
+        <div class="section-label">Your Contact Info</div>
+
+        <div class="field-row">
+          <div>
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="First name" required />
+          </div>
+          <div>
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Last name" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@school.org" required />
+          </div>
+          <div>
+            <label for="phone">Phone <span class="optional">(optional)</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="(000) 000-0000" />
+          </div>
+        </div>
+
+        <div class="field-full">
+          <label for="role">Your Role / Title</label>
+          <input type="text" id="role" name="role" placeholder="e.g. 6th Grade Teacher, Program Director" required />
+        </div>
+
+        <!-- Organization -->
+        <div class="section-label">Your Organization</div>
+
+        <div class="field-full">
+          <label for="orgName">Organization Name</label>
+          <input type="text" id="orgName" name="orgName" placeholder="School or program name" required />
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="orgType">Organization Type</label>
+            <select id="orgType" name="orgType" required>
+              <option value="" disabled selected>Select one</option>
+              <option>Public School</option>
+              <option>Charter School</option>
+              <option>Private School</option>
+              <option>Nonprofit / Youth Program</option>
+              <option>Community Organization</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="studentCount">Estimated Students in Pilot</label>
+            <select id="studentCount" name="studentCount" required>
+              <option value="" disabled selected>Select range</option>
+              <option>Under 15</option>
+              <option>15–30</option>
+              <option>31–60</option>
+              <option>61–100</option>
+              <option>100+</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-full">
+          <label>Grade Levels Served</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="4th" /><span>4th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="5th" /><span>5th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="6th" /><span>6th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="7th" /><span>7th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="8th" /><span>8th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="Mixed" /><span>Mixed</span></label>
+          </div>
+        </div>
+
+        <!-- Pilot Details -->
+        <div class="section-label">Pilot Details</div>
+
+        <div class="field-full">
+          <label for="timing">When Would You Like to Run the Pilot?</label>
+          <select id="timing" name="timing" required>
+            <option value="" disabled selected>Select a timeframe</option>
+            <option>Week of May 12, 2026</option>
+            <option>Week of May 19, 2026</option>
+            <option>Week of May 26, 2026</option>
+            <option>Week of June 2, 2026</option>
+            <option>Flexible — I'll confirm once selected</option>
+          </select>
+        </div>
+
+        <div class="field-full">
+          <label for="source">How Did You Hear About The $100 Week™?</label>
+          <select id="source" name="source">
+            <option value="" disabled selected>Select one</option>
+            <option>Email outreach</option>
+            <option>Colleague / Word of mouth</option>
+            <option>Social media</option>
+            <option>Conference or event</option>
+            <option>Online search</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field-full">
+          <label for="why">Why Do You Want to Participate? <span class="optional">(optional but helpful)</span></label>
+          <textarea id="why" name="why" placeholder="Tell us a little about your students and what you're hoping they get out of the experience..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit My Application →</button>
+        <p class="submit-note">We'll review your application and follow up within 2 business days.<br/>No spam — ever.</p>
+
+      </form>
+
+      <!-- Success Screen -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">✓</div>
+        <h2>Application Received!</h2>
+        <p>Thank you for applying to be a pilot partner. We'll review your application and reach out within 2 business days to confirm your spot.</p>
+        <p style="font-size:13px; color:#888;">In the meantime, preview the student experience at <strong>play.wealthwiselearning.com</strong></p>
+        <a href="https://play.wealthwiselearning.com" class="back-link">← Back to The $100 Week™</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>
+      WealthWise Kids™ &nbsp;·&nbsp; <a href="mailto:info@wealthwisekids.org">info@wealthwisekids.org</a><br/>
+      <span style="font-size:11px;">Empowering the next generation to think, earn, save, and grow.</span>
+    </p>
+  </div>
+
+  <script>
+    const form = document.getElementById('applyForm');
+    const successScreen = document.getElementById('successScreen');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = form.querySelector('.submit-btn');
+      btn.textContent = 'Submitting...';
+      btn.disabled = true;
+
+      try {
+        const data = new FormData(form);
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          form.style.display = 'none';
+          successScreen.style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          btn.textContent = 'Something went wrong — please try again';
+          btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = 'Something went wrong — please try again';
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>
