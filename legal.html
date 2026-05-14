@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy &amp; Legal — The $100 Week™ | WealthWise Kids</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1F3C88;
+      --gold:  #F4B223;
+      --text:  #1B2A4A;
+      --text2: #4A5A7A;
+      --bg:    #F7F5F0;
+      --white: #FFFFFF;
+      --border: rgba(27,42,74,0.10);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-top: 88px;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 88px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 16px rgba(27,42,74,0.07);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      z-index: 100;
+      gap: 14px;
+    }
+    .topbar img {
+      width: 64px; height: 64px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(244,178,35,0.30));
+    }
+    .topbar-name { display: flex; flex-direction: column; line-height: 1.2; }
+    .topbar-brand-main { font-size: 15px; font-weight: 800; color: var(--navy); letter-spacing: -0.2px; }
+    .topbar-brand-sub  { font-size: 10px; font-weight: 600; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; }
+    .topbar-back {
+      margin-left: auto;
+      font-size: 12px; font-weight: 700;
+      color: var(--navy);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .topbar-back:hover { border-color: var(--navy); background: #F0F4FF; }
+
+    /* ── Page ── */
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .page-eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 10px;
+    }
+    .page-title {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 800; color: var(--navy);
+      letter-spacing: -0.4px; line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      font-size: 14px; color: var(--text2);
+      line-height: 1.7; margin-bottom: 36px;
+    }
+
+    /* ── Section ── */
+    .section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
+    }
+    .section-label {
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--gold); margin-bottom: 14px;
+    }
+    .section-text {
+      font-size: 13px; color: var(--text2);
+      line-height: 1.85; font-weight: 400;
+    }
+    .section-text + .section-text { margin-top: 12px; }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    .footer-note {
+      font-size: 11px; color: var(--text2);
+      text-align: center; line-height: 1.7;
+      opacity: 0.7; margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topbar">
+    <img src="./milo.png" alt="Milo" />
+    <div class="topbar-name">
+      <span class="topbar-brand-main">WealthWise Kids™</span>
+      <span class="topbar-brand-sub">The $100 Week™</span>
+    </div>
+    <a href="/" class="topbar-back">← Back to Simulation</a>
+  </nav>
+
+  <div class="page">
+
+    <div class="page-eyebrow">WealthWise Kids LLC</div>
+    <h1 class="page-title">Privacy &amp; Legal</h1>
+    <p class="page-subtitle">
+      The $100 Week™ is a student-facing educational simulation operated by WealthWise Kids LLC.
+      This page contains our full intellectual property, privacy, and compliance disclosures.
+    </p>
+
+    <div class="section">
+      <div class="section-label">Intellectual Property &amp; Copyright</div>
+      <p class="section-text">
+        © 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, FLIQ Profile™, Financial Intelligence Quotient™, and Milo Peregrine™ are trademarks and service marks of WealthWise Kids LLC, registered or pending registration in the United States. The WealthWise Kids™ name, logo, and all associated visual identity elements are proprietary marks of WealthWise Kids LLC.
+      </p>
+      <p class="section-text">
+        All simulation scenarios, behavioral scoring rubrics, trait frameworks, pedagogical content, and platform architecture contained herein are original works protected under United States copyright law and applicable international treaties. No portion of this platform — including but not limited to its content, code, scoring methodology, character likenesses, or user interface — may be reproduced, distributed, publicly displayed, modified, sublicensed, or commercially exploited in any form without the prior express written consent of WealthWise Kids LLC.
+      </p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Privacy, Data Protection &amp; Student Safety</div>
+      <p class="section-text">
+        WealthWise Kids LLC is committed to the highest standard of privacy and data stewardship, particularly with respect to minors. This platform is designed with a zero-PII architecture: at no point does it collect, store, transmit, or process any personally identifiable information (PII). No student names, birth dates, ages, grade levels, gender identifiers, photographs, email addresses, device identifiers, IP addresses, geolocation data, or biometric markers are captured at any stage of the simulation experience.
+      </p>
+      <p class="section-text">
+        All behavioral response data is recorded anonymously using a randomly generated session token that cannot be linked back to any individual student or household. Facilitators and educators receive only aggregated, class-level behavioral insights. No individual student's results, scores, or behavioral profile are ever surfaced, shared, sold, or disclosed to any third party under any circumstance. WealthWise Kids LLC does not engage in any form of student data monetization.
+      </p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Regulatory Compliance</div>
+      <p class="section-text">
+        This platform is designed and operated in compliance with the Children's Online Privacy Protection Act (COPPA), the Family Educational Rights and Privacy Act (FERPA), the Student Online Personal Information Protection Act (SOPIPA), and applicable state-level student data privacy laws including, where applicable, the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA). WealthWise Kids LLC does not knowingly collect any information from children under the age of 13 without verifiable parental or guardian consent as required by COPPA. All data handling practices are reviewed regularly for ongoing compliance with federal and state regulatory requirements.
+      </p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Authorized Use &amp; Permitted Access</div>
+      <p class="section-text">
+        Access to and use of this platform is granted solely to authorized participants in officially sanctioned WealthWise Kids™ educational programs, pilot partnerships, or licensed deployments. Unauthorized access, scraping, reverse engineering, systematic data extraction, or use of this platform outside of a formally authorized educational context is strictly prohibited and may constitute a violation of the Computer Fraud and Abuse Act (CFAA) and other applicable federal and state statutes. This platform is intended for supervised classroom or afterschool program use under the direction of a credentialed facilitator or educator.
+      </p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Disclaimer &amp; Limitation of Liability</div>
+      <p class="section-text">
+        The $100 Week™ simulation is an educational tool designed to build financial awareness and behavioral self-reflection skills in young learners. It is not intended as financial advice, clinical assessment, diagnostic instrument, or substitute for professional educational evaluation. WealthWise Kids LLC makes no warranties, express or implied, regarding the completeness, accuracy, or fitness for any particular purpose of the simulation content. To the maximum extent permitted by applicable law, WealthWise Kids LLC shall not be liable for any direct, indirect, incidental, or consequential damages arising from the use of or reliance upon this platform.
+      </p>
+    </div>
+
+    <hr class="divider" />
+
+    <p class="footer-note">
+      WealthWise Kids LLC &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; info@wealthwisekids.org &nbsp;·&nbsp; play.wealthwiselearning.com<br>
+      Platform v1.0 &nbsp;·&nbsp; Pilot Release — Not for Public Distribution
+    </p>
+
+  </div>
+
+</body>
+</html>
