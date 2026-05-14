@@ -695,10 +695,10 @@
       transition: height 1s cubic-bezier(0.16,1,0.3,1);
       min-height: 4px;
     }
-    .band-bar-low     { background: linear-gradient(180deg, #EF4444, #dc2626); }
+    .band-bar-low     { background: linear-gradient(180deg, #7A8FA6, #5A6E82); }
     .band-bar-dev     { background: linear-gradient(180deg, #F59E0B, #d97706); }
     .band-bar-prof    { background: linear-gradient(180deg, #00B4D8, #0090b0); }
-    .band-bar-adv     { background: linear-gradient(180deg, #22C55E, #16a34a); }
+    .band-bar-adv     { background: linear-gradient(180deg, #D97706, #B45309); }
     .band-num { font-size: 14px; font-weight: 800; color: var(--white); }
     .band-label { font-size: 9px; color: var(--text-dim); text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .band-legend {
@@ -1056,6 +1056,18 @@
     <p style="text-align:center;font-size:11px;color:var(--text-dim);margin-top:10px;font-weight:500">
       Report unlocks after 5 or more students complete the simulation.
     </p>
+
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);text-align:center">
+      <button class="btn btn-ghost" onclick="confirmReset()"
+        style="width:auto;padding:10px 20px;font-size:12px;color:rgba(239,68,68,0.6);border-color:rgba(239,68,68,0.2);"
+        onmouseover="this.style.color='#EF4444';this.style.borderColor='rgba(239,68,68,0.45)';this.style.background='rgba(239,68,68,0.06)'"
+        onmouseout="this.style.color='rgba(239,68,68,0.6)';this.style.borderColor='rgba(239,68,68,0.2)';this.style.background='transparent'">
+        ↺ Reset &amp; Start New Session
+      </button>
+      <p style="font-size:10px;color:var(--text-dim);margin-top:6px;font-weight:500">
+        Clears this session and returns to setup. Use only if students need to restart from Day 1.
+      </p>
+    </div>
   </div>
 
   <!-- ═══════════════════════════════════════
@@ -1080,10 +1092,10 @@
       <div class="section-label">Score Distribution</div>
       <div class="band-chart" id="bandChart"></div>
       <div class="band-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>Low (0–2)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7A8FA6"></div>Low (0–2)</div>
         <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>Developing (3–4)</div>
         <div class="legend-item"><div class="legend-dot" style="background:#00B4D8"></div>Proficient (5–6)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#22C55E"></div>Advanced (7–8)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#D97706"></div>Advanced (7–8)</div>
       </div>
     </div>
 
@@ -1111,55 +1123,11 @@
 
   <!-- ── Footer / Colophon ── -->
   <div class="page-footer">
-    <div class="colophon-brand">WealthWise Kids™ &nbsp;·&nbsp; FLIQ Score™ Platform &nbsp;·&nbsp; Facilitator Dashboard</div>
-
-    <div class="colophon-section">
-      <div class="colophon-label">Intellectual Property &amp; Copyright</div>
-      <div class="colophon-text">
-        © 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, FLIQ Profile™, Financial Intelligence Quotient™, and Milo Peregrine™ are trademarks and service marks of WealthWise Kids LLC, registered or pending registration in the United States. The WealthWise Kids™ name, logo, and all associated visual identity elements are proprietary marks of WealthWise Kids LLC. All simulation scenarios, behavioral scoring rubrics, trait frameworks, pedagogical content, class reporting architecture, and platform design contained herein are original works protected under United States copyright law and applicable international treaties. No portion of this platform — including but not limited to its content, code, scoring methodology, character likenesses, facilitator tools, or data outputs — may be reproduced, distributed, publicly displayed, modified, sublicensed, or commercially exploited in any form without the prior express written consent of WealthWise Kids LLC.
-      </div>
-    </div>
-
-    <hr class="colophon-divider" />
-
-    <div class="colophon-section">
-      <div class="colophon-label">Privacy, Data Protection &amp; Student Safety</div>
-      <div class="colophon-text">
-        WealthWise Kids LLC is committed to the highest standard of privacy and data stewardship, particularly with respect to minors. This platform is designed with a zero-PII architecture: at no point does it collect, store, transmit, or process any personally identifiable information (PII) about students. No student names, birth dates, ages, grade levels, gender identifiers, photographs, email addresses, device identifiers, IP addresses, geolocation data, or biometric markers are captured at any stage of the simulation experience. All behavioral response data is recorded anonymously using a randomly generated session token that cannot be linked back to any individual student or household. Facilitators and educators receive only aggregated, class-level behavioral insights through this dashboard. No individual student's results, scores, or behavioral profile are ever surfaced, shared, sold, or disclosed to any third party under any circumstance. WealthWise Kids LLC does not engage in any form of student data monetization, behavioral profiling for commercial purposes, or secondary use of educational data.
-      </div>
-    </div>
-
-    <hr class="colophon-divider" />
-
-    <div class="colophon-section">
-      <div class="colophon-label">Regulatory Compliance</div>
-      <div class="colophon-text">
-        This platform is designed and operated in compliance with the Children's Online Privacy Protection Act (COPPA), the Family Educational Rights and Privacy Act (FERPA), the Student Online Personal Information Protection Act (SOPIPA), and applicable state-level student data privacy laws including, where applicable, the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA). WealthWise Kids LLC does not knowingly collect any information from children under the age of 13 without verifiable parental or guardian consent as required by COPPA. All data handling practices are reviewed regularly for ongoing compliance with federal and state regulatory requirements. Facilitators and partner organizations are responsible for obtaining any required institutional authorizations, parental notification, and applicable consent documentation as required by their institution's policies and applicable law prior to deploying this platform with students.
-      </div>
-    </div>
-
-    <hr class="colophon-divider" />
-
-    <div class="colophon-section">
-      <div class="colophon-label">Authorized Use &amp; Facilitator Responsibilities</div>
-      <div class="colophon-text">
-        Access to the WealthWise Kids™ Facilitator Dashboard is granted exclusively to credentialed educators, afterschool program facilitators, and authorized institutional partners participating in a formally sanctioned WealthWise Kids™ pilot, licensed program, or research partnership. Facilitators agree, by accessing this dashboard, to use all data outputs solely for lawful educational purposes within their authorized institutional context. Sharing, publishing, distributing, or transmitting class report data outside of one's own institution without prior written authorization from WealthWise Kids LLC is strictly prohibited. Unauthorized access, scraping, reverse engineering, or systematic data extraction is prohibited and may constitute a violation of the Computer Fraud and Abuse Act (CFAA) and other applicable federal and state statutes.
-      </div>
-    </div>
-
-    <hr class="colophon-divider" />
-
-    <div class="colophon-section">
-      <div class="colophon-label">Disclaimer &amp; Limitation of Liability</div>
-      <div class="colophon-text">
-        The $100 Week™ simulation and FLIQ Score™ class reports are educational tools designed to build financial awareness and behavioral self-reflection skills in young learners and to provide facilitators with high-level observational insights. They are not intended as clinical assessments, diagnostic instruments, special education evaluations, or substitutes for professional educational or psychological assessment. FLIQ Score™ results are behavioral indicators derived from a five-scenario simulation and should be interpreted as one data point within a broader educational context, not as a definitive measure of a student's financial capability or intelligence. WealthWise Kids LLC makes no warranties, express or implied, regarding the accuracy, completeness, or fitness for any particular purpose of the simulation content or reporting outputs. To the maximum extent permitted by applicable law, WealthWise Kids LLC shall not be liable for any direct, indirect, incidental, or consequential damages arising from the use of or reliance upon this platform or its outputs.
-      </div>
-    </div>
-
-    <hr class="colophon-divider" />
-
-    <div class="colophon-text" style="font-size:10px;">
-      WealthWise Kids LLC &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; info@wealthwisekids.org &nbsp;·&nbsp; play.wealthwiselearning.com &nbsp;·&nbsp; Facilitator Dashboard v1.0 &nbsp;·&nbsp; Pilot Release — Confidential &amp; Not for Public Distribution
+    <div class="colophon-text" style="text-align:center;">
+      © 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>
+      Zero student PII collected · COPPA &amp; FERPA compliant · Authorized facilitator use only<br>
+      <a href="/legal.html" style="color:rgba(0,180,216,0.5);text-decoration:none;font-size:10px;">Privacy &amp; Legal</a>
+      &nbsp;·&nbsp; Facilitator Dashboard v1.0 &nbsp;·&nbsp; Pilot Release — Confidential
     </div>
   </div>
 
@@ -1316,9 +1284,9 @@ const getLbl = l => LABELS[l] || { emoji:'⭐', color:'#9E9E9E', desc:'Behaviora
 
 // ── Trait color ────────────────────────────────────────────────────────────
 function traitColor(v) {
-  if (v >= 1.5) return 'linear-gradient(90deg, #22C55E, #16a34a)';
-  if (v >= 1.0) return 'linear-gradient(90deg, #F59E0B, #d97706)';
-  return 'linear-gradient(90deg, #EF4444, #dc2626)';
+  if (v >= 1.5) return 'linear-gradient(90deg, #D97706, #B45309)';
+  if (v >= 1.0) return 'linear-gradient(90deg, #5B7FA6, #3D6491)';
+  return 'linear-gradient(90deg, #7A8FA6, #5A6E82)';
 }
 
 // ── Render Report ──────────────────────────────────────────────────────────
@@ -1407,6 +1375,39 @@ function renderReport(data) {
       <div class="label-badge" style="background:${bg};color:${m.color}">${cnt}</div>
     </li>`;
   }).join('');
+}
+
+// ── Reset Session ──────────────────────────────────────────────────────────
+function confirmReset() {
+  if (!confirm('Reset this session?\n\nAll student completion data for this cohort will be cleared and you will return to the setup screen. This cannot be undone.')) return;
+  resetSession();
+}
+
+async function resetSession() {
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  if (cohortId) {
+    try {
+      await fetch(`${API}/cohorts/${cohortId}/reset`, { method: 'POST' });
+    } catch (e) {}
+  }
+  cohortId = null;
+  joinCode  = null;
+  document.getElementById('facilName').value   = '';
+  document.getElementById('cohortName').value  = '';
+  document.getElementById('gradeBand').value   = '';
+  document.getElementById('orgName').value     = '';
+  document.getElementById('btnCreate').disabled    = false;
+  document.getElementById('btnCreate').textContent = 'Create Session & Get Join Code →';
+  document.getElementById('btnReport').disabled    = true;
+  document.getElementById('btnReport').textContent = 'View Class Report →';
+  document.getElementById('ringNum').textContent    = '0';
+  document.getElementById('completedNum').textContent  = '0';
+  document.getElementById('inProgressNum').textContent = '0';
+  document.getElementById('ringFill').style.strokeDashoffset = '251';
+  document.getElementById('progressHeadline').textContent = 'Waiting for students to join…';
+  document.getElementById('progressDetail').textContent   = '';
+  goToScreen('setup');
+  toast('Session reset — ready for a new class');
 }
 
 // ── Copy URL ───────────────────────────────────────────────────────────────
