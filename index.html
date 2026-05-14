@@ -567,11 +567,13 @@
     }
     .milo-bubble.show { display: flex; }
     .milo-bubble img {
-      width: 56px;
-      height: 56px;
+      width: 72px;
+      height: auto;
+      max-height: 80px;
       object-fit: contain;
       flex-shrink: 0;
-      mix-blend-mode: multiply;
+      align-self: flex-end;
+      display: block;
     }
     .milo-speech {
       background: #FFFBF0;
@@ -1238,8 +1240,8 @@ function renderScore() {
       <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px;">Powered by FLIQ Score™</div>
 
       <div style="position:relative;width:136px;margin:0 auto 4px;">
-        <div style="width:136px;height:136px;border-radius:50%;background:linear-gradient(135deg,#FEF9EE,#FDF3D8);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(244,178,35,0.12);">
-          <img src="${miloAsset.img}" style="width:110px;height:110px;object-fit:contain;animation:starPop 0.5s ease both;${miloAsset.blend ? 'mix-blend-mode:multiply;' : ''}" alt="Milo" />
+        <div style="width:136px;height:136px;border-radius:50%;background:#FFFFFF;border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(244,178,35,0.12);overflow:hidden;">
+          <img src="${miloAsset.img}" style="width:108px;height:108px;object-fit:contain;animation:starPop 0.5s ease both;mix-blend-mode:multiply;" alt="Milo" />
         </div>
       </div>
 
