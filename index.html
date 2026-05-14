@@ -561,19 +561,16 @@
     .milo-bubble {
       display: none;
       align-items: flex-end;
-      gap: 12px;
+      gap: 10px;
       margin-top: 18px;
-      animation: fadeIn 0.35s ease;
     }
     .milo-bubble.show { display: flex; }
-    .milo-bubble img {
-      width: 72px;
-      height: auto;
-      object-fit: contain;
+    .milo-avatar {
+      font-size: 24px;
       flex-shrink: 0;
       align-self: flex-end;
-      display: block;
-      mix-blend-mode: multiply;
+      margin-bottom: 2px;
+      line-height: 1;
     }
     .milo-speech {
       background: #FFFBF0;
@@ -584,7 +581,7 @@
       font-weight: 600;
       color: var(--navy);
       line-height: 1.5;
-      max-width: 340px;
+      max-width: 360px;
     }
 
     /* ── Confetti particles ── */
@@ -615,8 +612,7 @@
       animation: flashIn 0.3s ease, flashOut 0.4s ease 1.1s forwards;
       pointer-events: none;
     }
-    .day-flash .flash-star  { font-size: 72px; animation: starPop 0.4s 0.1s ease both; }
-    .day-flash .flash-label { font-size: 28px; font-weight: 900; color: var(--navy); margin-top: 10px; }
+    .day-flash > div { animation: starPop 0.4s 0.1s ease both; }
     @keyframes flashIn  { from { opacity: 0; } to { opacity: 1; } }
     @keyframes flashOut { from { opacity: 1; } to { opacity: 0; } }
 
@@ -638,7 +634,6 @@
     .balance-bar { animation: slideUp 0.35s ease both; }
     .progress-track { animation: slideUp 0.3s 0.1s ease both; }
 
-    /* Milo bubble slide-in from left */
     .milo-bubble.show {
       animation: fadeSlide 0.35s ease both;
     }
@@ -1144,7 +1139,7 @@ function renderSim() {
       </div>
 
       <div class="milo-bubble" id="miloBubble">
-        <img id="miloImg" src="./milo-curious.png" alt="Milo" />
+        <div class="milo-avatar">🦉</div>
         <div class="milo-speech" id="miloText"></div>
       </div>
 
@@ -1381,33 +1376,17 @@ async function makeChoice(choiceIndex) {
     outcomeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Milo reaction — expression + speech
+  // Milo reaction lines
   const miloData = {
-    positive: {
-      imgs: ['./milo-proud.png', './milo-happy.png', './milo-smile.png'],
-      lines: ["Smart move!", "Your money brain is ON!", "That's how you do it!", "Yes! Great thinking!"],
-    },
-    negative: {
-      imgs: ['./milo-concerned.png', './milo-calm.png'],
-      lines: ["Oops! It happens.", "Tough one... you'll bounce back!", "Every choice teaches you something."],
-    },
-    neutral: {
-      imgs: ['./milo-curious.png', './milo-thinking.png', './milo-noticing.png'],
-      lines: ["Interesting choice...", "Let's see how this plays out!", "Hmm, I wonder..."],
-    },
+    positive: { lines: ["Smart move!", "Your money brain is ON!", "That's how you do it!", "Yes! Great thinking!"] },
+    negative: { lines: ["Oops! It happens.", "Tough one... you'll bounce back!", "Every choice teaches you something."] },
+    neutral:  { lines: ["Interesting choice...", "Let's see how this plays out!", "Hmm, I wonder..."] },
   };
-  // Day 4 (opportunity/risk) always shows thinking Milo
-  if (state.day === 4) miloData.neutral.imgs = ['./milo-thinking.png'];
-  // Day 5 positive close uses closure expression
-  if (state.day === 5 && outcome?.type === 'positive') miloData.positive.imgs = ['./milo-closure.png', './milo-happy.png'];
 
   const md = miloData[outcome?.type] || miloData.neutral;
-  const selectedImg = md.imgs[Math.floor(Math.random() * md.imgs.length)];
   const miloText = document.getElementById('miloText');
   const miloBubble = document.getElementById('miloBubble');
-  const miloImg = document.getElementById('miloImg');
-  if (miloText && miloBubble && miloImg) {
-    miloImg.src = selectedImg;
+  if (miloText && miloBubble) {
     miloText.textContent = md.lines[Math.floor(Math.random() * md.lines.length)];
     miloBubble.classList.add('show');
   }
@@ -1434,7 +1413,7 @@ async function nextDay() {
     if (miloBubble) miloBubble.style.display = 'none';
     const flash = document.createElement('div');
     flash.className = 'day-flash';
-    flash.innerHTML = `<img src="./milo-encouraging.png" style="width:80px;margin-bottom:8px;animation:starPop 0.4s 0.1s ease both;filter:drop-shadow(0 2px 10px rgba(244,178,35,0.3));" /><div class="flash-star" style="font-size:52px;font-weight:900;color:var(--gold);font-family:system-ui;letter-spacing:-1px;">Day ${state.day}</div><div class="flash-label">Complete! ✓</div>`;
+    flash.innerHTML = `<div style="font-size:64px;font-weight:900;color:var(--gold);line-height:1;margin-bottom:8px;animation:starPop 0.4s 0.1s ease both;">✓</div><div style="font-size:48px;font-weight:900;color:var(--navy);font-family:system-ui;letter-spacing:-1px;line-height:1;">Day ${state.day}</div><div style="font-size:22px;font-weight:700;color:var(--navy);margin-top:6px;opacity:0.6;">Complete</div>`;
     document.body.appendChild(flash);
     setTimeout(() => {
       flash.remove();
