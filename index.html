@@ -565,23 +565,15 @@
       margin-top: 18px;
     }
     .milo-bubble.show { display: flex; }
-    .milo-avatar {
-      font-size: 24px;
-      flex-shrink: 0;
-      align-self: flex-end;
-      margin-bottom: 2px;
-      line-height: 1;
-    }
     .milo-speech {
       background: #FFFBF0;
       border: 1.5px solid rgba(244,178,35,0.30);
-      border-radius: 18px 18px 18px 4px;
-      padding: 12px 16px;
-      font-size: 14px;
+      border-radius: 14px;
+      padding: 11px 16px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--navy);
       line-height: 1.5;
-      max-width: 360px;
     }
 
     /* ── Confetti particles ── */
@@ -1139,7 +1131,6 @@ function renderSim() {
       </div>
 
       <div class="milo-bubble" id="miloBubble">
-        <div class="milo-avatar">🦉</div>
         <div class="milo-speech" id="miloText"></div>
       </div>
 
