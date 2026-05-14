@@ -307,9 +307,9 @@
       font-weight: 700;
       margin-top: 5px;
     }
-    .choice-cost.spend { color: var(--red); }
-    .choice-cost.save  { color: var(--green); }
-    .choice-cost.risk  { color: #B45309; }
+    .choice-cost.spend { color: var(--navy); }
+    .choice-cost.save  { color: #92400E; }
+    .choice-cost.risk  { color: #6B5A8E; }
 
     /* ── Outcome card ── */
     .outcome-card {
@@ -320,16 +320,16 @@
       animation: fadeIn 0.4s ease;
     }
     .outcome-card.show { display: block; }
-    .outcome-card.positive { background: #DCFCE7; border: 1.5px solid #86EFAC; }
-    .outcome-card.negative { background: #FEE2E2; border: 1.5px solid #FCA5A5; }
-    .outcome-card.neutral  { background: #FEF9EE; border: 1.5px solid #F4D98A; }
+    .outcome-card.positive { background: #FEF9EE; border: 1.5px solid #F4D98A; }
+    .outcome-card.negative { background: #EEF2FF; border: 1.5px solid #C7D2FE; }
+    .outcome-card.neutral  { background: #F5F3EE; border: 1.5px solid #DDD9CE; }
 
     .outcome-card .outcome-title {
       font-size: 15px; font-weight: 800; margin-bottom: 6px;
     }
-    .outcome-card.positive .outcome-title { color: #166534; }
-    .outcome-card.negative .outcome-title { color: #991B1B; }
-    .outcome-card.neutral  .outcome-title { color: #92400E; }
+    .outcome-card.positive .outcome-title { color: #92400E; }
+    .outcome-card.negative .outcome-title { color: #1F3C88; }
+    .outcome-card.neutral  .outcome-title { color: #4A4035; }
     .outcome-card .outcome-text {
       font-size: 14px; color: var(--text2); line-height: 1.65;
     }
@@ -404,9 +404,9 @@
       font-weight: 800;
       flex: 1;
     }
-    .trait-label.strong     { color: #166534; }
-    .trait-label.developing { color: #92400E; }
-    .trait-label.emerging   { color: #991B1B; }
+    .trait-label.strong     { color: #92400E; }
+    .trait-label.developing { color: var(--navy); }
+    .trait-label.emerging   { color: #6B5A8E; }
 
     .trait-dots {
       display: flex; gap: 6px; margin-top: 8px;
@@ -415,9 +415,9 @@
       width: 12px; height: 12px; border-radius: 50%;
       background: rgba(27,42,74,0.1);
     }
-    .trait-dot.filled.strong     { background: #22C55E; }
-    .trait-dot.filled.developing { background: var(--gold); }
-    .trait-dot.filled.emerging   { background: #EF4444; }
+    .trait-dot.filled.strong     { background: var(--gold); }
+    .trait-dot.filled.developing { background: var(--navy); }
+    .trait-dot.filled.emerging   { background: #6B5A8E; }
 
     .play-again-btn {
       background: transparent;
@@ -546,16 +546,16 @@
     }
     @keyframes balanceDrop {
       0%   { transform: scale(1); color: var(--gold); }
-      30%  { transform: scale(1.2); color: #EF4444; }
+      30%  { transform: scale(1.2); color: #6B5A8E; }
       100% { transform: scale(1); color: var(--gold); }
     }
     .bal-pop  { animation: balancePop  0.5s ease forwards; }
     .bal-drop { animation: balanceDrop 0.5s ease forwards; }
 
-    /* ── Choice left-border color coding ── */
-    .choice-btn[data-cost="spend"] { border-left: 4px solid #FCA5A5; }
-    .choice-btn[data-cost="save"]  { border-left: 4px solid #86EFAC; }
-    .choice-btn[data-cost="risk"]  { border-left: 4px solid #FCD34D; }
+    /* ── Choice left-border — observational, not evaluative ── */
+    .choice-btn[data-cost="spend"] { border-left: 4px solid rgba(31,60,136,0.35); }
+    .choice-btn[data-cost="save"]  { border-left: 4px solid rgba(244,178,35,0.60); }
+    .choice-btn[data-cost="risk"]  { border-left: 4px solid rgba(107,90,142,0.50); }
 
     /* ── Milo speech bubble ── */
     .milo-bubble {
@@ -1229,10 +1229,10 @@ function renderScore() {
 
   const finalBalance = state.balance;
   const balanceResult = finalBalance >= 70
-    ? { label: `You ended with $${finalBalance}`, color: '#166534', bg: '#DCFCE7', border: '#86EFAC' }
-    : finalBalance >= 40
     ? { label: `You ended with $${finalBalance}`, color: '#92400E', bg: '#FEF9EE', border: '#F4D98A' }
-    : { label: `You ended with $${finalBalance}`, color: '#991B1B', bg: '#FEE2E2', border: '#FCA5A5' };
+    : finalBalance >= 40
+    ? { label: `You ended with $${finalBalance}`, color: '#1F3C88', bg: '#EEF2FF', border: '#C7D2FE' }
+    : { label: `You ended with $${finalBalance}`, color: '#4B5563', bg: '#F3F4F6', border: '#D1D5DB' };
 
   app.innerHTML = `
     <div class="card score-screen">
