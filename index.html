@@ -1173,15 +1173,15 @@ function renderScore() {
 
   // Per-profile Milo image — image IS the badge, no separate emoji needed
   const profileMilos = {
-    'Explorer':         { img: './milo-explorer.png', blend: true  },
-    'Developing':       { img: './milo-explorer.png', blend: true  },
-    'Thinker':          { img: './milo-curious.png',  blend: true  },
-    'Advancing':        { img: './milo-curious.png',  blend: true  },
-    'Builder':          { img: './milo-happy.png',    blend: true  },
-    'Financial Starter':{ img: './milo.png',          blend: false },
-    'Emerging':         { img: './milo.png',          blend: false },
+    'Financial Starter':{ img: './milo-calm.png',     blend: true  },
+    'Emerging':         { img: './milo-calm.png',     blend: true  },
+    'Explorer':         { img: './milo-smile.png',    blend: true  },
+    'Developing':       { img: './milo-smile.png',    blend: true  },
+    'Thinker':          { img: './milo-happy.png',    blend: true  },
+    'Advancing':        { img: './milo-happy.png',    blend: true  },
+    'Builder':          { img: './milo-encouraging.png', blend: true },
     'Leading':          { img: './milo-proud.png',    blend: true  },
-    'Exceptional':      { img: './milo-proud.png',    blend: true  },
+    'Exceptional':      { img: './milo-closure.png',  blend: true  },
   };
   const miloAsset = profileMilos[p.profile_label] || { img: './milo.png', blend: false };
   const badge = null; // image replaces emoji badge
@@ -1382,24 +1382,30 @@ async function makeChoice(choiceIndex) {
   // Milo reaction — expression + speech
   const miloData = {
     positive: {
-      img: './milo-proud.png',
-      lines: ["Smart move!", "Your money brain is ON! 🧠", "That's how you do it! 💪", "Yes! Great thinking! ⭐"],
+      imgs: ['./milo-proud.png', './milo-happy.png', './milo-smile.png'],
+      lines: ["Smart move!", "Your money brain is ON!", "That's how you do it!", "Yes! Great thinking!"],
     },
     negative: {
-      img: './milo-concerned.png',
-      lines: ["Oops! It happens 😅", "Tough one... you'll bounce back!", "Don't worry — every choice teaches you something. 🙌"],
+      imgs: ['./milo-concerned.png', './milo-calm.png'],
+      lines: ["Oops! It happens.", "Tough one... you'll bounce back!", "Every choice teaches you something."],
     },
     neutral: {
-      img: './milo-curious.png',
-      lines: ["Interesting choice... 🤔", "Let's see how this plays out!", "Hmm, I wonder..."],
+      imgs: ['./milo-curious.png', './milo-thinking.png'],
+      lines: ["Interesting choice...", "Let's see how this plays out!", "Hmm, I wonder..."],
     },
   };
+  // Day 4 (opportunity/risk) always shows thinking Milo
+  if (state.day === 4) miloData.neutral.imgs = ['./milo-thinking.png'];
+  // Day 5 positive close uses closure expression
+  if (state.day === 5 && outcome?.type === 'positive') miloData.positive.imgs = ['./milo-closure.png', './milo-happy.png'];
+
   const md = miloData[outcome?.type] || miloData.neutral;
+  const selectedImg = md.imgs[Math.floor(Math.random() * md.imgs.length)];
   const miloText = document.getElementById('miloText');
   const miloBubble = document.getElementById('miloBubble');
   const miloImg = document.getElementById('miloImg');
   if (miloText && miloBubble && miloImg) {
-    miloImg.src = md.img;
+    miloImg.src = selectedImg;
     miloText.textContent = md.lines[Math.floor(Math.random() * md.lines.length)];
     miloBubble.classList.add('show');
   }
