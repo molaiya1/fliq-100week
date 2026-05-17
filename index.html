@@ -8,1451 +8,1027 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:   #1F3C88;
-      --gold:   #F4B223;
-      --green:  #16A34A;
-      --red:    #DC2626;
-      --text:   #1B2A4A;
-      --text2:  #4A5A7A;
-      --bg:     #F7F5F0;
-      --white:  #FFFFFF;
-      --card-shadow: 0 4px 28px rgba(27,42,74,0.10);
-      --card-shadow-hover: 0 10px 40px rgba(27,42,74,0.15);
+      --navy:    #0B1D3A;
+      --gold:    #F4B942;
+      --gold-dk: #C9890A;
+      --gold-lt: #FFF8E7;
+      --white:   #FFFFFF;
+      --cream:   #FFFDF7;
+      --text:    #0B1D3A;
+      --text2:   #4A6080;
+      --text3:   #8A9EC0;
     }
 
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
-      min-height: 100vh;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      padding-top: 108px;
-      position: relative;
-      overflow-x: hidden;
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--cream); min-height:100vh; color:var(--text); overflow-x:hidden; }
+
+    /* ══════════════════════════════════════
+       NAV
+    ══════════════════════════════════════ */
+    .nav {
+      position:fixed; top:0; left:0; right:0; height:72px;
+      background:rgba(255,255,255,0.97); backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(11,29,58,0.08);
+      box-shadow:0 2px 20px rgba(11,29,58,0.07);
+      display:flex; align-items:center; padding:0 20px; z-index:300; gap:12px;
+    }
+    .nav-logo    { width:40px; height:40px; object-fit:contain; flex-shrink:0; }
+    .nav-brand   { display:flex; flex-direction:column; line-height:1.1; flex-shrink:0; }
+    .nav-brand-m { font-size:13px; font-weight:800; color:var(--navy); }
+    .nav-brand-s { font-size:9px; font-weight:700; color:var(--gold-dk); letter-spacing:1.6px; text-transform:uppercase; }
+
+    /* Day dots (shown during sim) */
+    .day-dots { display:none; align-items:flex-end; gap:8px; margin:0 auto; }
+    .day-dots.show { display:flex; }
+    .d-dot-wrap { display:flex; flex-direction:column; align-items:center; gap:3px; }
+    .d-dot {
+      width:38px; height:38px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; font-weight:800; transition:all 0.3s;
+    }
+    .d-dot.done   { background:var(--gold); color:var(--navy); box-shadow:0 3px 10px rgba(244,185,66,0.4); }
+    .d-dot.active { background:var(--navy); color:white; box-shadow:0 4px 14px rgba(11,29,58,0.25); }
+    .d-dot.future { background:rgba(11,29,58,0.1); color:rgba(11,29,58,0.35); }
+    .d-dot-lbl    { font-size:9px; font-weight:700; color:var(--navy); letter-spacing:0.5px; }
+
+    /* Streak badge */
+    .streak-badge { display:none; align-items:center; gap:6px; background:#EDE9FE; border:1.5px solid #DDD6FE; border-radius:20px; padding:6px 14px; cursor:default; flex-shrink:0; }
+    .streak-badge.show { display:flex; }
+    .streak-badge span { font-size:12px; font-weight:700; color:#6D28D9; }
+
+    /* Nav right actions */
+    .nav-links { display:flex; align-items:center; gap:4px; margin-left:auto; }
+    .nav-link  { display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:10px; font-size:13px; font-weight:600; color:var(--text2); text-decoration:none; transition:all 0.18s; }
+    .nav-link:hover { background:rgba(11,29,58,0.06); color:var(--navy); }
+    .nav-link-edu   { background:rgba(11,29,58,0.06); border:1.5px solid rgba(11,29,58,0.12); color:var(--navy); border-radius:12px; }
+    .nav-link-edu:hover { background:var(--navy); color:white; border-color:var(--navy); }
+    .nav-btn { display:none; align-items:center; gap:6px; padding:8px 16px; border:1.5px solid rgba(11,29,58,0.15); border-radius:12px; font-size:13px; font-weight:600; color:var(--text2); background:transparent; cursor:pointer; font-family:'Inter',sans-serif; }
+    .nav-btn.show { display:flex; }
+    .nav-btn:hover { background:rgba(11,29,58,0.06); color:var(--navy); }
+
+    /* ══════════════════════════════════════
+       HOME SCREEN
+    ══════════════════════════════════════ */
+    #screen-home { min-height:100vh; display:flex; flex-direction:column; }
+    .hero { flex:1; padding-top:72px; position:relative; display:flex; align-items:stretch; overflow:hidden; }
+    .hero-bg { position:absolute; inset:0; background:linear-gradient(180deg,#4A90C8 0%,#6AAFD6 18%,#96C8E8 38%,#BDE0F2 56%,#D8EFF8 70%,#E4F3E8 84%,#C8E0C0 100%); overflow:hidden; }
+
+    .cloud { position:absolute; background:white; border-radius:60px; filter:blur(1px); opacity:0.82; }
+    .cloud::before,.cloud::after { content:''; position:absolute; background:white; border-radius:50%; }
+    .c1 { top:7%; left:4%; width:150px; height:44px; animation:cdrift 26s ease-in-out infinite alternate; }
+    .c1::before { width:64px; height:64px; top:-30px; left:18px; }
+    .c1::after  { width:48px; height:48px; top:-20px; left:64px; }
+    .c2 { top:13%; left:38%; width:210px; height:58px; opacity:0.62; animation:cdrift 36s ease-in-out infinite alternate-reverse; }
+    .c2::before { width:84px; height:84px; top:-40px; left:28px; }
+    .c2::after  { width:64px; height:64px; top:-30px; left:88px; }
+    .c3 { top:6%; right:6%; width:128px; height:38px; opacity:0.72; animation:cdrift 20s ease-in-out infinite alternate; }
+    .c3::before { width:52px; height:52px; top:-24px; left:14px; }
+    .c3::after  { width:40px; height:40px; top:-16px; left:52px; }
+    @keyframes cdrift { from{transform:translateX(-14px);} to{transform:translateX(14px);} }
+    .scene-ground { position:absolute; bottom:0; left:0; right:0; height:56px; background:linear-gradient(180deg,#A8D5A2 0%,#7DBD76 100%); border-radius:80% 80% 0 0/30px 30px 0 0; }
+    .scene-bldg { position:absolute; bottom:56px; right:14%; width:120px; height:130px; background:rgba(255,255,255,0.3); border-radius:6px 6px 0 0; }
+    .scene-bldg::before { content:''; position:absolute; top:-26px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:36px solid transparent; border-right:36px solid transparent; border-bottom:26px solid rgba(255,255,255,0.35); }
+    .scene-bldg::after  { content:''; position:absolute; top:-46px; left:50%; transform:translateX(-50%); width:7px; height:20px; background:rgba(255,255,255,0.45); border-radius:2px; }
+    .scene-tree { position:absolute; bottom:56px; width:36px; }
+    .scene-tree::before { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:8px; height:28px; background:rgba(139,90,43,0.5); border-radius:2px; }
+    .scene-tree::after  { content:''; position:absolute; bottom:18px; left:50%; transform:translateX(-50%); width:36px; height:48px; background:rgba(80,160,80,0.55); border-radius:50% 50% 40% 40%; }
+
+    .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:28px 28px 70px; display:grid; grid-template-columns:1fr 420px; gap:36px; align-items:center; min-height:calc(100vh - 72px); }
+    .hero-left { display:flex; flex-direction:column; align-items:flex-start; }
+    .hero-milo-wrap { position:relative; margin-bottom:20px; align-self:center; }
+    .hero-milo { width:270px; max-width:100%; filter:drop-shadow(0 14px 36px rgba(11,29,58,0.2)); animation:miloFloat 4s ease-in-out infinite; }
+    @keyframes miloFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+    .hero-speech { position:absolute; top:16px; right:-16px; background:var(--navy); color:white; border-radius:16px 16px 16px 4px; padding:12px 15px; font-size:13px; font-weight:600; line-height:1.5; max-width:174px; box-shadow:0 6px 22px rgba(11,29,58,0.24); animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .hero-speech strong { color:var(--gold); }
+    .hero-speech::after { content:''; position:absolute; bottom:-8px; left:14px; width:14px; height:14px; background:var(--navy); clip-path:polygon(0 0,100% 0,0 100%); }
+    @keyframes speechPop { from{opacity:0;transform:scale(0.75) translateY(10px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    .hero-text { background:rgba(255,255,255,0.78); backdrop-filter:blur(10px); border-radius:22px; padding:26px 30px; border:1.5px solid rgba(255,255,255,0.9); box-shadow:0 4px 24px rgba(11,29,58,0.08); }
+    .hero-h1 { font-size:clamp(34px,4.5vw,54px); font-weight:900; color:var(--navy); line-height:1.08; letter-spacing:-1.5px; margin-bottom:14px; }
+    .hero-h1 .gld { color:var(--gold-dk); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:4px; }
+    .hero-sub { font-size:15px; line-height:1.72; color:var(--text2); max-width:390px; }
+
+    .hero-card { background:white; border-radius:26px; padding:30px 26px; box-shadow:0 20px 60px rgba(11,29,58,0.18),0 4px 16px rgba(11,29,58,0.07); animation:cardIn 0.6s 0.15s cubic-bezier(0.34,1.56,0.64,1) both; }
+    @keyframes cardIn { from{opacity:0;transform:translateY(28px) scale(0.96);} to{opacity:1;transform:translateY(0) scale(1);} }
+    .card-title { display:flex; align-items:center; gap:10px; font-size:21px; font-weight:900; color:var(--navy); margin-bottom:5px; }
+    .card-sub   { font-size:13px; color:var(--text2); margin-bottom:22px; line-height:1.5; }
+    .card-sub strong { color:var(--gold-dk); }
+
+    .join-block { margin-bottom:14px; }
+    .join-block-hdr { display:flex; align-items:center; gap:10px; font-size:15px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+    .join-block-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+    .ic-blue   { background:#E0EFFF; }
+    .ic-purple { background:#EDE9FE; }
+    .join-block-desc { font-size:12px; color:var(--text2); margin-left:46px; margin-top:-2px; margin-bottom:10px; line-height:1.4; }
+
+    .code-row  { display:flex; gap:8px; }
+    .join-input { flex:1; padding:13px 15px; background:#F5F8FF; border:2px solid rgba(11,29,58,0.12); border-radius:13px; color:var(--navy); font-size:16px; font-weight:700; letter-spacing:4px; text-align:center; outline:none; transition:border-color 0.18s,background 0.18s; font-family:'Inter',sans-serif; }
+    .join-input:focus { border-color:var(--navy); background:white; }
+    .join-input::placeholder { color:rgba(11,29,58,0.22); letter-spacing:1.5px; font-weight:500; font-size:12px; }
+    .join-btn  { padding:13px 18px; white-space:nowrap; background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:13px; color:var(--navy); font-size:14px; font-weight:800; cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; box-shadow:0 4px 16px rgba(244,185,66,0.4); }
+    .join-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(244,185,66,0.5); }
+    .or-row { display:flex; align-items:center; gap:10px; margin:12px 0; color:var(--text3); font-size:12px; font-weight:500; }
+    .or-row::before,.or-row::after { content:''; flex:1; height:1px; background:rgba(11,29,58,0.1); }
+    .solo-btn  { width:100%; padding:13px; background:transparent; border:2px solid rgba(11,29,58,0.15); border-radius:13px; color:var(--text2); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .solo-btn:hover { border-color:var(--navy); color:var(--navy); background:#F0F5FF; }
+    .privacy-note { margin-top:14px; background:var(--gold-lt); border:1.5px solid rgba(244,185,66,0.3); border-radius:12px; padding:10px 13px; display:flex; align-items:flex-start; gap:8px; font-size:11.5px; color:var(--text2); line-height:1.5; }
+    .privacy-note strong { color:var(--navy); }
+    .err-msg { background:#FEE2E2; border:1.5px solid #FCA5A5; border-radius:10px; padding:9px 13px; font-size:13px; font-weight:500; color:#991B1B; margin-top:8px; display:none; }
+    .err-msg.show { display:block; }
+
+    .feature-bar { background:var(--navy); padding:22px 28px; }
+    .feature-bar-inner { max-width:1120px; margin:0 auto; display:flex; justify-content:space-around; gap:16px; }
+    .feat { display:flex; align-items:center; gap:12px; flex:1; }
+    .feat-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .fi-b  { background:rgba(79,179,232,0.25); }
+    .fi-g  { background:rgba(244,185,66,0.25); }
+    .fi-gr { background:rgba(74,222,128,0.22); }
+    .fi-p  { background:rgba(167,139,250,0.25); }
+    .feat-lbl  { font-size:13px; font-weight:800; color:white; margin-bottom:2px; }
+    .feat-desc { font-size:11px; color:rgba(255,255,255,0.52); line-height:1.4; }
+
+    .site-footer { padding:24px 24px 32px; text-align:center; border-top:1px solid rgba(11,29,58,0.08); }
+    .footer-copy { font-size:11px; color:var(--text3); line-height:1.9; }
+    .footer-link { font-size:11px; color:var(--navy); font-weight:600; text-decoration:none; opacity:0.5; border-bottom:1px solid rgba(11,29,58,0.2); padding-bottom:1px; }
+
+    /* ══════════════════════════════════════
+       DAY INTRO SCREEN
+    ══════════════════════════════════════ */
+    #screen-dayintro { position:fixed; inset:0; z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
+    .di-bg   { position:absolute; inset:0; }
+    .bg-d1   { background:linear-gradient(135deg,#3B0E6E 0%,#6D28D9 35%,#7C3AED 60%,#A78BFA 100%); }
+    .bg-d2   { background:linear-gradient(135deg,#1A1A2E 0%,#2D1B69 40%,#4C1D95 100%); }
+    .bg-d3   { background:linear-gradient(135deg,#0C1E3A 0%,#1E3A5F 40%,#1E40AF 100%); }
+    .bg-d4   { background:linear-gradient(135deg,#064E3B 0%,#065F46 40%,#059669 100%); }
+    .bg-d5   { background:linear-gradient(135deg,#7C2D12 0%,#C2410C 40%,#EA580C 100%); }
+    .di-content { position:relative; z-index:10; text-align:center; padding:40px 24px; max-width:560px; animation:diIn 0.55s cubic-bezier(0.34,1.56,0.64,1) both; }
+    @keyframes diIn { from{opacity:0;transform:scale(0.88) translateY(24px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    .di-week-lbl { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.52); margin-bottom:10px; }
+    .di-day-name { font-size:clamp(56px,10vw,88px); font-weight:900; color:white; letter-spacing:-3px; line-height:1; text-shadow:0 4px 24px rgba(0,0,0,0.35); margin-bottom:4px; }
+    .di-subtitle { font-size:clamp(16px,3vw,24px); font-weight:700; color:var(--gold); letter-spacing:5px; text-transform:uppercase; margin-bottom:24px; }
+    .di-tease    { background:rgba(255,255,255,0.1); backdrop-filter:blur(8px); border:1.5px solid rgba(255,255,255,0.18); border-radius:16px; padding:15px 20px; font-size:15px; color:rgba(255,255,255,0.9); line-height:1.65; margin-bottom:20px; font-weight:500; }
+    .di-milo     { display:flex; align-items:center; gap:11px; background:rgba(255,255,255,0.1); border-radius:13px; padding:11px 15px; margin-bottom:26px; text-align:left; }
+    .di-milo img { width:42px; height:42px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.2)); }
+    .di-milo-txt { font-size:13px; font-weight:600; color:white; line-height:1.45; }
+    .di-go { display:inline-flex; align-items:center; gap:10px; padding:16px 42px; background:var(--gold); border:none; border-radius:22px; color:var(--navy); font-size:17px; font-weight:800; cursor:pointer; font-family:'Inter',sans-serif; box-shadow:0 6px 28px rgba(244,185,66,0.45); transition:all 0.2s ease; }
+    .di-go:hover { transform:translateY(-3px) scale(1.02); box-shadow:0 12px 36px rgba(244,185,66,0.55); }
+
+    /* ══════════════════════════════════════
+       SIMULATION SCREEN
+    ══════════════════════════════════════ */
+    #screen-sim {
+      min-height:100vh; padding-top:72px;
+      display:flex; position:relative; overflow:hidden;
     }
 
-    /* ── Soft light blobs ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 70% 50% at 5% 10%,  rgba(0,180,216,0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 95% 90%, rgba(245,166,35,0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,255,255,0.50) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    body > * { position: relative; z-index: 1; }
+    /* Themed scene backgrounds */
+    .sim-scene { position:fixed; inset:0; z-index:0; transition:background 0.6s ease; }
 
-    /* ── Topbar ── */
-    .topbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 88px;
-      background: var(--white);
-      border-bottom: 1px solid rgba(27,42,74,0.08);
-      box-shadow: 0 2px 16px rgba(27,42,74,0.07);
-      display: flex;
-      align-items: center;
-      padding: 0 28px;
-      z-index: 100;
-      gap: 14px;
-    }
-    .topbar-logo {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(244,178,35,0.30));
-      flex-shrink: 0;
-    }
-    .topbar-name {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-    .topbar-brand-main {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--navy);
-      letter-spacing: -0.2px;
-    }
-    .topbar-brand-sub {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-    .topbar-badge {
-      margin-left: auto;
-      background: rgba(245,166,35,0.12);
-      border: 1.5px solid rgba(245,166,35,0.35);
-      border-radius: 20px;
-      padding: 5px 16px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #b87800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
+    /* Day 1 — Shoe store / temptation */
+    .sim-scene.sc-d1 { background:linear-gradient(135deg,#2D1B69 0%,#4C1D95 20%,#6D28D9 45%,#A855F7 70%,#DDD6FE 100%); }
+    /* Day 2 — Social / movie night */
+    .sim-scene.sc-d2 { background:linear-gradient(135deg,#0F0C29 0%,#302B63 40%,#24243E 100%); }
+    /* Day 3 — Emergency / rain */
+    .sim-scene.sc-d3 { background:linear-gradient(135deg,#0C1E3A 0%,#1E3A5F 50%,#2563EB 100%); }
+    /* Day 4 — Opportunity / bright */
+    .sim-scene.sc-d4 { background:linear-gradient(135deg,#064E3B 0%,#065F46 50%,#059669 100%); }
+    /* Day 5 — Reflection / warmth */
+    .sim-scene.sc-d5 { background:linear-gradient(135deg,#431407 0%,#9A3412 40%,#EA580C 70%,#FED7AA 100%); }
 
-    /* ── Header ── */
-    .header {
-      text-align: center;
-      padding: 16px 0 8px;
-      width: 100%;
-      max-width: 700px;
-    }
-    .header .brand {
-      font-size: 12px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 6px;
-      font-weight: 700;
-    }
-    .header h1 {
-      font-size: clamp(26px, 5vw, 40px);
-      font-weight: 900;
-      color: var(--navy);
-      letter-spacing: -0.5px;
-    }
-    .header h1 span { color: var(--gold); }
+    /* Ambient glow circles per scene */
+    .sim-scene::before,.sim-scene::after { content:''; position:absolute; border-radius:50%; filter:blur(80px); opacity:0.35; }
+    .sim-scene.sc-d1::before { width:400px; height:400px; background:#C084FC; top:10%; right:5%; }
+    .sim-scene.sc-d1::after  { width:300px; height:300px; background:#7C3AED; bottom:15%; left:5%; }
+    .sim-scene.sc-d2::before { width:350px; height:350px; background:#F59E0B; top:5%; right:10%; }
+    .sim-scene.sc-d2::after  { width:250px; height:250px; background:#EC4899; bottom:20%; left:5%; }
+    .sim-scene.sc-d3::before { width:350px; height:350px; background:#3B82F6; top:0; right:10%; }
+    .sim-scene.sc-d3::after  { width:250px; height:250px; background:#1E40AF; bottom:10%; left:0; }
+    .sim-scene.sc-d4::before { width:400px; height:400px; background:#10B981; top:5%; right:5%; }
+    .sim-scene.sc-d4::after  { width:300px; height:300px; background:#F4B942; bottom:10%; left:5%; }
+    .sim-scene.sc-d5::before { width:400px; height:400px; background:#F97316; top:5%; right:5%; }
+    .sim-scene.sc-d5::after  { width:300px; height:300px; background:#FCD34D; bottom:10%; left:5%; }
 
-    /* ── Balance Bar ── */
+    /* Layout */
+    .sim-body { position:relative; z-index:1; width:100%; display:flex; padding-top:16px; padding-bottom:40px; gap:0; }
+
+    /* LEFT SIDEBAR — Milo */
+    .sim-sidebar {
+      width:260px; flex-shrink:0;
+      display:flex; flex-direction:column; align-items:center;
+      padding:0 12px 20px 16px; position:relative;
+    }
+    .milo-speech-bubble {
+      background:white; border-radius:16px 16px 16px 4px;
+      padding:14px 16px; font-size:13px; font-weight:600; line-height:1.55;
+      color:var(--navy); box-shadow:0 6px 24px rgba(11,29,58,0.18);
+      margin-bottom:12px; position:relative;
+      animation:bubbleIn 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes bubbleIn { from{opacity:0;transform:translateY(-16px) scale(0.9);} to{opacity:1;transform:translateY(0) scale(1);} }
+    .milo-speech-bubble::after { content:''; position:absolute; bottom:-8px; left:16px; width:14px; height:14px; background:white; clip-path:polygon(0 0,100% 0,0 100%); }
+    .milo-speech-bubble strong { color:#7C3AED; }
+    .milo-figure-wrap { position:relative; margin-bottom:12px; }
+    .milo-figure { width:190px; filter:drop-shadow(0 12px 32px rgba(11,29,58,0.3)); animation:miloFloat 4s ease-in-out infinite; }
+    .milo-tip-card {
+      width:100%; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px);
+      border-radius:16px; padding:14px 16px;
+      box-shadow:0 4px 20px rgba(11,29,58,0.12);
+      border:1.5px solid rgba(255,255,255,0.9);
+    }
+    .milo-tip-hdr { display:flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--gold-dk); margin-bottom:8px; }
+    .milo-tip-text { font-size:12.5px; font-weight:600; color:var(--navy); line-height:1.55; }
+    .milo-tip-star { text-align:right; margin-top:8px; font-size:16px; }
+
+    /* MAIN CONTENT */
+    .sim-main { flex:1; min-width:0; padding:0 20px 0 8px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; max-height:calc(100vh - 88px); }
+
+    /* Balance bar */
     .balance-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(135deg, var(--navy) 0%, #2a3f6f 100%);
-      border-radius: 20px;
-      padding: 20px 28px;
-      margin: 20px 0;
-      width: 100%;
-      max-width: 700px;
-      box-shadow: 0 6px 24px rgba(27,42,74,0.22);
+      background:rgba(11,29,58,0.95); backdrop-filter:blur(12px);
+      border-radius:20px; padding:16px 22px;
+      display:flex; align-items:center; gap:16px;
+      box-shadow:0 6px 28px rgba(11,29,58,0.4);
+      border:1px solid rgba(255,255,255,0.08);
+      flex-shrink:0;
     }
-    .balance-bar .balance-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.55);
-      font-weight: 600;
-    }
-    .balance-bar .balance-amount {
-      font-size: 36px;
-      font-weight: 900;
-      color: var(--gold);
-      letter-spacing: -1px;
-    }
-    .balance-bar .day-indicator { text-align: right; }
-    .balance-bar .day-label {
-      font-size: 11px;
-      color: rgba(255,255,255,0.55);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 600;
-    }
-    .balance-bar .day-number {
-      font-size: 26px;
-      font-weight: 800;
-      color: #FFFFFF;
-    }
+    .bal-col-left  { flex:1; }
+    .bal-col-mid   { width:2px; height:44px; background:rgba(255,255,255,0.1); border-radius:1px; }
+    .bal-col-right { flex:1; display:flex; flex-direction:column; justify-content:center; }
+    .bal-col-day   { flex-shrink:0; text-align:center; padding:0 16px; border-left:2px solid rgba(255,255,255,0.1); }
+    .bal-lbl  { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:3px; }
+    .bal-num  { font-size:40px; font-weight:900; color:var(--gold); letter-spacing:-2px; line-height:1; display:flex; align-items:center; gap:8px; }
+    .bal-coin { font-size:28px; animation:coinSpin 3s linear infinite; }
+    @keyframes coinSpin { 0%,100%{transform:rotateY(0deg);} 50%{transform:rotateY(180deg);} }
+    .bal-status-msg { font-size:13px; font-weight:700; color:white; margin-bottom:6px; }
+    .bal-track { height:8px; background:rgba(255,255,255,0.12); border-radius:4px; overflow:hidden; }
+    .bal-fill  { height:100%; border-radius:4px; transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1), background 0.5s; }
+    .bal-day-num { font-size:28px; font-weight:900; color:white; letter-spacing:-1px; line-height:1; }
+    .bal-day-of  { font-size:12px; color:rgba(255,255,255,0.45); font-weight:600; margin-top:2px; }
+    .bal-emoji   { font-size:28px; margin-left:8px; }
 
-    /* ── Progress track ── */
-    .progress-track {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 22px;
+    /* Scenario card */
+    .scenario-card {
+      background:rgba(255,255,255,0.97); border-radius:24px;
+      padding:22px 24px; display:flex; gap:20px; align-items:flex-start;
+      box-shadow:0 8px 40px rgba(11,29,58,0.18);
+      flex-shrink:0;
     }
-    .progress-pill {
-      display: flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px; border-radius: 50%;
-      font-size: 12px; font-weight: 800;
-      flex-shrink: 0; transition: all 0.3s ease;
-    }
-    .progress-pill.done     { background: var(--gold); color: var(--navy); }
-    .progress-pill.active   { background: var(--navy); color: #FFFFFF; box-shadow: 0 0 0 4px rgba(31,60,136,0.18); animation: pillPulse 1.5s ease-in-out infinite; }
-    .progress-pill.upcoming { background: rgba(27,42,74,0.08); color: rgba(27,42,74,0.28); }
-    .progress-connector     { width: 18px; height: 2px; background: rgba(27,42,74,0.1); border-radius: 1px; flex-shrink: 0; }
-    .progress-connector.done { background: var(--gold); }
-    @keyframes pillPulse {
-      0%, 100% { box-shadow: 0 0 0 4px rgba(31,60,136,0.18); }
-      50%       { box-shadow: 0 0 0 7px rgba(31,60,136,0.08); }
-    }
+    .sc-text-col { flex:1; min-width:0; }
+    .sc-tags { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+    .sc-tag { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+    .sc-tag-day   { background:#FFF3E0; color:#E65100; border:1.5px solid #FFCC80; }
+    .sc-tag-theme { background:#F3E8FF; color:#6D28D9; border:1.5px solid #DDD6FE; }
+    .sc-title { font-size:clamp(20px,2.8vw,26px); font-weight:900; color:var(--navy); letter-spacing:-0.5px; margin-bottom:10px; line-height:1.2; }
+    .sc-body  { font-size:14.5px; line-height:1.75; color:var(--text2); }
 
-    /* ── Card ── */
-    .card {
-      background: var(--white);
-      border: 1.5px solid rgba(27,42,74,0.07);
-      border-radius: 24px;
-      padding: 36px;
-      width: 100%;
-      max-width: 700px;
-      box-shadow: var(--card-shadow);
-      animation: fadeIn 0.4s ease;
-    }
+    .sc-vis-col { flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .sc-visual  { width:150px; height:140px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; flex-direction:column; gap:4px; }
+    .sc-vis-emoji { font-size:72px; line-height:1; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2)); }
+    .sc-vis-badge { position:absolute; bottom:-8px; right:-8px; background:#EC4899; color:white; border-radius:50%; width:58px; height:58px; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:10px; font-weight:900; text-align:center; line-height:1.1; box-shadow:0 4px 14px rgba(0,0,0,0.25); }
+    .vis-d1 { background:linear-gradient(135deg,#7C3AED,#A855F7); }
+    .vis-d2 { background:linear-gradient(135deg,#1E1B4B,#4338CA); }
+    .vis-d3 { background:linear-gradient(135deg,#1E3A5F,#3B82F6); }
+    .vis-d4 { background:linear-gradient(135deg,#064E3B,#10B981); }
+    .vis-d5 { background:linear-gradient(135deg,#7C2D12,#F97316); }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    /* Choice section */
+    .choice-prompt-row { text-align:center; flex-shrink:0; }
+    .choice-prompt-title { font-size:16px; font-weight:900; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.3); margin-bottom:3px; }
+    .choice-prompt-sub   { font-size:12px; font-weight:600; color:rgba(255,255,255,0.75); }
+    .choice-prompt-sub strong { color:var(--gold); }
 
-    .day-tag {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 14px;
-    }
-    .day-tag.temptation   { background: #FEF3C7; color: #92400E; }
-    .day-tag.social       { background: #EDE9FE; color: #5B21B6; }
-    .day-tag.unexpected   { background: #FEE2E2; color: #991B1B; }
-    .day-tag.opportunity  { background: #E0F7FA; color: #006064; }
-    .day-tag.recovery     { background: #DCFCE7; color: #166534; }
+    .choice-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; flex-shrink:0; }
 
-    .scenario-title {
-      font-size: clamp(20px, 3vw, 26px);
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 14px;
-      line-height: 1.25;
+    .choice-card {
+      background:rgba(255,255,255,0.96); border-radius:20px; padding:18px 18px 14px;
+      cursor:pointer; transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+      text-align:left; display:flex; flex-direction:column;
+      font-family:'Inter',sans-serif;
+      box-shadow:0 4px 20px rgba(11,29,58,0.12);
+      border:2.5px solid transparent; position:relative; overflow:hidden;
+      min-height:190px;
     }
+    .choice-card:hover { transform:translateY(-4px) scale(1.01); box-shadow:0 14px 40px rgba(11,29,58,0.2); }
+    .choice-card:active { transform:scale(0.98); }
 
-    .scenario-text {
-      font-size: 16px;
-      line-height: 1.75;
-      color: var(--text2);
-      margin-bottom: 20px;
-    }
+    .choice-card.type-blue   { border-color:#3B82F6; }
+    .choice-card.type-green  { border-color:#22C55E; }
+    .choice-card.type-orange { border-color:#F97316; }
+    .choice-card.type-purple { border-color:#A855F7; }
+    .choice-card.type-teal   { border-color:#14B8A6; }
+    .choice-card.type-red    { border-color:#EF4444; }
 
-    .context-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #F0F4FF;
-      border: 1.5px solid rgba(27,42,74,0.12);
-      border-radius: 20px;
-      padding: 7px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 24px;
-    }
+    .choice-card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; }
+    .ch-badge { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:white; flex-shrink:0; }
+    .badge-blue   { background:#3B82F6; }
+    .badge-green  { background:#22C55E; }
+    .badge-orange { background:#F97316; }
+    .badge-purple { background:#A855F7; }
+    .badge-teal   { background:#14B8A6; }
+    .badge-red    { background:#EF4444; }
+    .ch-emoji { font-size:44px; line-height:1; margin-top:-4px; }
+    .ch-title  { font-size:15px; font-weight:800; color:var(--navy); margin-bottom:5px; line-height:1.3; }
+    .ch-detail { font-size:12.5px; color:var(--text2); line-height:1.5; flex:1; }
+    .choice-card-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid rgba(11,29,58,0.07); }
+    .ch-cost { font-size:16px; font-weight:900; }
+    .ch-cost.spend  { color:#EF4444; }
+    .ch-cost.save   { color:#22C55E; }
+    .ch-cost.risk   { color:#A855F7; }
+    .mood-label { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:20px; }
+    .mood-risky  { background:#FEE2E2; color:#B91C1C; }
+    .mood-smart  { background:#DCFCE7; color:#15803D; }
+    .mood-social { background:#FEF3C7; color:#92400E; }
+    .mood-safe   { background:#EFF6FF; color:#1D4ED8; }
+    .mood-risk   { background:#F3E8FF; color:#7E22CE; }
+    .mood-tough  { background:#FEF2F2; color:#991B1B; }
 
-    /* ── Choices ── */
-    .choices { display: flex; flex-direction: column; gap: 12px; }
+    /* Outcome panel */
+    .outcome-panel { border-radius:18px; padding:16px 20px; display:none; flex-shrink:0; }
+    .outcome-panel.show { display:block; animation:cBounce 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .outcome-panel.pos { background:rgba(255,255,255,0.95); border:2px solid #FDE68A; }
+    .outcome-panel.neg { background:rgba(255,255,255,0.95); border:2px solid #BFDBFE; }
+    .outcome-panel.neu { background:rgba(255,255,255,0.92); border:2px solid rgba(255,255,255,0.5); }
+    .out-title { font-size:16px; font-weight:800; margin-bottom:5px; }
+    .outcome-panel.pos .out-title { color:#92400E; }
+    .outcome-panel.neg .out-title { color:#1E3A5F; }
+    .outcome-panel.neu .out-title { color:#3D3830; }
+    .out-text { font-size:13.5px; line-height:1.65; color:var(--text2); }
 
-    .choice-btn {
-      background: var(--white);
-      border: 2px solid rgba(27,42,74,0.1);
-      border-radius: 18px;
-      padding: 20px 22px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: left;
-      color: var(--text);
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      position: relative;
-      overflow: hidden;
-      font-family: 'Inter', system-ui, sans-serif;
-      box-shadow: 0 2px 8px rgba(27,42,74,0.06);
-    }
-    .choice-btn:hover {
-      border-color: var(--navy);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(31,60,136,0.12);
-      background: #F0F4FF;
-    }
-    .choice-btn:active { transform: translateY(0); }
+    /* Milo bottom chat */
+    .milo-chat { display:flex; align-items:flex-end; gap:10px; flex-shrink:0; }
+    .milo-chat-av { width:48px; height:48px; border-radius:50%; background:white; border:2.5px solid rgba(255,255,255,0.8); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; box-shadow:0 4px 14px rgba(11,29,58,0.2); }
+    .milo-chat-av img { width:40px; height:40px; object-fit:contain; }
+    .milo-chat-bubble { background:rgba(255,255,255,0.95); border-radius:16px 16px 16px 4px; padding:12px 16px; font-size:13px; font-weight:600; color:var(--navy); line-height:1.55; box-shadow:0 4px 20px rgba(11,29,58,0.15); flex:1; }
+    .milo-chat-bubble strong { color:#7C3AED; }
+    .milo-chat-bubble.rxn { animation:slideL 0.4s ease both; }
+    @keyframes slideL { from{opacity:0;transform:translateX(-12px);} to{opacity:1;transform:translateX(0);} }
 
-    .choice-letter {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: #EEF2FF;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 15px;
-      color: var(--navy);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
+    /* Next button */
+    .next-btn { width:100%; padding:17px; background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:18px; color:var(--navy); font-size:16px; font-weight:800; cursor:pointer; display:none; transition:all 0.2s; font-family:'Inter',sans-serif; box-shadow:0 6px 24px rgba(244,185,66,0.45); flex-shrink:0; }
+    .next-btn:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(244,185,66,0.55); }
+    .next-btn.show  { display:block; animation:fadeUp 0.35s ease both; }
 
-    .choice-content .choice-label {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 4px;
-    }
-    .choice-content .choice-detail {
-      font-size: 13px;
-      color: var(--text2);
-      line-height: 1.5;
-    }
-    .choice-content .choice-cost {
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 5px;
-    }
-    .choice-cost.spend { color: #2C4A6B; }
-    .choice-cost.save  { color: #92400E; }
-    .choice-cost.risk  { color: #6B5A8E; }
+    /* Day complete flash */
+    .day-flash { position:fixed; inset:0; z-index:500; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--navy); pointer-events:none; animation:flashIn 0.25s ease,flashOut 0.4s ease 1.8s forwards; }
+    @keyframes flashIn  { from{opacity:0;} to{opacity:1;} }
+    @keyframes flashOut { from{opacity:1;} to{opacity:0;} }
+    .flash-check { font-size:80px; font-weight:900; color:var(--gold); animation:popIn 0.4s 0.1s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .flash-day   { font-size:54px; font-weight:900; color:white; letter-spacing:-2px; line-height:1; animation:popIn 0.4s 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .flash-lbl   { font-size:20px; font-weight:600; color:rgba(255,255,255,0.5); margin-top:4px; animation:popIn 0.4s 0.3s cubic-bezier(0.34,1.56,0.64,1) both; }
 
-    /* ── Outcome card ── */
-    .outcome-card {
-      border-radius: 16px;
-      padding: 20px 24px;
-      margin-bottom: 20px;
-      display: none;
-      animation: fadeIn 0.4s ease;
-    }
-    .outcome-card.show { display: block; }
-    .outcome-card.positive { background: #FFFBEB; border: 1.5px solid #FDE68A; }
-    .outcome-card.negative { background: #F0F5FA; border: 1.5px solid #BFCFDE; }
-    .outcome-card.neutral  { background: #F5F3EE; border: 1.5px solid #DDD9CE; }
+    /* ══════════════════════════════════════
+       SCORE SCREEN
+    ══════════════════════════════════════ */
+    #screen-score { min-height:100vh; padding:88px 16px 60px; display:flex; flex-direction:column; align-items:center; }
+    .score-card { width:100%; max-width:680px; background:white; border-radius:28px; padding:40px; box-shadow:0 8px 48px rgba(11,29,58,0.12); text-align:center; animation:cBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .sc-eyebrow  { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold-dk); margin-bottom:4px; }
+    .sc-headline { font-size:26px; font-weight:900; color:var(--navy); letter-spacing:-0.5px; margin-bottom:8px; }
+    .sc-fliq     { display:inline-block; background:var(--gold-lt); border:1.5px solid rgba(244,185,66,0.4); border-radius:20px; padding:4px 14px; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#92400E; margin-bottom:20px; }
+    .milo-circle { width:140px; height:140px; border-radius:50%; background:white; border:3px solid var(--gold); box-shadow:0 0 0 8px rgba(244,185,66,0.12); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; overflow:hidden; animation:popIn 0.55s 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .milo-circle img { width:112px; height:112px; object-fit:contain; mix-blend-mode:multiply; }
+    .prof-name { font-size:36px; font-weight:900; color:var(--navy); letter-spacing:-1.5px; margin-bottom:10px; }
+    .prof-desc { font-size:15px; color:var(--text2); line-height:1.7; max-width:460px; margin:0 auto 20px; }
+    .bal-result { display:inline-flex; align-items:center; gap:8px; border-radius:20px; padding:8px 20px; font-size:14px; font-weight:700; margin-bottom:24px; }
+    .trait-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px; text-align:left; }
+    .trait-tile { background:#F7F9FF; border:1.5px solid rgba(11,29,58,0.08); border-radius:18px; padding:18px; }
+    .t-name { display:flex; align-items:center; gap:6px; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:6px; }
+    .t-level { font-size:17px; font-weight:800; margin-bottom:8px; }
+    .t-level.strong     { color:#D97706; }
+    .t-level.developing { color:#2563EB; }
+    .t-level.emerging   { color:#7C3AED; }
+    .t-dots { display:flex; gap:5px; margin-bottom:8px; }
+    .t-dot  { width:11px; height:11px; border-radius:50%; background:rgba(11,29,58,0.08); }
+    .t-dot.on.strong     { background:#D97706; }
+    .t-dot.on.developing { background:#2563EB; }
+    .t-dot.on.emerging   { background:#7C3AED; }
+    .t-q  { font-size:12px; color:var(--text2); line-height:1.5; }
+    .edu-note { font-size:12px; color:var(--text2); line-height:1.7; background:#F7F5F0; border-radius:14px; padding:14px 18px; margin-bottom:16px; }
+    .replay-btn { background:transparent; border:2px solid rgba(11,29,58,0.18); border-radius:14px; padding:12px 32px; font-size:14px; font-weight:600; color:var(--text2); cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; }
+    .replay-btn:hover { border-color:var(--navy); color:var(--navy); }
 
-    .outcome-card .outcome-title {
-      font-size: 15px; font-weight: 800; margin-bottom: 6px;
-    }
-    .outcome-card.positive .outcome-title { color: #92400E; }
-    .outcome-card.negative .outcome-title { color: #2C4A6B; }
-    .outcome-card.neutral  .outcome-title { color: #4A4035; }
-    .outcome-card .outcome-text {
-      font-size: 14px; color: var(--text2); line-height: 1.65;
-    }
+    /* ══════════════════════════════════════
+       LOADING
+    ══════════════════════════════════════ */
+    #screen-loading { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+    .spinner { width:44px; height:44px; border:3px solid rgba(11,29,58,0.1); border-top-color:var(--gold); border-radius:50%; animation:spin 0.7s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg);} }
+    .loading-txt { font-size:15px; font-weight:600; color:var(--text2); }
 
-    /* ── Next button ── */
-    .next-btn {
-      width: 100%;
-      padding: 17px;
-      background: linear-gradient(135deg, var(--gold) 0%, #E08A00 100%);
-      border: none;
-      border-radius: 16px;
-      color: var(--navy);
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 12px;
-      display: none;
-      transition: all 0.2s ease;
-      letter-spacing: 0.3px;
-      font-family: 'Inter', system-ui, sans-serif;
-      box-shadow: 0 4px 20px rgba(245,166,35,0.35);
-    }
-    .next-btn:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(245,166,35,0.45); }
-    .next-btn.show { display: block; animation: fadeIn 0.3s ease; }
+    /* ══════════════════════════════════════
+       SHARED ANIMATIONS
+    ══════════════════════════════════════ */
+    @keyframes cBounce { from{opacity:0;transform:scale(0.93) translateY(22px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    @keyframes popIn   { from{opacity:0;transform:scale(0);} to{opacity:1;transform:scale(1);} }
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+    @keyframes bPop    { 0%{color:var(--gold);transform:scale(1);}  40%{color:#4ADE80;transform:scale(1.28);} 100%{color:var(--gold);transform:scale(1);} }
+    @keyframes bDrop   { 0%{color:var(--gold);transform:scale(1);}  30%{color:#93C5FD;transform:scale(1.22);} 100%{color:var(--gold);transform:scale(1);} }
+    .a-pop  { animation:bPop  0.55s ease forwards; }
+    .a-drop { animation:bDrop 0.55s ease forwards; }
+    .c-bit  { position:fixed; pointer-events:none; z-index:9999; border-radius:2px; animation:cFall linear forwards; }
+    @keyframes cFall { 0%{opacity:1;transform:translateY(0) rotate(0deg);} 100%{opacity:0;transform:translateY(65vh) rotate(720deg);} }
 
-    /* ── Score screen ── */
-    .score-screen { text-align: center; }
-    .score-screen .profile-badge {
-      font-size: 80px;
-      margin: 16px 0;
-      display: block;
+    /* ══════════════════════════════════════
+       MOBILE
+    ══════════════════════════════════════ */
+    @media(max-width:900px) {
+      .sim-sidebar { display:none; }
+      .sim-main { padding:0 16px; }
+      .choice-grid { grid-template-columns:1fr; }
+      .sc-vis-col { display:none; }
     }
-    .score-screen .profile-label {
-      font-size: clamp(28px, 5vw, 40px);
-      font-weight: 900;
-      color: var(--navy);
-      margin-bottom: 8px;
-    }
-    .score-screen .profile-sub {
-      font-size: 16px;
-      color: var(--text2);
-      max-width: 480px;
-      margin: 0 auto 28px;
-      line-height: 1.65;
-    }
-    .trait-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin: 20px 0;
-      text-align: left;
-      align-items: stretch;
-    }
-    .trait-card {
-      background: #F7F9FF;
-      border: 1.5px solid rgba(27,42,74,0.08);
-      border-radius: 16px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-    }
-    .trait-card .trait-name {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--text2);
-      margin-bottom: 4px;
-      font-weight: 600;
-    }
-    .trait-card .trait-label {
-      font-size: 17px;
-      font-weight: 800;
-      flex: 1;
-    }
-    .trait-label.strong     { color: #92400E; }
-    .trait-label.developing { color: #2C4A6B; }
-    .trait-label.emerging   { color: #6B5A8E; }
-
-    .trait-dots {
-      display: flex; gap: 6px; margin-top: 8px;
-    }
-    .trait-dot {
-      width: 12px; height: 12px; border-radius: 50%;
-      background: rgba(27,42,74,0.1);
-    }
-    .trait-dot.filled.strong     { background: #D97706; }
-    .trait-dot.filled.developing { background: #5B7FA6; }
-    .trait-dot.filled.emerging   { background: #6B5A8E; }
-
-    .play-again-btn {
-      background: transparent;
-      border: 2px solid rgba(27,42,74,0.2);
-      border-radius: 14px;
-      color: var(--text2);
-      padding: 12px 32px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 16px;
-      transition: all 0.2s;
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-    .play-again-btn:hover { border-color: var(--cyan); color: var(--cyan); }
-
-    /* ── Join screen ── */
-    .join-screen { text-align: center; max-width: 460px; margin: 0 auto; }
-    .join-screen .join-title {
-      font-size: clamp(24px, 4vw, 34px);
-      font-weight: 900;
-      color: var(--navy);
-      margin-bottom: 10px;
-    }
-    .join-screen .join-sub {
-      font-size: 16px;
-      color: var(--text2);
-      margin-bottom: 32px;
-      line-height: 1.65;
-    }
-    .join-input {
-      width: 100%;
-      padding: 18px 20px;
-      background: #F7F9FF;
-      border: 2px solid rgba(27,42,74,0.15);
-      border-radius: 16px;
-      color: var(--navy);
-      font-size: 20px;
-      font-weight: 700;
-      text-align: center;
-      letter-spacing: 5px;
-      margin-bottom: 16px;
-      outline: none;
-      transition: border-color 0.2s;
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-    .join-input:focus { border-color: var(--navy); background: #fff; }
-    .join-input::placeholder { color: rgba(27,42,74,0.25); letter-spacing: 2px; font-weight: 500; }
-
-    .start-btn {
-      width: 100%;
-      padding: 17px;
-      background: linear-gradient(135deg, var(--gold) 0%, #E08A00 100%);
-      border: none; border-radius: 16px;
-      color: var(--navy);
-      font-size: 17px; font-weight: 800;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.5px;
-    }
-    .start-btn:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
-
-    .or-divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 20px 0; color: rgba(27,42,74,0.3); font-size: 13px; font-weight: 500;
-    }
-    .or-divider::before, .or-divider::after {
-      content: ''; flex: 1; height: 1px; background: rgba(27,42,74,0.1);
-    }
-
-    .solo-btn {
-      width: 100%;
-      padding: 15px;
-      background: transparent;
-      border: 2px solid rgba(27,42,74,0.15);
-      border-radius: 16px;
-      color: var(--text2);
-      font-size: 15px; font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-    .solo-btn:hover { border-color: var(--navy); color: var(--navy); background: #F0F4FF; }
-
-    /* ── Loading ── */
-    .loading {
-      display: flex; flex-direction: column; align-items: center;
-      gap: 12px; padding: 40px;
-    }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid rgba(27,42,74,0.1);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading > div:last-child { color: var(--text2); font-size: 14px; font-weight: 500; }
-
-    .error-msg {
-      background: #FEE2E2;
-      border: 1.5px solid #FCA5A5;
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #991B1B;
-      margin-top: 12px;
-      display: none;
-    }
-    .error-msg.show { display: block; }
-
-    /* ── Star pop (used on day complete flash + score screen) ── */
-    @keyframes starPop {
-      0%   { transform: scale(1); }
-      40%  { transform: scale(1.55) rotate(-8deg); }
-      70%  { transform: scale(0.9) rotate(4deg); }
-      100% { transform: scale(1) rotate(0); }
-    }
-
-    /* ── Balance pop animations ── */
-    @keyframes balancePop {
-      0%   { transform: scale(1); color: var(--gold); }
-      40%  { transform: scale(1.3); color: #22C55E; }
-      100% { transform: scale(1); color: var(--gold); }
-    }
-    @keyframes balanceDrop {
-      0%   { transform: scale(1); color: var(--gold); }
-      30%  { transform: scale(1.2); color: #5B7FA6; }
-      100% { transform: scale(1); color: var(--gold); }
-    }
-    .bal-pop  { animation: balancePop  0.5s ease forwards; }
-    .bal-drop { animation: balanceDrop 0.5s ease forwards; }
-
-    /* ── Choice left-border — amber / slate-blue / purple ── */
-    .choice-btn[data-cost="spend"] { border-left: 4px solid rgba(91,127,166,0.55); }
-    .choice-btn[data-cost="save"]  { border-left: 4px solid rgba(217,119,6,0.55); }
-    .choice-btn[data-cost="risk"]  { border-left: 4px solid rgba(107,90,142,0.55); }
-
-    /* ── Milo speech bubble ── */
-    .milo-bubble {
-      display: none;
-      align-items: flex-end;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .milo-bubble.show { display: flex; }
-    .milo-speech {
-      background: #FFFBF0;
-      border: 1.5px solid rgba(244,178,35,0.30);
-      border-radius: 14px;
-      padding: 11px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--navy);
-      line-height: 1.5;
-    }
-
-    /* ── Confetti particles ── */
-    .confetti-piece {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      pointer-events: none;
-      z-index: 9999;
-      animation: confettiFall linear forwards;
-    }
-    @keyframes confettiFall {
-      0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
-      100% { opacity: 0; transform: translateY(60vh) rotate(720deg); }
-    }
-
-    /* ── Day complete flash ── */
-    .day-flash {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #F7F5F0;
-      z-index: 500;
-      animation: flashIn 0.3s ease, flashOut 0.4s ease 1.1s forwards;
-      pointer-events: none;
-    }
-    .day-flash > div { animation: starPop 0.4s 0.1s ease both; }
-    @keyframes flashIn  { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes flashOut { from { opacity: 1; } to { opacity: 0; } }
-
-    /* ── Page transitions ── */
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes bounceIn {
-      0%   { opacity: 0; transform: scale(0.92); }
-      60%  { opacity: 1; transform: scale(1.03); }
-      100% { transform: scale(1); }
-    }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateX(-12px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    .card      { animation: bounceIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
-    .balance-bar { animation: slideUp 0.35s ease both; }
-    .progress-track { animation: slideUp 0.3s 0.1s ease both; }
-
-    .milo-bubble.show {
-      animation: fadeSlide 0.35s ease both;
-    }
-
-    /* Choice buttons stagger */
-    .choice-btn:nth-child(1) { animation: slideUp 0.3s 0.05s ease both; }
-    .choice-btn:nth-child(2) { animation: slideUp 0.3s 0.12s ease both; }
-
-    /* Outcome card pop */
-    .outcome-card.show { animation: bounceIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
-
-    /* ── Footer ── */
-    .page-footer {
-      width: 100%;
-      max-width: 700px;
-      margin-top: 48px;
-      padding: 24px 0 40px;
-      border-top: 1px solid rgba(27,42,74,0.10);
-      box-sizing: border-box;
+    @media(max-width:768px) {
+      .nav-links .nav-link:not(.nav-link-edu) { display:none; }
+      .hero-content { grid-template-columns:1fr; min-height:auto; padding-top:20px; padding-bottom:0; }
+      .hero-left { align-items:center; }
+      .hero-milo { width:200px; }
+      .hero-speech { right:-8px; max-width:155px; font-size:12px; }
+      .hero-text { text-align:center; }
+      .feature-bar-inner { flex-wrap:wrap; gap:12px; }
+      .feat { flex:0 0 calc(50% - 6px); }
+      .trait-grid { grid-template-columns:1fr; }
+      .score-card { padding:28px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOPBAR -->
-  <nav class="topbar">
-    <img src="./milo.png" alt="Milo" class="topbar-logo" />
-    <div class="topbar-name">
-      <span class="topbar-brand-main">WealthWise Kids™</span>
-      <span class="topbar-brand-sub">The $100 Week™</span>
-    </div>
-    <span class="topbar-badge">Student Simulation</span>
-  </nav>
-
-  <!-- HEADER -->
-  <div class="header">
-    <div class="brand">WealthWise Kids™</div>
-    <h1>The <span>$100</span> Week™</h1>
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <img src="./milo.png" alt="Milo" class="nav-logo" id="navLogo" />
+  <div class="nav-brand" id="navBrand">
+    <span class="nav-brand-m">WealthWise Kids™</span>
+    <span class="nav-brand-s">The $100 Week™</span>
   </div>
 
-  <!-- MAIN CONTAINER -->
-  <div id="app"></div>
+  <!-- Day dots (sim mode) -->
+  <div class="day-dots" id="dayDots">
+    <div class="d-dot-wrap"><div class="d-dot future" id="dd1">1</div><div class="d-dot-lbl" id="ddl1"></div></div>
+    <div class="d-dot-wrap"><div class="d-dot future" id="dd2">2</div><div class="d-dot-lbl" id="ddl2"></div></div>
+    <div class="d-dot-wrap"><div class="d-dot future" id="dd3">3</div><div class="d-dot-lbl" id="ddl3"></div></div>
+    <div class="d-dot-wrap"><div class="d-dot future" id="dd4">4</div><div class="d-dot-lbl" id="ddl4"></div></div>
+    <div class="d-dot-wrap"><div class="d-dot future" id="dd5">5</div><div class="d-dot-lbl" id="ddl5"></div></div>
+  </div>
 
-  <footer class="page-footer">
-    <div style="text-align: center;">
-      <div style="font-size: 11px; color: var(--text2); font-weight: 500; line-height: 1.8; opacity: 0.75;">
-        © 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.
-      </div>
-      <div style="font-size: 11px; color: var(--text2); font-weight: 500; line-height: 1.8; opacity: 0.75; margin-top: 2px;">
-        Zero student PII collected &nbsp;·&nbsp; COPPA &amp; FERPA compliant &nbsp;·&nbsp; Authorized facilitator use only
-      </div>
-      <div style="margin-top: 8px;">
-        <a href="/legal.html" style="font-size: 11px; color: var(--navy); font-weight: 600; text-decoration: none; opacity: 0.6; border-bottom: 1px solid rgba(31,60,136,0.25); padding-bottom: 1px;">
-          Privacy &amp; Legal
-        </a>
-      </div>
-    </div>
-  </footer>
+  <!-- Streak (sim mode) -->
+  <div class="streak-badge" id="streakBadge"><span>💎 Streak 1 day!</span></div>
+
+  <!-- Home mode links -->
+  <div class="nav-links" id="navLinks">
+    <a href="#how-it-works" class="nav-link">⭐ How It Works</a>
+    <a href="/legal.html"   class="nav-link">🛡️ Privacy &amp; Safety</a>
+    <a href="/facilitator.html" class="nav-link nav-link-edu">👥 Educator Login</a>
+  </div>
+
+  <!-- Sim mode actions -->
+  <button class="nav-btn" id="navMenu" onclick="void(0)">☰ Menu</button>
+</nav>
+
+<div id="app"></div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════════════════
-const API_BASE = 'https://fliq-api-production.up.railway.app';
-const PILOT_ORG_ID = '00000000-0000-0000-0000-000000000001';
-const SIMULATION_ID = 'sim_100week_v1';
-const STARTING_BALANCE = 100;
+// ── CONFIG ───────────────────────────────────────────────────────
+const API_BASE  = 'https://fliq-api-production.up.railway.app';
+const PILOT_ORG = '00000000-0000-0000-0000-000000000001';
+const SIM_ID    = 'sim_100week_v1';
+const START_BAL = 100;
 
-// ══════════════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════════════
-let state = {
-  screen: 'join',       // join | sim | score
-  studentId: null,
-  sessionId: null,
-  cohortId: null,       // resolved from join code
-  balance: STARTING_BALANCE,
-  day: 1,
-  priorImpulsiveCount: 0,
-  history: [],          // { day, choice, balanceBefore, balanceAfter }
-  profile: null,
-  sessionStart: null,
+// ── STATE ────────────────────────────────────────────────────────
+let S = {
+  screen:'home', studentId:null, sessionId:null, cohortId:null,
+  balance:START_BAL, day:1, impulsiveN:0,
+  history:[], profile:null, sessionStart:null, _t0:null,
 };
 
-// ══════════════════════════════════════════════════════════════
-// SCENARIO DATA
-// ══════════════════════════════════════════════════════════════
+// ── DAY META ─────────────────────────────────────────────────────
+const DAYS = [
+  { name:'MONDAY',    sub:'THE DROP',   sceneCls:'sc-d1', miloImg:'./milo-happy.png',
+    speech:"It's your first day!<br>Every choice you make shapes your week.<br><strong>You got this! ✨</strong>",
+    tip:"Think about what future-you might be happy about.",
+    tease:"You've got $100 and it's only Monday. Let's see how long that lasts 👀",
+    diLine:"Day 1. The week hasn't even started and you're already about to make a big call." },
+  { name:'TUESDAY',   sub:'THE PULL',   sceneCls:'sc-d2', miloImg:'./milo-noticing.png',
+    speech:"Everyone's watching what you do.<br><strong>What matters most to you right now?</strong>",
+    tip:"Real friends don't actually care if you go or not. Your money does.",
+    tease:"Your phone's blowing up. Everyone's going. And your wallet is watching.",
+    diLine:"The group chat is dangerous. Let's see if you fold — or hold." },
+  { name:'WEDNESDAY', sub:'THE BLOW',   sceneCls:'sc-d3', miloImg:'./milo-concerned.png',
+    speech:"Life threw a curveball.<br><strong>What do you do when the unexpected hits?</strong>",
+    tip:"An emergency fund exists so surprises don't become crises.",
+    tease:"Nobody planned for this. That's the whole point.",
+    diLine:"Real life doesn't text you before it happens. Here it comes." },
+  { name:'THURSDAY',  sub:'THE BET',    sceneCls:'sc-d4', miloImg:'./milo-thinking.png',
+    speech:"Is it worth the risk?<br><strong>Only you know how much you can afford to lose.</strong>",
+    tip:"The best risks are calculated. Know what you're willing to lose before you bet it.",
+    tease:"Someone's got a plan to make you more money. The question is — do you trust it?",
+    diLine:"Interesting timing for a risk. Let's see how smart you really are." },
+  { name:'FRIDAY',    sub:'THE FINISH', sceneCls:'sc-d5', miloImg:'./milo-encouraging.png',
+    speech:"Last day. Last call.<br><strong>How do you want to finish this week?</strong>",
+    tip:"How you finish tells you everything about who you are with money.",
+    tease:"Last day. Whatever you have left — this is the final test.",
+    diLine:"Friday. You made it here. Now finish strong." },
+];
+
+// ── SCENARIOS ────────────────────────────────────────────────────
 function getScenarios() {
-  const b = state.balance;
-  const pct = (b / STARTING_BALANCE) * 100;
-
+  const b = S.balance;
   return [
-    // ── DAY 1 — Temptation ──────────────────────────────────
-    {
-      day: 1,
-      tag: 'temptation',
-      tagLabel: 'Day 1 — Temptation',
-      title: 'The Cool Shoes',
-      text: `It's Monday. Your friend just texted you. The shoes you really want are on sale — right now. They cost $80. You have $100 for the whole week. You want to save some for later. But these shoes are SO cool.`,
-      contextPill: `💰 Your money: $${b}`,
-      choices: [
-        {
-          letter: 'A',
-          label: 'Buy the shoes now!',
-          detail: 'Get them before they\'re gone. You\'ll figure out the rest later.',
-          costLabel: '− $80',
-          costType: 'spend',
-          cost: 80,
-          optionType: 'spend_nonessential',
-        },
-        {
-          letter: 'B',
-          label: 'Wait and save my money',
-          detail: 'They might come back. Hold on to your money for now.',
-          costLabel: 'Keep $100',
-          costType: 'save',
-          cost: 0,
-          optionType: 'save',
-        },
+    // ── DAY 1 ──
+    { day:1,
+      visEmoji:'👟', visCls:'vis-d1', visBadge:'SALE!\n$80',
+      preChat:"Hmm... tough choice. There's no wrong answer.<br>It's about what <strong>YOU</strong> value most right now. 💜",
+      choices:[
+        { l:'A', title:'Buy the shoes now!',      detail:"Get them before they're gone. You'll figure out the rest later.", cost:80, opt:'spend_nonessential',
+          costLbl:'−$80', costCls:'spend', moodLbl:'RISKY MOVE', moodEmoji:'🔥', moodCls:'mood-risky', cardCls:'type-blue',   badgeCls:'badge-blue',   emoji:'👟' },
+        { l:'B', title:'Wait and save my money',  detail:"They might come back. Hold on to your money for now.",            cost:0,  opt:'save',
+          costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART MOVE', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green',  badgeCls:'badge-green',  emoji:'🐷' },
       ],
-      getOutcome: (choice) => {
-        if (choice === 0) return {
-          type: 'negative',
-          title: 'You got the shoes!',
-          text: 'They look amazing. But now you only have $20 left for the whole week. That\'s not much. Things just got harder.',
-        };
-        return {
-          type: 'positive',
-          title: 'You waited. Good job!',
-          text: 'Your $100 is safe. You still have money for anything that comes up this week. Smart move!',
-        };
+      outcome(c){ return c===0
+        ? { cls:'neg', title:"You got the shoes!", text:"They look amazing. But you only have $20 left for the entire week. Things just got a lot harder." }
+        : { cls:'pos', title:"You held.",           text:"Your $100 is still safe. The whole week is ahead of you — and you've got options." }; },
+      milo(c){ return c===0
+        ? { img:'./milo-concerned.png', txt:"Whoa 😳 …Day 1 and you already spent $80? This week just got real." }
+        : { img:'./milo-happy.png',     txt:"Okayyyy 👀 You're thinking ahead. Future-you might thank you for this." }; },
+    },
+    // ── DAY 2 ──
+    { day:2,
+      visEmoji:'📱', visCls:'vis-d2', visBadge:null,
+      preChat:"The group chat is blowing up. <strong>You've got options.</strong> Use them wisely. 👀",
+      choices:[
+        { l:'A', title:'Go with everyone!',    detail: b<40?"Spend $30 even with almost nothing left. FOMO is real.":"Spend $30. The memories are worth it.", cost:30, opt:'spend_social',
+          costLbl:'−$30', costCls:'spend', moodLbl:'SOCIAL MOVE', moodEmoji:'👥', moodCls:'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🎟️' },
+        { l:'B', title:'Stay home this time',  detail: b<40?"You can't afford this one right now. Keep what you have.":`Save the $30. It's okay to sit one out.`, cost:0, opt:'decline_social',
+          costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SAFE MOVE', moodEmoji:'🧠', moodCls:'mood-safe', cardCls:'type-green',  badgeCls:'badge-green',  emoji:'🏠' },
+      ],
+      outcome(c){
+        if(c===0&&b<40) return { cls:'neg', title:"You went — but it cost you.",  text:`Fun night. But you only have $${b-30} left. The rest of the week is really tight.` };
+        if(c===0)       return { cls:'neu', title:"You went out.",                text:`Good time! You spent $30. Keep an eye on that balance.` };
+        if(b<40)        return { cls:'pos', title:"Smart call.",                  text:`With $${b} left, keeping your money was the right move. Saying no when the math says no — that's a real skill.` };
+        return                 { cls:'pos', title:"You held back.",               text:`Your $${b} stays put. Missing out stings a little — but your wallet doesn't.` };
+      },
+      milo(c){
+        if(c===0&&b<40) return { img:'./milo-concerned.png', txt:`Social pressure is powerful. But $${b-30}? This week just got harder.` };
+        if(c===0)       return { img:'./milo-smile.png',     txt:"You went! Nothing wrong with that — just watch that balance." };
+        return                 { img:'./milo-proud.png',     txt:"Bold move saying no to the group chat. That's harder than it looks." };
       },
     },
-
-    // ── DAY 2 — Social Pressure ──────────────────────────────
-    {
-      day: 2,
-      tag: 'social',
-      tagLabel: 'Day 2 — Social Pressure',
-      title: 'Everyone is Going!',
-      text: `Your friends are all going to the movies and the snack bar tonight. It costs $30. Your phone keeps buzzing. "Come on!" "Don't miss it!" "Everyone is going!" Your money is $${b}.${b < 40 ? ' You don\'t have a lot left.' : ''}`,
-      contextPill: `💰 Your money: $${b}${b < 40 ? ' ⚠️ Running low!' : ''}`,
-      choices: [
-        {
-          letter: 'A',
-          label: 'Go with my friends!',
-          detail: b < 40 ? 'Spend $30 even with low money. You don\'t want to miss out.' : 'Spend $30. You can handle it.',
-          costLabel: '− $30',
-          costType: 'spend',
-          cost: 30,
-          optionType: b < 40 ? 'spend_social' : 'spend_social',
-        },
-        {
-          letter: 'B',
-          label: 'Stay home this time',
-          detail: b < 40 ? 'You don\'t have much left. Keep your money safe.' : 'Save the $30 for something you really need.',
-          costLabel: 'Keep $' + b,
-          costType: 'save',
-          cost: 0,
-          optionType: b < 40 ? 'decline_social' : 'decline_social',
-        },
+    // ── DAY 3 ──
+    { day:3,
+      visEmoji:'🚲', visCls:'vis-d3', visBadge:'$25\nFIX',
+      preChat:"This one's stressful. <strong>Take a breath.</strong> What's the right call here? 🔧",
+      choices:[
+        { l:'A', title: b>=25?'Pay $25 to fix it':'Try to cover it',  detail: b>=25?'You have enough. Fix it and get to practice.':'You\'re short — you\'ll need someone\'s help.', cost: b>=25?25:0, opt:'spend_essential',
+          costLbl: b>=25?'−$25':'Need help', costCls:'spend', moodLbl: b>=25?'NECESSARY':'HARD SPOT', moodEmoji: b>=25?'🔧':'😬', moodCls:'mood-safe', cardCls:'type-teal',   badgeCls:'badge-teal',   emoji:'🔧' },
+        { l:'B', title:'Leave it flat for now',                        detail:"Keep your money. Figure out another way to get there.", cost:0, opt:'save',
+          costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SKIP IT', moodEmoji:'🛑', moodCls:'mood-tough', cardCls:'type-red',    badgeCls:'badge-red',    emoji:'🛑' },
       ],
-      getOutcome: (choice) => {
-        if (choice === 0 && b < 40) return {
-          type: 'negative',
-          title: 'You went — but it cost you.',
-          text: `You had fun! But now you only have $${b - 30} left. That\'s really low. The rest of the week is going to be tough.`,
-        };
-        if (choice === 0) return {
-          type: 'neutral',
-          title: 'You went out.',
-          text: `You had a great time! You spent $30. You have $${b - 30} left. Keep an eye on it.`,
-        };
-        return {
-          type: 'positive',
-          title: 'You stayed home.',
-          text: b < 40 ? `Good thinking! With only $${b} left, keeping your money was the right call.` : `Your $${b} is still safe. It\'s okay to miss out sometimes. Your money will thank you later.`,
-        };
+      outcome(c){
+        if(c===0&&b<25) return { cls:'neg', title:"You couldn't cover it.",  text:"Your balance was too low. You had to ask someone else to help. Spending earlier in the week made this moment harder." };
+        if(c===0)       return { cls:'neu', title:"Tire is fixed.",           text:`$25 gone — but the problem is solved. You had enough because you held your money earlier.` };
+        return                 { cls:'neg', title:"You left it.",             text:"You kept your money — but now you can't get to practice. Sometimes not spending creates its own problems." };
+      },
+      milo(c){
+        if(c===0&&b<25) return { img:'./milo-concerned.png',   txt:"This is why we hold money back. The unexpected always shows up." };
+        if(c===0)       return { img:'./milo-encouraging.png', txt:"Good. You had the money because you planned ahead. That's not luck — that's discipline." };
+        return                 { img:'./milo-thinking.png',    txt:"Saving is usually smart. But not every no-spend saves you." };
       },
     },
-
-    // ── DAY 3 — Unexpected Event ─────────────────────────────
-    {
-      day: 3,
-      tag: 'unexpected',
-      tagLabel: 'Day 3 — Unexpected',
-      title: 'Uh Oh. Your Bike Tire Popped.',
-      text: `You were riding your bike and — POP! Your tire is flat. You need your bike to get to practice. The bike shop can fix it for $25. You didn\'t plan for this. Your money is $${b}.`,
-      contextPill: `💰 Your money: $${b}`,
-      choices: [
-        {
-          letter: 'A',
-          label: 'Pay $25 to fix the tire',
-          detail: b >= 25 ? 'You have enough. Fix it and get back on your bike.' : 'You don\'t have enough. You\'ll need to ask someone for help.',
-          costLabel: b >= 25 ? '− $25' : 'Need to borrow',
-          costType: b >= 25 ? 'spend' : 'spend',
-          cost: b >= 25 ? 25 : 0,
-          optionType: 'spend_essential',
-        },
-        {
-          letter: 'B',
-          label: 'Leave the tire flat for now',
-          detail: 'Keep your money. You\'ll figure out another way to get there.',
-          costLabel: 'Keep $' + b,
-          costType: 'save',
-          cost: 0,
-          optionType: 'save',
-        },
+    // ── DAY 4 ──
+    { day:4,
+      visEmoji:'💎', visCls:'vis-d4', visBadge:'50/50',
+      preChat:"High risk, high reward. <strong>Or just... high risk.</strong> What's your read? ⚖️",
+      choices:[
+        { l:'A', title:"Give them $20 — let's go", detail: b>60?'You can afford the risk. If it works, great!':'You\'re running low. This is a real gamble.', cost:20, opt:'invest',
+          costLbl:'−$20 (maybe +$40)', costCls:'risk', moodLbl:'HIGH RISK', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
+        { l:'B', title:"No thanks — keep my money", detail: b<40?'You can\'t afford to lose $20 right now.':'Not every opportunity is worth taking.', cost:0, opt:'decline_invest',
+          costLbl:`Keep $${b}`, costCls:'save', moodLbl:'PLAY SAFE', moodEmoji:'🛡️', moodCls:'mood-smart', cardCls:'type-green',  badgeCls:'badge-green',  emoji:'🛡️' },
       ],
-      getOutcome: (choice) => {
-        if (choice === 0 && b < 25) return {
-          type: 'negative',
-          title: 'You didn\'t have enough.',
-          text: `Your money was too low to fix it. You had to ask someone to help pay. Spending early in the week made this harder.`,
-        };
-        if (choice === 0) return {
-          type: 'neutral',
-          title: 'Tire is fixed!',
-          text: `$25 gone — but you solved the problem. Your money is $${b - 25}. You had enough because you planned ahead.`,
-        };
-        return {
-          type: 'negative',
-          title: 'You left it flat.',
-          text: `You kept your money — but now you can\'t ride your bike. Sometimes not spending causes other problems too.`,
-        };
+      outcome(c){
+        if(c===0&&b>60)            return { cls:'pos', title:"Calculated risk.",    text:"You had enough to take the chance without gambling your survival. That's what smart risk looks like." };
+        if(c===0&&S.impulsiveN>=2) return { cls:'neg', title:"That was risky.",     text:"After a tough week, this gamble could cost you. You put $20 you might really need on the line." };
+        if(c===0)                  return { cls:'neu', title:"You went for it.",    text:"$20 in play. You'll find out next week. Was it the right call?" };
+        if(b<40)                   return { cls:'pos', title:"Wise call.",          text:`With $${b} left, protecting your money was the right call. Strategic patience is a real skill.` };
+        return                            { cls:'neu', title:"You said no.",        text:`Sometimes the smartest move is the one you don't take. Your $${b} is safe.` };
+      },
+      milo(c){
+        if(c===0&&b>60)            return { img:'./milo-explorer.png',    txt:"Bold move. Let's see if it pays off." };
+        if(c===0&&S.impulsiveN>=2) return { img:'./milo-concerned.png',   txt:"After this week… are you sure about that one?" };
+        if(c===0)                  return { img:'./milo-thinking.png',    txt:"50/50. Could be genius. Could be Wednesday all over again." };
+        return                            { img:'./milo-proud.png',       txt:"Knowing when NOT to move — that's a superpower. Real talk." };
       },
     },
-
-    // ── DAY 4 — Opportunity ──────────────────────────────────
-    {
-      day: 4,
-      tag: 'opportunity',
-      tagLabel: 'Day 4 — Opportunity',
-      title: 'A Chance to Make More Money',
-      text: `Your friend has a plan. If you give them $20, they\'ll try to flip it and give you $40 back by next week. It might work. It might not. It\'s a 50/50 chance. Your money is $${b}.`,
-      contextPill: `💰 Your money: $${b} · 50/50 chance`,
-      choices: [
-        {
-          letter: 'A',
-          label: 'Give them $20 and try it',
-          detail: b > 60 ? 'You have enough to take the chance. If it works, great!' : 'You don\'t have much left. This is risky.',
-          costLabel: '− $20 (maybe +$40)',
-          costType: 'risk',
-          cost: 20,
-          optionType: 'invest',
-        },
-        {
-          letter: 'B',
-          label: 'No thanks — keep my money',
-          detail: b < 40 ? 'You don\'t have much left. Keeping it is the safe choice.' : 'Not every chance is worth taking.',
-          costLabel: 'Keep $' + b,
-          costType: 'save',
-          cost: 0,
-          optionType: 'decline_invest',
-        },
+    // ── DAY 5 ──
+    { day:5,
+      visEmoji:'🏁', visCls:'vis-d5', visBadge:null,
+      preChat:"Last day. Last call. <strong>How you finish is who you are.</strong> 🏁",
+      choices:[
+        { l:'A', title: b<30?'Spend a little more':'Treat yourself!', detail: b<30?'One more spend after a hard week.':'You did well. Take a little reward.', cost:20, opt:'spend_nonessential',
+          costLbl:'−$20', costCls:'spend', moodLbl: b<30?'RISKY MOVE':'REWARD MOVE', moodEmoji: b<30?'⚠️':'🎁', moodCls: b<30?'mood-risky':'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🛍️' },
+        { l:'B', title: b<30?"Stop — save what's left":'Save it for next week', detail: b<30?'You catch yourself. That takes real awareness.':'Next week starts stronger with more saved.', cost:0, opt:'save',
+          costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART FINISH', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'💰' },
       ],
-      getOutcome: (choice) => {
-        if (choice === 0 && b > 60) return {
-          type: 'positive',
-          title: 'You took a chance!',
-          text: `You had enough money to try it. Win or lose, you thought it through first. That\'s smart risk-taking.`,
-        };
-        if (choice === 0 && state.priorImpulsiveCount >= 2) return {
-          type: 'negative',
-          title: 'That was risky.',
-          text: `After a tough week, putting more money at risk is a tough call. You gave away $20 you might really need.`,
-        };
-        if (choice === 0) return {
-          type: 'neutral',
-          title: 'You went for it.',
-          text: `You put $20 on the line. You\'ll find out next week. Was it the right call?`,
-        };
-        if (b < 40) return {
-          type: 'positive',
-          title: 'Good thinking!',
-          text: `With only $${b} left, keeping your money was the right call. Staying safe when you\'re low is a smart move.`,
-        };
-        return {
-          type: 'neutral',
-          title: 'You said no.',
-          text: `You kept your $${b} safe. Not every chance needs to be taken. Sometimes saying no is the smart play.`,
-        };
+      outcome(c){
+        if(c===0&&b<30) return { cls:'neg', title:"You spent again.",             text:"The week ends the same way it started. But you now know your pattern. Next week — you'll know what to watch for." };
+        if(c===0)       return { cls:'neu', title:"You treated yourself.",        text:`You had the money. $${b-20} is left. Not a bad week — next one just starts a little lighter.` };
+        if(b<30)        return { cls:'pos', title:"You stopped. That took guts.", text:"Seeing the pattern and choosing different — that is one of the hardest financial skills there is. You did it." };
+        return                 { cls:'pos', title:"Strong finish.",               text:`Week ends with $${b}. You saved when it was hard. That's what financial discipline actually looks like.` };
       },
-    },
-
-    // ── DAY 5 — Recovery ─────────────────────────────────────
-    {
-      day: 5,
-      tag: 'recovery',
-      tagLabel: 'Day 5 — Recovery',
-      title: 'Last Day of the Week!',
-      text: `It\'s Friday! The week is almost over. You have $${b} left.${b < 30 ? ' That\'s not much — it was a tough week.' : b >= 60 ? ' You did a great job this week!' : ' You made it through!'} On your way home you pass a store. There\'s a sale on stuff you kind of want. What do you do?`,
-      contextPill: `💰 Your money: $${b}${b < 30 ? ' ⚠️ Running low!' : b >= 60 ? ' ✅ Great job!' : ''}`,
-      choices: [
-        {
-          letter: 'A',
-          label: b < 30 ? 'Buy one more thing' : 'Treat yourself — you earned it!',
-          detail: b < 30 ? 'Keep spending even after a hard week.' : 'You did well. Spend a little on yourself.',
-          costLabel: '− $20',
-          costType: 'spend',
-          cost: 20,
-          optionType: 'spend_nonessential',
-        },
-        {
-          letter: 'B',
-          label: b < 30 ? 'Stop and save what\'s left' : 'Save it for next week',
-          detail: b < 30 ? 'You notice the pattern and stop. That takes courage.' : 'Next week starts stronger with more in your pocket.',
-          costLabel: 'Keep $' + b,
-          costType: 'save',
-          cost: 0,
-          optionType: b < 30 ? 'save' : 'save',
-        },
-      ],
-      getOutcome: (choice) => {
-        if (choice === 0 && b < 30) return {
-          type: 'negative',
-          title: 'You kept spending.',
-          text: `Even after a tough week, you spent again. The week ends the same way it started. Next time, you\'ll know what to do differently.`,
-        };
-        if (choice === 0) return {
-          type: 'neutral',
-          title: 'You treated yourself!',
-          text: `You had the money for it. $${b - 20} is left. Not a bad week — but next week starts a little smaller.`,
-        };
-        if (b < 30) return {
-          type: 'positive',
-          title: 'You stopped! Great job!',
-          text: `You saw the pattern and changed it. That is one of the hardest things to do — and you did it. That\'s what bouncing back looks like.`,
-        };
-        return {
-          type: 'positive',
-          title: 'Strong finish!',
-          text: `You end the week with $${b}. You saved money when it was hard. That\'s what good planning looks like. Be proud of yourself!`,
-        };
+      milo(c){
+        if(c===0&&b<30) return { img:'./milo-closure.png',     txt:"Every week teaches you something. Next week, you'll remember this moment." };
+        if(c===0)       return { img:'./milo-smile.png',       txt:"Fair. You had it. Just remember — next week starts lighter." };
+        if(b<30)        return { img:'./milo-proud.png',       txt:"You caught yourself. I didn't think you would. Proved me wrong. 🙌" };
+        return                 { img:'./milo-closure.png',     txt:"Okay. That was a good week. Your future self is smiling at you right now." };
       },
     },
   ];
 }
 
-// ══════════════════════════════════════════════════════════════
-// API
-// ══════════════════════════════════════════════════════════════
-async function apiPost(path, body) {
-  try {
-    const res = await fetch(`${API_BASE}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+// ── API ──────────────────────────────────────────────────────────
+async function api(path,body){
+  try{ const r=await fetch(`${API_BASE}${path}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); return r.ok?await r.json():null; }catch(e){ return null; }
+}
+async function createStudent(cid){ const d=await api('/students',{org_id:PILOT_ORG,cohort_id:cid||undefined,age_band:'13-17',grade:'mixed'}); return d?.student_id||null; }
+async function startSession(sid){ const d=await api('/sessions',{student_id:sid,simulation_id:SIM_ID,delivery_mode:'web_classroom',pilot_instance:'tcof_pilot_1'}); return d?.session_id||null; }
+async function recordEvent(ci,sc){
+  if(!S.sessionId) return;
+  const prev=S.history.length?S.history[S.history.length-1].balAfter:START_BAL;
+  const after=Math.max(0,prev-sc.choices[ci].cost);
+  await api('/events',{session_id:S.sessionId,student_id:S.studentId,scenario_round:sc.day,simulation_id:SIM_ID,option_selected:String.fromCharCode(65+ci),time_to_decision_ms:S._t0?Date.now()-S._t0:null,mind_changed:false,state_snapshot:{day:sc.day,option_type:sc.choices[ci].opt,balance_pct_before:Math.round((prev/START_BAL)*100),balance_pct_after:Math.round((after/START_BAL)*100),prior_impulsive_count:S.impulsiveN,low_balance_warning_shown:prev<30},presented_options:sc.choices.map(c=>c.opt)});
+}
+async function completeSession(){ if(!S.sessionId) return null; return await api(`/sessions/${S.sessionId}/complete`,{duration_seconds:S.sessionStart?Math.round((Date.now()-S.sessionStart)/1000):null}); }
+
+// ── NAV UPDATER ──────────────────────────────────────────────────
+function updateNav(){
+  const simMode = (S.screen==='sim'||S.screen==='score');
+  document.getElementById('dayDots').classList.toggle('show', simMode);
+  document.getElementById('streakBadge').classList.toggle('show', simMode);
+  document.getElementById('navLinks').style.display = simMode?'none':'flex';
+  document.getElementById('navMenu').classList.toggle('show', simMode);
+
+  if(simMode){
+    [1,2,3,4,5].forEach(d=>{
+      const dot=document.getElementById(`dd${d}`);
+      const lbl=document.getElementById(`ddl${d}`);
+      dot.className='d-dot '+(d<S.day?'done':d===S.day?'active':'future');
+      dot.textContent=d<S.day?'✓':d;
+      lbl.textContent=d===S.day?`Day ${d}`:'';
     });
-    return res.ok ? await res.json() : null;
-  } catch (e) {
-    console.warn('[API]', e);
-    return null;
   }
 }
 
-async function createStudent(cohortId = null) {
-  const data = await apiPost('/students', {
-    org_id: PILOT_ORG_ID,
-    cohort_id: cohortId || undefined,
-    age_band: '13-17',
-    grade: 'mixed',
-  });
-  return data?.student_id || null;
+// ── BALANCE STATUS ───────────────────────────────────────────────
+function balStatus(b){
+  if(b>=80) return {msg:"You're in control!",   emoji:"😊", color:"#22C55E"};
+  if(b>=50) return {msg:"Keep it steady",       emoji:"👀", color:"#F4B942"};
+  if(b>=20) return {msg:"Getting tight...",     emoji:"😬", color:"#F97316"};
+  return           {msg:"Hang in there!",       emoji:"💪", color:"#EF4444"};
 }
 
-async function startSession(studentId) {
-  const data = await apiPost('/sessions', {
-    student_id: studentId,
-    simulation_id: SIMULATION_ID,
-    delivery_mode: 'web_classroom',
-    pilot_instance: 'tcof_pilot_1',
-  });
-  return data?.session_id || null;
-}
+// ── RENDER ───────────────────────────────────────────────────────
+const app=document.getElementById('app');
+function render(){ updateNav(); ({home:renderHome,dayintro:renderDayIntro,sim:renderSim,score:renderScore,loading:renderLoading}[S.screen]||renderHome)(); }
 
-async function recordEvent(choice, scenario) {
-  if (!state.sessionId) return;
-  const balBefore = (state.history.length === 0
-    ? STARTING_BALANCE
-    : state.history[state.history.length - 1].balanceAfter);
-
-  const cost = scenario.choices[choice].cost;
-  const balAfter = Math.max(0, balBefore - cost);
-  const balPctBefore = Math.round((balBefore / STARTING_BALANCE) * 100);
-  const balPctAfter  = Math.round((balAfter  / STARTING_BALANCE) * 100);
-
-  await apiPost('/events', {
-    session_id: state.sessionId,
-    student_id: state.studentId,
-    scenario_round: scenario.day,
-    simulation_id: SIMULATION_ID,
-    option_selected: String.fromCharCode(65 + choice),
-    time_to_decision_ms: state._choiceStartTime ? (Date.now() - state._choiceStartTime) : null,
-    mind_changed: false,
-    state_snapshot: {
-      day: scenario.day,
-      option_type: scenario.choices[choice].optionType,
-      balance_pct_before: balPctBefore,
-      balance_pct_after: balPctAfter,
-      prior_impulsive_count: state.priorImpulsiveCount,
-      low_balance_warning_shown: balBefore < 30,
-    },
-    presented_options: scenario.choices.map(c => c.optionType),
-  });
-}
-
-async function completeSession() {
-  if (!state.sessionId) return null;
-  const duration = state.sessionStart ? Math.round((Date.now() - state.sessionStart) / 1000) : null;
-  const data = await apiPost(`/sessions/${state.sessionId}/complete`, { duration_seconds: duration });
-  return data;
-}
-
-// ══════════════════════════════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════════════════════════════
-const app = document.getElementById('app');
-
-function render() {
-  if (state.screen === 'join')  return renderJoin();
-  if (state.screen === 'sim')   return renderSim();
-  if (state.screen === 'score') return renderScore();
-  if (state.screen === 'loading') return renderLoading();
-}
-
-function renderJoin() {
-  app.innerHTML = `
-    <div class="card join-screen">
-      <img src="./milo-money.png" alt="Milo" style="width:96px;display:block;margin:0 auto 18px;animation:starPop 0.5s ease both;filter:drop-shadow(0 4px 12px rgba(244,178,35,0.25));" />
-      <div class="join-title">Ready to take<br>the challenge?</div>
-      <div class="join-sub">
-        You have $100. Five days. Five choices.<br>
-        What you decide shows how your money brain works!
-      </div>
-      <input class="join-input" id="codeInput" type="text" maxlength="6"
-        placeholder="Enter session code" autocomplete="off" spellcheck="false" />
-      <div class="error-msg" id="codeError">That code doesn't match a session. Try again.</div>
-      <button class="start-btn" onclick="joinWithCode()">Join Session</button>
-      <div class="or-divider">or</div>
-      <button class="solo-btn" onclick="startSolo()">Play on your own</button>
+// HOME
+function renderHome(){
+  app.innerHTML=`
+<div id="screen-home">
+  <div class="hero">
+    <div class="hero-bg">
+      <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+      <div class="scene-tree" style="left:8%;"></div><div class="scene-tree" style="left:23%;"></div>
+      <div class="scene-bldg"></div><div class="scene-ground"></div>
     </div>
-  `;
-}
-
-function renderLoading() {
-  app.innerHTML = `
-    <div class="card">
-      <div class="loading">
-        <div class="spinner"></div>
-        <div style="color:rgba(255,255,255,0.6);font-size:14px;">Setting up your session…</div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-milo-wrap">
+          <img src="./milo-happy.png" alt="Milo" class="hero-milo" />
+          <div class="hero-speech">Hi there! I'm <strong>Milo.</strong><br>I'll be your guide on this $100 adventure!</div>
+        </div>
+        <div class="hero-text">
+          <h1 class="hero-h1">Your choices.<br>Your <span class="gld">future.</span></h1>
+          <p class="hero-sub">You have $100. Five days. Five decisions that shape how you think about money. Let's see what kind of money thinker you are!</p>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="card-title"><span>⭐</span> Ready for the challenge?</div>
+        <div class="card-sub">Jump in and start your <strong>$100 Week™</strong> journey!</div>
+        <div class="join-block">
+          <div class="join-block-hdr"><div class="join-block-icon ic-blue">👥</div>Join a Session</div>
+          <div class="join-block-desc">Enter the session code your teacher gave you.</div>
+          <div class="code-row">
+            <input class="join-input" id="codeInput" type="text" maxlength="6" placeholder="Enter session code" autocomplete="off" spellcheck="false" />
+            <button class="join-btn" onclick="handleJoin()">Join Session ›</button>
+          </div>
+          <div class="err-msg" id="codeErr">That code doesn't match a session. Try again.</div>
+        </div>
+        <div class="or-row">or</div>
+        <div class="join-block">
+          <div class="join-block-hdr"><div class="join-block-icon ic-purple">🎮</div>Play on Your Own</div>
+          <div class="join-block-desc">Explore the challenge and track your progress.</div>
+          <button class="solo-btn" style="margin-top:8px;" onclick="handleSolo()">Play Now ›</button>
+        </div>
+        <div class="privacy-note">🔒 <div><strong>Safe. Private.</strong> No personal info required. We never collect names, emails, or anything personal.</div></div>
       </div>
     </div>
-  `;
+  </div>
+  <div class="feature-bar" id="how-it-works">
+    <div class="feature-bar-inner">
+      <div class="feat"><div class="feat-icon fi-b">🎯</div><div><div class="feat-lbl">Real-Life Choices</div><div class="feat-desc">Face fun, everyday money decisions.</div></div></div>
+      <div class="feat"><div class="feat-icon fi-g">💰</div><div><div class="feat-lbl">See the Impact</div><div class="feat-desc">Watch how your choices affect your week.</div></div></div>
+      <div class="feat"><div class="feat-icon fi-gr">⭐</div><div><div class="feat-lbl">Discover Your Type</div><div class="feat-desc">Find out what kind of money thinker you are.</div></div></div>
+      <div class="feat"><div class="feat-icon fi-p">🏆</div><div><div class="feat-lbl">Level Up</div><div class="feat-desc">Make smart moves and boost your future!</div></div></div>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-copy">© 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>Zero student PII collected &nbsp;·&nbsp; COPPA &amp; FERPA Compliant &nbsp;·&nbsp; Authorized facilitator use only</div>
+    <div style="margin-top:8px;"><a href="/legal.html" class="footer-link">Privacy &amp; Legal</a></div>
+  </footer>
+</div>`;
+  const code=new URLSearchParams(window.location.search).get('code');
+  if(code){const el=document.getElementById('codeInput');if(el) el.value=code.toUpperCase();}
 }
 
-function renderSim() {
-  const scenarios = getScenarios();
-  const scenario  = scenarios[state.day - 1];
+// DAY INTRO
+function renderDayIntro(){
+  const d=DAYS[S.day-1];
+  app.innerHTML=`
+<div id="screen-dayintro">
+  <div class="di-bg bg-d${S.day}"></div>
+  <div class="di-content">
+    <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Day ${S.day} of 5</div>
+    <div class="di-day-name">${d.name}</div>
+    <div class="di-subtitle">${d.sub}</div>
+    <div class="di-tease">${d.tease}</div>
+    <div class="di-milo"><img src="${d.miloImg}" alt="Milo"/><div class="di-milo-txt">${d.diLine}</div></div>
+    <button class="di-go" onclick="beginDay()">Let's Go →</button>
+  </div>
+</div>`;
+}
 
-  const progressHtml = [1,2,3,4,5].flatMap((d, idx) => {
-    const cls = d < state.day ? 'done' : d === state.day ? 'active' : 'upcoming';
-    const label = d < state.day ? '✓' : d;
-    const pill = `<div class="progress-pill ${cls}">${label}</div>`;
-    const conn = idx < 4 ? `<div class="progress-connector ${d < state.day ? 'done' : ''}"></div>` : '';
-    return [pill, conn];
-  }).join('');
+// SIM
+function renderSim(){
+  const sc  = getScenarios()[S.day-1];
+  const dm  = DAYS[S.day-1];
+  const pct = Math.round((S.balance/START_BAL)*100);
+  const bs  = balStatus(S.balance);
+  const dayNames=['Monday','Tuesday','Wednesday','Thursday','Friday'];
 
-  const choicesHtml = scenario.choices.map((c, i) => `
-    <button class="choice-btn" data-cost="${c.costType}" onclick="makeChoice(${i})">
-      <div class="choice-letter">${c.letter}</div>
-      <div class="choice-content">
-        <div class="choice-label">${c.label}</div>
-        <div class="choice-detail">${c.detail}</div>
-        <div class="choice-cost ${c.costType}">${c.costLabel}</div>
+  const choicesHtml = sc.choices.map((c,i)=>`
+    <button class="choice-card ${c.cardCls}" id="cc${i}" onclick="makeChoice(${i})">
+      <div class="choice-card-top">
+        <div class="ch-badge ${c.badgeCls}">${c.l}</div>
+        <div class="ch-emoji">${c.emoji}</div>
       </div>
-    </button>
-  `).join('');
-
-  app.innerHTML = `
-    <div class="balance-bar">
-      <div>
-        <div class="balance-label">Your Balance</div>
-        <div class="balance-amount" id="balanceDisplay">$${state.balance}</div>
+      <div class="ch-title">${c.title}</div>
+      <div class="ch-detail">${c.detail}</div>
+      <div class="choice-card-bottom">
+        <span class="ch-cost ${c.costCls}">${c.costLbl}</span>
+        <span class="mood-label ${c.moodCls}">${c.moodEmoji} ${c.moodLbl}</span>
       </div>
-      <div class="day-indicator">
-        <div class="day-label">Day</div>
-        <div class="day-number">${state.day} / 5</div>
+    </button>`).join('');
+
+  const visBadgeHtml = sc.visBadge
+    ? `<div class="sc-vis-badge">${sc.visBadge.replace('\n','<br>')}</div>` : '';
+
+  app.innerHTML=`
+<div id="screen-sim">
+  <div class="sim-scene ${dm.sceneCls}" id="simScene"></div>
+  <div class="sim-body">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sim-sidebar">
+      <div class="milo-speech-bubble">${dm.speech}</div>
+      <div class="milo-figure-wrap">
+        <img src="${dm.miloImg}" alt="Milo" class="milo-figure" />
+      </div>
+      <div class="milo-tip-card">
+        <div class="milo-tip-hdr">💡 Milo's Tip</div>
+        <div class="milo-tip-text">${dm.tip}</div>
+        <div class="milo-tip-star">☆</div>
       </div>
     </div>
 
-    <div class="progress-track">${progressHtml}</div>
+    <!-- MAIN CONTENT -->
+    <div class="sim-main" id="simMain">
 
-    <div class="card" id="simCard">
-      <div class="day-tag ${scenario.tag}">${scenario.tagLabel}</div>
-      <div class="scenario-title">${scenario.title}</div>
-      <div class="scenario-text">${scenario.text}</div>
-      <div class="context-pill">${scenario.contextPill}</div>
-
-      <div class="outcome-card" id="outcomeCard">
-        <div class="outcome-title" id="outcomeTitle"></div>
-        <div class="outcome-text" id="outcomeText"></div>
+      <!-- Balance bar -->
+      <div class="balance-bar">
+        <div class="bal-col-left">
+          <div class="bal-lbl">Your Balance</div>
+          <div class="bal-num" id="balNum">$${S.balance} <span class="bal-coin">🪙</span></div>
+        </div>
+        <div style="width:2px;height:44px;background:rgba(255,255,255,0.1);border-radius:1px;flex-shrink:0;"></div>
+        <div class="bal-col-right">
+          <div class="bal-status-msg" id="balMsg">${bs.msg}</div>
+          <div class="bal-track"><div class="bal-fill" id="balFill" style="width:${pct}%;background:${bs.color};"></div></div>
+        </div>
+        <div style="width:2px;height:44px;background:rgba(255,255,255,0.1);border-radius:1px;flex-shrink:0;"></div>
+        <div class="bal-col-day" style="text-align:center;padding:0 16px;">
+          <div class="bal-lbl">Day</div>
+          <div class="bal-day-num">${S.day}<span style="opacity:.4;font-size:.65em;"> / 5</span></div>
+          <div class="bal-day-of">${dayNames[S.day-1]}</div>
+        </div>
+        <div class="bal-emoji" id="balEmoji">${bs.emoji}</div>
       </div>
 
-      <div class="milo-bubble" id="miloBubble">
-        <div class="milo-speech" id="miloText"></div>
-      </div>
-
-      <div class="choices" id="choicesContainer">
-        ${choicesHtml}
-      </div>
-
-      <button class="next-btn" id="nextBtn" onclick="nextDay()">
-        ${state.day < 5 ? 'Day ' + state.day + ' Complete — Next →' : '🎉 See My Results!'}
-      </button>
-    </div>
-  `;
-
-  // Start timing for this decision
-  state._choiceStartTime = Date.now();
-}
-
-function renderScore() {
-  const p = state.profile;
-  if (!p) {
-    app.innerHTML = `<div class="card score-screen">
-      <div class="profile-badge">✅</div>
-      <div class="profile-label">Week Complete</div>
-      <div class="profile-sub">Your session has been recorded. Your educator will share your results.</div>
-    </div>`;
-    return;
-  }
-
-  // Per-profile Milo image — image IS the badge, no separate emoji needed
-  const profileMilos = {
-    'Financial Starter':{ img: './milo-calm.png',     blend: true  },
-    'Emerging':         { img: './milo-calm.png',     blend: true  },
-    'Explorer':         { img: './milo-smile.png',    blend: true  },
-    'Developing':       { img: './milo-smile.png',    blend: true  },
-    'Thinker':          { img: './milo-happy.png',    blend: true  },
-    'Advancing':        { img: './milo-happy.png',    blend: true  },
-    'Builder':          { img: './milo-encouraging.png', blend: true },
-    'Leading':          { img: './milo-proud.png',    blend: true  },
-    'Exceptional':      { img: './milo-closure.png',  blend: true  },
-  };
-  const miloAsset = profileMilos[p.profile_label] || { img: './milo.png', blend: false };
-  const badge = null; // image replaces emoji badge
-
-  const traits = [
-    { id: 'ic', name: 'Impulse Control', ...p.traits?.ic },
-    { id: 'po', name: 'Planning',        ...p.traits?.po },
-    { id: 'ra', name: 'Risk Awareness',  ...p.traits?.ra },
-    { id: 'rb', name: 'Recovery',        ...p.traits?.rb },
-  ];
-
-  const traitDefs = {
-    ic: { icon: '🛑', kid: 'Can you stop and think before you spend?' },
-    po: { icon: '📅', kid: 'Do you think about tomorrow, not just today?' },
-    ra: { icon: '👀', kid: 'Can you tell when something is a bad idea?' },
-    rb: { icon: '💪', kid: 'Can you bounce back after a tough choice?' },
-  };
-  const traitCards = traits.map(t => {
-    const label = t.label || 'Emerging';
-    const cls   = label.toLowerCase().replace(' ', '-');
-    const score = t.score ?? 0;
-    const dots  = [0,1,2].map(i =>
-      `<div class="trait-dot ${i < score ? `filled ${cls}` : ''}"></div>`
-    ).join('');
-    const def = traitDefs[t.id] || {};
-    return `
-      <div class="trait-card">
-        <div class="trait-name">${def.icon || ''} ${t.name}</div>
-        <div class="trait-label ${cls}">${label}</div>
-        <div class="trait-dots">${dots}</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5;">${def.kid || ''}</div>
-      </div>`;
-  }).join('');
-
-  const profileDescriptions = {
-    'Financial Starter': 'You\'re at the beginning of your financial intelligence journey. Every expert started here.',
-    'Explorer':  'You\'re building awareness. Some strong instincts are showing — keep going.',
-    'Builder':   'Your financial thinking is solid. You balance risk, patience, and recovery well.',
-    'Thinker':   'You make intentional, context-aware financial decisions. That\'s rare.',
-    'Developing': 'You\'re building awareness. Some strong instincts are showing — keep going.',
-    'Advancing': 'Your financial thinking is solid. You balance risk, patience, and recovery well.',
-  };
-
-  const finalBalance = state.balance;
-  const balanceResult = finalBalance >= 70
-    ? { label: `You ended with $${finalBalance}`, color: '#92400E', bg: '#FFFBEB', border: '#FDE68A' }
-    : finalBalance >= 40
-    ? { label: `You ended with $${finalBalance}`, color: '#2C4A6B', bg: '#F0F5FA', border: '#BFCFDE' }
-    : { label: `You ended with $${finalBalance}`, color: '#4B5563', bg: '#F5F3EE', border: '#DDD9CE' };
-
-  app.innerHTML = `
-    <div class="card score-screen">
-      <div style="font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-0.3px;margin-bottom:4px;">Your Money Profile</div>
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px;">Powered by FLIQ Score™</div>
-
-      <div style="position:relative;width:136px;margin:0 auto 4px;">
-        <div style="width:136px;height:136px;border-radius:50%;background:#FFFFFF;border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(244,178,35,0.12);overflow:hidden;">
-          <img src="${miloAsset.img}" style="width:108px;height:108px;object-fit:contain;animation:starPop 0.5s ease both;mix-blend-mode:multiply;" alt="Milo" />
+      <!-- Scenario card -->
+      <div class="scenario-card">
+        <div class="sc-text-col">
+          <div class="sc-tags">
+            <span class="sc-tag sc-tag-day">📅 Day ${S.day}</span>
+            <span class="sc-tag sc-tag-theme">${DAYS[S.day-1].sub === 'THE DROP' ? '🔥' : S.day===2?'👥':S.day===3?'⚡':S.day===4?'💎':'🏁'} ${['TEMPTATION','SOCIAL PRESSURE','UNEXPECTED','OPPORTUNITY','REFLECTION'][S.day-1]}</span>
+          </div>
+          <div class="sc-title">${sc.day===1?'The Cool Shoes':sc.day===2?'Everyone Is Going!':sc.day===3?'Your Bike Tire Just Popped.':sc.day===4?'A Chance to Make More':' Last Day of the Week.'}</div>
+          <div class="sc-body">${[
+            `It's Monday. Your friend just texted you. The shoes you really want are on sale — right now. They cost $80. You have $100 for the whole week. You want to save some for later. But these shoes are <em>SO</em> cool.`,
+            `The group chat is going crazy. Movies tonight — $30 for tickets and snacks. "You're coming right??" Your phone won't stop buzzing. You have $${S.balance}${S.balance<40?". You're running low.":"."}`,
+            `POP. You're halfway to practice and you're standing there with a flat tire. The shop can fix it for $25. You didn't plan for this. You have $${S.balance}.`,
+            `Your friend has a plan. Give them $20 and they'll flip it — maybe return you $40 by next week. 50/50 shot. You have $${S.balance}.`,
+            `Friday. The week is almost over. You have $${S.balance} left.${S.balance<30?' That was a tough week.':S.balance>=70?' You crushed it.':' You made it through.'} You pass a store on the way home. There's a sale on stuff you kind of want.`,
+          ][S.day-1]}</div>
+        </div>
+        <div class="sc-vis-col">
+          <div class="sc-visual ${sc.visCls}">
+            <span class="sc-vis-emoji">${sc.visEmoji}</span>
+            ${visBadgeHtml}
+          </div>
         </div>
       </div>
 
-      <div class="profile-label" style="margin-top:14px;">${p.profile_label}</div>
-      <div class="profile-sub">${profileDescriptions[p.profile_label] || 'Your behavioral intelligence profile has been recorded.'}</div>
-
-      <div style="display:inline-flex;align-items:center;gap:8px;background:${balanceResult.bg};border:1.5px solid ${balanceResult.border};border-radius:20px;padding:7px 18px;font-size:13px;font-weight:700;color:${balanceResult.color};margin-bottom:20px;">
-        💰 ${balanceResult.label}
+      <!-- Choice prompt -->
+      <div class="choice-prompt-row">
+        <div class="choice-prompt-title">⭐ What will you do? ⭐</div>
+        <div class="choice-prompt-sub">Choose the option that feels right for <strong>YOU</strong>.</div>
       </div>
 
-      <div class="trait-grid">${traitCards}</div>
+      <!-- Choices -->
+      <div class="choice-grid" id="choiceGrid">${choicesHtml}</div>
 
-      <div style="font-size:12px;color:var(--text2);margin-top:18px;line-height:1.75;background:#F7F5F0;border-radius:12px;padding:14px 16px;">
-        Your educator has access to your full behavioral report.<br>
-        <strong style="color:var(--navy);">Your profile builds over time — this is just the start.</strong>
+      <!-- Outcome -->
+      <div class="outcome-panel" id="outPanel">
+        <div class="out-title" id="outTitle"></div>
+        <div class="out-text"  id="outText"></div>
       </div>
 
-      <button class="play-again-btn" onclick="resetAndPlay()">Play Again</button>
-    </div>
-  `;
-  confetti(60);
+      <!-- Milo bottom chat -->
+      <div class="milo-chat" id="miloChat">
+        <div class="milo-chat-av"><img id="miloChatImg" src="./milo.png" alt="Milo" /></div>
+        <div class="milo-chat-bubble" id="miloChatBubble">${sc.preChat}</div>
+      </div>
+
+      <!-- Next button -->
+      <button class="next-btn" id="nextBtn" onclick="nextDay()">
+        ${S.day<5?`Day ${S.day} Complete — Next →`:'🎉 See My Results!'}
+      </button>
+
+    </div><!-- /sim-main -->
+  </div><!-- /sim-body -->
+</div>`;
+  S._t0=Date.now();
 }
 
-// ══════════════════════════════════════════════════════════════
-// INTERACTIONS
-// ══════════════════════════════════════════════════════════════
-async function startSolo() {
-  state.screen = 'loading';
-  render();
-
-  const studentId = await createStudent(state.cohortId);
-  const sessionId = studentId ? await startSession(studentId) : null;
-
-  state.studentId = studentId;
-  state.sessionId = sessionId;
-  state.balance   = STARTING_BALANCE;
-  state.day       = 1;
-  state.priorImpulsiveCount = 0;
-  state.history   = [];
-  state.sessionStart = Date.now();
-  state.screen    = 'sim';
-  render();
-}
-
-async function joinWithCode() {
-  const code = document.getElementById('codeInput')?.value?.trim().toUpperCase();
-  if (!code || code.length < 4) {
-    const err = document.getElementById('codeError');
-    if (err) err.classList.add('show');
+// SCORE
+function renderScore(){
+  const p=S.profile;
+  if(!p){
+    app.innerHTML=`<div id="screen-score"><div class="score-card"><div class="sc-headline">Week Complete ✅</div><p class="prof-desc">Your session has been recorded. Your educator will share your results.</p><button class="replay-btn" onclick="resetToHome()">Play Again</button></div></div>`;
     return;
   }
-
-  // Resolve code to a real cohort_id
-  try {
-    const res = await fetch(`${API_BASE}/cohorts/by-code/${code}`);
-    if (res.ok) {
-      const data = await res.json();
-      state.cohortId = data.cohort_id;
-    }
-    // If code lookup fails, proceed as solo (graceful fallback)
-  } catch (e) { /* silent fallback */ }
-
-  await startSolo();
+  const miloMap={'Financial Starter':'./milo-calm.png','Emerging':'./milo-calm.png','Explorer':'./milo-smile.png','Developing':'./milo-smile.png','Thinker':'./milo-happy.png','Advancing':'./milo-happy.png','Builder':'./milo-encouraging.png','Leading':'./milo-proud.png','Exceptional':'./milo-closure.png'};
+  const descMap={'Financial Starter':"You're at the beginning of your financial intelligence journey. Every expert started exactly here.",'Explorer':"You're building awareness. Some strong instincts are showing — keep going.",'Developing':"You're building awareness. Some strong instincts are showing — keep going.",'Builder':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Thinker':"You make intentional, context-aware financial decisions. That's rare for any age.",'Advancing':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Leading':"You demonstrate elite financial behavior patterns. This is the top tier.",'Exceptional':"Exceptional. You saw every trap, managed every risk, and finished stronger than you started."};
+  const fb=S.balance;
+  const bSty=fb>=70?'background:#FFFBEB;border:1.5px solid #FDE68A;color:#92400E;':fb>=40?'background:#EFF6FF;border:1.5px solid #BFDBFE;color:#1E40AF;':'background:#F5F3EE;border:1.5px solid #E5E2DA;color:#4A4035;';
+  const traits=[{id:'ic',name:'Impulse Control',icon:'🛑',q:'Can you stop and think before you spend?'},{id:'po',name:'Planning',icon:'📅',q:'Do you think about tomorrow, not just today?'},{id:'ra',name:'Risk Awareness',icon:'👀',q:'Can you tell when something is a bad idea?'},{id:'rb',name:'Recovery',icon:'💪',q:'Can you bounce back after a tough choice?'}];
+  const traitHtml=traits.map(t=>{const td=p.traits?.[t.id]||{},label=td.label||'Emerging',cls=label.toLowerCase().replace(' ','-'),score=td.score??0,dots=[0,1,2].map(i=>`<div class="t-dot ${i<score?'on '+cls:''}"></div>`).join('');return `<div class="trait-tile"><div class="t-name">${t.icon} ${t.name}</div><div class="t-level ${cls}">${label}</div><div class="t-dots">${dots}</div><div class="t-q">${t.q}</div></div>`;}).join('');
+  app.innerHTML=`
+<div id="screen-score">
+  <div class="score-card">
+    <div class="sc-eyebrow">Your Money Profile</div>
+    <div class="sc-headline">FLIQ Score™ Results</div>
+    <div class="sc-fliq">Powered by FLIQ Score™</div>
+    <div class="milo-circle"><img src="${miloMap[p.profile_label]||'./milo.png'}" alt="Milo"/></div>
+    <div class="prof-name">${p.profile_label||'Explorer'}</div>
+    <p class="prof-desc">${descMap[p.profile_label]||'Your behavioral intelligence profile has been recorded.'}</p>
+    <div class="bal-result" style="${bSty}">💰 You ended with $${fb}</div>
+    <div class="trait-grid">${traitHtml}</div>
+    <div class="edu-note">Your educator has access to your full behavioral report.<br><strong>Your profile builds over time — this is just the start.</strong></div>
+    <button class="replay-btn" onclick="resetToHome()">Play Again</button>
+  </div>
+</div>`;
+  confetti(72);
 }
 
-// Auto-fill code from URL param ?code=XXXXXXXX
-(function autoFillCode() {
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get('code');
-  if (code) {
-    const el = document.getElementById('codeInput');
-    if (el) el.value = code.toUpperCase();
-  }
-})();
-
-async function makeChoice(choiceIndex) {
-  const scenarios = getScenarios();
-  const scenario  = scenarios[state.day - 1];
-
-  // Disable buttons
-  const container = document.getElementById('choicesContainer');
-  if (container) container.style.pointerEvents = 'none';
-
-  // Highlight selected
-  const btns = document.querySelectorAll('.choice-btn');
-  btns.forEach((b, i) => {
-    if (i === choiceIndex) {
-      b.style.borderColor = '#00B4D8';
-      b.style.background  = 'rgba(0,180,216,0.12)';
-    } else {
-      b.style.opacity = '0.4';
-    }
-  });
-
-  // Track impulsive behavior
-  const optType = scenario.choices[choiceIndex].optionType;
-  const isImpulsive = ['spend_nonessential', 'spend_social'].includes(optType)
-    && (state.balance / STARTING_BALANCE) < 0.4;
-  if (isImpulsive) state.priorImpulsiveCount++;
-
-  // Update balance
-  const cost = scenario.choices[choiceIndex].cost;
-  const newBalance = Math.max(0, state.balance - cost);
-
-  // Record event
-  await recordEvent(choiceIndex, scenario);
-
-  // Update state
-  state.history.push({
-    day: state.day,
-    choice: choiceIndex,
-    balanceBefore: state.balance,
-    balanceAfter: newBalance,
-  });
-  state.balance = newBalance;
-
-  // Animate balance display
-  const balDisplay = document.getElementById('balanceDisplay');
-  if (balDisplay) {
-    balDisplay.textContent = `$${state.balance}`;
-    const animClass = cost > 0 ? 'bal-drop' : 'bal-pop';
-    balDisplay.classList.remove('bal-pop', 'bal-drop');
-    void balDisplay.offsetWidth; // force reflow
-    balDisplay.classList.add(animClass);
-    balDisplay.addEventListener('animationend', () => balDisplay.classList.remove(animClass), { once: true });
-  }
-
-  // Show outcome
-  const outcome = scenario.getOutcome(choiceIndex);
-  const outcomeCard = document.getElementById('outcomeCard');
-  const outcomeTitle = document.getElementById('outcomeTitle');
-  const outcomeText  = document.getElementById('outcomeText');
-  if (outcomeCard && outcome) {
-    outcomeCard.className = `outcome-card show ${outcome.type}`;
-    outcomeTitle.textContent = outcome.title;
-    outcomeText.textContent  = outcome.text;
-    outcomeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  // Milo reaction lines
-  const miloData = {
-    positive: { lines: ["Smart move!", "Your money brain is ON!", "That's how you do it!", "Yes! Great thinking!"] },
-    negative: { lines: ["Oops! It happens.", "Tough one... you'll bounce back!", "Every choice teaches you something."] },
-    neutral:  { lines: ["Interesting choice...", "Let's see how this plays out!", "Hmm, I wonder..."] },
-  };
-
-  const md = miloData[outcome?.type] || miloData.neutral;
-  const miloText = document.getElementById('miloText');
-  const miloBubble = document.getElementById('miloBubble');
-  if (miloText && miloBubble) {
-    miloText.textContent = md.lines[Math.floor(Math.random() * md.lines.length)];
-    miloBubble.classList.add('show');
-  }
-  if (outcome?.type === 'positive') confetti(25);
-
-  // Show next button
-  const nextBtn = document.getElementById('nextBtn');
-  if (nextBtn) nextBtn.classList.add('show');
+// LOADING
+function renderLoading(){
+  app.innerHTML=`<div id="screen-loading"><div class="spinner"></div><div class="loading-txt">Setting up your adventure…</div></div>`;
 }
 
-async function nextDay() {
-  if (state.day >= 5) {
-    confetti(50);
-    state.screen = 'loading';
-    render();
-    const result = await completeSession();
-    state.profile = result;
-    state.screen  = 'score';
-    render();
+// ── INTERACTIONS ─────────────────────────────────────────────────
+async function handleJoin(){
+  const code=document.getElementById('codeInput')?.value?.trim().toUpperCase();
+  if(!code||code.length<4){document.getElementById('codeErr')?.classList.add('show');return;}
+  try{const r=await fetch(`${API_BASE}/cohorts/by-code/${code}`);if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;}}catch(e){}
+  await boot();
+}
+async function handleSolo(){ await boot(); }
+async function boot(){
+  S.screen='loading'; render();
+  const sid=await createStudent(S.cohortId);
+  const sess=sid?await startSession(sid):null;
+  Object.assign(S,{studentId:sid,sessionId:sess,balance:START_BAL,day:1,impulsiveN:0,history:[],sessionStart:Date.now()});
+  S.screen='dayintro'; render();
+}
+function beginDay(){ S.screen='sim'; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+async function makeChoice(ci){
+  const sc=getScenarios()[S.day-1];
+  // Lock grid
+  const grid=document.getElementById('choiceGrid');
+  if(grid) grid.style.pointerEvents='none';
+  document.querySelectorAll('.choice-card').forEach((b,i)=>{
+    if(i===ci){ b.style.boxShadow='0 0 0 3px var(--gold), 0 14px 40px rgba(11,29,58,0.2)'; b.style.transform='scale(1.02)'; }
+    else { b.style.opacity='0.38'; b.style.transform='scale(0.98)'; }
+  });
+
+  const opt=sc.choices[ci].opt;
+  if(['spend_nonessential','spend_social'].includes(opt)&&(S.balance/START_BAL)<0.4) S.impulsiveN++;
+
+  const cost=sc.choices[ci].cost, newBal=Math.max(0,S.balance-cost);
+  await recordEvent(ci,sc);
+  S.history.push({day:S.day,choice:ci,balBefore:S.balance,balAfter:newBal});
+  S.balance=newBal;
+
+  // Animate balance
+  const balNum=document.getElementById('balNum');
+  const balFill=document.getElementById('balFill');
+  const balMsg=document.getElementById('balMsg');
+  const balEmoji=document.getElementById('balEmoji');
+  if(balNum){
+    const bs2=balStatus(S.balance);
+    balNum.innerHTML=`$${S.balance} <span class="bal-coin">🪙</span>`;
+    const cls=cost>0?'a-drop':'a-pop';
+    balNum.classList.remove('a-pop','a-drop'); void balNum.offsetWidth;
+    balNum.classList.add(cls);
+    balNum.addEventListener('animationend',()=>balNum.classList.remove(cls),{once:true});
+    if(balFill){ balFill.style.width=Math.round((S.balance/START_BAL)*100)+'%'; balFill.style.background=bs2.color; }
+    if(balMsg)  balMsg.textContent=bs2.msg;
+    if(balEmoji) balEmoji.textContent=bs2.emoji;
+  }
+  if(cost>0) confetti(10);
+
+  // Outcome
+  const out=sc.outcome(ci);
+  const panel=document.getElementById('outPanel');
+  if(panel&&out){
+    panel.className=`outcome-panel show ${out.cls}`;
+    document.getElementById('outTitle').textContent=out.title;
+    document.getElementById('outText').textContent=out.text;
+    setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),120);
+  }
+
+  // Milo reaction
+  const rxn=sc.milo(ci);
+  const chatBubble=document.getElementById('miloChatBubble');
+  const chatImg=document.getElementById('miloChatImg');
+  if(chatBubble&&rxn){
+    chatImg.src=rxn.img;
+    chatBubble.innerHTML=rxn.txt;
+    chatBubble.classList.add('rxn');
+  }
+  if(out?.cls==='pos') confetti(28);
+
+  const nb=document.getElementById('nextBtn'); if(nb) nb.classList.add('show');
+}
+
+async function nextDay(){
+  if(S.day>=5){
+    confetti(58); S.screen='loading'; render();
+    S.profile=await completeSession(); S.screen='score'; render();
   } else {
-    // Day complete flash
-    confetti(30);
-    const miloBubble = document.getElementById('miloBubble');
-    if (miloBubble) miloBubble.style.display = 'none';
-    const flash = document.createElement('div');
-    flash.className = 'day-flash';
-    flash.innerHTML = `<div style="font-size:64px;font-weight:900;color:var(--gold);line-height:1;margin-bottom:8px;animation:starPop 0.4s 0.1s ease both;">✓</div><div style="font-size:48px;font-weight:900;color:var(--navy);font-family:system-ui;letter-spacing:-1px;line-height:1;">Day ${state.day}</div><div style="font-size:22px;font-weight:700;color:var(--navy);margin-top:6px;opacity:0.6;">Complete</div>`;
+    confetti(34);
+    const flash=document.createElement('div');
+    flash.className='day-flash';
+    flash.innerHTML=`<div class="flash-check">✓</div><div class="flash-day">Day ${S.day}</div><div class="flash-lbl">Complete</div>`;
     document.body.appendChild(flash);
-    setTimeout(() => {
-      flash.remove();
-      state.day++;
-      state.screen = 'sim';
-      render();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 1500);
+    setTimeout(()=>{ flash.remove(); S.day++; S.screen='dayintro'; render(); window.scrollTo({top:0,behavior:'smooth'}); },2200);
   }
 }
 
-function resetAndPlay() {
-  state.screen   = 'join';
-  state.studentId = null;
-  state.sessionId = null;
-  state.balance  = STARTING_BALANCE;
-  state.day      = 1;
-  state.priorImpulsiveCount = 0;
-  state.history  = [];
-  state.profile  = null;
-  render();
+function resetToHome(){
+  S={screen:'home',studentId:null,sessionId:null,cohortId:null,balance:START_BAL,day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null};
+  render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ══════════════════════════════════════════════════════════════
-// DELIGHT
-// ══════════════════════════════════════════════════════════════
-function confetti(count = 30) {
-  const colors = ['#F5A623','#00B4D8','#22C55E','#A78BFA','#F472B6','#1B2A4A','#FBBF24'];
-  const vw = window.innerWidth;
-  for (let i = 0; i < count; i++) {
-    const el = document.createElement('div');
-    el.className = 'confetti-piece';
-    el.style.left = (20 + Math.random() * 60) + 'vw';
-    el.style.top  = (Math.random() * 20) + 'vh';
-    el.style.background = colors[Math.floor(Math.random() * colors.length)];
-    el.style.width  = (6 + Math.random() * 8) + 'px';
-    el.style.height = (6 + Math.random() * 8) + 'px';
-    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-    el.style.animationDuration = (0.8 + Math.random() * 1.2) + 's';
-    el.style.animationDelay   = (Math.random() * 0.4) + 's';
-    document.body.appendChild(el);
-    el.addEventListener('animationend', () => el.remove());
+// ── CONFETTI ─────────────────────────────────────────────────────
+function confetti(n=30){
+  const cols=['#F4B942','#4FB3E8','#4ADE80','#A78BFA','#F472B6','#FBBF24'];
+  for(let i=0;i<n;i++){
+    const el=document.createElement('div'); el.className='c-bit';
+    el.style.cssText=`left:${20+Math.random()*60}vw;top:${Math.random()*15}vh;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${.9+Math.random()*1.2}s;animation-delay:${Math.random()*.4}s;`;
+    document.body.appendChild(el); el.addEventListener('animationend',()=>el.remove());
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════════
 render();
 </script>
 </body>
