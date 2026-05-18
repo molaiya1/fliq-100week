@@ -34,11 +34,9 @@
       box-shadow:0 2px 20px rgba(11,29,58,0.07);
       display:flex; align-items:center; padding:0 20px; z-index:300; gap:12px;
     }
-    .nav-lockup  { display:flex; align-items:center; gap:12px; flex-shrink:0; }
-    .nav-logo    { width:40px; height:40px; object-fit:contain; flex-shrink:0; }
-    .nav-brand   { display:flex; flex-direction:column; line-height:1.1; flex-shrink:0; }
-    .nav-brand-m { font-size:13px; font-weight:800; color:var(--navy); }
-    .nav-brand-s { font-size:9px; font-weight:700; color:var(--gold-dk); letter-spacing:1.6px; text-transform:uppercase; }
+    .nav-lockup  { display:flex; flex-direction:column; line-height:1.15; flex-shrink:0; gap:1px; }
+    .nav-brand-m { font-size:17px; font-weight:900; color:var(--navy); letter-spacing:-0.3px; }
+    .nav-brand-s { font-size:10px; font-weight:700; color:var(--gold-dk); letter-spacing:2px; text-transform:uppercase; }
 
     /* Day dots (shown during sim) */
     .day-dots { display:none; align-items:flex-end; gap:8px; margin:0 auto; }
@@ -73,22 +71,25 @@
        HOME SCREEN
     ══════════════════════════════════════ */
     #screen-home { height:100vh; display:flex; flex-direction:column; overflow:hidden; }
-    .hero { flex:1; min-height:0; padding-top:72px; position:relative; display:flex; align-items:stretch; overflow:hidden; }
+    /* Hero: centers its child (hero-content) vertically; no overflow:hidden needed
+       because hero-bg is position:absolute inside position:relative — already contained */
+    .hero { flex:1; min-height:0; padding-top:72px; position:relative; display:flex; align-items:center; justify-content:stretch; }
     .hero-bg { position:absolute; inset:0; background:url('./bg-home.jpg') center bottom/cover no-repeat; }
 
-    .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:12px 28px 12px; display:grid; grid-template-columns:1fr 400px; gap:32px; align-items:center; height:100%; }
+    /* No height:100% — grid is auto-height, hero flex-centers it vertically */
+    .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:12px 28px; display:grid; grid-template-columns:1fr 400px; gap:32px; align-items:center; }
     .hero-left { display:flex; flex-direction:column; align-items:flex-start; }
     .hero-milo-wrap { position:relative; margin-bottom:12px; align-self:center; }
-    .hero-milo { width:340px; max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); animation:miloFloat 4s ease-in-out infinite; }
+    .hero-milo { width:290px; max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); animation:miloFloat 4s ease-in-out infinite; }
     @keyframes miloFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
     .hero-speech { position:absolute; top:16px; right:-16px; background:var(--navy); color:white; border-radius:16px 16px 16px 4px; padding:12px 15px; font-size:13px; font-weight:600; line-height:1.5; max-width:174px; box-shadow:0 6px 22px rgba(11,29,58,0.24); animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
     .hero-speech strong { color:var(--gold); }
     .hero-speech::after { content:''; position:absolute; bottom:-8px; left:14px; width:14px; height:14px; background:var(--navy); clip-path:polygon(0 0,100% 0,0 100%); }
     @keyframes speechPop { from{opacity:0;transform:scale(0.75) translateY(10px);} to{opacity:1;transform:scale(1) translateY(0);} }
-    .hero-text { background:rgba(255,255,255,0.78); backdrop-filter:blur(10px); border-radius:22px; padding:26px 30px; border:1.5px solid rgba(255,255,255,0.9); box-shadow:0 4px 24px rgba(11,29,58,0.08); }
-    .hero-h1 { font-size:clamp(34px,4.5vw,54px); font-weight:900; color:var(--navy); line-height:1.08; letter-spacing:-1.5px; margin-bottom:14px; }
+    .hero-text { background:rgba(255,255,255,0.78); backdrop-filter:blur(10px); border-radius:22px; padding:18px 26px; border:1.5px solid rgba(255,255,255,0.9); box-shadow:0 4px 24px rgba(11,29,58,0.08); }
+    .hero-h1 { font-size:clamp(30px,4vw,50px); font-weight:900; color:var(--navy); line-height:1.08; letter-spacing:-1.5px; margin-bottom:10px; }
     .hero-h1 .gld { color:var(--gold-dk); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:4px; }
-    .hero-sub { font-size:15px; line-height:1.72; color:var(--text2); max-width:390px; }
+    .hero-sub { font-size:14px; line-height:1.65; color:var(--text2); max-width:360px; }
 
     .hero-card { background:white; border-radius:26px; padding:18px 22px 20px; box-shadow:0 20px 60px rgba(11,29,58,0.18),0 4px 16px rgba(11,29,58,0.07); animation:cardIn 0.6s 0.15s cubic-bezier(0.34,1.56,0.64,1) both; }
     @keyframes cardIn { from{opacity:0;transform:translateY(28px) scale(0.96);} to{opacity:1;transform:translateY(0) scale(1);} }
@@ -496,17 +497,15 @@
 
     @media(max-width:768px) {
 
-      /* ══ NAV — Milo + brand as a single glued pill lockup ══ */
-      .nav { height:72px; padding:0 14px; gap:8px; }
+      /* ══ NAV — text-only brand lockup, no Milo ══ */
+      .nav { height:64px; padding:0 14px; gap:8px; }
       .nav-lockup {
-        display:flex; align-items:center; gap:2px;
-        background:rgba(11,29,58,0.06);
-        border-radius:14px; padding:4px 12px 4px 2px;
+        background:rgba(11,29,58,0.05);
+        border-radius:12px; padding:6px 14px;
         border:1px solid rgba(11,29,58,0.08);
       }
-      .nav-logo { width:58px; height:58px; object-fit:contain; }
-      .nav-brand-m { font-size:14px; font-weight:900; }
-      .nav-brand-s { font-size:9px; letter-spacing:1.4px; }
+      .nav-brand-m { font-size:15px; }
+      .nav-brand-s { font-size:9px; letter-spacing:1.6px; }
       .nav-links .nav-link:not(.nav-link-edu) { display:none; }
       .nav-link-edu { font-size:11px; padding:6px 10px; }
 
@@ -523,7 +522,7 @@
 
       /* Hero fills space below fixed nav */
       .hero {
-        flex:1; min-height:0; padding-top:72px;
+        flex:1; min-height:0; padding-top:64px;
         position:relative; display:flex; align-items:stretch; overflow:hidden;
       }
 
@@ -635,12 +634,9 @@
 
 <!-- NAV -->
 <nav class="nav" id="mainNav">
-  <div class="nav-lockup">
-    <img src="./milo-hero.png" alt="Milo" class="nav-logo" id="navLogo" />
-    <div class="nav-brand" id="navBrand">
-      <span class="nav-brand-m">WealthWise Kids™</span>
-      <span class="nav-brand-s">The $100 Week™</span>
-    </div>
+  <div class="nav-lockup" id="navBrand">
+    <span class="nav-brand-m">WealthWise Kids™</span>
+    <span class="nav-brand-s">The $100 Week™</span>
   </div>
 
   <!-- Day dots (sim mode) -->
