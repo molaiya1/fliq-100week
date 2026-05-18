@@ -34,9 +34,11 @@
       box-shadow:0 2px 20px rgba(11,29,58,0.07);
       display:flex; align-items:center; padding:0 20px; z-index:300; gap:12px;
     }
-    .nav-lockup  { display:flex; flex-direction:column; line-height:1.15; flex-shrink:0; gap:1px; }
-    .nav-brand-m { font-size:17px; font-weight:900; color:var(--navy); letter-spacing:-0.3px; }
-    .nav-brand-s { font-size:10px; font-weight:700; color:var(--gold-dk); letter-spacing:2px; text-transform:uppercase; }
+    .nav-lockup  { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .nav-logo    { width:52px; height:52px; object-fit:contain; flex-shrink:0; }
+    .nav-brand   { display:flex; align-items:center; gap:10px; line-height:1.15; }
+    .nav-brand-m { font-size:18px; font-weight:900; color:var(--navy); letter-spacing:-0.3px; }
+    .nav-brand-s { font-size:13px; font-weight:800; color:var(--gold-dk); letter-spacing:0.5px; text-transform:uppercase; border-left:2.5px solid rgba(11,29,58,0.12); padding-left:10px; }
 
     /* Day dots (shown during sim) */
     .day-dots { display:none; align-items:flex-end; gap:8px; margin:0 auto; }
@@ -102,19 +104,20 @@
     .join-block-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
     .ic-blue   { background:#E0EFFF; }
     .ic-purple { background:#EDE9FE; }
-    .join-block-desc { display:none; }
+    .join-block-desc { font-size:12px; color:var(--text2); margin-top:2px; margin-bottom:10px; line-height:1.4; }
 
-    .code-row  { display:flex; gap:8px; }
-    .join-input { flex:1; padding:13px 15px; background:#F5F8FF; border:2px solid rgba(11,29,58,0.12); border-radius:13px; color:var(--navy); font-size:16px; font-weight:700; letter-spacing:4px; text-align:center; outline:none; transition:border-color 0.18s,background 0.18s; font-family:'Inter',sans-serif; }
+    .join-input { width:100%; padding:13px 15px; background:#F5F8FF; border:2px solid rgba(11,29,58,0.12); border-radius:13px; color:var(--navy); font-size:16px; font-weight:700; letter-spacing:4px; text-align:center; outline:none; transition:border-color 0.18s,background 0.18s; font-family:'Inter',sans-serif; display:block; }
     .join-input:focus { border-color:var(--navy); background:white; }
     .join-input::placeholder { color:rgba(11,29,58,0.22); letter-spacing:1.5px; font-weight:500; font-size:12px; }
-    .join-btn  { padding:13px 18px; white-space:nowrap; background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:13px; color:var(--navy); font-size:14px; font-weight:800; cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; box-shadow:0 4px 16px rgba(244,185,66,0.4); }
-    .join-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(244,185,66,0.5); }
-    .or-row { display:flex; align-items:center; gap:10px; margin:4px 0; color:var(--text3); font-size:12px; font-weight:500; }
+    /* Full-width gold Join button — sits below the input */
+    .join-btn-full { width:100%; margin-top:8px; padding:13px; background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:13px; color:var(--navy); font-size:15px; font-weight:800; cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; box-shadow:0 4px 16px rgba(244,185,66,0.4); display:block; }
+    .join-btn-full:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(244,185,66,0.5); }
+    .or-row { display:flex; align-items:center; gap:10px; margin:8px 0; color:var(--text3); font-size:12px; font-weight:500; }
     .or-row::before,.or-row::after { content:''; flex:1; height:1px; background:rgba(11,29,58,0.1); }
-    .solo-btn  { width:100%; padding:13px; background:transparent; border:2px solid rgba(11,29,58,0.15); border-radius:13px; color:var(--text2); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px; }
+    /* Desktop: outline style. Mobile override makes it gold. */
+    .solo-btn  { width:100%; margin-top:8px; padding:13px; background:transparent; border:2px solid rgba(11,29,58,0.15); border-radius:13px; color:var(--text2); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px; }
     .solo-btn:hover { border-color:var(--navy); color:var(--navy); background:#F0F5FF; }
-    .privacy-note { display:none; }
+    .privacy-note { margin-top:10px; background:var(--gold-lt); border:1.5px solid rgba(244,185,66,0.3); border-radius:12px; padding:10px 13px; display:flex; align-items:flex-start; gap:8px; font-size:11.5px; color:var(--text2); line-height:1.5; }
     .privacy-note strong { color:var(--navy); }
     .err-msg { background:#FEE2E2; border:1.5px solid #FCA5A5; border-radius:10px; padding:9px 13px; font-size:13px; font-weight:500; color:#991B1B; margin-top:8px; display:none; }
     .err-msg.show { display:block; }
@@ -423,6 +426,10 @@
     .c-bit  { position:fixed; pointer-events:none; z-index:9999; border-radius:2px; animation:cFall linear forwards; }
     @keyframes cFall { 0%{opacity:1;transform:translateY(0) rotate(0deg);} 100%{opacity:0;transform:translateY(65vh) rotate(720deg);} }
 
+    /* Desktop/mobile button split */
+    .solo-mobile { display:none; }
+    .solo-desktop { display:flex; }
+
     /* $100 badge (mobile) */
     .hero-hundred-badge {
       display:none;
@@ -587,13 +594,13 @@
       .join-block-desc { display:none; }
       .privacy-note { display:none; }
 
-      /* Play Now first, session code second */
+      /* Play Now first (last join-block), session code second */
       .hero-card > .join-block:last-of-type { order:-2; }
       .or-row { order:-1; margin:5px 0; color:rgba(255,255,255,0.3); font-size:11px; }
       .or-row::before,.or-row::after { background:rgba(255,255,255,0.12); }
       .hero-card > .join-block:first-of-type { order:0; }
 
-      /* Gold CTA — pulsing glow to invite the tap */
+      /* Gold CTA — pulsing glow */
       .solo-btn {
         width:100%; padding:16px; font-size:17px; font-weight:900;
         background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%);
@@ -602,15 +609,23 @@
         letter-spacing:-0.3px;
         animation:btnGlow 2.5s ease-in-out infinite;
       }
+      .join-block-desc { display:none; }
+      .privacy-note { display:none; }
+      .solo-desktop { display:none; }
+      .solo-mobile { display:flex; }
       .join-block-hdr { color:rgba(255,255,255,0.6); font-size:12px; font-weight:600; margin-bottom:5px; }
       .join-block-icon { display:none; }
       .join-block { margin-bottom:4px; }
       .join-input {
         background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.18);
         color:white; font-size:15px; padding:10px 12px; border-radius:12px;
+        letter-spacing:2px;
       }
       .join-input::placeholder { color:rgba(255,255,255,0.28); letter-spacing:1px; font-size:12px; }
-      .join-btn { padding:10px 14px; font-size:13px; white-space:nowrap; border-radius:12px; }
+      .join-btn-full {
+        background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.7);
+        font-size:13px; padding:10px; border-radius:12px; margin-top:6px;
+      }
 
       /* ── Copyright — one line, barely visible ── */
       .site-footer {
@@ -635,8 +650,11 @@
 <!-- NAV -->
 <nav class="nav" id="mainNav">
   <div class="nav-lockup" id="navBrand">
-    <span class="nav-brand-m">WealthWise Kids™</span>
-    <span class="nav-brand-s">The $100 Week™</span>
+    <img src="./milo.png" alt="Milo" class="nav-logo" />
+    <div class="nav-brand">
+      <span class="nav-brand-m">WealthWise Kids™</span>
+      <span class="nav-brand-s">The $100 Week™</span>
+    </div>
   </div>
 
   <!-- Day dots (sim mode) -->
@@ -889,19 +907,18 @@ function renderHome(){
         <div class="card-title"><span>⭐</span> Ready for the challenge?</div>
         <div class="card-sub">Jump in and start your <strong>$100 Week™</strong> journey!</div>
         <div class="join-block">
-          <div class="join-block-hdr"><div class="join-block-icon ic-blue">👥</div>Have a class code?</div>
+          <div class="join-block-hdr"><div class="join-block-icon ic-blue">👥</div>Join a Session</div>
           <div class="join-block-desc">Enter the session code your teacher gave you.</div>
-          <div class="code-row">
-            <input class="join-input" id="codeInput" type="text" maxlength="6" placeholder="Enter code here" autocomplete="off" spellcheck="false" />
-            <button class="join-btn" onclick="handleJoin()">Join →</button>
-          </div>
+          <input class="join-input" id="codeInput" type="text" maxlength="6" placeholder="Enter session code" autocomplete="off" spellcheck="false" />
+          <button class="join-btn-full" onclick="handleJoin()">Join Session ›</button>
           <div class="err-msg" id="codeErr">That code doesn't match a session. Try again.</div>
         </div>
         <div class="or-row">or</div>
         <div class="join-block">
           <div class="join-block-hdr"><div class="join-block-icon ic-purple">🎮</div>Play on Your Own</div>
           <div class="join-block-desc">Explore the challenge and track your progress.</div>
-          <button class="solo-btn" style="margin-top:8px;" onclick="handleSolo()">Start My Week! →</button>
+          <button class="solo-btn solo-desktop" onclick="handleSolo()">Play Now ›</button>
+          <button class="solo-btn solo-mobile" onclick="handleSolo()">Start My Week! →</button>
         </div>
         <div class="privacy-note">🔒 <div><strong>Safe. Private.</strong> No personal info required. We never collect names, emails, or anything personal.</div></div>
       </div>
