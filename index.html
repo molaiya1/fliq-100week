@@ -418,33 +418,66 @@
     /* ══════════════════════════════════════
        MOBILE
     ══════════════════════════════════════ */
-    /* Mobile Milo strip — hidden on desktop, shown on phones */
+    /* Balance bar divider */
+    .bal-divider { width:2px; height:44px; background:rgba(255,255,255,0.1); border-radius:1px; flex-shrink:0; }
+
+    /* Mobile Milo strip — hidden on desktop */
     .milo-mobile-strip {
-      display:none; align-items:center; gap:12px;
+      display:none; width:100%; box-sizing:border-box;
+      align-items:center; gap:10px;
       background:rgba(255,255,255,0.93); backdrop-filter:blur(10px);
-      border-radius:18px; padding:12px 14px; flex-shrink:0;
+      border-radius:16px; padding:10px 12px; flex-shrink:0;
       box-shadow:0 4px 20px rgba(11,29,58,0.18);
       border:1.5px solid rgba(255,255,255,0.95);
-      animation:bubbleIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
     }
-    .milo-strip-img { width:72px; flex-shrink:0; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2)); }
-    .milo-strip-text { flex:1; min-width:0; }
-    .milo-strip-speech { font-size:13px; font-weight:600; color:var(--navy); line-height:1.5; margin-bottom:4px; }
+    .milo-strip-img { width:54px; flex-shrink:0; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.2)); }
+    .milo-strip-text { flex:1; min-width:0; overflow:hidden; }
+    .milo-strip-speech { font-size:12px; font-weight:600; color:var(--navy); line-height:1.45; margin-bottom:2px; }
     .milo-strip-speech strong { color:#7C3AED; }
-    .milo-strip-tip { font-size:11px; font-weight:500; color:var(--text2); line-height:1.4; }
+    .milo-strip-tip { font-size:10.5px; font-weight:500; color:var(--text2); line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     @media(max-width:900px) {
+      /* Sim screen — allow natural scroll */
+      #screen-sim { overflow:visible; min-height:100vh; }
+      .sim-body { flex-direction:column; padding:8px 0 80px; }
       .sim-sidebar { display:none; }
       .milo-mobile-strip { display:flex; }
-      .sim-main { padding:0 12px; }
-      .choice-grid { grid-template-columns:1fr; }
+
+      /* Main content — full width, natural scroll */
+      .sim-main {
+        padding:0 12px 40px;
+        max-height:none;
+        overflow-y:visible;
+        width:100%;
+        box-sizing:border-box;
+        gap:10px;
+      }
+
+      /* Balance bar — compact, hide less-essential pieces */
+      .balance-bar { padding:10px 14px; gap:8px; }
+      .bal-num { font-size:26px; letter-spacing:-1px; }
+      .bal-coin { font-size:20px; }
+      .bal-divider { display:none; }
+      .bal-col-day { display:none; }
+      .bal-emoji { display:none; }
+
+      /* Scenario card */
       .sc-vis-col { display:none; }
+      .scenario-card { padding:14px 16px; gap:0; }
+      .sc-title { font-size:18px; }
+      .sc-body { font-size:13px; line-height:1.65; }
+
+      /* Choice grid — single column */
+      .choice-grid { grid-template-columns:1fr; gap:10px; }
+      .choice-card { min-height:auto; padding:14px 14px 12px; }
+      .ch-emoji { font-size:26px; }
     }
+
     @media(max-width:768px) {
       .nav-links .nav-link:not(.nav-link-edu) { display:none; }
       .hero-content { grid-template-columns:1fr; min-height:auto; padding-top:20px; padding-bottom:0; }
       .hero-left { align-items:center; }
-      .hero-milo { width:200px; }
+      .hero-milo { width:220px; }
       .hero-speech { right:-8px; max-width:155px; font-size:12px; }
       .hero-text { text-align:center; }
       .feature-bar-inner { flex-wrap:wrap; gap:12px; }
@@ -825,12 +858,12 @@ function renderSim(){
           <div class="bal-lbl">Your Balance</div>
           <div class="bal-num" id="balNum">$${S.balance} <span class="bal-coin">🪙</span></div>
         </div>
-        <div style="width:2px;height:44px;background:rgba(255,255,255,0.1);border-radius:1px;flex-shrink:0;"></div>
+        <div class="bal-divider"></div>
         <div class="bal-col-right">
           <div class="bal-status-msg" id="balMsg">${bs.msg}</div>
           <div class="bal-track"><div class="bal-fill" id="balFill" style="width:${pct}%;background:${bs.color};"></div></div>
         </div>
-        <div style="width:2px;height:44px;background:rgba(255,255,255,0.1);border-radius:1px;flex-shrink:0;"></div>
+        <div class="bal-divider"></div>
         <div class="bal-col-day" style="text-align:center;padding:0 16px;">
           <div class="bal-lbl">Day</div>
           <div class="bal-day-num">${S.day}<span style="opacity:.4;font-size:.65em;"> / 5</span></div>
