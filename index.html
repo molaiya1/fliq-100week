@@ -478,18 +478,30 @@
       /* ── FULL-BLEED GAME-STYLE MOBILE HOME ── */
       #screen-home { height:100vh; overflow:hidden; display:flex; flex-direction:column; }
       .feature-bar { display:none; }
-      .site-footer { display:none; }
       .nav-links .nav-link:not(.nav-link-edu) { display:none; }
 
-      /* Hero fills full remaining height */
-      .hero { flex:1; min-height:0; overflow:hidden; padding-top:72px; }
+      /* ── NAV LOCKUP — larger Milo, tighter brand unit ── */
+      .nav { height:84px; padding:0 16px; gap:10px; }
+      .nav-logo { width:68px; height:68px; object-fit:contain; }
+      .nav-brand { gap:1px; }
+      .nav-brand-m { font-size:15px; }
+      .nav-brand-s { font-size:10px; letter-spacing:1.4px; }
+
+      /* Hero fills full remaining height, account for taller nav */
+      .hero { flex:1; min-height:0; overflow:hidden; padding-top:84px; }
+
+      /* Copyright — slim one-liner at very bottom */
+      .site-footer { display:block; flex-shrink:0; padding:4px 16px 10px; border-top:none; background:transparent; }
+      .footer-copy { display:none; }
+      .footer-min  { display:block; color:rgba(255,255,255,0.5); font-size:10px; text-align:center; }
+      .footer-min .footer-link { color:rgba(255,255,255,0.5); border-bottom-color:rgba(255,255,255,0.3); }
 
       /* Stack left + card vertically, space-between so card anchors bottom */
       .hero-content {
         grid-template-columns:1fr;
         display:flex; flex-direction:column;
         align-items:center; justify-content:space-between;
-        padding:8px 18px 22px;
+        padding:8px 18px 20px;
         gap:0; height:100%;
       }
 
@@ -536,6 +548,7 @@
         border:1.5px solid rgba(255,255,255,0.13);
         box-shadow:0 8px 32px rgba(0,0,0,0.35);
         display:flex; flex-direction:column; gap:0;
+        margin-bottom:max(0px, env(safe-area-inset-bottom));
       }
       .card-title { display:none; }
       .card-sub   { display:none; }
