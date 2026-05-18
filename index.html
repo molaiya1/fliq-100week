@@ -475,112 +475,119 @@
     }
 
     @media(max-width:768px) {
-      /* ── FULL-BLEED GAME-STYLE MOBILE HOME ── */
-      #screen-home { height:100vh; overflow:hidden; display:flex; flex-direction:column; }
-      .feature-bar { display:none; }
-      .nav-links .nav-link:not(.nav-link-edu) { display:none; }
-
-      /* ── NAV LOCKUP — larger Milo, tighter brand unit ── */
+      /* ── NAV — larger lockup ── */
       .nav { height:84px; padding:0 16px; gap:10px; }
-      .nav-logo { width:68px; height:68px; object-fit:contain; }
-      .nav-brand { gap:1px; }
+      .nav-logo { width:64px; height:64px; object-fit:contain; }
       .nav-brand-m { font-size:15px; }
       .nav-brand-s { font-size:10px; letter-spacing:1.4px; }
+      .nav-links .nav-link:not(.nav-link-edu) { display:none; }
 
-      /* Hero fills full remaining height, account for taller nav */
-      .hero { flex:1; min-height:0; overflow:hidden; padding-top:84px; }
+      /* ── HOME SCREEN — locks to one viewport, no scroll ── */
+      #screen-home { height:100dvh; display:flex; flex-direction:column; overflow:hidden; background:transparent; }
+      .feature-bar { display:none; }
 
-      /* Copyright — slim one-liner at very bottom */
-      .site-footer { display:block; flex-shrink:0; padding:4px 16px 10px; border-top:none; background:transparent; }
-      .footer-copy { display:none; }
-      .footer-min  { display:block; color:rgba(255,255,255,0.5); font-size:10px; text-align:center; }
-      .footer-min .footer-link { color:rgba(255,255,255,0.5); border-bottom-color:rgba(255,255,255,0.3); }
+      /* Background: position:fixed → viewport-relative, not clipped by overflow:hidden */
+      .hero-bg { position:fixed; inset:0; z-index:0; }
 
-      /* Stack left + card vertically, space-between so card anchors bottom */
+      /* Hero: fill remaining space after nav (fixed so not in flow) */
+      .hero {
+        flex:1; min-height:0; padding-top:84px; position:relative;
+        display:flex; align-items:stretch; overflow:hidden;
+      }
+
+      /* Content: single column, fills hero, Milo top / card bottom */
       .hero-content {
         grid-template-columns:1fr;
         display:flex; flex-direction:column;
         align-items:center; justify-content:space-between;
-        padding:8px 18px 20px;
-        gap:0; height:100%;
+        padding:8px 18px calc(10px + env(safe-area-inset-bottom,0px));
+        gap:8px; width:100%;
+        position:relative; z-index:1;
       }
 
-      /* ── MILO SECTION (top/center) ── */
+      /* ── MILO (top half) ── */
       .hero-left {
-        flex:1; display:flex; flex-direction:column;
+        flex:1; min-height:0; display:flex; flex-direction:column;
         align-items:center; justify-content:center;
-        width:100%; gap:0;
+        width:100%;
       }
       .hero-milo-wrap { margin-bottom:0; display:flex; flex-direction:column; align-items:center; }
-      .hero-milo { width:220px; }
+      .hero-milo { width:min(210px, 38vh); }
 
-      /* Speech bubble — small, dark, semi-transparent, inline */
+      /* Speech bubble — inline, small, semi-transparent dark */
       .hero-speech {
         position:relative; top:auto; right:auto;
-        background:rgba(11,29,58,0.72); backdrop-filter:blur(8px);
-        border:1px solid rgba(255,255,255,0.15);
-        border-radius:12px; padding:7px 14px;
-        font-size:11.5px; max-width:200px;
-        text-align:center; margin:10px auto 0;
-        box-shadow:0 4px 16px rgba(0,0,0,0.25);
+        background:rgba(11,29,58,0.70); backdrop-filter:blur(8px);
+        border:1px solid rgba(255,255,255,0.14);
+        border-radius:12px; padding:7px 13px;
+        font-size:11px; max-width:195px; text-align:center;
+        margin:9px auto 0; box-shadow:0 3px 12px rgba(0,0,0,0.2);
       }
       .hero-speech::after { display:none; }
 
-      /* Headline — text only, no white card, drop shadow for legibility */
+      /* Headline — no card, text directly on background */
       .hero-text {
         background:transparent; border:none;
         box-shadow:none; backdrop-filter:none;
-        padding:10px 0 0; text-align:center;
+        padding:8px 0 0; text-align:center;
       }
       .hero-h1 {
-        font-size:clamp(26px,7vw,32px); color:white;
-        text-shadow:0 2px 18px rgba(0,0,0,0.65);
+        font-size:clamp(24px,6.5vw,30px); color:white;
+        text-shadow:0 2px 20px rgba(0,0,0,0.7);
         margin-bottom:0; letter-spacing:-0.5px;
       }
-      .hero-h1 .gld { color:var(--gold); text-shadow:0 2px 12px rgba(0,0,0,0.4); }
+      .hero-h1 .gld { color:var(--gold); }
       .hero-sub { display:none; }
 
-      /* ── ACTION CARD (bottom) — dark glass pill ── */
+      /* ── ACTION CARD (bottom) ── */
       .hero-card {
         width:100%; flex-shrink:0;
-        background:rgba(11,29,58,0.80); backdrop-filter:blur(18px);
-        border-radius:22px; padding:14px 16px;
+        background:rgba(11,29,58,0.82); backdrop-filter:blur(20px);
+        border-radius:20px; padding:14px 16px 16px;
         border:1.5px solid rgba(255,255,255,0.13);
-        box-shadow:0 8px 32px rgba(0,0,0,0.35);
-        display:flex; flex-direction:column; gap:0;
-        margin-bottom:max(0px, env(safe-area-inset-bottom));
+        box-shadow:0 8px 32px rgba(0,0,0,0.4);
+        display:flex; flex-direction:column;
+        position:relative; z-index:1;
       }
       .card-title { display:none; }
-      .card-sub   { display:none; }
+      .card-sub { display:none; }
       .join-block-desc { display:none; }
-      .privacy-note    { display:none; }
+      .privacy-note { display:none; }
 
-      /* Play Now — gold, dominant, first visually via order */
-      .hero-card { order:0; }
+      /* Play Now first, session code second */
       .hero-card > .join-block:last-of-type { order:-2; }
-      .or-row                               { order:-1; margin:6px 0; color:rgba(255,255,255,0.4); }
-      .or-row::before,.or-row::after        { background:rgba(255,255,255,0.15); }
-      .hero-card > .join-block:first-of-type{ order:0; }
+      .or-row { order:-1; margin:6px 0; color:rgba(255,255,255,0.35); }
+      .or-row::before,.or-row::after { background:rgba(255,255,255,0.15); }
+      .hero-card > .join-block:first-of-type { order:0; }
 
       .solo-btn {
+        width:100%; padding:14px; font-size:16px; font-weight:800;
         background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%);
-        border:none; color:var(--navy); font-weight:800; font-size:16px;
-        padding:14px; border-radius:14px;
-        box-shadow:0 4px 20px rgba(244,185,66,0.5);
-        margin-bottom:0;
+        border:none; border-radius:13px; color:var(--navy);
+        box-shadow:0 4px 20px rgba(244,185,66,0.5); margin-bottom:0;
       }
-      .solo-btn:hover { background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); }
-
-      /* Session code — light on dark */
-      .join-block-hdr { color:rgba(255,255,255,0.75); font-size:13px; margin-bottom:4px; }
+      .join-block-hdr { color:rgba(255,255,255,0.7); font-size:13px; margin-bottom:4px; }
       .join-block-icon { display:none; }
       .join-block { margin-bottom:4px; }
       .join-input {
         background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2);
-        color:white; font-size:15px; padding:11px 12px;
+        color:white; font-size:15px; padding:10px 12px;
       }
-      .join-input::placeholder { color:rgba(255,255,255,0.3); }
-      .join-btn { padding:11px 14px; font-size:13px; }
+      .join-input::placeholder { color:rgba(255,255,255,0.3); letter-spacing:1px; }
+      .join-btn { padding:10px 14px; font-size:13px; }
+
+      /* ── COPYRIGHT — one line, sits on background ── */
+      .site-footer {
+        flex-shrink:0; padding:4px 16px calc(8px + env(safe-area-inset-bottom,0px));
+        border-top:none; background:transparent;
+        position:relative; z-index:1;
+      }
+      .footer-copy { display:none; }
+      .footer-min {
+        display:block; color:rgba(255,255,255,0.45);
+        font-size:10px; text-align:center;
+      }
+      .footer-min .footer-link { color:rgba(255,255,255,0.45); border-bottom-color:rgba(255,255,255,0.25); }
 
       /* ── SCORE SCREEN ── */
       .trait-grid { grid-template-columns:1fr; }
@@ -654,7 +661,7 @@ const DAYS = [
     tip:"An emergency fund exists so surprises don't become crises.",
     tease:"Nobody planned for this. That's the whole point.",
     diLine:"Real life doesn't text you before it happens. Here it comes." },
-  { name:'THURSDAY',  sub:'THE BET',    sceneCls:'sc-d4', miloImg:'./milo-thinking.png',
+  { name:'THURSDAY',  sub:'THE BET',    sceneCls:'sc-d4', miloImg:'./milo-money.png',
     speech:"Is it worth the risk?<br><strong>Only you know how much you can afford to lose.</strong>",
     tip:"The best risks are calculated. Know what you're willing to lose before you bet it.",
     tease:"Someone's got a plan to make you more money. The question is — do you trust it?",
@@ -684,7 +691,7 @@ function getScenarios() {
         ? { cls:'neg', title:"You got the shoes!", text:"They look amazing. But you only have $20 left for the entire week. Things just got a lot harder." }
         : { cls:'pos', title:"You held.",           text:"Your $100 is still safe. The whole week is ahead of you — and you've got options." }; },
       milo(c){ return c===0
-        ? { img:'./milo-concerned.png', txt:"Whoa 😳 …Day 1 and you already spent $80? This week just got real." }
+        ? { img:'./milo-shocked.png', txt:"Whoa 😳 …Day 1 and you already spent $80? This week just got real." }
         : { img:'./milo-happy.png',     txt:"Okayyyy 👀 You're thinking ahead. Future-you might thank you for this." }; },
     },
     // ── DAY 2 ──
@@ -1036,7 +1043,7 @@ function renderScore(){
     app.innerHTML=`<div id="screen-score"><div class="score-card"><div class="sc-headline">Week Complete ✅</div><p class="prof-desc">Your session has been recorded. Your educator will share your results.</p><button class="replay-btn" onclick="resetToHome()">Play Again</button></div></div>`;
     return;
   }
-  const miloMap={'Financial Starter':'./milo-calm.png','Emerging':'./milo-calm.png','Explorer':'./milo-smile.png','Developing':'./milo-smile.png','Thinker':'./milo-happy.png','Advancing':'./milo-happy.png','Builder':'./milo-encouraging.png','Leading':'./milo-proud.png','Exceptional':'./milo-closure.png'};
+  const miloMap={'Financial Starter':'./milo-calm.png','Emerging':'./milo-calm.png','Explorer':'./milo-smile.png','Developing':'./milo-smile.png','Thinker':'./milo-happy.png','Advancing':'./milo-happy.png','Builder':'./milo-encouraging.png','Leading':'./milo-celebrating.png','Exceptional':'./milo-celebrating.png'};
   const descMap={'Financial Starter':"You're at the beginning of your financial intelligence journey. Every expert started exactly here.",'Explorer':"You're building awareness. Some strong instincts are showing — keep going.",'Developing':"You're building awareness. Some strong instincts are showing — keep going.",'Builder':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Thinker':"You make intentional, context-aware financial decisions. That's rare for any age.",'Advancing':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Leading':"You demonstrate elite financial behavior patterns. This is the top tier.",'Exceptional':"Exceptional. You saw every trap, managed every risk, and finished stronger than you started."};
   const fb=S.balance;
   const bSty=fb>=70?'background:#FFFBEB;border:1.5px solid #FDE68A;color:#92400E;':fb>=40?'background:#EFF6FF;border:1.5px solid #BFDBFE;color:#1E40AF;':'background:#F5F3EE;border:1.5px solid #E5E2DA;color:#4A4035;';
