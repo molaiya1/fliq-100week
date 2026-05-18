@@ -85,10 +85,10 @@
     .hero-milo-wrap { position:relative; margin-bottom:0; align-self:center; display:flex; flex-direction:column; align-items:center; }
     .hero-milo { width:260px; max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); animation:miloFloat 4s ease-in-out infinite; }
     @keyframes miloFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-    /* Speech bubble below Milo, tail points up toward his feet */
-    .hero-speech { position:relative; top:auto; right:auto; margin:10px auto 14px; background:var(--navy); color:white; border-radius:4px 16px 16px 16px; padding:11px 14px; font-size:12.5px; font-weight:600; line-height:1.5; max-width:220px; box-shadow:0 6px 22px rgba(11,29,58,0.24); animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+    /* Speech bubble: absolute beside Milo's face, tail points LEFT toward him */
+    .hero-speech { position:absolute; top:32px; left:238px; z-index:2; background:var(--navy); color:white; border-radius:14px; padding:11px 14px; font-size:12.5px; font-weight:600; line-height:1.5; max-width:185px; box-shadow:0 6px 22px rgba(11,29,58,0.24); animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
     .hero-speech strong { color:var(--gold); }
-    .hero-speech::before { content:''; position:absolute; top:-8px; left:18px; width:14px; height:14px; background:var(--navy); clip-path:polygon(0 100%,100% 100%,0 0); }
+    .hero-speech::before { content:''; position:absolute; top:14px; left:-10px; width:12px; height:14px; background:var(--navy); clip-path:polygon(100% 0,100% 100%,0 50%); }
     .hero-speech::after { display:none; }
     @keyframes speechPop { from{opacity:0;transform:scale(0.75) translateY(10px);} to{opacity:1;transform:scale(1) translateY(0);} }
     .hero-text { background:rgba(255,255,255,0.78); backdrop-filter:blur(10px); border-radius:22px; padding:16px 24px; border:1.5px solid rgba(255,255,255,0.9); box-shadow:0 4px 24px rgba(11,29,58,0.08); }
@@ -136,8 +136,8 @@
     .feat-lbl  { font-size:13px; font-weight:800; color:white; margin-bottom:2px; }
     .feat-desc { font-size:11px; color:rgba(255,255,255,0.52); line-height:1.4; }
 
-    .site-footer { padding:14px 24px 18px; text-align:center; border-top:1px solid rgba(11,29,58,0.08); position:relative; z-index:10; background:white; }
-    .footer-copy { font-size:11px; color:var(--text3); line-height:1.9; }
+    .site-footer { padding:8px 24px 10px; text-align:center; border-top:1px solid rgba(11,29,58,0.08); position:relative; z-index:10; background:white; }
+    .footer-copy { font-size:11px; color:var(--text3); line-height:1.6; }
     .footer-min  { display:none; font-size:10px; color:var(--text3); }
     .footer-link { font-size:11px; color:var(--navy); font-weight:600; text-decoration:none; opacity:0.5; border-bottom:1px solid rgba(11,29,58,0.2); padding-bottom:1px; }
 
@@ -944,17 +944,8 @@ function renderHome(){
       </div>
     </div>
   </div>
-  <div class="feature-bar" id="how-it-works">
-    <div class="feature-bar-inner">
-      <div class="feat"><div class="feat-icon fi-b">🎯</div><div><div class="feat-lbl">Real-Life Choices</div><div class="feat-desc">Face fun, everyday money decisions.</div></div></div>
-      <div class="feat"><div class="feat-icon fi-g">💰</div><div><div class="feat-lbl">See the Impact</div><div class="feat-desc">Watch how your choices affect your week.</div></div></div>
-      <div class="feat"><div class="feat-icon fi-gr">⭐</div><div><div class="feat-lbl">Discover Your Type</div><div class="feat-desc">Find out what kind of money thinker you are.</div></div></div>
-      <div class="feat"><div class="feat-icon fi-p">🏆</div><div><div class="feat-lbl">Level Up</div><div class="feat-desc">Make smart moves and boost your future!</div></div></div>
-    </div>
-  </div>
   <footer class="site-footer">
-    <div class="footer-copy">© 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>Zero student PII collected &nbsp;·&nbsp; COPPA &amp; FERPA Compliant &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Legal</a></div>
-    <div class="footer-min">© 2026 WealthWise Kids LLC &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Legal</a></div>
+    <div class="footer-copy">© 2026 WealthWise Kids™ LLC. All rights reserved.</div>
   </footer>
 </div>`;
   const code=new URLSearchParams(window.location.search).get('code');
