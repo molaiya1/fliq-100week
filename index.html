@@ -170,16 +170,18 @@
     /* Day 2 — Social / movie night */
     .sim-scene.sc-d2 { background:url('./bg-day2.jpg') center/cover no-repeat; }
     /* Day 3 — Emergency / rain */
-    .sim-scene.sc-d3 { background:linear-gradient(135deg,#0C1E3A 0%,#1E3A5F 50%,#2563EB 100%); }
+    .sim-scene.sc-d3 { background:url('./bg-day3.jpg') center/cover no-repeat; }
     /* Day 4 — Risk / opportunity */
     .sim-scene.sc-d4 { background:url('./bg-day4.jpg') center/cover no-repeat; }
     /* Day 5 — Reflection / warmth */
-    .sim-scene.sc-d5 { background:linear-gradient(135deg,#431407 0%,#9A3412 40%,#EA580C 70%,#FED7AA 100%); }
+    .sim-scene.sc-d5 { background:url('./bg-day5.jpg') center/cover no-repeat; }
 
     /* Suppress CSS glow orbs on days with real image backgrounds */
     .sim-scene.sc-d1::before,.sim-scene.sc-d1::after,
     .sim-scene.sc-d2::before,.sim-scene.sc-d2::after,
-    .sim-scene.sc-d4::before,.sim-scene.sc-d4::after { opacity:0; }
+    .sim-scene.sc-d3::before,.sim-scene.sc-d3::after,
+    .sim-scene.sc-d4::before,.sim-scene.sc-d4::after,
+    .sim-scene.sc-d5::before,.sim-scene.sc-d5::after { opacity:0; }
 
     /* Ambient glow circles per scene */
     .sim-scene::before,.sim-scene::after { content:''; position:absolute; border-radius:50%; filter:blur(80px); opacity:0.35; }
