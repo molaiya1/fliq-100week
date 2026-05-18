@@ -475,18 +475,70 @@
     }
 
     @media(max-width:768px) {
+      /* ── HOME SCREEN ── */
+      #screen-home { height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+
+      /* Feature bar — not for kids on mobile */
+      .feature-bar { display:none; }
+
+      /* Hero fills all remaining space, scrollable internally if needed */
+      .hero { flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-top:72px; }
+
+      /* Single column, centered, tight padding */
+      .hero-content {
+        grid-template-columns:1fr;
+        align-items:center;
+        justify-items:center;
+        padding:10px 16px 16px;
+        gap:10px;
+        height:auto;
+        min-height:100%;
+      }
+
+      /* Milo — centered, smaller, speech bubble repositioned */
+      .hero-left { align-items:center; width:100%; }
+      .hero-milo-wrap { margin-bottom:0; display:flex; flex-direction:column; align-items:center; }
+      .hero-milo { width:170px; }
+
+      /* Speech bubble — pull out of absolute, flow below Milo */
+      .hero-speech {
+        position:relative; top:auto; right:auto;
+        margin:8px auto 0; max-width:220px;
+        border-radius:14px; font-size:12px; padding:9px 12px;
+        text-align:center;
+      }
+      .hero-speech::after { display:none; }
+
+      /* Headline card — transparent, centered, no body text */
+      .hero-text {
+        background:rgba(255,255,255,0.82); backdrop-filter:blur(10px);
+        padding:12px 18px; border-radius:16px; text-align:center; width:100%;
+      }
+      .hero-h1 { font-size:clamp(26px,7vw,34px); letter-spacing:-1px; margin-bottom:0; }
+      .hero-sub { display:none; }
+
+      /* Join card — compact, full width */
+      .hero-card { width:100%; padding:14px 16px; border-radius:20px; }
+      .card-title { font-size:16px; margin-bottom:2px; }
+      .card-sub { display:none; }
+      .join-block-desc { display:none; }
+      .join-block-hdr { font-size:13px; }
+      .join-block { margin-bottom:6px; }
+      .join-input { padding:11px 12px; font-size:15px; }
+      .join-btn { padding:11px 14px; font-size:13px; }
+      .solo-btn { padding:11px; font-size:14px; }
+      .privacy-note { display:none; }
+      .or-row { margin:6px 0; }
+
+      /* Nav */
       .nav-links .nav-link:not(.nav-link-edu) { display:none; }
-      .hero-content { grid-template-columns:1fr; min-height:auto; padding-top:20px; padding-bottom:0; }
-      .hero-left { align-items:center; }
-      .hero-milo { width:220px; }
-      .hero-speech { right:-8px; max-width:155px; font-size:12px; }
-      .hero-text { text-align:center; }
-      .feature-bar-inner { flex-wrap:wrap; gap:12px; }
-      .feat { flex:0 0 calc(50% - 6px); }
+
+      /* Score screen */
       .trait-grid { grid-template-columns:1fr; }
       .score-card { padding:28px 20px; }
-      /* Footer — strip to one line on mobile */
-      .site-footer { padding:6px 16px 10px; border-top:none; }
+
+      /* Footer */
+      .site-footer { padding:6px 16px 8px; border-top:none; }
       .footer-copy { display:none; }
       .footer-min  { display:block; }
     }
