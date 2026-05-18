@@ -73,32 +73,12 @@
     ══════════════════════════════════════ */
     #screen-home { min-height:100vh; display:flex; flex-direction:column; }
     .hero { flex:1; padding-top:72px; position:relative; display:flex; align-items:stretch; overflow:hidden; }
-    .hero-bg { position:absolute; inset:0; background:linear-gradient(180deg,#4A90C8 0%,#6AAFD6 18%,#96C8E8 38%,#BDE0F2 56%,#D8EFF8 70%,#E4F3E8 84%,#C8E0C0 100%); overflow:hidden; }
-
-    .cloud { position:absolute; background:white; border-radius:60px; filter:blur(1px); opacity:0.82; }
-    .cloud::before,.cloud::after { content:''; position:absolute; background:white; border-radius:50%; }
-    .c1 { top:7%; left:4%; width:150px; height:44px; animation:cdrift 26s ease-in-out infinite alternate; }
-    .c1::before { width:64px; height:64px; top:-30px; left:18px; }
-    .c1::after  { width:48px; height:48px; top:-20px; left:64px; }
-    .c2 { top:13%; left:38%; width:210px; height:58px; opacity:0.62; animation:cdrift 36s ease-in-out infinite alternate-reverse; }
-    .c2::before { width:84px; height:84px; top:-40px; left:28px; }
-    .c2::after  { width:64px; height:64px; top:-30px; left:88px; }
-    .c3 { top:6%; right:6%; width:128px; height:38px; opacity:0.72; animation:cdrift 20s ease-in-out infinite alternate; }
-    .c3::before { width:52px; height:52px; top:-24px; left:14px; }
-    .c3::after  { width:40px; height:40px; top:-16px; left:52px; }
-    @keyframes cdrift { from{transform:translateX(-14px);} to{transform:translateX(14px);} }
-    .scene-ground { position:absolute; bottom:0; left:0; right:0; height:56px; background:linear-gradient(180deg,#A8D5A2 0%,#7DBD76 100%); border-radius:80% 80% 0 0/30px 30px 0 0; }
-    .scene-bldg { position:absolute; bottom:56px; right:14%; width:120px; height:130px; background:rgba(255,255,255,0.3); border-radius:6px 6px 0 0; }
-    .scene-bldg::before { content:''; position:absolute; top:-26px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:36px solid transparent; border-right:36px solid transparent; border-bottom:26px solid rgba(255,255,255,0.35); }
-    .scene-bldg::after  { content:''; position:absolute; top:-46px; left:50%; transform:translateX(-50%); width:7px; height:20px; background:rgba(255,255,255,0.45); border-radius:2px; }
-    .scene-tree { position:absolute; bottom:56px; width:36px; }
-    .scene-tree::before { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:8px; height:28px; background:rgba(139,90,43,0.5); border-radius:2px; }
-    .scene-tree::after  { content:''; position:absolute; bottom:18px; left:50%; transform:translateX(-50%); width:36px; height:48px; background:rgba(80,160,80,0.55); border-radius:50% 50% 40% 40%; }
+    .hero-bg { position:absolute; inset:0; background:url('./bg-home.jpg') center bottom/cover no-repeat; overflow:hidden; }
 
     .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:28px 28px 70px; display:grid; grid-template-columns:1fr 420px; gap:36px; align-items:center; min-height:calc(100vh - 72px); }
     .hero-left { display:flex; flex-direction:column; align-items:flex-start; }
     .hero-milo-wrap { position:relative; margin-bottom:20px; align-self:center; }
-    .hero-milo { width:270px; max-width:100%; filter:drop-shadow(0 14px 36px rgba(11,29,58,0.2)); animation:miloFloat 4s ease-in-out infinite; }
+    .hero-milo { width:420px; max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); animation:miloFloat 4s ease-in-out infinite; }
     @keyframes miloFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
     .hero-speech { position:absolute; top:16px; right:-16px; background:var(--navy); color:white; border-radius:16px 16px 16px 4px; padding:12px 15px; font-size:13px; font-weight:600; line-height:1.5; max-width:174px; box-shadow:0 6px 22px rgba(11,29,58,0.24); animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
     .hero-speech strong { color:var(--gold); }
@@ -186,15 +166,20 @@
     .sim-scene { position:fixed; inset:0; z-index:0; transition:background 0.6s ease; }
 
     /* Day 1 — Shoe store / temptation */
-    .sim-scene.sc-d1 { background:linear-gradient(135deg,#2D1B69 0%,#4C1D95 20%,#6D28D9 45%,#A855F7 70%,#DDD6FE 100%); }
+    .sim-scene.sc-d1 { background:url('./bg-day1.jpg') center/cover no-repeat; }
     /* Day 2 — Social / movie night */
-    .sim-scene.sc-d2 { background:linear-gradient(135deg,#0F0C29 0%,#302B63 40%,#24243E 100%); }
+    .sim-scene.sc-d2 { background:url('./bg-day2.jpg') center/cover no-repeat; }
     /* Day 3 — Emergency / rain */
     .sim-scene.sc-d3 { background:linear-gradient(135deg,#0C1E3A 0%,#1E3A5F 50%,#2563EB 100%); }
-    /* Day 4 — Opportunity / bright */
-    .sim-scene.sc-d4 { background:linear-gradient(135deg,#064E3B 0%,#065F46 50%,#059669 100%); }
+    /* Day 4 — Risk / opportunity */
+    .sim-scene.sc-d4 { background:url('./bg-day4.jpg') center/cover no-repeat; }
     /* Day 5 — Reflection / warmth */
     .sim-scene.sc-d5 { background:linear-gradient(135deg,#431407 0%,#9A3412 40%,#EA580C 70%,#FED7AA 100%); }
+
+    /* Suppress CSS glow orbs on days with real image backgrounds */
+    .sim-scene.sc-d1::before,.sim-scene.sc-d1::after,
+    .sim-scene.sc-d2::before,.sim-scene.sc-d2::after,
+    .sim-scene.sc-d4::before,.sim-scene.sc-d4::after { opacity:0; }
 
     /* Ambient glow circles per scene */
     .sim-scene::before,.sim-scene::after { content:''; position:absolute; border-radius:50%; filter:blur(80px); opacity:0.35; }
@@ -693,15 +678,11 @@ function renderHome(){
   app.innerHTML=`
 <div id="screen-home">
   <div class="hero">
-    <div class="hero-bg">
-      <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
-      <div class="scene-tree" style="left:8%;"></div><div class="scene-tree" style="left:23%;"></div>
-      <div class="scene-bldg"></div><div class="scene-ground"></div>
-    </div>
+    <div class="hero-bg"></div>
     <div class="hero-content">
       <div class="hero-left">
         <div class="hero-milo-wrap">
-          <img src="./milo-happy.png" alt="Milo" class="hero-milo" />
+          <img src="./milo-hero.png" alt="Milo" class="hero-milo" />
           <div class="hero-speech">Hi there! I'm <strong>Milo.</strong><br>I'll be your guide on this $100 adventure!</div>
         </div>
         <div class="hero-text">
