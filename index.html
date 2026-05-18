@@ -128,8 +128,9 @@
     .feat-lbl  { font-size:13px; font-weight:800; color:white; margin-bottom:2px; }
     .feat-desc { font-size:11px; color:rgba(255,255,255,0.52); line-height:1.4; }
 
-    .site-footer { padding:24px 24px 32px; text-align:center; border-top:1px solid rgba(11,29,58,0.08); }
+    .site-footer { padding:14px 24px 18px; text-align:center; border-top:1px solid rgba(11,29,58,0.08); }
     .footer-copy { font-size:11px; color:var(--text3); line-height:1.9; }
+    .footer-min  { display:none; font-size:10px; color:var(--text3); }
     .footer-link { font-size:11px; color:var(--navy); font-weight:600; text-decoration:none; opacity:0.5; border-bottom:1px solid rgba(11,29,58,0.2); padding-bottom:1px; }
 
     /* ══════════════════════════════════════
@@ -484,6 +485,10 @@
       .feat { flex:0 0 calc(50% - 6px); }
       .trait-grid { grid-template-columns:1fr; }
       .score-card { padding:28px 20px; }
+      /* Footer — strip to one line on mobile */
+      .site-footer { padding:6px 16px 10px; border-top:none; }
+      .footer-copy { display:none; }
+      .footer-min  { display:block; }
     }
   </style>
 </head>
@@ -772,8 +777,8 @@ function renderHome(){
     </div>
   </div>
   <footer class="site-footer">
-    <div class="footer-copy">© 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>Zero student PII collected &nbsp;·&nbsp; COPPA &amp; FERPA Compliant &nbsp;·&nbsp; Authorized facilitator use only</div>
-    <div style="margin-top:8px;"><a href="/legal.html" class="footer-link">Privacy &amp; Legal</a></div>
+    <div class="footer-copy">© 2026 WealthWise Kids LLC. All rights reserved. The $100 Week™, FLIQ Score™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>Zero student PII collected &nbsp;·&nbsp; COPPA &amp; FERPA Compliant &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Legal</a></div>
+    <div class="footer-min">© 2026 WealthWise Kids LLC &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Legal</a></div>
   </footer>
 </div>`;
   const code=new URLSearchParams(window.location.search).get('code');
