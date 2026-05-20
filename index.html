@@ -454,19 +454,31 @@
     .sc-eyebrow  { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(244,178,35,0.7); margin-bottom:4px; }
     .sc-headline { font-size:22px; font-weight:900; color:white; letter-spacing:-0.5px; margin-bottom:8px; }
     .sc-fliq     { display:inline-block; background:rgba(244,178,35,0.15); border:1.5px solid rgba(244,178,35,0.35); border-radius:20px; padding:4px 14px; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+    /* FLIQ Score ring — SVG arc around Milo */
+    .fliq-ring-wrap { position:relative; width:160px; height:160px; margin:0 auto 12px; animation:popIn 0.55s 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .fliq-ring-svg { position:absolute; top:0; left:0; width:160px; height:160px; transform:rotate(-90deg); }
+    .fliq-ring-track { fill:none; stroke:rgba(255,255,255,0.08); stroke-width:7; }
+    .fliq-ring-fill  { fill:none; stroke:var(--gold); stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset 1.4s cubic-bezier(0.34,1.56,0.64,1) 0.4s; }
     .milo-circle {
+      position:absolute; top:15px; left:15px; margin:0;
       width:130px; height:130px; border-radius:50%;
       background:rgba(255,255,255,0.06); border:3px solid var(--gold);
-      box-shadow:0 0 0 8px rgba(244,178,35,0.15), 0 0 40px rgba(244,178,35,0.2);
-      display:flex; align-items:center; justify-content:center;
-      margin:0 auto 14px; overflow:hidden;
-      animation:popIn 0.55s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+      box-shadow:0 0 0 6px rgba(244,178,35,0.12), 0 0 32px rgba(244,178,35,0.18);
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
     }
     .milo-circle img { width:108px; height:108px; object-fit:contain; }
+    /* Loop closed confirmation */
+    .fliq-loop-closed { display:flex; align-items:center; justify-content:center; gap:6px; background:rgba(244,178,35,0.12); border:1px solid rgba(244,178,35,0.3); border-radius:20px; padding:5px 14px; margin:0 auto 14px; font-size:11px; font-weight:700; letter-spacing:1px; color:var(--gold); animation:fadeUp 0.5s 0.8s both; width:fit-content; }
+    /* Profile as credential badge */
+    .prof-badge { display:inline-flex; align-items:center; gap:7px; background:rgba(244,178,35,0.1); border:1.5px solid rgba(244,178,35,0.35); border-radius:10px; padding:5px 12px 5px 9px; margin-bottom:8px; font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(244,178,35,0.75); animation:fadeUp 0.5s 0.45s both; }
+    .prof-badge-dot { width:7px; height:7px; border-radius:50%; background:var(--gold); flex-shrink:0; }
     /* Big reveal — profile label in gold */
-    .prof-name { font-size:40px; font-weight:900; color:var(--gold); letter-spacing:-1.5px; margin-bottom:8px; animation:fadeUp 0.5s 0.4s both; }
-    .prof-desc { font-size:14px; color:rgba(255,255,255,0.75); line-height:1.7; max-width:420px; margin:0 auto 18px; animation:fadeUp 0.5s 0.55s both; }
-    .bal-result { display:inline-flex; align-items:center; gap:8px; border-radius:20px; padding:8px 20px; font-size:14px; font-weight:700; margin-bottom:20px; background:rgba(244,178,35,0.15); border:1.5px solid rgba(244,178,35,0.3); color:var(--gold); }
+    .prof-name { font-size:40px; font-weight:900; color:var(--gold); letter-spacing:-1.5px; margin-bottom:6px; animation:fadeUp 0.5s 0.5s both; }
+    .prof-desc { font-size:14px; color:rgba(255,255,255,0.75); line-height:1.7; max-width:420px; margin:0 auto 16px; animation:fadeUp 0.5s 0.6s both; }
+    .bal-result { display:inline-flex; align-items:center; gap:8px; border-radius:20px; padding:8px 20px; font-size:14px; font-weight:700; margin-bottom:18px; background:rgba(244,178,35,0.15); border:1.5px solid rgba(244,178,35,0.3); color:var(--gold); }
+    /* Ecosystem CTA */
+    .fliq-ecosystem-cta { margin-top:4px; margin-bottom:14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 16px; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.65; animation:fadeUp 0.5s 1s both; }
+    .fliq-ecosystem-cta strong { color:white; }
     .trait-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:18px; text-align:left; }
     .trait-tile { background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.12); border-radius:16px; padding:14px; }
     .t-name { display:flex; align-items:center; gap:6px; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:6px; }
@@ -1197,26 +1209,59 @@ function renderScore(){
   const miloMap={'Financial Starter':'./milo-calm.png','Emerging':'./milo-calm.png','Explorer':'./milo-smile.png','Developing':'./milo-smile.png','Thinker':'./milo-happy.png','Advancing':'./milo-happy.png','Builder':'./milo-encouraging.png','Leading':'./milo-celebrating.png','Exceptional':'./milo-celebrating.png'};
   const descMap={'Financial Starter':"You're at the beginning of your financial intelligence journey. Every expert started exactly here.",'Explorer':"You're building awareness. Some strong instincts are showing — keep going.",'Developing':"You're building awareness. Some strong instincts are showing — keep going.",'Builder':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Thinker':"You make intentional, context-aware financial decisions. That's rare for any age.",'Advancing':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Leading':"You demonstrate elite financial behavior patterns. This is the top tier.",'Exceptional':"Exceptional. You saw every trap, managed every risk, and finished stronger than you started."};
   const fb=S.balance;
-  const bSty=fb>=70?'background:#FFFBEB;border:1.5px solid #FDE68A;color:#92400E;':fb>=40?'background:#EFF6FF;border:1.5px solid #BFDBFE;color:#1E40AF;':'background:#F5F3EE;border:1.5px solid #E5E2DA;color:#4A4035;';
   const traits=[{id:'ic',name:'Impulse Control',icon:'🛑',q:'Can you stop and think before you spend?'},{id:'po',name:'Planning',icon:'📅',q:'Do you think about tomorrow, not just today?'},{id:'ra',name:'Risk Awareness',icon:'👀',q:'Can you tell when something is a bad idea?'},{id:'rb',name:'Recovery',icon:'💪',q:'Can you bounce back after a tough choice?'}];
   const traitHtml=traits.map(t=>{const td=p.traits?.[t.id]||{},label=td.label||'Emerging',cls=label.toLowerCase().replace(' ','-'),score=td.score??0,dots=[0,1,2].map(i=>`<div class="t-dot ${i<score?'on '+cls:''}"></div>`).join('');return `<div class="trait-tile"><div class="t-name">${t.icon} ${t.name}</div><div class="t-level ${cls}">${label}</div><div class="t-dots">${dots}</div><div class="t-q">${t.q}</div></div>`;}).join('');
+  // FLIQ Score ring — use API score if returned, otherwise map from profile label
+  const scoreMap={'Financial Starter':24,'Emerging':32,'Explorer':42,'Developing':48,'Thinker':60,'Advancing':65,'Builder':74,'Leading':85,'Exceptional':95};
+  const fliqScore=p.fliq_score||p.overall_score||p.score||scoreMap[p.profile_label]||50;
+  const R=68, C=+(2*Math.PI*R).toFixed(1); // arc circumference
+  const dashOffset=+((1-(fliqScore/100))*C).toFixed(1);
   app.innerHTML=`
 <div id="screen-score">
   <div class="score-card">
     <div class="sc-eyebrow">Your Money Profile</div>
     <div class="sc-headline">FLIQ Score™ Results</div>
     <div class="sc-fliq">Powered by FLIQ Score™</div>
-    <div class="milo-circle"><img src="${miloMap[p.profile_label]||'./milo.png'}" alt="Milo"/></div>
+
+    <!-- Ring + Milo -->
+    <div class="fliq-ring-wrap">
+      <svg class="fliq-ring-svg" viewBox="0 0 160 160">
+        <circle class="fliq-ring-track" cx="80" cy="80" r="${R}"/>
+        <circle class="fliq-ring-fill" id="fliqRingFill" cx="80" cy="80" r="${R}"
+          stroke-dasharray="${C}" stroke-dashoffset="${C}"/>
+      </svg>
+      <div class="milo-circle"><img src="${miloMap[p.profile_label]||'./milo.png'}" alt="Milo"/></div>
+    </div>
+
+    <!-- Loop closed confirmation -->
+    <div class="fliq-loop-closed">✓ &nbsp;Your FLIQ Score™ has been recorded</div>
+
+    <!-- Profile as credential badge -->
+    <div class="prof-badge"><span class="prof-badge-dot"></span>WWK Behavioral Profile</div>
     <div class="prof-name">${p.profile_label||'Explorer'}</div>
     <p class="prof-desc">${descMap[p.profile_label]||'Your behavioral intelligence profile has been recorded.'}</p>
-    <div class="bal-result" style="${bSty}">💰 You ended with $${fb}</div>
+
+    <div class="bal-result">💰 You ended with $${fb}</div>
     <div class="trait-grid">${traitHtml}</div>
-    <div class="edu-note">Your educator has access to your full behavioral report.<br><strong>Your profile builds over time — this is just the start.</strong></div>
+
+    <!-- Ecosystem CTA -->
+    <div class="fliq-ecosystem-cta">
+      📋 <strong>Tell your teacher about WealthWise Kids™</strong> — they can unlock your full behavioral report and track how your FLIQ Score grows over time.
+    </div>
+
+    <div class="edu-note">Your profile builds over time — <strong>this is just the start.</strong></div>
     <button class="replay-btn" onclick="resetToHome()">Play Again</button>
   </div>
 </div>`;
   clearProgress();
   confetti(72);
+  // Animate ring fill after render
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      const ring=document.getElementById('fliqRingFill');
+      if(ring) ring.style.strokeDashoffset=String(dashOffset);
+    });
+  });
 }
 
 // LOADING
