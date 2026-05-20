@@ -125,6 +125,17 @@
     .privacy-note strong { color:var(--navy); }
     .err-msg { background:#FEE2E2; border:1.5px solid #FCA5A5; border-radius:10px; padding:9px 13px; font-size:13px; font-weight:500; color:#991B1B; margin-top:8px; display:none; }
     .err-msg.show { display:block; }
+    /* Resume progress block */
+    .resume-block { background:linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 100%); border:1.5px solid rgba(11,29,58,0.14); border-radius:14px; padding:14px 16px; margin-bottom:16px; }
+    .resume-hdr { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .resume-icon { font-size:20px; flex-shrink:0; }
+    .resume-title { font-size:13px; font-weight:800; color:var(--navy); }
+    .resume-sub { font-size:11.5px; color:var(--text2); margin-top:1px; }
+    .resume-btn { width:100%; padding:10px 0; background:var(--navy); color:white; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:7px; }
+    .resume-btn:hover { background:var(--navy-dk,#0d1b38); }
+    .resume-fresh { display:block; width:100%; text-align:center; font-size:11.5px; color:var(--text3); background:none; border:none; cursor:pointer; padding:2px 0; text-decoration:underline; }
+    .resume-divider { display:flex; align-items:center; gap:8px; color:var(--text3); font-size:11px; font-weight:500; margin-bottom:14px; }
+    .resume-divider::before,.resume-divider::after { content:''; flex:1; height:1px; background:rgba(11,29,58,0.1); }
 
     .feature-bar { background:var(--navy); padding:14px 28px; flex-shrink:0; position:relative; z-index:10; }
     .feature-bar-inner { max-width:1120px; margin:0 auto; display:flex; justify-content:space-around; gap:16px; }
@@ -207,7 +218,7 @@
     .sim-scene.sc-d5::after  { width:300px; height:300px; background:#FCD34D; bottom:10%; left:5%; }
 
     /* Layout */
-    .sim-body { position:relative; z-index:1; width:100%; display:flex; justify-content:flex-start; padding:16px 0 48px 36px; gap:0; }
+    .sim-body { position:relative; z-index:1; width:100%; display:flex; justify-content:flex-start; padding:12px 0 16px 36px; gap:0; }
 
     /* LEFT SIDEBAR — hidden on all sizes; Milo lives in the bottom chat strip */
     .sim-sidebar { display:none; }
@@ -235,38 +246,38 @@
     .milo-tip-star { text-align:right; margin-top:8px; font-size:16px; }
 
     /* MAIN CONTENT */
-    .sim-main { width:100%; max-width:740px; padding:0; display:flex; flex-direction:column; gap:12px; overflow-y:auto; max-height:calc(100vh - 104px); }
+    .sim-main { width:100%; max-width:740px; padding:0; display:flex; flex-direction:column; gap:8px; overflow:visible; }
 
     /* Balance bar */
     .balance-bar {
       background:rgba(11,29,58,0.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-      border-radius:18px; padding:13px 20px;
-      display:flex; align-items:center; gap:16px;
+      border-radius:16px; padding:10px 16px;
+      display:flex; align-items:center; gap:12px;
       box-shadow:0 4px 22px rgba(0,0,0,0.25);
       border:1px solid rgba(255,255,255,0.1);
       flex-shrink:0;
     }
     .bal-col-left  { flex:1; }
-    .bal-col-mid   { width:2px; height:44px; background:rgba(255,255,255,0.1); border-radius:1px; }
+    .bal-col-mid   { width:2px; height:36px; background:rgba(255,255,255,0.1); border-radius:1px; }
     .bal-col-right { flex:1; display:flex; flex-direction:column; justify-content:center; }
-    .bal-col-day   { flex-shrink:0; text-align:center; padding:0 16px; border-left:2px solid rgba(255,255,255,0.1); }
+    .bal-col-day   { flex-shrink:0; text-align:center; padding:0 12px; border-left:2px solid rgba(255,255,255,0.1); }
     .bal-lbl  { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:3px; }
-    .bal-num  { font-size:40px; font-weight:900; color:var(--gold); letter-spacing:-2px; line-height:1; display:flex; align-items:center; gap:8px; }
-    .bal-coin { font-size:28px; animation:coinSpin 3s linear infinite; }
+    .bal-num  { font-size:32px; font-weight:900; color:var(--gold); letter-spacing:-2px; line-height:1; display:flex; align-items:center; gap:8px; }
+    .bal-coin { font-size:22px; animation:coinSpin 3s linear infinite; }
     @keyframes coinSpin { 0%,100%{transform:rotateY(0deg);} 50%{transform:rotateY(180deg);} }
     .bal-status-msg { font-size:13px; font-weight:700; color:white; margin-bottom:6px; }
     .bal-track { height:8px; background:rgba(255,255,255,0.12); border-radius:4px; overflow:hidden; }
     .bal-fill  { height:100%; border-radius:4px; transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1), background 0.5s; }
-    .bal-day-num { font-size:28px; font-weight:900; color:white; letter-spacing:-1px; line-height:1; }
-    .bal-day-of  { font-size:12px; color:rgba(255,255,255,0.45); font-weight:600; margin-top:2px; }
-    .bal-emoji   { font-size:28px; margin-left:8px; }
+    .bal-day-num { font-size:22px; font-weight:900; color:white; letter-spacing:-1px; line-height:1; }
+    .bal-day-of  { font-size:11px; color:rgba(255,255,255,0.45); font-weight:600; margin-top:2px; }
+    .bal-emoji   { font-size:22px; margin-left:8px; }
 
     /* Scenario card */
     .scenario-card {
       background:rgba(11,29,58,0.58); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-      border-radius:20px; border:1px solid rgba(255,255,255,0.13);
+      border-radius:16px; border:1px solid rgba(255,255,255,0.13);
       border-left:4px solid var(--gold);
-      padding:16px 20px; display:flex; gap:16px; align-items:flex-start;
+      padding:12px 16px; display:flex; gap:14px; align-items:flex-start;
       box-shadow:0 4px 28px rgba(0,0,0,0.22);
       flex-shrink:0;
     }
@@ -275,8 +286,8 @@
     .sc-tag { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; opacity:0.72; }
     .sc-tag-day   { background:rgba(244,178,35,0.18); color:#FFD47B; border:1px solid rgba(244,178,35,0.28); }
     .sc-tag-theme { background:rgba(168,85,247,0.18); color:#D8B4FE; border:1px solid rgba(168,85,247,0.28); }
-    .sc-title { font-size:clamp(22px,2.8vw,30px); font-weight:900; color:white; letter-spacing:-0.8px; margin-bottom:8px; line-height:1.15; }
-    .sc-body  { font-size:13.5px; line-height:1.7; color:rgba(255,255,255,0.8); }
+    .sc-title { font-size:clamp(18px,2.2vw,24px); font-weight:900; color:white; letter-spacing:-0.5px; margin-bottom:6px; line-height:1.15; }
+    .sc-body  { font-size:13px; line-height:1.6; color:rgba(255,255,255,0.8); }
 
     .sc-vis-col { display:none; }
     .sc-visual  { width:150px; height:140px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; flex-direction:column; gap:4px; }
@@ -298,7 +309,7 @@
 
     .choice-card {
       background:rgba(255,255,255,0.09); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      border-radius:18px; padding:14px 16px 12px;
+      border-radius:14px; padding:10px 13px 9px;
       cursor:pointer; transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
       text-align:left; display:flex; flex-direction:column;
       font-family:'Inter',sans-serif;
@@ -326,8 +337,8 @@
     .badge-teal   { background:#0D9488; }
     .badge-red    { background:#C2410C; }
     .ch-emoji { font-size:44px; line-height:1; margin-top:-4px; }
-    .ch-title  { font-size:15px; font-weight:800; color:white; margin-bottom:5px; line-height:1.3; }
-    .ch-detail { font-size:12.5px; color:rgba(255,255,255,0.72); line-height:1.5; flex:1; }
+    .ch-title  { font-size:13.5px; font-weight:800; color:white; margin-bottom:4px; line-height:1.3; }
+    .ch-detail { font-size:12px; color:rgba(255,255,255,0.72); line-height:1.45; flex:1; }
     .choice-card-bottom { display:flex; align-items:center; margin-top:8px; padding-top:0; border-top:none; }
     /* Cost label — neutral white, no red/green signal */
     .ch-cost { font-size:16px; font-weight:900; color:rgba(255,255,255,0.92); }
@@ -377,7 +388,7 @@
     @keyframes slideL { from{opacity:0;transform:translateX(-12px);} to{opacity:1;transform:translateX(0);} }
 
     /* Next button */
-    .next-btn { width:100%; padding:17px; background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:18px; color:var(--navy); font-size:16px; font-weight:800; cursor:pointer; display:none; transition:all 0.2s; font-family:'Inter',sans-serif; box-shadow:0 6px 24px rgba(244,185,66,0.45); flex-shrink:0; }
+    .next-btn { width:100%; padding:13px; background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:14px; color:var(--navy); font-size:15px; font-weight:800; cursor:pointer; display:none; transition:all 0.2s; font-family:'Inter',sans-serif; box-shadow:0 6px 24px rgba(244,185,66,0.45); flex-shrink:0; }
     .next-btn:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(244,185,66,0.55); }
     .next-btn.show  { display:block; animation:fadeUp 0.35s ease both; }
 
@@ -479,7 +490,7 @@
       box-shadow:0 4px 20px rgba(0,0,0,0.2);
       border:1px solid rgba(255,255,255,0.13);
     }
-    .milo-strip-img { width:70px; flex-shrink:0; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.25)); }
+    .milo-strip-img { width:56px; flex-shrink:0; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.25)); }
     .milo-strip-text { flex:1; min-width:0; overflow:hidden; }
     .milo-strip-speech { font-size:13px; font-weight:600; color:white; line-height:1.5; margin-bottom:2px; }
     .milo-strip-speech strong { color:var(--gold); }
@@ -908,6 +919,20 @@ function render(){ updateNav(); ({home:renderHome,dayintro:renderDayIntro,sim:re
 
 // HOME
 function renderHome(){
+  const saved=loadProgress();
+  const resumeBlock=saved?`
+    <div class="resume-block">
+      <div class="resume-hdr">
+        <span class="resume-icon">📍</span>
+        <div>
+          <div class="resume-title">Session in progress</div>
+          <div class="resume-sub">Day ${saved.day} of 5 &nbsp;·&nbsp; $${saved.balance} remaining</div>
+        </div>
+      </div>
+      <button class="resume-btn" onclick="resumeSession()">Continue my week →</button>
+      <button class="resume-fresh" onclick="startFresh()">Start over instead</button>
+    </div>
+    <div class="resume-divider">or start new</div>`:'';
   app.innerHTML=`
 <div id="screen-home">
   <div class="hero">
@@ -928,6 +953,7 @@ function renderHome(){
         </div>
       </div>
       <div class="hero-card">
+        ${resumeBlock}
         <div class="card-title">What will you do with <strong>$100?</strong></div>
         <div class="card-sub">Your $100 is waiting. Find out what kind of money thinker you are.</div>
         <div class="join-block">
@@ -1137,6 +1163,7 @@ function renderScore(){
     <button class="replay-btn" onclick="resetToHome()">Play Again</button>
   </div>
 </div>`;
+  clearProgress();
   confetti(72);
 }
 
@@ -1158,6 +1185,7 @@ async function boot(){
   const sid=await createStudent(S.cohortId);
   const sess=sid?await startSession(sid):null;
   Object.assign(S,{studentId:sid,sessionId:sess,balance:START_BAL,day:1,impulsiveN:0,history:[],sessionStart:Date.now()});
+  saveProgress();
   S.screen='dayintro'; render();
 }
 function beginDay(){ S.screen='sim'; render(); window.scrollTo({top:0,behavior:'smooth'}); }
@@ -1179,6 +1207,7 @@ async function makeChoice(ci){
   await recordEvent(ci,sc);
   S.history.push({day:S.day,choice:ci,balBefore:S.balance,balAfter:newBal});
   S.balance=newBal;
+  saveProgress();
 
   // Animate balance
   const balNum=document.getElementById('balNum');
@@ -1240,14 +1269,38 @@ async function nextDay(){
     flash.className='day-flash';
     flash.innerHTML=`<div class="flash-check">✓</div><div class="flash-day">Day ${S.day}</div><div class="flash-lbl">Complete</div>`;
     document.body.appendChild(flash);
-    setTimeout(()=>{ flash.remove(); S.day++; S.screen='dayintro'; render(); window.scrollTo({top:0,behavior:'smooth'}); },2200);
+    setTimeout(()=>{ flash.remove(); S.day++; saveProgress(); S.screen='dayintro'; render(); window.scrollTo({top:0,behavior:'smooth'}); },2200);
   }
 }
 
 function resetToHome(){
+  clearProgress();
   S={screen:'home',studentId:null,sessionId:null,cohortId:null,balance:START_BAL,day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null};
   render(); window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// ── PROGRESS PERSISTENCE ─────────────────────────────────────────
+const PROGRESS_KEY='fliq_100week_v1';
+function saveProgress(){
+  if(!S.studentId) return;
+  try{ localStorage.setItem(PROGRESS_KEY,JSON.stringify({studentId:S.studentId,sessionId:S.sessionId,cohortId:S.cohortId,balance:S.balance,day:S.day,impulsiveN:S.impulsiveN,history:S.history,sessionStart:S.sessionStart,savedAt:Date.now()})); }catch(e){}
+}
+function clearProgress(){ try{ localStorage.removeItem(PROGRESS_KEY); }catch(e){} }
+function loadProgress(){
+  try{
+    const raw=localStorage.getItem(PROGRESS_KEY);
+    if(!raw) return null;
+    const p=JSON.parse(raw);
+    if(!p.studentId||p.day<1||p.day>5) return null;
+    return p;
+  }catch(e){ return null; }
+}
+function resumeSession(){
+  const p=loadProgress(); if(!p) return;
+  Object.assign(S,{studentId:p.studentId,sessionId:p.sessionId,cohortId:p.cohortId,balance:p.balance,day:p.day,impulsiveN:p.impulsiveN,history:p.history,sessionStart:p.sessionStart,screen:'dayintro'});
+  render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function startFresh(){ clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,balance:START_BAL,day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
 
 // ── CONFETTI ─────────────────────────────────────────────────────
 function confetti(n=30){
