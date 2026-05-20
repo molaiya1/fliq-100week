@@ -782,10 +782,12 @@
 
 <script>
 // ── CONFIG ───────────────────────────────────────────────────────
-const API_BASE  = 'https://fliq-api-production.up.railway.app';
-const PILOT_ORG = '00000000-0000-0000-0000-000000000001';
-const SIM_ID    = 'sim_100week_v1';
-const START_BAL = 100;
+const API_BASE      = 'https://fliq-api-production.up.railway.app';
+const PILOT_ORG     = '00000000-0000-0000-0000-000000000001';
+const SIM_ID        = 'sim_100week_v1';
+const START_BAL     = 100;
+const PORTAL_API    = 'https://wwk-portal.vercel.app/api/activity';
+const PORTAL_SECRET = '1a3d7af64d7c14ba94485cc419e213553ef289f36aa4d1b5ec1a1e4c62af46f4';
 
 // ── STATE ────────────────────────────────────────────────────────
 let S = {
@@ -950,6 +952,38 @@ async function recordEvent(ci,sc){
   await api('/events',{session_id:S.sessionId,student_id:S.studentId,scenario_round:sc.day,simulation_id:SIM_ID,option_selected:String.fromCharCode(65+ci),time_to_decision_ms:S._t0?Date.now()-S._t0:null,mind_changed:false,state_snapshot:{day:sc.day,option_type:sc.choices[ci].opt,balance_pct_before:Math.round((prev/START_BAL)*100),balance_pct_after:Math.round((after/START_BAL)*100),prior_impulsive_count:S.impulsiveN,low_balance_warning_shown:prev<30},presented_options:sc.choices.map(c=>c.opt)});
 }
 async function completeSession(){ if(!S.sessionId) return null; return await api(`/sessions/${S.sessionId}/complete`,{duration_seconds:S.sessionStart?Math.round((Date.now()-S.sessionStart)/1000):null}); }
+
+// ── Portal bridge — close the Completed Loop in Supabase ──
+async function postToPortal(profile){
+  if(!profile||!S.studentId) return;
+  const scoreMap={'Financial Starter':24,'Emerging':32,'Explorer':42,'Developing':48,'Thinker':60,'Advancing':65,'Builder':74,'Leading':85,'Exceptional':95};
+  const fliqScore=profile.fliq_score||profile.overall_score||profile.score||scoreMap[profile.profile_label]||50;
+  try{
+    await fetch(PORTAL_API,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${PORTAL_SECRET}`},
+      body:JSON.stringify({
+        source:'100week',
+        event_type:'post_assessment',
+        score:fliqScore,
+        data:{
+          external_id:S.studentId,
+          profile_label:profile.profile_label||null,
+          balance_final:S.balance,
+          session_id:S.sessionId||null,
+          cohort_id:S.cohortId||null,
+          sub_scores:{
+            impulse_control:profile.traits?.ic?.score??null,
+            planning:profile.traits?.po?.score??null,
+            risk_awareness:profile.traits?.ra?.score??null,
+            recovery:profile.traits?.rb?.score??null,
+          },
+          duration_seconds:S.sessionStart?Math.round((Date.now()-S.sessionStart)/1000):null,
+        }
+      })
+    });
+  }catch(e){ /* non-blocking — sim works even if portal is unreachable */ }
+}
 
 // ── NAV UPDATER ──────────────────────────────────────────────────
 function updateNav(){
@@ -1364,7 +1398,9 @@ async function makeChoice(ci){
 async function nextDay(){
   if(S.day>=5){
     confetti(58); S.screen='loading'; render();
-    S.profile=await completeSession(); S.screen='score'; render();
+    S.profile=await completeSession();
+    postToPortal(S.profile); // non-blocking — closes Completed Loop in portal
+    S.screen='score'; render();
   } else {
     confetti(34);
     const flash=document.createElement('div');
