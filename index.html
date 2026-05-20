@@ -282,12 +282,12 @@
       flex-shrink:0;
     }
     .sc-text-col { flex:1; min-width:0; }
-    .sc-tags { display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+    .sc-tags { display:none; }
     .sc-tag { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; opacity:0.72; }
     .sc-tag-day   { background:rgba(244,178,35,0.18); color:#FFD47B; border:1px solid rgba(244,178,35,0.28); }
     .sc-tag-theme { background:rgba(168,85,247,0.18); color:#D8B4FE; border:1px solid rgba(168,85,247,0.28); }
-    .sc-title { font-size:clamp(18px,2.2vw,24px); font-weight:900; color:white; letter-spacing:-0.5px; margin-bottom:6px; line-height:1.15; }
-    .sc-body  { font-size:13px; line-height:1.6; color:rgba(255,255,255,0.8); }
+    .sc-title { font-size:clamp(17px,2vw,22px); font-weight:900; color:white; letter-spacing:-0.5px; margin-bottom:4px; line-height:1.15; }
+    .sc-body  { font-size:13px; line-height:1.5; color:rgba(255,255,255,0.82); }
 
     .sc-vis-col { display:none; }
     .sc-visual  { width:150px; height:140px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; flex-direction:column; gap:4px; }
@@ -300,10 +300,7 @@
     .vis-d5 { background:linear-gradient(135deg,#7C2D12,#F97316); }
 
     /* Choice section */
-    .choice-prompt-row { text-align:center; flex-shrink:0; }
-    .choice-prompt-title { font-size:16px; font-weight:900; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.3); margin-bottom:3px; }
-    .choice-prompt-sub   { font-size:12px; font-weight:600; color:rgba(255,255,255,0.75); }
-    .choice-prompt-sub strong { color:var(--gold); }
+    .choice-prompt-row { display:none; }
 
     .choice-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; flex-shrink:0; }
 
@@ -336,12 +333,12 @@
     .badge-purple { background:#9333EA; }
     .badge-teal   { background:#0D9488; }
     .badge-red    { background:#C2410C; }
-    .ch-emoji { font-size:44px; line-height:1; margin-top:-4px; }
-    .ch-title  { font-size:13.5px; font-weight:800; color:white; margin-bottom:4px; line-height:1.3; }
-    .ch-detail { font-size:12px; color:rgba(255,255,255,0.72); line-height:1.45; flex:1; }
-    .choice-card-bottom { display:flex; align-items:center; margin-top:8px; padding-top:0; border-top:none; }
+    .ch-emoji { font-size:36px; line-height:1; margin-top:-2px; }
+    .ch-title  { font-size:13.5px; font-weight:800; color:white; margin-bottom:0; line-height:1.3; }
+    .ch-detail { display:none; }
+    .choice-card-bottom { display:flex; align-items:center; margin-top:6px; padding-top:0; border-top:none; }
     /* Cost label — neutral white, no red/green signal */
-    .ch-cost { font-size:16px; font-weight:900; color:rgba(255,255,255,0.92); }
+    .ch-cost { font-size:15px; font-weight:900; color:rgba(255,255,255,0.92); }
     .ch-cost.spend,.ch-cost.save,.ch-cost.risk { color:rgba(255,255,255,0.92); }
     /* Mood labels hidden — no judgment cues on choices */
     .mood-label { display:none; }
@@ -494,7 +491,7 @@
     .milo-strip-text { flex:1; min-width:0; overflow:hidden; }
     .milo-strip-speech { font-size:13px; font-weight:600; color:white; line-height:1.5; margin-bottom:2px; }
     .milo-strip-speech strong { color:var(--gold); }
-    .milo-strip-tip { font-size:11px; font-weight:500; color:rgba(255,255,255,0.68); line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .milo-strip-tip { display:none; }
 
     @media(max-width:900px) {
       /* Sim screen — allow natural scroll */
@@ -1088,11 +1085,11 @@ function renderSim(){
           </div>
           <div class="sc-title">${sc.day===1?'The Cool Shoes':sc.day===2?'Everyone Is Going!':sc.day===3?'Your Bike Tire Just Popped.':sc.day===4?'A Chance to Make More':' Last Day of the Week.'}</div>
           <div class="sc-body">${[
-            `It's Monday. Your friend just texted you. The shoes you really want are on sale — right now. They cost $80. You have $100 for the whole week. You want to save some for later. But these shoes are <em>SO</em> cool.`,
-            `The group chat is going crazy. Movies tonight — $30 for tickets and snacks. "You're coming right??" Your phone won't stop buzzing. You have $${S.balance}${S.balance<40?". You're running low.":"."}`,
-            `POP. You're halfway to practice and you're standing there with a flat tire. The shop can fix it for $25. You didn't plan for this. You have $${S.balance}.`,
-            `Your friend has a plan. Give them $20 and they'll flip it — maybe return you $40 by next week. 50/50 shot. You have $${S.balance}.`,
-            `Friday. The week is almost over. You have $${S.balance} left.${S.balance<30?' That was a tough week.':S.balance>=70?' You crushed it.':' You made it through.'} You pass a store on the way home. There's a sale on stuff you kind of want.`,
+            `The shoes you've been wanting are <em>on sale</em> — $80. You have $100 for the whole week.`,
+            `Group chat is going crazy. Movies tonight, $30. <em>"You're coming, right??"</em> You have $${S.balance}.`,
+            `<em>POP.</em> Flat tire on the way to practice. $25 to fix it. You have $${S.balance}.`,
+            `Your friend: <em>"Give me $20 now — I'll flip it to $40 by next week."</em> 50/50 shot. You have $${S.balance}.`,
+            `Friday. $${S.balance} left. You pass a store with a sale on the way home.`,
           ][S.day-1]}</div>
         </div>
         <div class="sc-vis-col">
