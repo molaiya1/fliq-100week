@@ -787,7 +787,7 @@ const PILOT_ORG     = '00000000-0000-0000-0000-000000000001';
 const SIM_ID        = 'sim_100week_v1';
 const START_BAL     = 100;
 const PORTAL_API    = 'https://wwk-portal.vercel.app/api/activity';
-const PORTAL_SECRET = '1a3d7af64d7c14ba94485cc419e213553ef289f36aa4d1b5ec1a1e4c62af46f4';
+const PORTAL_SECRET = 'wwk-internal-2026';
 
 // ── STATE ────────────────────────────────────────────────────────
 let S = {
@@ -961,13 +961,13 @@ async function postToPortal(profile){
   try{
     await fetch(PORTAL_API,{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${PORTAL_SECRET}`},
+      headers:{'Content-Type':'application/json','x-wwk-api-key':PORTAL_SECRET},
       body:JSON.stringify({
-        source:'100week',
-        event_type:'post_assessment',
-        score:fliqScore,
-        data:{
-          external_id:S.studentId,
+        student_id:S.studentId||'anonymous',
+        app_source:'100week',
+        event_type:'sim_completed',
+        fliq_score:fliqScore,
+        event_data:{
           profile_label:profile.profile_label||null,
           balance_final:S.balance,
           session_id:S.sessionId||null,
