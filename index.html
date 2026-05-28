@@ -74,7 +74,7 @@
     ══════════════════════════════════════ */
     /* Fixed height was the culprit — grid taller than viewport got symmetrically clipped.
        Now min-height allows natural expansion; hero-bg fixed so background always fills viewport. */
-    #screen-home { height:100vh; max-height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+    #screen-home { min-height:100vh; display:flex; flex-direction:column; overflow:hidden; }
     .hero { flex:1; min-height:0; padding-top:72px; position:relative; display:flex; align-items:center; justify-content:stretch; overflow:hidden; }
     .hero-bg { position:fixed; inset:0; z-index:0; background:url('./bg-home.jpg') center bottom/cover no-repeat; }
 
@@ -1001,6 +1001,8 @@ function updateNav(){
       dot.textContent=d<S.day?'✓':d;
       lbl.textContent=d===S.day?`Day ${d}`:'';
     });
+    const sb=document.getElementById('streakBadge');
+    if(sb){ const completed=S.day-1; sb.innerHTML=`<span>💎 ${completed>0?`${completed} day${completed>1?'s':''} done!`:'Day 1!'}</span>`; }
   }
 }
 
@@ -1074,6 +1076,7 @@ function renderHome(){
   </div>
   <footer class="site-footer">
     <div class="footer-copy">© 2026 WealthWise Kids™ LLC. All rights reserved.</div>
+    <div class="footer-min">© 2026 WealthWise Kids™ LLC &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Safety</a></div>
   </footer>
 </div>`;
   const code=new URLSearchParams(window.location.search).get('code');
@@ -1241,7 +1244,7 @@ function renderScore(){
     return;
   }
   const miloMap={'Financial Starter':'./milo-calm.png','Emerging':'./milo-calm.png','Explorer':'./milo-smile.png','Developing':'./milo-smile.png','Thinker':'./milo-happy.png','Advancing':'./milo-happy.png','Builder':'./milo-encouraging.png','Leading':'./milo-celebrating.png','Exceptional':'./milo-celebrating.png'};
-  const descMap={'Financial Starter':"You're at the beginning of your financial intelligence journey. Every expert started exactly here.",'Explorer':"You're building awareness. Some strong instincts are showing — keep going.",'Developing':"You're building awareness. Some strong instincts are showing — keep going.",'Builder':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Thinker':"You make intentional, context-aware financial decisions. That's rare for any age.",'Advancing':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Leading':"You demonstrate elite financial behavior patterns. This is the top tier.",'Exceptional':"Exceptional. You saw every trap, managed every risk, and finished stronger than you started."};
+  const descMap={'Financial Starter':"You're at the beginning of your financial intelligence journey. Every expert started exactly here.",'Emerging':"You're starting to recognize patterns in your financial behavior. Small steps forward are still forward.",'Explorer':"You're building awareness. Some strong instincts are showing — keep going.",'Developing':"You're building awareness. Some strong instincts are showing — keep going.",'Builder':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Thinker':"You make intentional, context-aware financial decisions. That's rare for any age.",'Advancing':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Leading':"You demonstrate elite financial behavior patterns. This is the top tier.",'Exceptional':"Exceptional. You saw every trap, managed every risk, and finished stronger than you started."};
   const fb=S.balance;
   const traits=[{id:'ic',name:'Impulse Control',icon:'🛑',q:'Can you stop and think before you spend?'},{id:'po',name:'Planning',icon:'📅',q:'Do you think about tomorrow, not just today?'},{id:'ra',name:'Risk Awareness',icon:'👀',q:'Can you tell when something is a bad idea?'},{id:'rb',name:'Recovery',icon:'💪',q:'Can you bounce back after a tough choice?'}];
   const traitHtml=traits.map(t=>{const td=p.traits?.[t.id]||{},label=td.label||'Emerging',cls=label.toLowerCase().replace(' ','-'),score=td.score??0,dots=[0,1,2].map(i=>`<div class="t-dot ${i<score?'on '+cls:''}"></div>`).join('');return `<div class="trait-tile"><div class="t-name">${t.icon} ${t.name}</div><div class="t-level ${cls}">${label}</div><div class="t-dots">${dots}</div><div class="t-q">${t.q}</div></div>`;}).join('');
@@ -1306,8 +1309,16 @@ function renderLoading(){
 // ── INTERACTIONS ─────────────────────────────────────────────────
 async function handleJoin(){
   const code=document.getElementById('codeInput')?.value?.trim().toUpperCase();
-  if(!code||code.length<4){document.getElementById('codeErr')?.classList.add('show');return;}
-  try{const r=await fetch(`${API_BASE}/cohorts/by-code/${code}`);if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;}}catch(e){}
+  const errEl=document.getElementById('codeErr');
+  if(!code||code.length<4){if(errEl) errEl.classList.add('show');return;}
+  if(errEl) errEl.classList.remove('show');
+  try{
+    const r=await fetch(`${API_BASE}/cohorts/by-code/${code}`);
+    if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;}
+    else{if(errEl){errEl.textContent='That code doesn\'t match a session. Check with your teacher.';errEl.classList.add('show');}return;}
+  }catch(e){
+    if(errEl){errEl.textContent='Can\'t connect right now. Try again or play on your own.';errEl.classList.add('show');}return;
+  }
   await boot();
 }
 async function handleSolo(){ await boot(); }
@@ -1361,7 +1372,6 @@ async function makeChoice(ci){
     if(balMsg)  balMsg.textContent=bs2.msg;
     if(balEmoji) balEmoji.textContent=bs2.emoji;
   }
-  if(cost>0) confetti(10);
 
   // Outcome
   const out=sc.outcome(ci);
