@@ -151,6 +151,69 @@
     .feat-desc { font-size:11px; color:rgba(255,255,255,0.52); line-height:1.4; }
 
     /* ══════════════════════════════════════
+       BAND COLOR OVERLAYS
+    ══════════════════════════════════════ */
+    /* Shared overlay base — sits between background image and content */
+    .band-overlay {
+      position:fixed; inset:0; pointer-events:none; z-index:0;
+      transition:background 0.5s ease;
+    }
+    /* Explorer (8–11): warm amber/golden — sunny, safe, playful */
+    .band-explorer .band-overlay {
+      background:linear-gradient(150deg,
+        rgba(255,195,55,0.16) 0%,
+        rgba(255,130,45,0.10) 55%,
+        rgba(255,210,80,0.05) 100%);
+    }
+    /* Builder (11–14): cool blue-teal — contemporary, focused */
+    .band-builder .band-overlay {
+      background:linear-gradient(150deg,
+        rgba(25,125,255,0.11) 0%,
+        rgba(0,200,195,0.07) 55%,
+        rgba(60,100,255,0.04) 100%);
+    }
+    /* Strategist (14–18): no tint — existing dark cinematic tone is correct */
+    .band-strategist .band-overlay { background:transparent; }
+
+    /* Day intro overlay — position:absolute because di-bg is absolute */
+    .band-di-overlay {
+      position:absolute; inset:0; pointer-events:none; z-index:1;
+      transition:background 0.5s ease;
+    }
+    .band-explorer .band-di-overlay {
+      background:linear-gradient(150deg,
+        rgba(255,195,55,0.20) 0%,
+        rgba(255,130,45,0.10) 60%,
+        transparent 100%);
+    }
+    .band-builder .band-di-overlay {
+      background:linear-gradient(150deg,
+        rgba(25,125,255,0.14) 0%,
+        rgba(0,200,195,0.08) 60%,
+        transparent 100%);
+    }
+    .band-strategist .band-di-overlay { background:transparent; }
+
+    /* Hero (home screen) tint — fixed to match hero-bg */
+    .hero-band-tint {
+      position:fixed; inset:0; z-index:1; pointer-events:none;
+      transition:background 0.5s ease;
+    }
+    .hero-band-tint.band-explorer {
+      background:linear-gradient(150deg,
+        rgba(255,195,55,0.13) 0%,
+        rgba(255,130,45,0.07) 60%,
+        transparent 100%);
+    }
+    .hero-band-tint.band-builder {
+      background:linear-gradient(150deg,
+        rgba(25,125,255,0.08) 0%,
+        rgba(0,200,195,0.05) 60%,
+        transparent 100%);
+    }
+    .hero-band-tint.band-strategist { background:transparent; }
+
+    /* ══════════════════════════════════════
        BAND SELECTOR
     ══════════════════════════════════════ */
     .band-selector { margin-bottom:12px; }
@@ -1384,6 +1447,7 @@ function renderHome(){
 <div id="screen-home">
   <div class="hero">
     <div class="hero-bg"></div>
+    <div class="hero-band-tint band-${S.band}"></div>
     <div class="hero-content">
       <div class="hero-left">
         <div class="hero-milo-wrap">
@@ -1441,8 +1505,9 @@ function selectBand(band){
 function renderDayIntro(){
   const d=getDaysMeta()[S.day-1];
   app.innerHTML=`
-<div id="screen-dayintro">
+<div id="screen-dayintro" class="band-${S.band}">
   <div class="di-bg bg-d${S.day}"></div>
+  <div class="band-di-overlay"></div>
   <div class="di-content">
     <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Day ${S.day} of 5</div>
     <div class="di-day-name">${d.name}</div>
@@ -1481,8 +1546,9 @@ function renderSim(){
     ? `<div class="sc-vis-badge">${sc.visBadge.replace('\n','<br>')}</div>` : '';
 
   app.innerHTML=`
-<div id="screen-sim">
+<div id="screen-sim" class="band-${S.band}">
   <div class="sim-scene ${dm.sceneCls}" id="simScene"></div>
+  <div class="band-overlay"></div>
   <!-- Floating Milo — desktop only -->
   <div class="milo-float-fig" id="miloFloatFig">
     <div class="milo-float-bubble" id="miloFloatBubble">${dm.speech}</div>
