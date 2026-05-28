@@ -1620,7 +1620,7 @@ function renderSim(){
         <div class="sc-text-col">
           <div class="sc-tags">
             <span class="sc-tag sc-tag-day">📅 Day ${S.day}</span>
-            <span class="sc-tag sc-tag-theme">${DAYS[S.day-1].sub === 'THE DROP' ? '🔥' : S.day===2?'👥':S.day===3?'⚡':S.day===4?'💎':'🏁'} ${['TEMPTATION','SOCIAL PRESSURE','UNEXPECTED','OPPORTUNITY','REFLECTION'][S.day-1]}</span>
+            <span class="sc-tag sc-tag-theme">${getDaysMeta()[S.day-1].sub === 'THE DROP' ? '🔥' : S.day===2?'👥':S.day===3?'⚡':S.day===4?'💎':'🏁'} ${['TEMPTATION','SOCIAL PRESSURE','UNEXPECTED','OPPORTUNITY','REFLECTION'][S.day-1]}</span>
           </div>
           <div class="sc-title">${sc.scTitle||''}</div>
           <div class="sc-body">${sc.scBody||''}</div>
@@ -1778,7 +1778,7 @@ async function makeChoice(ci){
   });
 
   const opt=sc.choices[ci].opt;
-  if(['spend_nonessential','spend_social'].includes(opt)&&(S.balance/START_BAL)<0.4) S.impulsiveN++;
+  if(['spend_nonessential','spend_social'].includes(opt)&&(S.balance/getStartBal())<0.4) S.impulsiveN++;
 
   const cost=sc.choices[ci].cost, newBal=Math.max(0,S.balance-cost);
   await recordEvent(ci,sc);
