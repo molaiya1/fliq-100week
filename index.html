@@ -1019,6 +1019,10 @@ function getScenarios(){
   return getStrategistScenarios();
 }
 
+// Carry-forward helpers — read prior day choices from history
+function priorChoice(day){ return S.history.find(x=>x.day===day)?.choice??null; }
+function priorSpent(day){ const h=S.history.find(x=>x.day===day); return h?h.balBefore-h.balAfter:0; }
+
 function getExplorerScenarios(){
   const b = S.balance;
   return [
@@ -1032,23 +1036,29 @@ function getExplorerScenarios(){
           costLbl:'−$14', costCls:'spend', moodLbl:'TREAT MOVE', moodEmoji:'🖍️', moodCls:'mood-risky', cardCls:'type-blue', badgeCls:'badge-blue', emoji:'🖍️' },
         { l:'B', title:'Save my money for later',  detail:"They might still be there. Hold on to your $20.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART MOVE', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🐷' },
-        { l:'C', title:'Check if it\'s cheaper elsewhere', detail:"Look around first. Maybe you can find the same thing for less!", cost:0, opt:'research_alternative',
-          costLbl:'−$0', costCls:'save', moodLbl:'EXPLORE MOVE', moodEmoji:'🔍', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🔍' },
+        { l:'C', title:'Ask a friend to go halfsies', detail:"Split the cost — you each pay $7 and share the set.", cost:7, opt:'split_cost',
+          costLbl:'−$7', costCls:'spend', moodLbl:'SHARE MOVE', moodEmoji:'🤝', moodCls:'mood-social', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🤝' },
       ],
       outcome(c){
         if(c===0) return { cls:'neg', title:"You got the pencils!", text:`They're so cool! But you only have $${b-14} left for the whole week. Everything just got harder.` };
-        if(c===2) return { cls:'pos', title:"Smart thinking!", text:"Looking around first is a great habit. You kept your $20 AND learned something about smart shopping!" };
-        return          { cls:'pos', title:"You saved it.",     text:"Smart! Your $20 is safe. You've got the whole week ahead of you — and plenty of options." }; },
+        if(c===2) return { cls:'neu', title:"You split it!", text:`Smart use of a friend — but you still spent $7. You have $${b-7} left. Sharing costs is real, but it's still spending.` };
+        return          { cls:'pos', title:"You saved it.",     text:"Your $20 is safe. You've got the whole week ahead of you — and plenty of options." }; },
       milo(c){
         if(c===0) return { img:'./milo-shocked.png',   txt:"Wow — Day 1 and $14 is already gone? Let's see how you handle the rest! 😳" };
-        if(c===2) return { img:'./milo-encouraging.png', txt:"Exploring your options before spending — that's a grown-up money skill! 🔍🌱" };
+        if(c===2) return { img:'./milo-thinking.png',  txt:"Splitting costs is clever — but $7 is still $7 gone on Day 1. Worth it? 🤔" };
         return          { img:'./milo-happy.png',       txt:"Good thinking! Future-you will thank you for that call. 🌟" }; },
     },
     // DAY 2 — THE PULL
     { day:2, scTitle:'Everyone\'s Getting Ice Cream',
-      scBody:`After school, everyone's heading to the ice cream cart. It's $3. <em>"You coming??"</em> You have $${b}.`,
+      scBody: priorChoice(1)===0
+        ? `You spent $14 on pencils yesterday — now you only have <strong>$${b}</strong>. After school, everyone's heading to the ice cream cart. It's $3. <em>"You coming??"</em>`
+        : priorChoice(1)===2
+        ? `You went halfsies yesterday — you've got $${b} left. After school, everyone's heading to the ice cream cart. It's $3. <em>"You coming??"</em>`
+        : `You kept your money yesterday — you've still got all $${b}. After school, everyone's heading to the ice cream cart. It's $3. <em>"You coming??"</em>`,
       visEmoji:'🍦', visCls:'vis-d2', visBadge:null,
-      preChat:"Ice cream sounds amazing. <strong>But is it in your plan?</strong> 🍦",
+      preChat: priorChoice(1)===0
+        ? `You're already down $14 from yesterday. <strong>Ice cream is $3 more.</strong> Is this really the call? 🍦`
+        : "Ice cream sounds amazing. <strong>But is it in your plan?</strong> 🍦",
       choices:[
         { l:'A', title:'Go get ice cream!', detail: b<8?"You barely have enough — but FOMO is real.":"It's only $3. The memories are worth it!", cost:3, opt:'spend_social',
           costLbl:'−$3', costCls:'spend', moodLbl:'FUN MOVE', moodEmoji:'🍦', moodCls:'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🍦' },
@@ -1075,25 +1085,27 @@ function getExplorerScenarios(){
     { day:3, scTitle:'The Lost Library Book',
       scBody:`You lost a library book — and the librarian says you owe $5 for a replacement copy. You have $${b}.`,
       visEmoji:'📚', visCls:'vis-d3', visBadge:'$5\nOWED',
-      preChat:"Uh oh. This wasn't part of the plan. <strong>What's the right call?</strong> 📚",
+      preChat: (priorChoice(1)===0||priorChoice(2)===0)
+        ? `You've been spending. Now this. <strong>Can you still cover it?</strong> 📚`
+        : "Uh oh. This wasn't part of the plan. <strong>What's the right call?</strong> 📚",
       choices:[
         { l:'A', title: b>=5?'Pay the $5 now':'Try to cover it', detail: b>=5?'Take care of it so you can use the library again.':'You\'re really short — you\'ll need help.', cost: b>=5?5:0, opt:'spend_essential',
           costLbl: b>=5?'−$5':'Need help', costCls:'spend', moodLbl:'RESPONSIBLE', moodEmoji:'📚', moodCls:'mood-safe', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'📚' },
         { l:'B', title:'Ignore it for now', detail:"Keep your money. Hope they forget about it.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SKIP IT', moodEmoji:'🛑', moodCls:'mood-tough', cardCls:'type-red', badgeCls:'badge-red', emoji:'🛑' },
-        { l:'C', title:'Tell a grown-up and ask for help', detail:"Some problems are easier with a grown-up's help.", cost:0, opt:'seek_help',
-          costLbl:'−$0', costCls:'save', moodLbl:'SMART ASK', moodEmoji:'🤝', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🤝' },
+        { l:'C', title:'Write a note asking for more time', detail:"Explain what happened. Ask if you can pay next week.", cost:0, opt:'negotiate_payment',
+          costLbl:'−$0 now', costCls:'save', moodLbl:'EXPLAIN IT', moodEmoji:'✏️', moodCls:'mood-social', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'✏️' },
       ],
       outcome(c){
         if(c===0&&b<5) return { cls:'neg', title:"You couldn't cover it.",  text:"Your balance was too low. You had to ask for help. Spending earlier made this harder." };
         if(c===0)      return { cls:'neu', title:"All paid up!",            text:`$5 gone — but the problem is solved. The library is happy. You can borrow books again.` };
-        if(c===2)      return { cls:'pos', title:"Great instinct!",         text:"Knowing when to ask for help is one of the smartest skills you can have. You kept your money AND you're not facing this alone." };
+        if(c===2)      return { cls:'neu', title:"You asked for more time.", text:"The librarian said maybe — but the fee is still there. Explaining your situation is honest. But problems don't disappear just because you wrote a note." };
         return                { cls:'neg', title:"You ignored it.",          text:"The fee is still there — and the library won't let you check out books. Small problems grow when you wait." };
       },
       milo(c){
         if(c===0&&b<5) return { img:'./milo-concerned.png',   txt:"This is why we hold onto money. Surprises always show up." };
         if(c===0)      return { img:'./milo-encouraging.png', txt:"Taking care of your responsibilities — that's what smart people do! 🌟" };
-        if(c===2)      return { img:'./milo-happy.png',        txt:"Asking for help isn't giving up — it's being smart about your resources. I'm proud of you! 🌱" };
+        if(c===2)      return { img:'./milo-thinking.png',    txt:"Honest communication is good — but the problem is still unresolved. Sometimes you have to pay AND explain. 🤔" };
         return                { img:'./milo-thinking.png',    txt:"Ignoring problems rarely makes them disappear. Something to think about…" };
       },
     },
@@ -1107,14 +1119,14 @@ function getExplorerScenarios(){
           costLbl:'−$4 (maybe +$8)', costCls:'risk', moodLbl:'RISK MOVE', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
         { l:'B', title:'No thanks, keep my money', detail: b<6?'You really can\'t afford to lose $4 right now.':'Not every opportunity is worth taking.', cost:0, opt:'decline_invest',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'PLAY SAFE', moodEmoji:'🛡️', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🛡️' },
-        { l:'C', title:'Ask a grown-up first', detail:"Get a second opinion before you put your money in.", cost:0, opt:'seek_advice',
-          costLbl:'−$0', costCls:'save', moodLbl:'WISE MOVE', moodEmoji:'🤝', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🤝' },
+        { l:'C', title:'Tell them maybe — sleep on it', detail:"You don't have to decide right now. Wait until tomorrow.", cost:0, opt:'defer_decision',
+          costLbl:'−$0', costCls:'save', moodLbl:'WAIT IT OUT', moodEmoji:'💤', moodCls:'mood-social', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'💤' },
       ],
       outcome(c){
         if(c===0&&b>10)            return { cls:'pos', title:"Calculated risk!",  text:"You had enough to try it without gambling everything. That's what smart risk looks like." };
         if(c===0&&S.impulsiveN>=2) return { cls:'neg', title:"That was risky.",   text:"After a tough week, this bet could really cost you. You put $4 you might need on the line." };
         if(c===0)                  return { cls:'neu', title:"You went for it!",  text:"$4 in play. Will it work? That's the thing about risks — you never know for sure." };
-        if(c===2)                  return { cls:'pos', title:"Smart move!",       text:"Asking for advice before risking money is one of the smartest things you can do. That's wisdom!" };
+        if(c===2)                  return { cls:'pos', title:"You slept on it.",  text:"Waiting before deciding is underrated. Your $4 is safe — and tomorrow you'll know if this was a real opportunity or just pressure." };
         if(b<6)                    return { cls:'pos', title:"Wise call!",         text:`With $${b} left, protecting your money was the smart move.` };
         return                            { cls:'neu', title:"You said no.",       text:`Sometimes the smartest move is the one you don't take. Your $${b} is safe.` };
       },
@@ -1122,7 +1134,7 @@ function getExplorerScenarios(){
         if(c===0&&b>10)            return { img:'./milo-explorer.png',    txt:"Bold move! Hope your classmate comes through. 🤞" };
         if(c===0&&S.impulsiveN>=2) return { img:'./milo-concerned.png',   txt:"After this week… are you really sure about that?" };
         if(c===0)                  return { img:'./milo-thinking.png',    txt:"50/50. Could be genius. Could be a tough lesson." };
-        if(c===2)                  return { img:'./milo-happy.png',        txt:"Asking for help is not a weakness — it's one of the smartest things a person can do! 🌱" };
+        if(c===2)                  return { img:'./milo-encouraging.png', txt:"'Let me sleep on it' is one of the most powerful things you can say to a sales pitch. Well done. 🌱" };
         return                            { img:'./milo-proud.png',       txt:"Knowing when NOT to spend is a superpower. For real. 💪" };
       },
     },
@@ -1170,23 +1182,29 @@ function getBuilderScenarios(){
           costLbl:'−$35', costCls:'spend', moodLbl:'HYPE MOVE', moodEmoji:'🔥', moodCls:'mood-risky', cardCls:'type-blue', badgeCls:'badge-blue', emoji:'👕' },
         { l:'B', title:'Keep scrolling, save it',  detail:"You can live without it. Hold your $50.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART MOVE', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🐷' },
-        { l:'C', title:'Look for it secondhand', detail:"Same style, way less money. Check the apps.", cost:0, opt:'research_alternative',
-          costLbl:'−$0', costCls:'save', moodLbl:'STRATEGIC', moodEmoji:'🔍', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🔍' },
+        { l:'C', title:'Buy it — sell something to cover it', detail:"Sell an old game or shoes to make up what you spent.", cost:35, opt:'barter_cover',
+          costLbl:'−$35 now', costCls:'spend', moodLbl:'HUSTLE MOVE', moodEmoji:'🔄', moodCls:'mood-risk', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🔄' },
       ],
       outcome(c){
         if(c===0) return { cls:'neg', title:"You got the hoodie!", text:`It's clean. But you only have $${b-35} left for the rest of the week. Things just got tight.` };
-        if(c===2) return { cls:'pos', title:"Big brain energy.", text:"Looking for the same item secondhand? That's how people build wealth. You saved $50 AND kept your options open. 🔨" };
+        if(c===2) return { cls:'neg', title:"You bought it — but selling takes time.", text:`The hoodie is yours. But whatever you planned to sell hasn't sold yet — and this week still has $${b-35} left in it. Plans aren't money.` };
         return          { cls:'pos', title:"You held.",           text:"Your $50 is intact. The whole week is ahead of you — and you've got real options." }; },
       milo(c){
         if(c===0) return { img:'./milo-shocked.png',   txt:"Day 1 and $35 is already gone? Hope the rest of the week is quiet. 😬" };
-        if(c===2) return { img:'./milo-encouraging.png', txt:"Secondhand is the move. Same drip, fraction of the price. That's elite financial thinking. 🔨" };
+        if(c===2) return { img:'./milo-thinking.png',  txt:"Counting money you haven't made yet is how people get into debt. Real talk. 🔨" };
         return          { img:'./milo-happy.png',       txt:"Patience. That's harder than it looks. Future-you might rock a different fit anyway. 🔨" }; },
     },
     // DAY 2 — THE PULL
     { day:2, scTitle:'Pizza Night With the Crew',
-      scBody:`Group chat is going crazy. Pizza and the game tonight — $12 to split. <em>"You in??"</em> You have $${b}.`,
+      scBody: priorChoice(1)===0
+        ? `You bought the hoodie yesterday — you're already down to <strong>$${b}</strong>. Group chat going crazy. Pizza and the game tonight — $12 to split. <em>"You in??"</em>`
+        : priorChoice(1)===2
+        ? `You bought the hoodie but sold something to cover it — you've got $${b}. Group chat going crazy. Pizza and the game tonight — $12. <em>"You in??"</em>`
+        : `You held onto your $50 yesterday. Now group chat is going crazy. Pizza and the game tonight — $12 to split. <em>"You in??"</em> You have $${b}.`,
       visEmoji:'🍕', visCls:'vis-d2', visBadge:null,
-      preChat:"The group chat is going off. <strong>FOMO is real — so is your balance.</strong> 👀",
+      preChat: priorChoice(1)===0
+        ? `You're already down $35 from Day 1. <strong>$12 more would leave you with almost nothing.</strong> FOMO hitting different when you're low. 👀`
+        : "The group chat is going off. <strong>FOMO is real — so is your balance.</strong> 👀",
       choices:[
         { l:'A', title:'I\'m in! Order the pizza.', detail: b<20?"You're low — but you don't want to miss out.":"$12 for the night with the crew. Worth it.", cost:12, opt:'spend_social',
           costLbl:'−$12', costCls:'spend', moodLbl:'SOCIAL MOVE', moodEmoji:'👥', moodCls:'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🍕' },
@@ -1213,7 +1231,9 @@ function getBuilderScenarios(){
     { day:3, scTitle:'You Cracked Their Screen',
       scBody:`<em>Crack.</em> You dropped your friend's phone by accident. Screen is shattered. $20 to fix it. You have $${b}.`,
       visEmoji:'📱', visCls:'vis-d3', visBadge:'$20\nFIX',
-      preChat:"This one's uncomfortable. <strong>But what's the right thing to do?</strong> 📱",
+      preChat: (priorChoice(1)===0||priorChoice(2)===0)
+        ? `You've spent a lot this week already. Now someone needs $20 from you. <strong>Character costs money sometimes.</strong> 📱`
+        : "This one's uncomfortable. <strong>But what's the right thing to do?</strong> 📱",
       choices:[
         { l:'A', title: b>=20?'Pay to fix it':'Try to cover it', detail: b>=20?'Own the mistake. Fix the screen.':'You\'re short — you\'ll need to work something out.', cost: b>=20?20:0, opt:'spend_essential',
           costLbl: b>=20?'−$20':'Need help', costCls:'spend', moodLbl: b>=20?'OWN IT':'HARD SPOT', moodEmoji: b>=20?'📱':'😬', moodCls:'mood-safe', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'📱' },
@@ -1245,14 +1265,14 @@ function getBuilderScenarios(){
           costLbl:'−$15 (maybe +$30)', costCls:'risk', moodLbl:'HIGH RISK', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
         { l:'B', title:'Hard pass — keep it.',     detail: b<20?'You can\'t afford to lose $15 right now.':'Not every hustle is your hustle.', cost:0, opt:'decline_invest',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'PLAY SAFE', moodEmoji:'🛡️', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🛡️' },
-        { l:'C', title:'Ask to see proof first', detail:"Show me the receipts. If it's real, they'll show you.", cost:0, opt:'seek_advice',
-          costLbl:'−$0', costCls:'save', moodLbl:'SHARP MOVE', moodEmoji:'🤝', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'📋' },
+        { l:'C', title:'Counter with $8 — half the ask', detail:"You're interested, but not for $15. Negotiate the entry price.", cost:8, opt:'negotiate_invest',
+          costLbl:'−$8 (maybe +$16)', costCls:'risk', moodLbl:'NEGOTIATE', moodEmoji:'⚖️', moodCls:'mood-risk', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'⚖️' },
       ],
       outcome(c){
         if(c===0&&b>30)            return { cls:'pos', title:"Calculated risk.",   text:"You had enough to take the swing without risking everything. Smart risk is still risk — but it's different." };
         if(c===0&&S.impulsiveN>=2) return { cls:'neg', title:"That was risky.",    text:"After a tough week, this bet could really hurt you. $15 you might need — gone." };
         if(c===0)                  return { cls:'neu', title:"You went for it.",   text:"$15 in play. The bracelets better sell! Was this the right call?" };
-        if(c===2)                  return { cls:'pos', title:"Due diligence.",     text:"Asking for proof before you invest? That's exactly what smart investors do — at any age." };
+        if(c===2)                  return { cls:'pos', title:"You negotiated in.",  text:"Cutting the risk in half before committing — that's deal-making. Whether your friend said yes or no, you changed the terms instead of just accepting them." };
         if(b<20)                   return { cls:'pos', title:"Wise call.",         text:`With $${b} left, protecting every dollar was the right move.` };
         return                            { cls:'neu', title:"You said no.",       text:`Your $${b} is safe. Sometimes the best move is the move you don't make.` };
       },
@@ -1260,7 +1280,7 @@ function getBuilderScenarios(){
         if(c===0&&b>30)            return { img:'./milo-explorer.png',    txt:"Bold. Let's see if those bracelets sell." };
         if(c===0&&S.impulsiveN>=2) return { img:'./milo-concerned.png',   txt:"After this week… you sure about that bet?" };
         if(c===0)                  return { img:'./milo-thinking.png',    txt:"50/50. Either a great story or a lesson. 😅" };
-        if(c===2)                  return { img:'./milo-proud.png',        txt:"'Show me the receipts' — that's the most boss thing you could have said. 🔨" };
+        if(c===2)                  return { img:'./milo-encouraging.png', txt:"Negotiating the terms of a deal before you enter it — that is exactly how business works. 🔨" };
         return                            { img:'./milo-proud.png',       txt:"Knowing when to sit out is underrated. Seriously." };
       },
     },
@@ -1308,23 +1328,29 @@ function getStrategistScenarios() {
           costLbl:'−$80', costCls:'spend', moodLbl:'RISKY MOVE', moodEmoji:'🔥', moodCls:'mood-risky', cardCls:'type-blue',   badgeCls:'badge-blue',   emoji:'👟' },
         { l:'B', title:'Wait and save my money',  detail:"They might come back. Hold on to your money for now.",            cost:0,  opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART MOVE', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green',  badgeCls:'badge-green',  emoji:'🐷' },
-        { l:'C', title:'Wait for a price drop', detail:"Sales come back. Impulse doesn't. Monitor the price first.", cost:0, opt:'research_alternative',
-          costLbl:'−$0', costCls:'save', moodLbl:'STRATEGIC', moodEmoji:'⏱️', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'⏱️' },
+        { l:'C', title:'Ask a parent to front it — pay back next week', detail:"Get the shoes now, promise to cover it from next week's money.", cost:80, opt:'borrow_social',
+          costLbl:'−$80 (borrowed)', costCls:'risk', moodLbl:'BORROW MOVE', moodEmoji:'🤲', moodCls:'mood-risk', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🤲' },
       ],
       outcome(c){
         if(c===0) return { cls:'neg', title:"You got the shoes!", text:"They look amazing. But you only have $20 left for the entire week. Things just got a lot harder." };
-        if(c===2) return { cls:'pos', title:"Price intelligence.", text:"Monitoring a price before you commit — that's how sophisticated buyers operate. You kept $100 AND stayed disciplined." };
+        if(c===2) return { cls:'neg', title:"You borrowed to buy.", text:"You have the shoes — but you've committed next week's money before the week even starts. That's how debt works. It feels fine today." };
         return          { cls:'pos', title:"You held.",           text:"Your $100 is still safe. The whole week is ahead of you — and you've got options." }; },
       milo(c){
         if(c===0) return { img:'./milo-shocked.png',   txt:"Whoa 😳 …Day 1 and you already spent $80? This week just got real." };
-        if(c===2) return { img:'./milo-explorer.png',  txt:"Waiting for the price to drop is literally how investors think. You're already there. 🎯" };
+        if(c===2) return { img:'./milo-concerned.png', txt:"Spending next week's money this week is the exact definition of a debt cycle. Something to think about. 🎯" };
         return          { img:'./milo-happy.png',      txt:"Okayyyy 👀 You're thinking ahead. Future-you might thank you for this." }; },
     },
     // ── DAY 2 ──
     { day:2, scTitle:'Everyone Is Going!',
-      scBody:`Group chat is going crazy. Movies tonight, $30. <em>"You're coming, right??"</em> You have $${b}.`,
+      scBody: priorChoice(1)===0
+        ? `You spent $80 on shoes Monday — you're down to <strong>$${b}</strong>. Group chat is blowing up. Movies tonight, $30. <em>"You're coming, right??"</em>`
+        : priorChoice(1)===2
+        ? `You borrowed to buy the shoes Monday — next week's money is already spoken for. You have $${b} left this week. Movies tonight, $30. <em>"You're coming, right??"</em>`
+        : `You kept your money Monday — still sitting on all $${b}. Group chat is blowing up. Movies tonight, $30. <em>"You're coming, right??"</em>`,
       visEmoji:'📱', visCls:'vis-d2', visBadge:null,
-      preChat:"The group chat is blowing up. <strong>You've got options.</strong> Use them wisely. 👀",
+      preChat: priorChoice(1)===0
+        ? `$80 gone on Day 1, and now $30 more? <strong>Do the math before you answer that text.</strong> 👀`
+        : "The group chat is blowing up. <strong>You've got options.</strong> Use them wisely. 👀",
       choices:[
         { l:'A', title:'Go with everyone!',    detail: b<40?"Spend $30 even with almost nothing left. FOMO is real.":"Spend $30. The memories are worth it.", cost:30, opt:'spend_social',
           costLbl:'−$30', costCls:'spend', moodLbl:'SOCIAL MOVE', moodEmoji:'👥', moodCls:'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🎟️' },
@@ -1351,7 +1377,9 @@ function getStrategistScenarios() {
     { day:3, scTitle:'Your Bike Tire Just Popped.',
       scBody:`<em>POP.</em> Flat tire on the way to practice. $25 to fix it. You have $${b}.`,
       visEmoji:'🚲', visCls:'vis-d3', visBadge:'$25\nFIX',
-      preChat:"This one's stressful. <strong>Take a breath.</strong> What's the right call here? 🔧",
+      preChat: (priorChoice(1)===0||priorChoice(2)===0)
+        ? `You've already spent heavily this week. Now a $25 problem just showed up. <strong>This is why we hold reserves.</strong> 🔧`
+        : "This one's stressful. <strong>Take a breath.</strong> What's the right call here? 🔧",
       choices:[
         { l:'A', title: b>=25?'Pay $25 to fix it':'Try to cover it',  detail: b>=25?'You have enough. Fix it and get to practice.':'You\'re short — you\'ll need someone\'s help.', cost: b>=25?25:0, opt:'spend_essential',
           costLbl: b>=25?'−$25':'Need help', costCls:'spend', moodLbl: b>=25?'NECESSARY':'HARD SPOT', moodEmoji: b>=25?'🔧':'😬', moodCls:'mood-safe', cardCls:'type-teal',   badgeCls:'badge-teal',   emoji:'🔧' },
