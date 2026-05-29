@@ -231,7 +231,7 @@
       .band-pill { padding:8px 5px; gap:5px; }
       .band-pill-emoji { font-size:18px; }
       .band-pill-text strong { font-size:12px; }
-      .band-pill-text em { display:none; }
+      .band-pill-text em { display:block; font-size:8px; }
     }
 
     .site-footer { padding:8px 24px 10px; text-align:center; border-top:1px solid rgba(11,29,58,0.08); position:relative; z-index:10; background:white; }
@@ -404,6 +404,7 @@
     .choice-prompt-row { display:none; }
 
     .choice-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; flex-shrink:0; }
+    .choice-grid.choices-3 { grid-template-columns:repeat(3,1fr); }
 
     .choice-card {
       background:rgba(255,255,255,0.13); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
@@ -415,9 +416,12 @@
       border:2.5px solid rgba(255,255,255,0.18); position:relative; overflow:hidden;
       animation:cardEntrance 0.5s cubic-bezier(0.34,1.56,0.64,1) both, choiceBreath 2.4s 0.5s ease-in-out infinite;
     }
-    /* Staggered entrance — card B pops in 120ms after card A */
+    /* Staggered entrance — card B pops in 120ms after card A, card C at 240ms */
     .choice-grid .choice-card:nth-child(2) {
       animation:cardEntrance 0.5s 0.12s cubic-bezier(0.34,1.56,0.64,1) both, choiceBreath 2.4s 0.62s ease-in-out infinite;
+    }
+    .choice-grid .choice-card:nth-child(3) {
+      animation:cardEntrance 0.5s 0.24s cubic-bezier(0.34,1.56,0.64,1) both, choiceBreath 2.4s 0.74s ease-in-out infinite;
     }
     /* Seesaw breathing — card B offset by half-cycle so they breathe opposite phases */
     @keyframes cardEntrance {
@@ -448,6 +452,9 @@
     /* Hover magnetism — hovering one card subtly repels the other */
     .choice-grid:has(.choice-card:nth-child(1):hover) .choice-card:nth-child(2) { transform:scale(0.94); opacity:0.82; }
     .choice-grid:has(.choice-card:nth-child(2):hover) .choice-card:nth-child(1) { transform:scale(0.94); opacity:0.82; }
+    .choice-grid.choices-3:has(.choice-card:nth-child(1):hover) .choice-card:not(:nth-child(1)) { transform:scale(0.94); opacity:0.82; }
+    .choice-grid.choices-3:has(.choice-card:nth-child(2):hover) .choice-card:not(:nth-child(2)) { transform:scale(0.94); opacity:0.82; }
+    .choice-grid.choices-3:has(.choice-card:nth-child(3):hover) .choice-card:not(:nth-child(3)) { transform:scale(0.94); opacity:0.82; }
 
     /* Choice card borders — bright, vivid colors; thicker for more pop */
     .choice-card.type-blue   { border-color:#60A5FA; }
@@ -601,6 +608,12 @@
     .edu-note strong { color:var(--gold); }
     .replay-btn { background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:14px; padding:14px 40px; font-size:15px; font-weight:800; color:var(--navy); cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; box-shadow:0 4px 20px rgba(244,178,35,0.4); }
     .replay-btn:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(244,178,35,0.6); }
+    .coinquest-cta { margin-top:16px; background:linear-gradient(135deg,rgba(25,125,255,0.12),rgba(0,200,195,0.08)); border:1.5px solid rgba(25,125,255,0.3); border-radius:18px; padding:16px; text-align:center; animation:fadeUp 0.5s 1.2s both; }
+    .coinquest-cta-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(79,179,232,0.7); margin-bottom:4px; }
+    .coinquest-cta-title { font-size:16px; font-weight:900; color:white; margin-bottom:4px; }
+    .coinquest-cta-desc { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.55; margin-bottom:10px; }
+    .coinquest-cta-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; background:linear-gradient(135deg,#2563EB,#0D9488); border:none; border-radius:12px; color:white; font-size:13px; font-weight:800; cursor:pointer; text-decoration:none; font-family:'Inter',sans-serif; transition:all 0.2s; }
+    .coinquest-cta-btn:hover { opacity:0.9; transform:translateY(-1px); }
 
     /* ══════════════════════════════════════
        LOADING
@@ -699,8 +712,9 @@
       .sc-title { font-size:17px; }
       .sc-body { font-size:13px; line-height:1.65; }
 
-      /* Choice grid — single column */
+      /* Choice grid — single column on mobile, 2 cols for 3-choice at tablet */
       .choice-grid { grid-template-columns:1fr; gap:10px; }
+      .choice-grid.choices-3 { grid-template-columns:1fr 1fr; }
       .choice-card { padding:13px 14px 11px; }
       .ch-emoji { font-size:26px; }
     }
@@ -1019,13 +1033,17 @@ function getExplorerScenarios(){
           costLbl:'−$14', costCls:'spend', moodLbl:'TREAT MOVE', moodEmoji:'🖍️', moodCls:'mood-risky', cardCls:'type-blue', badgeCls:'badge-blue', emoji:'🖍️' },
         { l:'B', title:'Save my money for later',  detail:"They might still be there. Hold on to your $20.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART MOVE', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🐷' },
+        { l:'C', title:'Check if it\'s cheaper elsewhere', detail:"Look around first. Maybe you can find the same thing for less!", cost:0, opt:'research_alternative',
+          costLbl:'−$0', costCls:'save', moodLbl:'EXPLORE MOVE', moodEmoji:'🔍', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🔍' },
       ],
-      outcome(c){ return c===0
-        ? { cls:'neg', title:"You got the pencils!", text:`They're so cool! But you only have $${b-14} left for the whole week. Everything just got harder.` }
-        : { cls:'pos', title:"You saved it.",         text:"Smart! Your $20 is safe. You've got the whole week ahead of you — and plenty of options." }; },
-      milo(c){ return c===0
-        ? { img:'./milo-shocked.png', txt:"Wow — Day 1 and $14 is already gone? Let's see how you handle the rest! 😳" }
-        : { img:'./milo-happy.png',   txt:"Good thinking! Future-you will thank you for that call. 🌟" }; },
+      outcome(c){
+        if(c===0) return { cls:'neg', title:"You got the pencils!", text:`They're so cool! But you only have $${b-14} left for the whole week. Everything just got harder.` };
+        if(c===2) return { cls:'pos', title:"Smart thinking!", text:"Looking around first is a great habit. You kept your $20 AND learned something about smart shopping!" };
+        return          { cls:'pos', title:"You saved it.",     text:"Smart! Your $20 is safe. You've got the whole week ahead of you — and plenty of options." }; },
+      milo(c){
+        if(c===0) return { img:'./milo-shocked.png',   txt:"Wow — Day 1 and $14 is already gone? Let's see how you handle the rest! 😳" };
+        if(c===2) return { img:'./milo-encouraging.png', txt:"Exploring your options before spending — that's a grown-up money skill! 🔍🌱" };
+        return          { img:'./milo-happy.png',       txt:"Good thinking! Future-you will thank you for that call. 🌟" }; },
     },
     // DAY 2 — THE PULL
     { day:2, scTitle:'Everyone\'s Getting Ice Cream',
@@ -1051,23 +1069,23 @@ function getExplorerScenarios(){
       },
     },
     // DAY 3 — THE OOPS
-    { day:3, scTitle:'The Library Fine',
-      scBody:`You borrowed a library book — and it's overdue. The fine is $2. The librarian needs it today. You have $${b}.`,
-      visEmoji:'📚', visCls:'vis-d3', visBadge:'$2\nFINE',
+    { day:3, scTitle:'The Lost Library Book',
+      scBody:`You lost a library book — and the librarian says you owe $5 for a replacement copy. You have $${b}.`,
+      visEmoji:'📚', visCls:'vis-d3', visBadge:'$5\nOWED',
       preChat:"Uh oh. This wasn't part of the plan. <strong>What's the right call?</strong> 📚",
       choices:[
-        { l:'A', title: b>=2?'Pay the fine now':'Try to cover it', detail: b>=2?'Take care of it so you can use the library again.':'You\'re really short — you\'ll need help.', cost: b>=2?2:0, opt:'spend_essential',
-          costLbl: b>=2?'−$2':'Need help', costCls:'spend', moodLbl:'RESPONSIBLE', moodEmoji:'📚', moodCls:'mood-safe', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'📚' },
+        { l:'A', title: b>=5?'Pay the $5 now':'Try to cover it', detail: b>=5?'Take care of it so you can use the library again.':'You\'re really short — you\'ll need help.', cost: b>=5?5:0, opt:'spend_essential',
+          costLbl: b>=5?'−$5':'Need help', costCls:'spend', moodLbl:'RESPONSIBLE', moodEmoji:'📚', moodCls:'mood-safe', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'📚' },
         { l:'B', title:'Ignore it for now', detail:"Keep your money. Hope they forget about it.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SKIP IT', moodEmoji:'🛑', moodCls:'mood-tough', cardCls:'type-red', badgeCls:'badge-red', emoji:'🛑' },
       ],
       outcome(c){
-        if(c===0&&b<2) return { cls:'neg', title:"You couldn't cover it.",  text:"Your balance was too low. You had to ask for help. Spending earlier made this harder." };
-        if(c===0)      return { cls:'neu', title:"Fine is paid!",            text:`$2 gone — but the problem is solved. The library is happy. You can borrow books again.` };
-        return                { cls:'neg', title:"You ignored it.",          text:"The fine is still there — and it might get bigger. Small problems grow when you wait." };
+        if(c===0&&b<5) return { cls:'neg', title:"You couldn't cover it.",  text:"Your balance was too low. You had to ask for help. Spending earlier made this harder." };
+        if(c===0)      return { cls:'neu', title:"All paid up!",            text:`$5 gone — but the problem is solved. The library is happy. You can borrow books again.` };
+        return                { cls:'neg', title:"You ignored it.",          text:"The fee is still there — and the library won't let you check out books. Small problems grow when you wait." };
       },
       milo(c){
-        if(c===0&&b<2) return { img:'./milo-concerned.png',   txt:"This is why we hold onto money. Surprises always show up." };
+        if(c===0&&b<5) return { img:'./milo-concerned.png',   txt:"This is why we hold onto money. Surprises always show up." };
         if(c===0)      return { img:'./milo-encouraging.png', txt:"Taking care of your responsibilities — that's what smart people do! 🌟" };
         return                { img:'./milo-thinking.png',    txt:"Ignoring problems rarely makes them disappear. Something to think about…" };
       },
@@ -1082,11 +1100,14 @@ function getExplorerScenarios(){
           costLbl:'−$4 (maybe +$8)', costCls:'risk', moodLbl:'RISK MOVE', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
         { l:'B', title:'No thanks, keep my money', detail: b<6?'You really can\'t afford to lose $4 right now.':'Not every opportunity is worth taking.', cost:0, opt:'decline_invest',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'PLAY SAFE', moodEmoji:'🛡️', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🛡️' },
+        { l:'C', title:'Ask a grown-up first', detail:"Get a second opinion before you put your money in.", cost:0, opt:'seek_advice',
+          costLbl:'−$0', costCls:'save', moodLbl:'WISE MOVE', moodEmoji:'🤝', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🤝' },
       ],
       outcome(c){
         if(c===0&&b>10)            return { cls:'pos', title:"Calculated risk!",  text:"You had enough to try it without gambling everything. That's what smart risk looks like." };
         if(c===0&&S.impulsiveN>=2) return { cls:'neg', title:"That was risky.",   text:"After a tough week, this bet could really cost you. You put $4 you might need on the line." };
         if(c===0)                  return { cls:'neu', title:"You went for it!",  text:"$4 in play. Will it work? That's the thing about risks — you never know for sure." };
+        if(c===2)                  return { cls:'pos', title:"Smart move!",       text:"Asking for advice before risking money is one of the smartest things you can do. That's wisdom!" };
         if(b<6)                    return { cls:'pos', title:"Wise call!",         text:`With $${b} left, protecting your money was the smart move.` };
         return                            { cls:'neu', title:"You said no.",       text:`Sometimes the smartest move is the one you don't take. Your $${b} is safe.` };
       },
@@ -1094,6 +1115,7 @@ function getExplorerScenarios(){
         if(c===0&&b>10)            return { img:'./milo-explorer.png',    txt:"Bold move! Hope your classmate comes through. 🤞" };
         if(c===0&&S.impulsiveN>=2) return { img:'./milo-concerned.png',   txt:"After this week… are you really sure about that?" };
         if(c===0)                  return { img:'./milo-thinking.png',    txt:"50/50. Could be genius. Could be a tough lesson." };
+        if(c===2)                  return { img:'./milo-happy.png',        txt:"Asking for help is not a weakness — it's one of the smartest things a person can do! 🌱" };
         return                            { img:'./milo-proud.png',       txt:"Knowing when NOT to spend is a superpower. For real. 💪" };
       },
     },
@@ -1137,13 +1159,17 @@ function getBuilderScenarios(){
           costLbl:'−$35', costCls:'spend', moodLbl:'HYPE MOVE', moodEmoji:'🔥', moodCls:'mood-risky', cardCls:'type-blue', badgeCls:'badge-blue', emoji:'👕' },
         { l:'B', title:'Keep scrolling, save it',  detail:"You can live without it. Hold your $50.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART MOVE', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🐷' },
+        { l:'C', title:'Look for it secondhand', detail:"Same style, way less money. Check the apps.", cost:0, opt:'research_alternative',
+          costLbl:'−$0', costCls:'save', moodLbl:'STRATEGIC', moodEmoji:'🔍', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🔍' },
       ],
-      outcome(c){ return c===0
-        ? { cls:'neg', title:"You got the hoodie!",  text:`It's clean. But you only have $${b-35} left for the rest of the week. Things just got tight.` }
-        : { cls:'pos', title:"You held.",             text:"Your $50 is intact. The whole week is ahead of you — and you've got real options." }; },
-      milo(c){ return c===0
-        ? { img:'./milo-shocked.png', txt:"Day 1 and $35 is already gone? Hope the rest of the week is quiet. 😬" }
-        : { img:'./milo-happy.png',   txt:"Patience. That's harder than it looks. Future-you might rock a different fit anyway. 🔨" }; },
+      outcome(c){
+        if(c===0) return { cls:'neg', title:"You got the hoodie!", text:`It's clean. But you only have $${b-35} left for the rest of the week. Things just got tight.` };
+        if(c===2) return { cls:'pos', title:"Big brain energy.", text:"Looking for the same item secondhand? That's how people build wealth. You saved $50 AND kept your options open. 🔨" };
+        return          { cls:'pos', title:"You held.",           text:"Your $50 is intact. The whole week is ahead of you — and you've got real options." }; },
+      milo(c){
+        if(c===0) return { img:'./milo-shocked.png',   txt:"Day 1 and $35 is already gone? Hope the rest of the week is quiet. 😬" };
+        if(c===2) return { img:'./milo-encouraging.png', txt:"Secondhand is the move. Same drip, fraction of the price. That's elite financial thinking. 🔨" };
+        return          { img:'./milo-happy.png',       txt:"Patience. That's harder than it looks. Future-you might rock a different fit anyway. 🔨" }; },
     },
     // DAY 2 — THE PULL
     { day:2, scTitle:'Pizza Night With the Crew',
@@ -1200,11 +1226,14 @@ function getBuilderScenarios(){
           costLbl:'−$15 (maybe +$30)', costCls:'risk', moodLbl:'HIGH RISK', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
         { l:'B', title:'Hard pass — keep it.',     detail: b<20?'You can\'t afford to lose $15 right now.':'Not every hustle is your hustle.', cost:0, opt:'decline_invest',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'PLAY SAFE', moodEmoji:'🛡️', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'🛡️' },
+        { l:'C', title:'Ask to see proof first', detail:"Show me the receipts. If it's real, they'll show you.", cost:0, opt:'seek_advice',
+          costLbl:'−$0', costCls:'save', moodLbl:'SHARP MOVE', moodEmoji:'🤝', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'📋' },
       ],
       outcome(c){
         if(c===0&&b>30)            return { cls:'pos', title:"Calculated risk.",   text:"You had enough to take the swing without risking everything. Smart risk is still risk — but it's different." };
         if(c===0&&S.impulsiveN>=2) return { cls:'neg', title:"That was risky.",    text:"After a tough week, this bet could really hurt you. $15 you might need — gone." };
         if(c===0)                  return { cls:'neu', title:"You went for it.",   text:"$15 in play. The bracelets better sell! Was this the right call?" };
+        if(c===2)                  return { cls:'pos', title:"Due diligence.",     text:"Asking for proof before you invest? That's exactly what smart investors do — at any age." };
         if(b<20)                   return { cls:'pos', title:"Wise call.",         text:`With $${b} left, protecting every dollar was the right move.` };
         return                            { cls:'neu', title:"You said no.",       text:`Your $${b} is safe. Sometimes the best move is the move you don't make.` };
       },
@@ -1212,6 +1241,7 @@ function getBuilderScenarios(){
         if(c===0&&b>30)            return { img:'./milo-explorer.png',    txt:"Bold. Let's see if those bracelets sell." };
         if(c===0&&S.impulsiveN>=2) return { img:'./milo-concerned.png',   txt:"After this week… you sure about that bet?" };
         if(c===0)                  return { img:'./milo-thinking.png',    txt:"50/50. Either a great story or a lesson. 😅" };
+        if(c===2)                  return { img:'./milo-proud.png',        txt:"'Show me the receipts' — that's the most boss thing you could have said. 🔨" };
         return                            { img:'./milo-proud.png',       txt:"Knowing when to sit out is underrated. Seriously." };
       },
     },
@@ -1255,13 +1285,17 @@ function getStrategistScenarios() {
           costLbl:'−$80', costCls:'spend', moodLbl:'RISKY MOVE', moodEmoji:'🔥', moodCls:'mood-risky', cardCls:'type-blue',   badgeCls:'badge-blue',   emoji:'👟' },
         { l:'B', title:'Wait and save my money',  detail:"They might come back. Hold on to your money for now.",            cost:0,  opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART MOVE', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green',  badgeCls:'badge-green',  emoji:'🐷' },
+        { l:'C', title:'Wait for a price drop', detail:"Sales come back. Impulse doesn't. Monitor the price first.", cost:0, opt:'research_alternative',
+          costLbl:'−$0', costCls:'save', moodLbl:'STRATEGIC', moodEmoji:'⏱️', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'⏱️' },
       ],
-      outcome(c){ return c===0
-        ? { cls:'neg', title:"You got the shoes!", text:"They look amazing. But you only have $20 left for the entire week. Things just got a lot harder." }
-        : { cls:'pos', title:"You held.",           text:"Your $100 is still safe. The whole week is ahead of you — and you've got options." }; },
-      milo(c){ return c===0
-        ? { img:'./milo-shocked.png', txt:"Whoa 😳 …Day 1 and you already spent $80? This week just got real." }
-        : { img:'./milo-happy.png',     txt:"Okayyyy 👀 You're thinking ahead. Future-you might thank you for this." }; },
+      outcome(c){
+        if(c===0) return { cls:'neg', title:"You got the shoes!", text:"They look amazing. But you only have $20 left for the entire week. Things just got a lot harder." };
+        if(c===2) return { cls:'pos', title:"Price intelligence.", text:"Monitoring a price before you commit — that's how sophisticated buyers operate. You kept $100 AND stayed disciplined." };
+        return          { cls:'pos', title:"You held.",           text:"Your $100 is still safe. The whole week is ahead of you — and you've got options." }; },
+      milo(c){
+        if(c===0) return { img:'./milo-shocked.png',   txt:"Whoa 😳 …Day 1 and you already spent $80? This week just got real." };
+        if(c===2) return { img:'./milo-explorer.png',  txt:"Waiting for the price to drop is literally how investors think. You're already there. 🎯" };
+        return          { img:'./milo-happy.png',      txt:"Okayyyy 👀 You're thinking ahead. Future-you might thank you for this." }; },
     },
     // ── DAY 2 ──
     { day:2, scTitle:'Everyone Is Going!',
@@ -1318,11 +1352,14 @@ function getStrategistScenarios() {
           costLbl:'−$20 (maybe +$40)', costCls:'risk', moodLbl:'HIGH RISK', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
         { l:'B', title:"No thanks — keep my money", detail: b<40?'You can\'t afford to lose $20 right now.':'Not every opportunity is worth taking.', cost:0, opt:'decline_invest',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'PLAY SAFE', moodEmoji:'🛡️', moodCls:'mood-smart', cardCls:'type-green',  badgeCls:'badge-green',  emoji:'🛡️' },
+        { l:'C', title:'Ask to split the risk 50/50', detail:"If it's a sure thing, they'll agree to $10 from each of you.", cost:10, opt:'invest_partial',
+          costLbl:'−$10 (maybe +$20)', costCls:'risk', moodLbl:'BALANCED RISK', moodEmoji:'⚖️', moodCls:'mood-risk', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'⚖️' },
       ],
       outcome(c){
         if(c===0&&b>60)            return { cls:'pos', title:"Calculated risk.",    text:"You had enough to take the chance without gambling your survival. That's what smart risk looks like." };
         if(c===0&&S.impulsiveN>=2) return { cls:'neg', title:"That was risky.",     text:"After a tough week, this gamble could cost you. You put $20 you might really need on the line." };
         if(c===0)                  return { cls:'neu', title:"You went for it.",    text:"$20 in play. You'll find out next week. Was it the right call?" };
+        if(c===2)                  return { cls:'pos', title:"Risk-managed.",       text:"Proposing a shared stake is a negotiation tactic used in real investment deals. You just did that. 🎯" };
         if(b<40)                   return { cls:'pos', title:"Wise call.",          text:`With $${b} left, protecting your money was the right call. Strategic patience is a real skill.` };
         return                            { cls:'neu', title:"You said no.",        text:`Sometimes the smartest move is the one you don't take. Your $${b} is safe.` };
       },
@@ -1330,6 +1367,7 @@ function getStrategistScenarios() {
         if(c===0&&b>60)            return { img:'./milo-explorer.png',    txt:"Bold move. Let's see if it pays off." };
         if(c===0&&S.impulsiveN>=2) return { img:'./milo-concerned.png',   txt:"After this week… are you sure about that one?" };
         if(c===0)                  return { img:'./milo-thinking.png',    txt:"50/50. Could be genius. Could be Wednesday all over again." };
+        if(c===2)                  return { img:'./milo-encouraging.png', txt:"Splitting the risk before committing — that's venture capital thinking at 16. Seriously impressive. 🎯" };
         return                            { img:'./milo-proud.png',       txt:"Knowing when NOT to move — that's a superpower. Real talk." };
       },
     },
@@ -1647,7 +1685,7 @@ function renderSim(){
       </div>
 
       <!-- Choices -->
-      <div class="choice-grid" id="choiceGrid">${choicesHtml}</div>
+      <div class="choice-grid${sc.choices.length===3?' choices-3':''}" id="choiceGrid">${choicesHtml}</div>
 
       <!-- Outcome -->
       <div class="outcome-panel" id="outPanel">
@@ -1675,26 +1713,105 @@ function renderSim(){
 // SCORE
 function renderScore(){
   const p=S.profile;
+  const band=S.band||'builder';
+
+  // Band-differentiated copy
+  const bandCfg={
+    explorer:{
+      eyebrow:'Amazing Job! 🌱',
+      headline:'You Finished the Week! 🎉',
+      fliqLabel:'Your Money Score',
+      traits:[
+        {id:'ic',name:'Stop & Think',   icon:'🛑',q:'Did you pause before spending?'},
+        {id:'po',name:'Think Ahead',    icon:'📅',q:'Did you plan for what comes next?'},
+        {id:'ra',name:'Spot the Trap',  icon:'👀',q:'Could you tell when something seemed off?'},
+        {id:'rb',name:'Bounce Back',    icon:'💪',q:'Did you recover when things got hard?'},
+      ],
+      descMap:{
+        'Financial Starter':"You're just getting started — and that's awesome! Every expert was a beginner once.",
+        'Emerging':          "You're building your money brain! Some great instincts are already showing. Keep going! 🌱",
+        'Explorer':          "Your money thinking is growing fast. You noticed things this week most people miss!",
+        'Developing':        "You're developing real financial smarts. You made tough calls — and learned from them.",
+        'Builder':           "Wow! Your money choices this week were really solid. You think before you act!",
+        'Thinker':           "You thought carefully about every decision. That's a superpower most adults don't have.",
+        'Advancing':         "You're way ahead of most people your age. Seriously impressive money thinking!",
+        'Leading':           "Elite money brain! You saw every trap, stayed calm, and made smart call after smart call.",
+        'Exceptional':       "Perfect week. You handled every single challenge like a pro. That is incredible. 🎉",
+      },
+      replayLabel:'Play Again! 🌱',
+      ecosystemNote:"🌟 <strong>Tell a grown-up about this!</strong> Your teacher or parent can see your full report and help you keep growing your money smarts.",
+    },
+    builder:{
+      eyebrow:'Week Complete 🔨',
+      headline:'Your FLIQ Score™ Results',
+      fliqLabel:'Powered by FLIQ Score™',
+      traits:[
+        {id:'ic',name:'Impulse Control',icon:'🛑',q:'Can you stop and think before you spend?'},
+        {id:'po',name:'Planning',        icon:'📅',q:'Do you think about tomorrow, not just today?'},
+        {id:'ra',name:'Risk Awareness',  icon:'👀',q:'Can you tell when something is a bad idea?'},
+        {id:'rb',name:'Recovery',        icon:'💪',q:'Can you bounce back after a tough choice?'},
+      ],
+      descMap:{
+        'Financial Starter':"You're at the beginning of your financial intelligence journey. Every expert started exactly here.",
+        'Emerging':          "You're starting to recognize patterns in your financial behavior. Small steps forward are still forward.",
+        'Explorer':          "You're building awareness. Some strong instincts are showing — keep going.",
+        'Developing':        "You're building awareness and making more intentional calls. Real progress.",
+        'Builder':           "Your financial thinking is solid. You balance risk, patience, and recovery well.",
+        'Thinker':           "You make intentional, context-aware financial decisions. That's rare for any age.",
+        'Advancing':         "Your financial thinking is sharp. You balance risk, patience, and discipline consistently.",
+        'Leading':           "You demonstrate elite financial behavior patterns. This is the top tier.",
+        'Exceptional':       "Exceptional. You saw every trap, managed every risk, and finished stronger than you started.",
+      },
+      replayLabel:'Play Again 🔨',
+      ecosystemNote:"📋 <strong>Tell your teacher about WealthWise Kids™</strong> — they can unlock your full behavioral report and track how your FLIQ Score grows over time.",
+    },
+    strategist:{
+      eyebrow:'Behavioral Intelligence Profile',
+      headline:'Your FLIQ Score™',
+      fliqLabel:'Powered by FLIQ Score™ Analytics',
+      traits:[
+        {id:'ic',name:'Impulse Control',    icon:'🛑',q:'Do you consistently pause before committing resources?'},
+        {id:'po',name:'Planning Orientation',icon:'📅',q:'Do your decisions account for multi-day consequences?'},
+        {id:'ra',name:'Risk Awareness',     icon:'👀',q:'Can you identify asymmetric risk before taking action?'},
+        {id:'rb',name:'Resilience',         icon:'💪',q:'Do you recover behavioral discipline after setbacks?'},
+      ],
+      descMap:{
+        'Financial Starter':"Behavioral patterns are still forming. Consistency and delayed gratification are the primary development areas.",
+        'Emerging':          "Early-stage financial intelligence. Impulse patterns show up under social pressure — a common and correctable signature.",
+        'Explorer':          "Awareness is developing. You recognize patterns in retrospect — the next step is catching them in the moment.",
+        'Developing':        "Solid behavioral foundation. You're making context-aware decisions with increasing consistency.",
+        'Builder':           "Your financial decision-making is deliberate and risk-calibrated. This profile signals strong financial maturity.",
+        'Thinker':           "You demonstrate sophisticated financial reasoning — weighing multi-variable outcomes before acting. That's rare.",
+        'Advancing':         "High-signal behavioral profile. You apply context, read risk, and recover from pressure points with discipline.",
+        'Leading':           "Elite behavioral intelligence. You processed every scenario systematically and executed with discipline.",
+        'Exceptional':       "Exceptional across all four FLIQ domains. You flagged every trap, managed every pressure point, and finished strong.",
+      },
+      replayLabel:'Try Different Choices 🎯',
+      ecosystemNote:"📊 <strong>Share this with your educator</strong> — your full behavioral data report is available through the WealthWise Kids™ facilitator dashboard.",
+    },
+  };
+  const cfg=bandCfg[band]||bandCfg.builder;
+
   if(!p){
-    app.innerHTML=`<div id="screen-score"><div class="score-card"><div class="sc-eyebrow">Week Complete</div><div class="sc-headline">You Did It! 🎉</div><div class="milo-circle"><img src="./milo-celebrating.png" alt="Milo"/></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">Play Again</button></div></div>`;
-    return;
+    app.innerHTML=`<div id="screen-score"><div class="score-card"><div class="sc-eyebrow">${cfg.eyebrow}</div><div class="sc-headline">You Did It!</div><div class="milo-circle"><img src="./milo-celebrating.png" alt="Milo"/></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button></div></div>`;
+    clearProgress(); confetti(48); return;
   }
+
   const miloMap={'Financial Starter':'./milo-calm.png','Emerging':'./milo-calm.png','Explorer':'./milo-smile.png','Developing':'./milo-smile.png','Thinker':'./milo-happy.png','Advancing':'./milo-happy.png','Builder':'./milo-encouraging.png','Leading':'./milo-celebrating.png','Exceptional':'./milo-celebrating.png'};
-  const descMap={'Financial Starter':"You're at the beginning of your financial intelligence journey. Every expert started exactly here.",'Emerging':"You're starting to recognize patterns in your financial behavior. Small steps forward are still forward.",'Explorer':"You're building awareness. Some strong instincts are showing — keep going.",'Developing':"You're building awareness. Some strong instincts are showing — keep going.",'Builder':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Thinker':"You make intentional, context-aware financial decisions. That's rare for any age.",'Advancing':"Your financial thinking is solid. You balance risk, patience, and recovery well.",'Leading':"You demonstrate elite financial behavior patterns. This is the top tier.",'Exceptional':"Exceptional. You saw every trap, managed every risk, and finished stronger than you started."};
   const fb=S.balance;
-  const traits=[{id:'ic',name:'Impulse Control',icon:'🛑',q:'Can you stop and think before you spend?'},{id:'po',name:'Planning',icon:'📅',q:'Do you think about tomorrow, not just today?'},{id:'ra',name:'Risk Awareness',icon:'👀',q:'Can you tell when something is a bad idea?'},{id:'rb',name:'Recovery',icon:'💪',q:'Can you bounce back after a tough choice?'}];
-  const traitHtml=traits.map(t=>{const td=p.traits?.[t.id]||{},label=td.label||'Emerging',cls=label.toLowerCase().replace(' ','-'),score=td.score??0,dots=[0,1,2].map(i=>`<div class="t-dot ${i<score?'on '+cls:''}"></div>`).join('');return `<div class="trait-tile"><div class="t-name">${t.icon} ${t.name}</div><div class="t-level ${cls}">${label}</div><div class="t-dots">${dots}</div><div class="t-q">${t.q}</div></div>`;}).join('');
-  // FLIQ Score ring — use API score if returned, otherwise map from profile label
+  const traitHtml=cfg.traits.map(t=>{const td=p.traits?.[t.id]||{},label=td.label||'Emerging',cls=label.toLowerCase().replace(' ','-'),score=td.score??0,dots=[0,1,2].map(i=>`<div class="t-dot ${i<score?'on '+cls:''}"></div>`).join('');return `<div class="trait-tile"><div class="t-name">${t.icon} ${t.name}</div><div class="t-level ${cls}">${label}</div><div class="t-dots">${dots}</div><div class="t-q">${t.q}</div></div>`;}).join('');
   const scoreMap={'Financial Starter':24,'Emerging':32,'Explorer':42,'Developing':48,'Thinker':60,'Advancing':65,'Builder':74,'Leading':85,'Exceptional':95};
   const fliqScore=p.fliq_score||p.overall_score||p.score||scoreMap[p.profile_label]||50;
-  const R=68, C=+(2*Math.PI*R).toFixed(1); // arc circumference
+  const R=68, C=+(2*Math.PI*R).toFixed(1);
   const dashOffset=+((1-(fliqScore/100))*C).toFixed(1);
+  const desc=cfg.descMap[p.profile_label]||'Your behavioral intelligence profile has been recorded.';
+
   app.innerHTML=`
 <div id="screen-score">
   <div class="score-card">
-    <div class="sc-eyebrow">Your Money Profile</div>
-    <div class="sc-headline">FLIQ Score™ Results</div>
-    <div class="sc-fliq">Powered by FLIQ Score™</div>
+    <div class="sc-eyebrow">${cfg.eyebrow}</div>
+    <div class="sc-headline">${cfg.headline}</div>
+    <div class="sc-fliq">${cfg.fliqLabel}</div>
 
     <!-- Ring + Milo -->
     <div class="fliq-ring-wrap">
@@ -1706,29 +1823,29 @@ function renderScore(){
       <div class="milo-circle"><img src="${miloMap[p.profile_label]||'./milo.png'}" alt="Milo"/></div>
     </div>
 
-    <!-- Loop closed confirmation -->
     <div class="fliq-loop-closed">✓ &nbsp;Your FLIQ Score™ has been recorded</div>
-
-    <!-- Profile as credential badge -->
     <div class="prof-badge"><span class="prof-badge-dot"></span>WWK Behavioral Profile</div>
     <div class="prof-name">${p.profile_label||'Explorer'}</div>
-    <p class="prof-desc">${descMap[p.profile_label]||'Your behavioral intelligence profile has been recorded.'}</p>
+    <p class="prof-desc">${desc}</p>
 
     <div class="bal-result">💰 You ended with $${fb}</div>
     <div class="trait-grid">${traitHtml}</div>
 
-    <!-- Ecosystem CTA -->
-    <div class="fliq-ecosystem-cta">
-      📋 <strong>Tell your teacher about WealthWise Kids™</strong> — they can unlock your full behavioral report and track how your FLIQ Score grows over time.
-    </div>
-
+    <div class="fliq-ecosystem-cta">${cfg.ecosystemNote}</div>
     <div class="edu-note">Your profile builds over time — <strong>this is just the start.</strong></div>
-    <button class="replay-btn" onclick="resetToHome()">Play Again</button>
+    <button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button>
+
+    <!-- CoinQuest CTA -->
+    <div class="coinquest-cta">
+      <div class="coinquest-cta-label">Next Level</div>
+      <div class="coinquest-cta-title">Ready to do more with money?</div>
+      <div class="coinquest-cta-desc">CoinQuest™ is your personal money app — save, set goals, and track your FLIQ Score™ as it grows.</div>
+      <a href="https://coinquest-wwk.vercel.app" target="_blank" rel="noopener" class="coinquest-cta-btn">Explore CoinQuest™ →</a>
+    </div>
   </div>
 </div>`;
   clearProgress();
   confetti(72);
-  // Animate ring fill after render
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       const ring=document.getElementById('fliqRingFill');
