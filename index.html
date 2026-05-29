@@ -227,11 +227,21 @@
     .band-pill-text strong { font-size:11px; font-weight:700; color:rgba(255,255,255,0.8); line-height:1.2; white-space:nowrap; }
     .band-pill-text em { font-size:9px; font-style:normal; color:rgba(255,255,255,0.38); white-space:nowrap; }
     .band-pill.active .band-pill-text strong { color:var(--gold); }
+    .week-selector { margin-bottom:12px; }
+    .week-pills { display:flex; gap:5px; }
+    .week-pill { flex:1; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.13); border-radius:11px; padding:7px 8px; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s; display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .week-pill:hover { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.22); }
+    .week-pill.active { background:rgba(79,179,232,0.16); border-color:rgba(79,179,232,0.5); }
+    .week-pill strong { font-size:11px; font-weight:700; color:rgba(255,255,255,0.8); line-height:1.3; display:block; }
+    .week-pill em { font-size:9px; font-style:normal; color:rgba(255,255,255,0.38); display:block; }
+    .week-pill.active strong { color:#4FB3E8; }
     @media(max-width:768px){
       .band-pill { padding:8px 5px; gap:5px; }
       .band-pill-emoji { font-size:18px; }
       .band-pill-text strong { font-size:12px; }
       .band-pill-text em { display:block; font-size:8px; }
+      .week-pill strong { font-size:11px; }
+      .week-pill em { font-size:8px; }
     }
 
     .site-footer { padding:8px 24px 10px; text-align:center; border-top:1px solid rgba(11,29,58,0.08); position:relative; z-index:10; background:white; }
@@ -480,6 +490,7 @@
     /* Cost label — neutral white, no red/green signal */
     .ch-cost { font-size:15px; font-weight:900; color:rgba(255,255,255,0.92); }
     .ch-cost.spend,.ch-cost.save,.ch-cost.risk { color:rgba(255,255,255,0.92); }
+    .ch-cost.earn { color:#4ADE80; }
     /* Mood labels hidden — no judgment cues on choices */
     .mood-label { display:none; }
 
@@ -916,7 +927,7 @@ function getStartBal(){ return BAND_CONFIG[S.band]?.startBal || 100; }
 
 // ── STATE ────────────────────────────────────────────────────────
 let S = {
-  screen:'home', studentId:null, sessionId:null, cohortId:null, band:'builder',
+  screen:'home', studentId:null, sessionId:null, cohortId:null, band:'builder', week:1,
   balance:50, day:1, impulsiveN:0,
   history:[], profile:null, sessionStart:null, _t0:null,
 };
@@ -1007,16 +1018,18 @@ const DAYS_STRATEGIST = [
 ];
 
 function getDaysMeta(){
-  if(S.band==='explorer')   return DAYS_EXPLORER;
-  if(S.band==='builder')    return DAYS_BUILDER;
-  return DAYS_STRATEGIST;
+  const w=S.week||1;
+  if(S.band==='explorer') return w===3?DAYS_EXPLORER_W3:w===2?DAYS_EXPLORER_W2:DAYS_EXPLORER;
+  if(S.band==='builder')  return w===3?DAYS_BUILDER_W3:w===2?DAYS_BUILDER_W2:DAYS_BUILDER;
+  return w===3?DAYS_STRATEGIST_W3:w===2?DAYS_STRATEGIST_W2:DAYS_STRATEGIST;
 }
 
 // ── SCENARIOS ────────────────────────────────────────────────────
 function getScenarios(){
-  if(S.band==='explorer')   return getExplorerScenarios();
-  if(S.band==='builder')    return getBuilderScenarios();
-  return getStrategistScenarios();
+  const w=S.week||1;
+  if(S.band==='explorer') return w===3?getExplorerScenariosW3():w===2?getExplorerScenariosW2():getExplorerScenarios();
+  if(S.band==='builder')  return w===3?getBuilderScenariosW3():w===2?getBuilderScenariosW2():getBuilderScenarios();
+  return w===3?getStrategistScenariosW3():w===2?getStrategistScenariosW2():getStrategistScenarios();
 }
 
 // Carry-forward helpers — read prior day choices from history
@@ -1461,6 +1474,894 @@ function getStrategistScenarios() {
   ];
 } // end getStrategistScenarios
 
+// ── WEEK 2 DAY META ──────────────────────────────────────────────
+const DAYS_EXPLORER_W2=[
+  {name:'MONDAY',    sub:'THE EARN',    sceneCls:'sc-d1',miloImg:'./milo-happy.png',
+   speech:"Someone's offering you a chance<br>to earn money.<br><strong>But it'll cost you something.</strong>",
+   tip:"Earning money is great — but check what you're giving up to get it.",
+   tease:"Work or play? Earn or pass? Week 2 opens with a real choice.",
+   diLine:"Week 2 kicks off with something new — a chance to earn. Let's see what you do."},
+  {name:'TUESDAY',   sub:'THE COMPARE', sceneCls:'sc-d2',miloImg:'./milo-noticing.png',
+   speech:"Your friend just got something amazing.<br><strong>How does that make you feel?</strong>",
+   tip:"Someone else having more doesn't mean you have less. Don't let comparison spend your money.",
+   tease:"Somebody's got something you don't. What do you do with that feeling?",
+   diLine:"Comparison is one of the sneakiest ways to lose money."},
+  {name:'WEDNESDAY', sub:'THE PLAN',    sceneCls:'sc-d3',miloImg:'./milo-money.png',
+   speech:"You've got a goal. And a temptation.<br><strong>Which one wins today?</strong>",
+   tip:"Every time you hold your goal, you're winning. Every impulse spend is a tax on your future.",
+   tease:"You set a goal. Now something's in the way. Can you hold the line?",
+   diLine:"Goals are easy to set. Keeping them is the real test."},
+  {name:'THURSDAY',  sub:'THE GIVE',    sceneCls:'sc-d4',miloImg:'./milo-concerned.png',
+   speech:"Someone needs your help.<br><strong>But helping has a cost today.</strong>",
+   tip:"Giving from strength feels different than giving from pressure.",
+   tease:"A friend needs something. You have it. What do you do?",
+   diLine:"Generosity is a value — but it's also a financial decision."},
+  {name:'FRIDAY',    sub:'THE REVIEW',  sceneCls:'sc-d5',miloImg:'./milo-encouraging.png',
+   speech:"Week 2 is done.<br><strong>How do you want to close it out?</strong>",
+   tip:"How you finish the week tells you more about your habits than how you started it.",
+   tease:"Second week down. The last choice is always the most revealing.",
+   diLine:"Week 2 is in the books. One choice left — and it says everything."},
+];
+const DAYS_BUILDER_W2=[
+  {name:'MONDAY',    sub:'THE EARN',    sceneCls:'sc-d1',miloImg:'./milo-happy.png',
+   speech:"There's money to be made today.<br><strong>But you'll have to give something up.</strong>",
+   tip:"Side income is powerful — but the cost isn't always money. Sometimes it's time.",
+   tease:"Work opportunity just landed. What's your move?",
+   diLine:"Week 2. Day 1. A way to make money just appeared. What do you do with it?"},
+  {name:'TUESDAY',   sub:'THE COMPARE', sceneCls:'sc-d2',miloImg:'./milo-noticing.png',
+   speech:"Someone at school is doing better.<br><strong>Is that your problem — or just information?</strong>",
+   tip:"Comparing what you have to others is the fastest way to make bad financial decisions.",
+   tease:"Somebody's flexing. Now what?",
+   diLine:"The comparison trap is real. And expensive."},
+  {name:'WEDNESDAY', sub:'THE PLAN',    sceneCls:'sc-d3',miloImg:'./milo-money.png',
+   speech:"You have a goal. The temptation<br>just showed up right on time.<br><strong>What's your call?</strong>",
+   tip:"Saving for something specific makes it ten times easier to say no to everything else.",
+   tease:"Goal on the line. Temptation in the room. Choose.",
+   diLine:"The best test of a financial goal is what happens when something else shows up."},
+  {name:'THURSDAY',  sub:'THE GIVE',    sceneCls:'sc-d4',miloImg:'./milo-concerned.png',
+   speech:"Someone needs money.<br>You have it.<br><strong>What's the right move here?</strong>",
+   tip:"Know whether you're giving or lending. They're different.",
+   tease:"Someone's asking. You have it. But do you give it?",
+   diLine:"Generosity is complicated. Let's see where you actually land."},
+  {name:'FRIDAY',    sub:'THE REVIEW',  sceneCls:'sc-d5',miloImg:'./milo-encouraging.png',
+   speech:"Week 2 is behind you.<br><strong>What do you do with what's left?</strong>",
+   tip:"The best financial move at week's end: did I stick to what I said I would?",
+   tease:"Second week done. One last call.",
+   diLine:"Week 2 ends here. What kind of money thinker are you building into?"},
+];
+const DAYS_STRATEGIST_W2=[
+  {name:'MONDAY',    sub:'THE EARN',    sceneCls:'sc-d1',miloImg:'./milo-happy.png',
+   speech:"Income opportunity just landed.<br><strong>The question is what you do with it.</strong>",
+   tip:"Earning is only the first step. What you do with income — that's the real skill.",
+   tease:"You can earn real money this week. But at what cost?",
+   diLine:"Week 2. Money on the table. Let's see if you're actually ready for it."},
+  {name:'TUESDAY',   sub:'THE COMPARE', sceneCls:'sc-d2',miloImg:'./milo-noticing.png',
+   speech:"Someone in your circle is ahead of you financially.<br><strong>What do you do with that?</strong>",
+   tip:"Comparison is data, not a command. Use it — don't let it use you.",
+   tease:"Someone else made money. Now you're feeling it. What happens next?",
+   diLine:"Social comparison is one of the biggest drivers of bad financial decisions in teenagers."},
+  {name:'WEDNESDAY', sub:'THE PLAN',    sceneCls:'sc-d3',miloImg:'./milo-money.png',
+   speech:"Your goal is right in front of you.<br>So is a distraction.<br><strong>Which one wins?</strong>",
+   tip:"A real goal creates a filter for every other decision. Either the spend serves the goal or it doesn't.",
+   tease:"You said you wanted something. Now we'll find out how much you meant it.",
+   diLine:"Goals are plans. Plans get tested. Here's yours."},
+  {name:'THURSDAY',  sub:'THE GIVE',    sceneCls:'sc-d4',miloImg:'./milo-concerned.png',
+   speech:"Someone's asking for money.<br>It's not a small ask.<br><strong>What do you do?</strong>",
+   tip:"Giving with intention is different from giving from obligation. Know which one you're doing.",
+   tease:"Someone needs something from you. The ask is real. What's your answer?",
+   diLine:"Generosity is a financial behavior too. Let's see how you navigate it."},
+  {name:'FRIDAY',    sub:'THE REVIEW',  sceneCls:'sc-d5',miloImg:'./milo-encouraging.png',
+   speech:"Week 2 is over.<br><strong>What's your final move?</strong>",
+   tip:"The way you end a financial period tells you more than how you started it.",
+   tease:"Second week done. One decision left — and it reveals everything.",
+   diLine:"Week 2 closes here. What do you do with what's left?"},
+];
+
+// ── WEEK 3 DAY META ──────────────────────────────────────────────
+const DAYS_EXPLORER_W3=[
+  {name:'MONDAY',    sub:'THE UPGRADE', sceneCls:'sc-d1',miloImg:'./milo-happy.png',
+   speech:"Something newer just showed up.<br><strong>But your old one still works.</strong>",
+   tip:"Upgrading something that still works is usually about feelings, not need.",
+   tease:"You don't need it. You want it. Is that enough?",
+   diLine:"Week 3 opens with the oldest trick — the upgrade."},
+  {name:'TUESDAY',   sub:'THE DEAL',    sceneCls:'sc-d2',miloImg:'./milo-noticing.png',
+   speech:"A deal is only a deal if you<br>actually needed the thing.<br><strong>Did you?</strong>",
+   tip:"A 50% discount on something you didn't need is still 50% wasted.",
+   tease:"Flash sale. Limited time. Only a few left. What do you do?",
+   diLine:"Sales are designed to make you act fast. Let's slow it down."},
+  {name:'WEDNESDAY', sub:'THE LOAN',    sceneCls:'sc-d3',miloImg:'./milo-concerned.png',
+   speech:"Your friend wants to borrow money.<br><strong>And they say they'll pay you back.</strong>",
+   tip:"Before you lend to a friend, ask: am I okay if I never get this back?",
+   tease:"Someone wants to borrow. You have it. But lending is tricky.",
+   diLine:"Lending money to friends is one of the most complicated financial decisions you'll ever make."},
+  {name:'THURSDAY',  sub:'THE LONG GAME',sceneCls:'sc-d4',miloImg:'./milo-money.png',
+   speech:"There's a reward if you wait.<br><strong>But you have to leave the money alone.</strong>",
+   tip:"Delayed gratification is the most important financial habit you can build.",
+   tease:"Wait and get more. Spend now and get nothing extra.",
+   diLine:"Waiting for more is hard. Let's find out if you can do it."},
+  {name:'FRIDAY',    sub:'THE LEGACY',  sceneCls:'sc-d5',miloImg:'./milo-encouraging.png',
+   speech:"Three weeks. Done.<br><strong>What kind of money thinker are you?</strong>",
+   tip:"Your last decision is always a mirror. What do you see?",
+   tease:"Three weeks of choices. This one's the last. Make it count.",
+   diLine:"You've made 14 choices. This is number 15."},
+];
+const DAYS_BUILDER_W3=[
+  {name:'MONDAY',    sub:'THE UPGRADE', sceneCls:'sc-d1',miloImg:'./milo-happy.png',
+   speech:"New version just dropped.<br>Your current one still works.<br><strong>What's your move?</strong>",
+   tip:"Upgrades feel like progress. They're often just spending in disguise.",
+   tease:"The new one is better. Your old one works. What do you do?",
+   diLine:"Week 3. The upgrade temptation is one of the most common financial traps."},
+  {name:'TUESDAY',   sub:'THE DEAL',    sceneCls:'sc-d2',miloImg:'./milo-noticing.png',
+   speech:"Limited time. Great price.<br><strong>But you weren't planning to buy this.</strong>",
+   tip:"The urgency in a deal is designed. The need is real or it isn't.",
+   tease:"Great deal. Ticking clock. Limited stock. What do you do?",
+   diLine:"Every 'limited time offer' is engineered. Let's see if it works on you."},
+  {name:'WEDNESDAY', sub:'THE LOAN',    sceneCls:'sc-d3',miloImg:'./milo-concerned.png',
+   speech:"A classmate wants to borrow $10.<br>They say they'll pay you back.<br><strong>Do you trust it?</strong>",
+   tip:"There's no such thing as a loan to a friend — only a gift you might get back.",
+   tease:"$10. One friend. One promise. What's your call?",
+   diLine:"Peer lending mixes money with relationships. Let's see how you navigate it."},
+  {name:'THURSDAY',  sub:'THE LONG GAME',sceneCls:'sc-d4',miloImg:'./milo-money.png',
+   speech:"Put $15 away for 30 days<br>and get $20 back.<br><strong>Or spend it now.</strong>",
+   tip:"The gap between what you want now and what you could have later is where wealth is built.",
+   tease:"$15 now or $20 in 30 days. Sounds simple. Is it?",
+   diLine:"Short-term vs. long-term thinking feel different in your body. Let's find out which one you are."},
+  {name:'FRIDAY',    sub:'THE LEGACY',  sceneCls:'sc-d5',miloImg:'./milo-encouraging.png',
+   speech:"Three weeks. Fifteen decisions.<br><strong>Who did you become?</strong>",
+   tip:"Identity is built in the small moments. Every choice this month shaped something.",
+   tease:"The final decision. Everything you've built — this is the capstone.",
+   diLine:"Three weeks in. This is where you decide what kind of money thinker you actually are."},
+];
+const DAYS_STRATEGIST_W3=[
+  {name:'MONDAY',    sub:'THE UPGRADE', sceneCls:'sc-d1',miloImg:'./milo-happy.png',
+   speech:"New version. Better specs.<br>Your current one still functions.<br><strong>Do you upgrade?</strong>",
+   tip:"Functional isn't optimal — but always ask what the upgrade is actually solving.",
+   tease:"The new thing is objectively better. But so is keeping your money. What wins?",
+   diLine:"Week 3. The upgrade question is one every adult faces constantly."},
+  {name:'TUESDAY',   sub:'THE DEAL',    sceneCls:'sc-d2',miloImg:'./milo-noticing.png',
+   speech:"Flash sale. 70% off. Today only.<br><strong>Was this ever in your plan?</strong>",
+   tip:"Best response to manufactured urgency: ask yourself — was I planning to buy this before I saw the deal?",
+   tease:"Engineered urgency meets your bank account. Who wins?",
+   diLine:"Every sales tactic is designed to override your rational mind."},
+  {name:'WEDNESDAY', sub:'THE LOAN',    sceneCls:'sc-d3',miloImg:'./milo-concerned.png',
+   speech:"A friend needs $25.<br>Promises to pay back next week.<br><strong>What do you do?</strong>",
+   tip:"Money and relationships mix badly unless both people are explicit about the terms.",
+   tease:"$25. A friend. A promise. Your call.",
+   diLine:"Peer loans in high school are rarely repaid on the original terms."},
+  {name:'THURSDAY',  sub:'THE LONG GAME',sceneCls:'sc-d4',miloImg:'./milo-money.png',
+   speech:"Lock $50 away for 30 days<br>and get $65 back.<br><strong>Or use it now.</strong>",
+   tip:"Delayed gratification compounds. The habit matters more than the dollar amount.",
+   tease:"$50 now or $65 in 30 days. Simple math. Hard choice.",
+   diLine:"This is the wealth-building decision in miniature."},
+  {name:'FRIDAY',    sub:'THE LEGACY',  sceneCls:'sc-d5',miloImg:'./milo-encouraging.png',
+   speech:"Three weeks. Fifteen choices.<br><strong>What kind of financial person are you becoming?</strong>",
+   tip:"Your financial identity is built in the small moments. Who showed up in these 15 decisions?",
+   tease:"The final decision of three weeks. Make it the truest one.",
+   diLine:"You've had 14 chances to reveal your financial character. This is the 15th."},
+];
+
+// ── WEEK 2 SCENARIOS ─────────────────────────────────────────────
+function getExplorerScenariosW2(){
+  const b=S.balance;
+  return [
+    // DAY 1 — THE EARN
+    { day:1, scTitle:'The Grocery Helper',
+      scBody:`Your neighbor Mrs. Kim offers you $5 to help carry grocery bags from her car. It'll take about 15 minutes — but your friend is waiting to play outside right now.`,
+      visEmoji:'🛒', visCls:'vis-d1', visBadge:'+$5\nOFFER',
+      preChat:"This is real money for real work. <strong>But is it worth giving up your free time?</strong> 🌱",
+      choices:[
+        {l:'A',title:'Help Mrs. Kim — earn the $5!',detail:"15 minutes of work for $5. Your friend can wait.",cost:-5,opt:'earn_work',
+         costLbl:'+$5',costCls:'earn',moodLbl:'EARN MOVE',moodEmoji:'💪',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'💪'},
+        {l:'B',title:'Go play — skip the work',detail:"You had plans. $5 isn't worth missing out.",cost:0,opt:'pass_earn',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'PASS',moodEmoji:'🎮',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎮'},
+        {l:'C',title:'Ask if tomorrow works instead',detail:"Try to earn it later so you don't miss your friend.",cost:0,opt:'defer_earn',
+         costLbl:'Maybe later',costCls:'save',moodLbl:'NEGOTIATE',moodEmoji:'🤔',moodCls:'mood-safe',cardCls:'type-purple',badgeCls:'badge-purple',emoji:'🤔'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"You earned $5!",text:`15 minutes of work. Now you have $${b+5}. That's more than you started with. Earning beats spending every time.`};
+        if(c===2) return {cls:'neu',title:"She said tomorrow maybe.",text:`Mrs. Kim wasn't sure. You might earn it, you might not. Sometimes opportunities are now-or-never.`};
+        return {cls:'neu',title:"You went to play.",text:`Fun afternoon! But your balance is still $${b}. The $5 is gone — Mrs. Kim found another helper.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-proud.png',txt:`$5 earned! That's YOUR money from YOUR work. Now you have $${b+5}. Keep that energy. 💪`};
+        if(c===2) return {img:'./milo-thinking.png',txt:"Good thinking to negotiate — but opportunities don't always wait. Watch for the next one. 🤔"};
+        return {img:'./milo-smile.png',txt:"Play time matters! Just know — that $5 had your name on it. 🎮"};},
+    },
+    // DAY 2 — THE COMPARE
+    { day:2, scTitle:"Your Friend's New Tablet",
+      scBody:`Your best friend just got a brand-new tablet for their birthday. It's so cool. You don't have one — and you feel kind of left out. You have $${b}.`,
+      visEmoji:'📱', visCls:'vis-d2', visBadge:null,
+      preChat:"Feeling left out is real. <strong>But does that feeling have to cost you money?</strong> 📱",
+      choices:[
+        {l:'A',title:'Ask your parents to get one too',detail:"If they say yes, you might spend your own money too.",cost:0,opt:'compare_react',
+         costLbl:'Could cost $0+',costCls:'spend',moodLbl:'FOMO MOVE',moodEmoji:'📱',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'📱'},
+        {l:'B',title:'Feel proud of what you have',detail:"Your stuff is good. Someone else's stuff doesn't change that.",cost:0,opt:'contentment',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'GROUNDED',moodEmoji:'🧠',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🧠'},
+        {l:'C',title:"Use their tablet — ask to share",detail:"Enjoy it together without buying anything.",cost:0,opt:'share_resource',
+         costLbl:'−$0',costCls:'save',moodLbl:'CLEVER',moodEmoji:'🤝',moodCls:'mood-social',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🤝'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neu',title:"You asked your parents.",text:`They said they'd think about it. Nothing changed today — but that feeling of wanting one is still there. Wanting something isn't the same as needing it.`};
+        if(c===2) return {cls:'pos',title:"You played with it together!",text:`You enjoyed the tablet without spending a dime. That's called accessing something without owning it — adults do this all the time (it's called renting).`};
+        return {cls:'pos',title:"You stayed grounded.",text:`Someone else having cool stuff doesn't make your stuff less cool. That's a mindset most adults never learn.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-noticing.png',txt:"Wanting stuff after seeing what others have — that's comparison spending. It's very common. And very expensive over time. 👀"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Using without owning. That's actually sophisticated thinking for your age! 🤝"};
+        return {img:'./milo-proud.png',txt:"Contentment is a superpower. You just used it. 🌱"};},
+    },
+    // DAY 3 — THE PLAN
+    { day:3, scTitle:'The Savings Goal Temptation',
+      scBody:`You've been saving up for a $15 toy you really want. You have $${b} right now. The ice cream truck pulls up outside — it's $2. Your goal is SO close.`,
+      visEmoji:'🎯', visCls:'vis-d3', visBadge:'GOAL\n$15',
+      preChat: b>=15
+        ? `You already have enough for the toy! <strong>Do you really need the ice cream right now?</strong> 🎯`
+        : `You're $${15-b} away from your goal. <strong>$2 doesn't sound like much — but it pushes your goal further away.</strong> 🎯`,
+      choices:[
+        {l:'A',title:'Get the ice cream — it\'s only $2',detail:"Small treat. The goal can wait a little longer.",cost:2,opt:'spend_impulse',
+         costLbl:'−$2',costCls:'spend',moodLbl:'IMPULSE',moodEmoji:'🍦',moodCls:'mood-risky',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🍦'},
+        {l:'B',title:'Skip it — protect the goal',detail:"You're this close. Don't let $2 slow you down.",cost:0,opt:'protect_goal',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'FOCUSED',moodEmoji:'🎯',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🎯'},
+        {l:'C',title:'Ask a parent to cover the $2',detail:"They might say yes. You don't spend your own money.",cost:0,opt:'ask_parent',
+         costLbl:'Maybe free',costCls:'save',moodLbl:'ASK MOVE',moodEmoji:'👋',moodCls:'mood-social',cardCls:'type-purple',badgeCls:'badge-purple',emoji:'👋'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"Ice cream time!",text:`Delicious! But your goal just got further away. Small spends add up — even $2 ones. Goals need protection.`};
+        if(c===2) return {cls:'neu',title:"You asked your parent.",text:`They said no. Your balance is still $${b}. Asking is smart — but you still have to protect your goal yourself.`};
+        return {cls:'pos',title:"Goal protected!",text:`You said no to $2 right now to get $15 later. That's what goal-setting actually looks like in real life.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-concerned.png',txt:"Ice cream is real. But so is your goal. Every $2 has a cost. 🍦"};
+        if(c===2) return {img:'./milo-thinking.png',txt:"Creative! But plans need a backup when people say no. Your goal is yours to protect. 🎯"};
+        return {img:'./milo-proud.png',txt:"THAT is goal-setting behavior. You know what you want — and you protected it. 💪"};},
+    },
+    // DAY 4 — THE GIVE
+    { day:4, scTitle:'Friend Forgot Lunch Money',
+      scBody:`Your best friend forgot their lunch money — $3. They look really embarrassed. They promise to pay you back tomorrow. You have $${b}.`,
+      visEmoji:'🍱', visCls:'vis-d4', visBadge:null,
+      preChat: b<=5
+        ? `You're already tight on money. <strong>Giving $3 could really hurt your own week.</strong> 💙`
+        : `You have enough to help. <strong>But will you get it back?</strong> 💙`,
+      choices:[
+        {l:'A',title:'Give them the $3',detail:"Friends take care of each other. They'll pay you back.",cost:3,opt:'give_friend',
+         costLbl:'−$3',costCls:'spend',moodLbl:'GENEROUS',moodEmoji:'💙',moodCls:'mood-social',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'💙'},
+        {l:'B',title:'Say sorry — you can\'t right now',detail:"You need your money too. It's okay to say no.",cost:0,opt:'decline_give',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'BOUNDARY',moodEmoji:'🛑',moodCls:'mood-safe',cardCls:'type-purple',badgeCls:'badge-purple',emoji:'🛑'},
+        {l:'C',title:'Offer to share your lunch instead',detail:"Give food, not money. Same kindness, different cost.",cost:0,opt:'give_noncash',
+         costLbl:'Share food',costCls:'save',moodLbl:'CREATIVE',moodEmoji:'🥪',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🥪'},
+      ],
+      outcome(c){
+        if(c===0&&b<=5) return {cls:'neg',title:"You helped — but now you're really tight.",text:`Kind move! But with $${b-3} left, your own week just got harder. Generosity from a tight spot is real sacrifice.`};
+        if(c===0) return {cls:'neu',title:"You helped your friend!",text:`They were so relieved. You have $${b-3} left. Hopefully they remember to pay you back. Lending and giving are different — make sure you know which one this was.`};
+        if(c===2) return {cls:'pos',title:"You shared your lunch!",text:`Same kindness, zero cash out of pocket. That's creative generosity — giving what you have without giving what you need.`};
+        return {cls:'neu',title:"You had to say no.",text:`Hard to do — but honest. Saying no when you can't afford it isn't selfish. It's self-aware.`};},
+      milo(c){
+        if(c===0&&b<=5) return {img:'./milo-concerned.png',txt:"You gave from an empty tank. That's kind — but make sure you take care of yourself too. 💙"};
+        if(c===0) return {img:'./milo-proud.png',txt:"Good friend energy! Just know: money between friends gets complicated. Make sure they know to pay you back. 🤝"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"You found a third option. Giving your lunch instead of your money — that's real creative problem-solving. 🥪"};
+        return {img:'./milo-thinking.png',txt:"Saying no to a friend is hard. But knowing your own limits is important too. 💙"};},
+    },
+    // DAY 5 — THE REVIEW
+    { day:5, scTitle:'Week 2 Wrap-Up',
+      scBody:`Week 2 is over! You have $${b} left. You can save it all for next week, spend a little on something fun, or put $2 in the class donation jar for a school project.`,
+      visEmoji:'📊', visCls:'vis-d5', visBadge:null,
+      preChat: b<=3
+        ? `This was a tough week for your wallet. <strong>How do you want to close it?</strong> 📊`
+        : `You made it through Week 2 with $${b}! <strong>Last decision — what do you do with it?</strong> 📊`,
+      choices:[
+        {l:'A',title:'Spend a little — you earned it',detail:"Get yourself a small treat. Week 2 is done!",cost:Math.min(4,b),opt:'spend_reward',
+         costLbl:`−$${Math.min(4,b)}`,costCls:'spend',moodLbl:'TREAT MOVE',moodEmoji:'🎉',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎉'},
+        {l:'B',title:'Save everything — carry it forward',detail:"Keep every dollar. Week 3 starts stronger.",cost:0,opt:'save',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'BUILDER',moodEmoji:'🏦',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🏦'},
+        {l:'C',title:'Donate $2 to the class jar',detail:"Give back a little. Feel good about Week 2.",cost:2,opt:'donate',
+         costLbl:'−$2 donated',costCls:'spend',moodLbl:'GIVING',moodEmoji:'💛',moodCls:'mood-social',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'💛'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neu',title:"Treat yourself!",text:`You spent $${Math.min(4,b)} on a small reward. Nothing wrong with enjoying what you earned. Week 3 starts with $${b-Math.min(4,b)}.`};
+        if(c===2) return {cls:'pos',title:"You gave back.",text:`$2 to the class. Week 3 starts with $${b-2}. Generosity at the end of a tough week says a lot about you.`};
+        return {cls:'pos',title:"Full carry-forward!",text:`Every dollar saved. Week 3 starts with $${b}. You're building momentum — and it shows.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-smile.png',txt:"A little reward after two weeks of choices? Fair! Week 3 is right around the corner. 🎉"};
+        if(c===2) return {img:'./milo-proud.png',txt:"You gave at the end. That tells me something real about who you are. 💛"};
+        return {img:'./milo-closure.png',txt:"Full carry-forward. Week 3 is going to be interesting — you're walking in strong. 🌱"};},
+    },
+  ];
+}
+
+function getBuilderScenariosW2(){
+  const b=S.balance;
+  return [
+    // DAY 1 — THE EARN
+    { day:1, scTitle:'The Lawn Mowing Job',
+      scBody:`Your neighbor offers you $10 to mow their lawn. It'll take about an hour. But it's Saturday — the only day you get to sleep in and hang out.`,
+      visEmoji:'🌿', visCls:'vis-d1', visBadge:'+$10\nOFFER',
+      preChat:"$10 for one hour of work. <strong>Is your Saturday worth that?</strong> 🔨",
+      choices:[
+        {l:'A',title:'Take the job — earn the $10',detail:"One hour of work. Real money. Worth it.",cost:-10,opt:'earn_work',
+         costLbl:'+$10',costCls:'earn',moodLbl:'EARNER',moodEmoji:'💰',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'💰'},
+        {l:'B',title:'Pass — it\'s my day off',detail:"Sleep in. Relax. The money isn't worth the hustle today.",cost:0,opt:'pass_earn',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'REST DAY',moodEmoji:'😴',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'😴'},
+        {l:'C',title:'Negotiate — ask for $15',detail:"Counter-offer. Maybe they'll go higher.",cost:0,opt:'negotiate_earn',
+         costLbl:'Maybe +$15',costCls:'save',moodLbl:'NEGOTIATE',moodEmoji:'🤝',moodCls:'mood-safe',cardCls:'type-purple',badgeCls:'badge-purple',emoji:'🤝'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"Lawn is done. $10 earned!",text:`One hour, $10 richer. You now have $${b+10}. That's a 20% increase on a $50 week. Earning has a multiplier effect.`};
+        if(c===2) return {cls:'neu',title:"They said $10 is the max.",text:`Negotiation is a real skill — but this one didn't budge. You can still take the $10 offer, or pass. The lesson: ask, but have a backup plan.`};
+        return {cls:'neu',title:"You took the day off.",text:`Rest is real. But $10 walked away with your neighbor. Next time a similar offer comes — will you be ready?`};},
+      milo(c){
+        if(c===0) return {img:'./milo-proud.png',txt:`$10 earned in an hour. That's $10/hr. You now have $${b+10}. Earning is how wealth actually builds. 💰`};
+        if(c===2) return {img:'./milo-thinking.png',txt:"The counter-offer didn't land — but you tried. Negotiation is a skill you build over time. 🤝"};
+        return {img:'./milo-smile.png',txt:"Rest matters. Just know — earning opportunities don't come back. Watch for the next one. 😴"};},
+    },
+    // DAY 2 — THE COMPARE
+    { day:2, scTitle:"The New Sneakers Problem",
+      scBody:`A classmate showed up today in new $70 sneakers. Everyone's complimenting them. You look down at your own shoes. You have $${b}.`,
+      visEmoji:'👟', visCls:'vis-d2', visBadge:null,
+      preChat:"That feeling when someone else has something you don't — <strong>it's real. But what do you DO with it?</strong> 👟",
+      choices:[
+        {l:'A',title:'Go home and ask for new shoes too',detail:"You want them. Make it known.",cost:0,opt:'compare_react',
+         costLbl:'Could cost you',costCls:'spend',moodLbl:'FOMO MOVE',moodEmoji:'👟',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'👟'},
+        {l:'B',title:'Respect the fit — and move on',detail:"They look good. Doesn't mean you need the same.",cost:0,opt:'contentment',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'GROUNDED',moodEmoji:'🧠',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🧠'},
+        {l:'C',title:'Start a savings goal for shoes',detail:"If you really want them — plan for them.",cost:0,opt:'start_goal',
+         costLbl:'Start saving',costCls:'save',moodLbl:'GOAL MOVE',moodEmoji:'🎯',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🎯'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"You went home wanting shoes.",text:`You asked — they said maybe. Nothing changed today except the feeling got bigger. Comparison spending starts with a feeling and ends with an empty wallet.`};
+        if(c===2) return {cls:'pos',title:"You turned it into a goal.",text:`Instead of wanting randomly, you made it specific. That's how adults build toward things — with intention, not impulse.`};
+        return {cls:'pos',title:"You let it go.",text:`Someone else's shoes don't have anything to do with your week. That kind of groundedness will save you a lot of money over your lifetime.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-noticing.png',txt:"Comparison is the thief of financial peace. That feeling in your gut right now? Advertisers spend billions creating it. 👀"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Converting a FOMO feeling into a savings goal? That's real financial maturity. 🎯"};
+        return {img:'./milo-proud.png',txt:"You saw it. You felt it. You moved on. That's discipline — and it gets easier with practice. 🧠"};},
+    },
+    // DAY 3 — THE PLAN
+    { day:3, scTitle:'The Concert Ticket vs. The Game',
+      scBody:`You've been saving for a concert ticket — it costs $40 and goes on sale in two weeks. Today, a new video game dropped for $25. You have $${b}.`,
+      visEmoji:'🎮', visCls:'vis-d3', visBadge:'NEW\n$25',
+      preChat: b>=40
+        ? `You already have enough for the ticket. <strong>But do you also need the game right now?</strong> 🎯`
+        : `You're $${40-b} away from the ticket goal. <strong>This game would set you back.</strong> 🎯`,
+      choices:[
+        {l:'A',title:'Buy the game now',detail:"It's out TODAY. The ticket can wait — you'll save again.",cost:25,opt:'spend_impulse',
+         costLbl:'−$25',costCls:'spend',moodLbl:'IMPULSE BUY',moodEmoji:'🎮',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'🎮'},
+        {l:'B',title:'Hold — protect the concert goal',detail:"The game will still exist. The ticket has a deadline.",cost:0,opt:'protect_goal',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'GOAL HOLD',moodEmoji:'🎯',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🎯'},
+        {l:'C',title:'Buy the game used — save $10',detail:"Find it for $15 used. Costs less, same game.",cost:15,opt:'spend_frugal',
+         costLbl:'−$15',costCls:'spend',moodLbl:'SMART SHOP',moodEmoji:'🔍',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🔍'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"You got the game.",text:`Great game. But now you have $${b-25} and the concert ticket is $${Math.max(0,40-(b-25))} away — and the deadline is in two weeks. Goals need protection.`};
+        if(c===2) return {cls:'neu',title:"Found a used copy.",text:`Smart! $15 instead of $25. You still spent though — and the concert goal got $15 farther away. Buying smarter isn't the same as not buying.`};
+        return {cls:'pos',title:"Goal protected.",text:`The concert is still reachable. The game will still be there. Goals with deadlines always win over impulses without one.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-concerned.png',txt:"The game is great — but the concert has a deadline. Once that sale opens, the ticket might sell out. Just know what you chose. 🎮"};
+        if(c===2) return {img:'./milo-thinking.png',txt:"Buying used is clever. But you still spent — and your goal is further away. Smart buying ≠ not buying. 🔍"};
+        return {img:'./milo-proud.png',txt:"Goals with deadlines are serious business. You treated this one like it mattered. That's the move. 🎯"};},
+    },
+    // DAY 4 — THE GIVE
+    { day:4, scTitle:'Family Needs Help',
+      scBody:`A family member texts asking if you have any money they can borrow — $15. They say they'll pay you back next week. You have $${b}.`,
+      visEmoji:'👨‍👩‍👧', visCls:'vis-d4', visBadge:null,
+      preChat: b<=20
+        ? `You're already tight this week. <strong>Giving $15 would leave you with very little.</strong> 💙`
+        : `You have enough to help. <strong>But family and money is complicated.</strong> 💙`,
+      choices:[
+        {l:'A',title:'Send them the $15',detail:"Family first. They said they'll pay it back.",cost:15,opt:'give_family',
+         costLbl:'−$15',costCls:'spend',moodLbl:'FAMILY FIRST',moodEmoji:'💙',moodCls:'mood-social',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'💙'},
+        {l:'B',title:'Say you only have a little',detail:"Offer $5 instead — help without going broke.",cost:5,opt:'give_partial',
+         costLbl:'−$5',costCls:'spend',moodLbl:'PARTIAL HELP',moodEmoji:'🤝',moodCls:'mood-safe',cardCls:'type-purple',badgeCls:'badge-purple',emoji:'🤝'},
+        {l:'C',title:'Say no — you need yours too',detail:"You have expenses this week. It's okay to say no.",cost:0,opt:'decline_give',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'BOUNDARY',moodEmoji:'🛑',moodCls:'mood-smart',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🛑'},
+      ],
+      outcome(c){
+        if(c===0&&b<=20) return {cls:'neg',title:"You sent the $15.",text:`Kind — but now you have $${b-15} and a tight rest of the week. Family money rarely comes back on schedule. Generosity has a cost when you can't afford it.`};
+        if(c===0) return {cls:'neu',title:"You sent it.",text:`$15 out. You have $${b-15} left. Helping family is real — just know that "I'll pay you back" is a promise, not a guarantee.`};
+        if(c===1) return {cls:'neu',title:"You offered $5.",text:`You helped what you could. $5 went out; $${b-5} stays. Setting a limit isn't cold — it's honest.`};
+        return {cls:'neu',title:"You said no.",text:`That's hard to do, especially with family. But your own financial stability matters too. It's okay to set limits.`};},
+      milo(c){
+        if(c===0&&b<=20) return {img:'./milo-concerned.png',txt:"You gave from a tight spot. That's love — but make sure your own week still works. 💙"};
+        if(c===0) return {img:'./milo-proud.png',txt:"Family first. Just track it — money between relatives gets complicated without clear expectations. 🤝"};
+        if(c===1) return {img:'./milo-thinking.png',txt:"Meeting in the middle. $5 is still help. Setting a limit is a skill. 🤝"};
+        return {img:'./milo-thinking.png',txt:"Saying no to family is one of the hardest things. But your financial health is also your responsibility. 🛑"};},
+    },
+    // DAY 5 — THE REVIEW
+    { day:5, scTitle:'Week 2 Wrap-Up',
+      scBody:`Week 2 is done. You have $${b} left. You can bank it all for Week 3, spend some on something you've been holding back, or set a specific savings goal right now.`,
+      visEmoji:'📊', visCls:'vis-d5', visBadge:null,
+      preChat: b<=10
+        ? `Tough week — but you made it. <strong>How do you want to close it out?</strong> 📊`
+        : `You finished Week 2 with $${b}. <strong>What's the right final move?</strong> 📊`,
+      choices:[
+        {l:'A',title:'Spend some — you deserve it',detail:"Small reward for a full week of decisions.",cost:Math.min(15,b),opt:'spend_reward',
+         costLbl:`−$${Math.min(15,b)}`,costCls:'spend',moodLbl:'REWARD',moodEmoji:'🎉',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎉'},
+        {l:'B',title:'Save everything — full carry',detail:"Every dollar into Week 3. Momentum is real.",cost:0,opt:'save',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'FULL CARRY',moodEmoji:'🏦',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🏦'},
+        {l:'C',title:'Set a goal with what you have',detail:"Name what you're saving toward. Makes it 3x more likely to stick.",cost:0,opt:'set_goal',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'GOAL SET',moodEmoji:'🎯',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🎯'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neu',title:"Treat unlocked.",text:`$${Math.min(15,b)} spent. Nothing wrong with rewarding yourself — just make sure it's a decision, not a habit. Week 3 starts with $${b-Math.min(15,b)}.`};
+        if(c===2) return {cls:'pos',title:"Goal set.",text:`Named it. Locked it. Research says people with named goals are 3x more likely to reach them. Week 3 starts with purpose.`};
+        return {cls:'pos',title:"Full carry-forward!",text:`Every dollar saved. Week 3 starts with $${b}. Two weeks of discipline — that's a pattern, not a fluke.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-smile.png',txt:"Earned treat. Week 3 is right there — walk in ready. 🎉"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Naming your goal is half the battle. Now protect it. 🎯"};
+        return {img:'./milo-closure.png',txt:"Two weeks. Full carry both times. That's a pattern. And patterns become identity. 🏦"};},
+    },
+  ];
+}
+
+function getStrategistScenariosW2(){
+  const b=S.balance;
+  return [
+    // DAY 1 — THE EARN
+    { day:1, scTitle:'The Babysitting Opportunity',
+      scBody:`A family friend needs a babysitter Saturday evening — 4 hours for $20. The same night, your friend group is heading to a party everyone's been talking about for weeks.`,
+      visEmoji:'👶', visCls:'vis-d1', visBadge:'+$20\nGIG',
+      preChat:"$20 for 4 hours is real income. <strong>But the party is real too.</strong> 🎯",
+      choices:[
+        {l:'A',title:'Take the gig — earn the $20',detail:"$5/hr, 4 hours, $20 added to your week.",cost:-20,opt:'earn_work',
+         costLbl:'+$20',costCls:'earn',moodLbl:'EARNER',moodEmoji:'💰',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'💰'},
+        {l:'B',title:'Skip it — go to the party',detail:"You only have this many free weekends. The money can wait.",cost:0,opt:'pass_earn',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'SOCIAL',moodEmoji:'🎉',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎉'},
+        {l:'C',title:'Negotiate — ask for $30',detail:"4 hours is a real commitment. Counter at $30.",cost:0,opt:'negotiate_earn',
+         costLbl:'Maybe +$30',costCls:'save',moodLbl:'NEGOTIATE',moodEmoji:'🤝',moodCls:'mood-safe',cardCls:'type-purple',badgeCls:'badge-purple',emoji:'🤝'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"Gig complete. $20 earned.",text:`You now have $${b+20}. The party happened without you — and life went on. Income replaces FOMO faster than you think.`};
+        if(c===2) return {cls:'neu',title:"They accepted $25 — meet in the middle.",text:`Negotiation worked partly. You earned $25 instead of $20. Now you have $${b+25}. That extra $5 came from asking. Always ask.`};
+        return {cls:'neu',title:"Party was great.",text:`Good memories. Balance still $${b}. The $20 went to someone else. Weighing income vs. social time is a real adult decision — no wrong answer, just tradeoffs.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-proud.png',txt:`$20 in 4 hours. You now have $${b+20}. Income is how wealth starts — and it starts here. 💰`};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Counter-offer landed. That extra $5 will always exist because you asked. Negotiation compounds. 🤝"};
+        return {img:'./milo-thinking.png',txt:"The party was the choice. Own it. And next time there's an income opportunity — weigh it consciously, not by default. 🎉"};},
+    },
+    // DAY 2 — THE COMPARE
+    { day:2, scTitle:"Your Friend Flipped Sneakers",
+      scBody:`A friend just told you they bought a pair of limited sneakers for $80 and resold them for $180. $100 profit. Now you feel behind. You have $${b}.`,
+      visEmoji:'👟', visCls:'vis-d2', visBadge:'+$100\nFLIP',
+      preChat:"Someone made $100 while you weren't looking. <strong>What do you do with that information?</strong> 🎯",
+      choices:[
+        {l:'A',title:'Try to do the same thing — right now',detail:"Find a pair, buy it, flip it. You can do this.",cost:Math.min(b,60),opt:'compare_react',
+         costLbl:`−$${Math.min(b,60)}`,costCls:'spend',moodLbl:'REACTIVE',moodEmoji:'👟',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'👟'},
+        {l:'B',title:'Ask them how it actually works first',detail:"Learn the model before you spend money on it.",cost:0,opt:'learn_first',
+         costLbl:'−$0',costCls:'save',moodLbl:'LEARN FIRST',moodEmoji:'🧠',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🧠'},
+        {l:'C',title:'Respect it — keep working your own plan',detail:"Their win isn't your loss. Stay on your path.",cost:0,opt:'contentment',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'FOCUSED',moodEmoji:'🎯',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🎯'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"You bought a pair to flip.",text:`$${Math.min(b,60)} in — and now you're waiting. The resale market is volatile. Reactive investing based on someone else's win is one of the most common money mistakes adults make.`};
+        if(c===1) return {cls:'pos',title:"You asked how it works.",text:`They walked you through it. Turns out it took them 3 weeks and lots of research. You learned without spending. Information is free. Mistakes aren't.`};
+        return {cls:'pos',title:"You stayed on your path.",text:`Someone else winning doesn't change your plan. That's called financial discipline — and it's rare.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-concerned.png',txt:"Reactive spending based on someone else's success is one of the top 5 financial mistakes. You bought high. The market decides what happens next. 👟"};
+        if(c===1) return {img:'./milo-encouraging.png',txt:"Learning before doing is how you avoid expensive mistakes. That conversation was free. The tuition you dodged was not. 🧠"};
+        return {img:'./milo-proud.png',txt:"Their win. Your plan. You didn't confuse the two. That's strategic clarity. 🎯"};},
+    },
+    // DAY 3 — THE PLAN
+    { day:3, scTitle:'The AirPods vs. The Goal',
+      scBody:`You've been saving toward a $120 contribution toward a new laptop. You have $${b}. Today, a limited AirPods sale — normally $79, marked down to $49 for 24 hours.`,
+      visEmoji:'🎧', visCls:'vis-d3', visBadge:'SALE\n$49',
+      preChat: b>=120
+        ? `You actually already hit your laptop goal. <strong>Does that change the AirPods decision?</strong> 🎯`
+        : `You're $${120-b} from your laptop goal. <strong>$49 on AirPods would set you back significantly.</strong> 🎯`,
+      choices:[
+        {l:'A',title:'Buy the AirPods — great deal',detail:"$49 for AirPods is rare. Laptop can wait.",cost:49,opt:'spend_impulse',
+         costLbl:'−$49',costCls:'spend',moodLbl:'DEAL GRAB',moodEmoji:'🎧',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'🎧'},
+        {l:'B',title:'Skip it — protect the laptop goal',detail:"A deal is only good if it's in your plan. This isn't.",cost:0,opt:'protect_goal',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'GOAL HOLD',moodEmoji:'🎯',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🎯'},
+        {l:'C',title:'Buy wired earbuds for $12 instead',detail:"Get sound. Don't blow the goal. Smart compromise.",cost:12,opt:'spend_frugal',
+         costLbl:'−$12',costCls:'spend',moodLbl:'SMART SUB',moodEmoji:'🎵',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🎵'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"AirPods acquired.",text:`They're great. But your laptop goal just moved $49 further away. Timed discounts are the #1 way brands override your financial plans — because they worked.`};
+        if(c===2) return {cls:'neu',title:"Wired earbuds — $12.",text:`You got sound at low cost. Laptop goal only moved $12. That's a reasonable compromise — not perfect, but controlled.`};
+        return {cls:'pos',title:"Goal protected.",text:`You saw a real deal and said no. That's one of the hardest things to do in personal finance. Most adults can't.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-concerned.png',txt:"The deal was real. But so was your goal. 'Limited time' is a tactic — and it worked on you today. Notice that. 🎧"};
+        if(c===2) return {img:'./milo-thinking.png',txt:"Budget substitution. $12 instead of $49. Goal took $37 less damage. That's controlled compromise. 🎵"};
+        return {img:'./milo-proud.png',txt:"You said no to a real deal to protect a real goal. That is elite financial behavior at your age. 🎯"};},
+    },
+    // DAY 4 — THE GIVE
+    { day:4, scTitle:'The Group Fundraiser Pressure',
+      scBody:`Your friend group is doing a class fundraiser and everyone's expected to contribute $25. They're going around the table collecting. You have $${b}.`,
+      visEmoji:'🫙', visCls:'vis-d4', visBadge:null,
+      preChat: b<=30
+        ? `$25 would be almost everything you have. <strong>Obligation isn't the same as generosity.</strong> 💙`
+        : `You can cover it — but do you want to? <strong>Notice whether you're giving or complying.</strong> 💙`,
+      choices:[
+        {l:'A',title:'Give the $25 — don\'t make it weird',detail:"Social pressure is real. $25 keeps the peace.",cost:25,opt:'give_social',
+         costLbl:'−$25',costCls:'spend',moodLbl:'COMPLY',moodEmoji:'😬',moodCls:'mood-risky',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'😬'},
+        {l:'B',title:'Offer what you can — $10',detail:"Give what you choose, not what you're told.",cost:10,opt:'give_intentional',
+         costLbl:'−$10',costCls:'spend',moodLbl:'INTENTIONAL',moodEmoji:'💙',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'💙'},
+        {l:'C',title:'Offer to donate time instead of money',detail:"Volunteer for the fundraiser instead of writing a check.",cost:0,opt:'give_noncash',
+         costLbl:'−$0',costCls:'save',moodLbl:'CREATIVE GIVE',moodEmoji:'⏰',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'⏰'},
+      ],
+      outcome(c){
+        if(c===0&&b<=30) return {cls:'neg',title:"You gave the $25.",text:`Pressure win. You have $${b-25} left and your week is very tight. When giving comes from social pressure rather than choice, it doesn't feel as good as it should.`};
+        if(c===0) return {cls:'neu',title:"You gave the $25.",text:`Group is happy. You have $${b-25} left. Ask yourself: would you have given this if no one was watching? That answer tells you whether it was generosity or compliance.`};
+        if(c===1) return {cls:'pos',title:"You gave $10 on your terms.",text:`You contributed intentionally — not the amount they expected, but the amount you chose. That's the difference between giving and complying.`};
+        return {cls:'pos',title:"You offered your time.",text:`Creative. Authentic. They appreciated it more than you expected. Giving doesn't require a check.`};},
+      milo(c){
+        if(c===0&&b<=30) return {img:'./milo-concerned.png',txt:"Peer pressure is expensive. $25 when you're tight — that came from the room, not your values. 😬"};
+        if(c===0) return {img:'./milo-thinking.png',txt:"You gave. But ask: was that YOUR choice or theirs? Generosity and compliance feel similar in the moment. Very different over time. 💙"};
+        if(c===1) return {img:'./milo-encouraging.png',txt:"You gave on your terms. That's what intentional generosity looks like. 💙"};
+        return {img:'./milo-proud.png',txt:"Time as a resource — not just money. You found the third option. That's creative character. ⏰"};},
+    },
+    // DAY 5 — THE REVIEW
+    { day:5, scTitle:'Week 2 Wrap-Up',
+      scBody:`Week 2 complete. You have $${b} left. Option 1: spend some on a reward. Option 2: save everything and carry it forward. Option 3: put $20 toward a specific goal you're building toward.`,
+      visEmoji:'📊', visCls:'vis-d5', visBadge:null,
+      preChat: b<=15
+        ? `Tight week — but you're still here. <strong>How do you close it?</strong> 📊`
+        : `You finished Week 2 with $${b}. <strong>What's your final move?</strong> 📊`,
+      choices:[
+        {l:'A',title:'Spend some — controlled reward',detail:"$20 or less. You earned a treat this week.",cost:Math.min(20,b),opt:'spend_reward',
+         costLbl:`−$${Math.min(20,b)}`,costCls:'spend',moodLbl:'REWARD',moodEmoji:'🎉',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎉'},
+        {l:'B',title:'Save everything — full carry',detail:"Walk into Week 3 with maximum balance.",cost:0,opt:'save',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'FULL CARRY',moodEmoji:'🏦',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🏦'},
+        {l:'C',title:'Allocate $20 to a named goal',detail:"Put it in a mental 'account' with a specific purpose.",cost:0,opt:'allocate_goal',
+         costLbl:'Earmarked',costCls:'save',moodLbl:'ALLOCATE',moodEmoji:'🎯',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🎯'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neu',title:"Reward taken.",text:`$${Math.min(20,b)} spent intentionally. Week 3 starts with $${b-Math.min(20,b)}. Intentional spending is very different from impulsive spending.`};
+        if(c===2) return {cls:'pos',title:"$20 allocated.",text:`Named goals have 3x higher completion rates than unnamed ones. You just gave your money a job. Week 3 starts with direction.`};
+        return {cls:'pos',title:"Full carry-forward.",text:`$${b} into Week 3. Two weeks of discipline. You're building something — and it's compounding.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-smile.png',txt:"Intentional reward spending — not impulse. There's a difference, and you know it. 🎉"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Allocation is how adults build wealth. Money with a job is more powerful than money sitting loose. 🎯"};
+        return {img:'./milo-closure.png',txt:"Two weeks. Full carry. Week 3 walks in with weight behind it. 🏦"};},
+    },
+  ];
+}
+
+// ── WEEK 3 SCENARIOS ─────────────────────────────────────────────
+function getExplorerScenariosW3(){
+  const b=S.balance;
+  return [
+    // DAY 1 — THE UPGRADE
+    { day:1, scTitle:"The New Headphones",
+      scBody:`Your headphones work fine — but a friend has newer ones that sound better and look cooler. You could buy new ones for $12. Yours are totally fine. You have $${b}.`,
+      visEmoji:'🎧', visCls:'vis-d1', visBadge:'NEW\n$12',
+      preChat:"Your old ones work. <strong>Do you need new ones — or just want them?</strong> 🌱",
+      choices:[
+        {l:'A',title:'Buy the new headphones!',detail:"$12 for an upgrade. Worth it!",cost:12,opt:'upgrade_impulse',
+         costLbl:'−$12',costCls:'spend',moodLbl:'UPGRADE',moodEmoji:'🎧',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'🎧'},
+        {l:'B',title:'Keep what I have — they still work',detail:"If it works, it works. Don't fix what isn't broken.",cost:0,opt:'contentment',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'CONTENT',moodEmoji:'🌱',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🌱'},
+        {l:'C',title:'Ask if you can try theirs first',detail:"Test before you buy. Maybe yours are actually fine.",cost:0,opt:'test_first',
+         costLbl:'−$0',costCls:'save',moodLbl:'TEST FIRST',moodEmoji:'🤔',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🤔'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"New headphones!",text:`They do sound better. But your old ones worked fine — this was a want, not a need. Now you have $${b-12}. The upgrade cost you $12.`};
+        if(c===2) return {cls:'pos',title:"You tried them first.",text:`You listened for a minute. Honestly? Yours aren't that different. You kept $${b}. Testing before buying is one of the best habits you can build.`};
+        return {cls:'pos',title:"Kept what works.",text:`Your headphones still work. $${b} saved. Upgrading what isn't broken is one of the most common ways people waste money.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-thinking.png',txt:"New thing feels great for about a week. Then it's just headphones. Worth $12? You decide. 🎧"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Test first — spend later. That's consumer wisdom most adults never learn. 🤔"};
+        return {img:'./milo-proud.png',txt:"Contentment is rare. You've got it. That'll save you thousands of dollars over your lifetime. 🌱"};},
+    },
+    // DAY 2 — THE DEAL
+    { day:2, scTitle:'The School Store Flash Sale',
+      scBody:`The school store is running a flash sale — everything $2. Stickers, notebooks, erasers, fun stuff. You don't need any of it. But it's $2! And it ends in 20 minutes. You have $${b}.`,
+      visEmoji:'🏷️', visCls:'vis-d2', visBadge:'FLASH\n$2',
+      preChat:"$2 sounds tiny. <strong>But did you actually need any of this before you saw the sign?</strong> 🌱",
+      choices:[
+        {l:'A',title:'Get a few things — it\'s only $2 each!',detail:"Grab 2–3 items. It's a great deal.",cost:6,opt:'spend_impulse',
+         costLbl:'−$6',costCls:'spend',moodLbl:'FLASH BUY',moodEmoji:'🏷️',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'🏷️'},
+        {l:'B',title:'Walk past it',detail:"You didn't need any of this before the sign. You still don't.",cost:0,opt:'resist_sale',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'DISCIPLINE',moodEmoji:'💪',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'💪'},
+        {l:'C',title:'Get one thing you actually need',detail:"Pick the one item that's actually useful. That's it.",cost:2,opt:'spend_intentional',
+         costLbl:'−$2',costCls:'spend',moodLbl:'INTENTIONAL',moodEmoji:'✅',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'✅'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"You grabbed a few things!",text:`Fun for a minute. But none of those items were on your mind before the sale. You spent $6 on things you didn't plan to buy. That's how sales work — they create the want.`};
+        if(c===2) return {cls:'neu',title:"One item — intentional.",text:`$2 for something you can actually use. That's controlled spending. $${b-2} left.`};
+        return {cls:'pos',title:"You walked past it.",text:`The sale was designed to make you stop. You didn't. That takes a lot more discipline than it sounds.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-thinking.png',txt:"Flash sales create the urge to buy. You felt it. Now you know what that feels like — and next time you can spot it faster. 🏷️"};
+        if(c===2) return {img:'./milo-smile.png',txt:"One intentional purchase > three random ones. Good filter. ✅"};
+        return {img:'./milo-proud.png',txt:"Sales are designed to stop you. You walked right past. That's real self-control. 💪"};},
+    },
+    // DAY 3 — THE LOAN
+    { day:3, scTitle:"Friend Wants to Borrow $3",
+      scBody:`Your best friend forgot their lunch money — $3. They promise to pay you back tomorrow. You have $${b}. This is the third time they've asked this month.`,
+      visEmoji:'🍱', visCls:'vis-d3', visBadge:null,
+      preChat:"Third time this month. <strong>At what point is a loan just a gift?</strong> 🌱",
+      choices:[
+        {l:'A',title:'Give the $3 — they\'re your friend',detail:"Friends help each other. Again.",cost:3,opt:'give_friend',
+         costLbl:'−$3',costCls:'spend',moodLbl:'HELPER',moodEmoji:'💙',moodCls:'mood-social',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'💙'},
+        {l:'B',title:'Say no — third time is too many',detail:"Kindness is real. But a pattern is a pattern.",cost:0,opt:'decline_loan',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'BOUNDARY',moodEmoji:'🛑',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🛑'},
+        {l:'C',title:'Share your lunch instead of money',detail:"Help them eat without putting cash out.",cost:0,opt:'give_noncash',
+         costLbl:'−$0',costCls:'save',moodLbl:'CREATIVE',moodEmoji:'🥪',moodCls:'mood-safe',cardCls:'type-purple',badgeCls:'badge-purple',emoji:'🥪'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neu',title:"$3 out. Again.",text:`You're a good friend. But three times in a month with no repayment is a pattern. At some point, you have to ask: is this a loan or just a gift I keep giving?`};
+        if(c===2) return {cls:'pos',title:"You shared your lunch!",text:`They got food. You kept your money. You found a way to help without feeding a pattern. That's creative kindness.`};
+        return {cls:'pos',title:"You said no.",text:`That was hard — especially with a friend. But recognizing a pattern and setting a limit is one of the most important financial skills there is.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-concerned.png',txt:"Three times. Has any of it come back? Money between friends gets complicated. You're allowed to have limits. 💙"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Help without cash. That's a third option most people never think of. Creative and kind. 🥪"};
+        return {img:'./milo-proud.png',txt:"Setting limits with friends is one of the hardest things. But a one-way pattern isn't friendship — it's just you giving. 🛑"};},
+    },
+    // DAY 4 — THE LONG GAME
+    { day:4, scTitle:'The Patience Test',
+      scBody:`Your teacher has a special deal: put $5 in an envelope today and don't touch it for one week — and she'll add $2 to it at the end. You'd end up with $7. You have $${b}.`,
+      visEmoji:'📬', visCls:'vis-d4', visBadge:'$5→$7\n1 WEEK',
+      preChat:"$5 today becomes $7 next week. <strong>Can you leave it alone?</strong> 🌱",
+      choices:[
+        {l:'A',title:'Put in the $5 — wait for $7',detail:"40% return in one week. You just have to wait.",cost:5,opt:'delay_gratify',
+         costLbl:'−$5 (get $7)',costCls:'save',moodLbl:'LONG GAME',moodEmoji:'⏳',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'⏳'},
+        {l:'B',title:'Keep your $5 now',detail:"$7 is nice — but you might need the $5 this week.",cost:0,opt:'take_now',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'KEEP NOW',moodEmoji:'💵',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'💵'},
+        {l:'C',title:'Put in $3 instead — smaller risk',detail:"Commit less. Still earn the bonus on what you put in.",cost:3,opt:'delay_partial',
+         costLbl:'−$3 (get $4)',costCls:'save',moodLbl:'PARTIAL',moodEmoji:'🔰',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🔰'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"Envelope locked!",text:`$5 in. $7 coming back. That's a 40% return in one week. In the real world, that's how interest and investment work — except the returns are usually smaller and the wait is longer.`};
+        if(c===2) return {cls:'neu',title:"$3 in — $4 back.",text:`Smaller commitment, still earns the bonus. You participated in the long game without going all in. That's a valid strategy.`};
+        return {cls:'neu',title:"You kept your $5.",text:`Smart to know your needs for the week. But $7 was right there. Sometimes the best investments are the ones closest to you.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-encouraging.png',txt:"$5 becomes $7 in a week. That's called a return — and you just made one. This is what investing feels like. ⏳"};
+        if(c===2) return {img:'./milo-smile.png',txt:"Partial commitment. Still earning. That's smart risk management — don't put in more than you can afford to leave alone. 🔰"};
+        return {img:'./milo-thinking.png',txt:"$7 walked away. Sometimes you need the money now — that's okay. But notice what $2 of patience was worth. 💵"};},
+    },
+    // DAY 5 — THE LEGACY
+    { day:5, scTitle:'Three Weeks Done — Your Final Choice',
+      scBody:`You made it through three full weeks. Fifteen choices. You have $${b} left. What do you do with it? Save it all, spend a little on something you've been waiting for, or donate some to something that matters?`,
+      visEmoji:'🏆', visCls:'vis-d5', visBadge:null,
+      preChat:"This is your last decision of three weeks. <strong>Make it the one that feels most like YOU.</strong> 🌱",
+      choices:[
+        {l:'A',title:'Spend it — you earned it!',detail:"Three weeks of choices. A small reward makes sense.",cost:Math.min(8,b),opt:'spend_reward',
+         costLbl:`−$${Math.min(8,b)}`,costCls:'spend',moodLbl:'CELEBRATE',moodEmoji:'🎉',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎉'},
+        {l:'B',title:'Save it all — finish strong',detail:"All $${b} saved. The best way to end.",cost:0,opt:'save',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'STRONG FINISH',moodEmoji:'🏦',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🏦'},
+        {l:'C',title:'Donate some — close with meaning',detail:"Put a few dollars toward something bigger than you.",cost:3,opt:'donate',
+         costLbl:'−$3 donated',costCls:'spend',moodLbl:'LEGACY',moodEmoji:'💛',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'💛'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"Treat unlocked.",text:`$${Math.min(8,b)} spent. Three weeks of real decisions — you've earned a small reward. Now you know what kind of money thinker you are.`};
+        if(c===2) return {cls:'pos',title:"You gave to close.",text:`$3 donated at the end of three weeks. That's not just generosity — that's identity. You chose to end with meaning.`};
+        return {cls:'pos',title:"Finished strong.",text:`Every dollar saved. Three weeks, fifteen choices, full balance. That's not just discipline — that's a financial identity being built.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-happy.png',txt:"Three weeks of decisions — and you chose to celebrate. You earned it! 🎉"};
+        if(c===2) return {img:'./milo-proud.png',txt:"You closed three weeks with a donation. That's character. That's your money story — and it's a good one. 💛"};
+        return {img:'./milo-closure.png',txt:"Three weeks. Fifteen choices. Finished strong. That's your financial identity — and it's strong. 🏆"};},
+    },
+  ];
+}
+
+function getBuilderScenariosW3(){
+  const b=S.balance;
+  return [
+    // DAY 1 — THE UPGRADE
+    { day:1, scTitle:'The Phone Case Dilemma',
+      scBody:`Your phone case is scratched up and kind of ugly — but it still protects your phone perfectly. A new case costs $20 and looks a lot better. You have $${b}.`,
+      visEmoji:'📱', visCls:'vis-d1', visBadge:'NEW\n$20',
+      preChat:"Old one works. New one looks better. <strong>Is that $20 worth it?</strong> 🔨",
+      choices:[
+        {l:'A',title:'Get the new case',detail:"$20 for a fresh look. The old one is embarrassing.",cost:20,opt:'upgrade_impulse',
+         costLbl:'−$20',costCls:'spend',moodLbl:'UPGRADE',moodEmoji:'📱',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'📱'},
+        {l:'B',title:'Keep the scratched one',detail:"It works. Scratches aren't damage. Hold the money.",cost:0,opt:'contentment',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'PRACTICAL',moodEmoji:'🔨',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🔨'},
+        {l:'C',title:'Find one online for $8',detail:"Same function, lower cost. Shop smarter.",cost:8,opt:'spend_frugal',
+         costLbl:'−$8',costCls:'spend',moodLbl:'SMART SHOP',moodEmoji:'🔍',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🔍'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"New case — looking good.",text:`$20 gone. Your phone looks fresh. But it worked before too. Aesthetic upgrades on functioning items are one of the most common ways people overspend without realizing it.`};
+        if(c===2) return {cls:'pos',title:"Found one for $8.",text:`Same protection. $12 saved. Smart shopping isn't the same as cheap — it's about value vs. price.`};
+        return {cls:'pos',title:"Kept the scratched one.",text:`Scratches aren't damage. Your wallet stayed intact. That's functional thinking — and it compounds over a lifetime.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-thinking.png',txt:"Looking good is fine — just ask whether $20 is the right price for a look. That's the real question. 📱"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Same function, $12 cheaper. That's how you win on everyday purchases — not by skipping them, but by finding better prices. 🔍"};
+        return {img:'./milo-proud.png',txt:"Functional over aesthetic. Every time. That's a wealth-builder mindset. 🔨"};},
+    },
+    // DAY 2 — THE DEAL
+    { day:2, scTitle:'"Last 2 Remaining" Backpack',
+      scBody:`Online you see a backpack — normally $30, now $18. Says "Only 2 remaining!" You weren't looking for a backpack. Your current one works. But $18 for a $30 backpack though… You have $${b}.`,
+      visEmoji:'🎒', visCls:'vis-d2', visBadge:'ONLY 2\nLEFT!',
+      preChat:"That urgency message is designed. <strong>Were you in the market for a backpack before you saw this?</strong> 🔨",
+      choices:[
+        {l:'A',title:'Buy it — that\'s a great deal',detail:"$12 off and almost gone. Jump on it.",cost:18,opt:'spend_impulse',
+         costLbl:'−$18',costCls:'spend',moodLbl:'DEAL GRAB',moodEmoji:'🎒',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'🎒'},
+        {l:'B',title:'Close the tab — you weren\'t looking',detail:"You weren't shopping for a backpack. Still aren't.",cost:0,opt:'resist_sale',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'RESIST',moodEmoji:'💪',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'💪'},
+        {l:'C',title:'Add to cart — sleep on it overnight',detail:"If you still want it tomorrow, buy it. If not, delete.",cost:0,opt:'delay_decide',
+         costLbl:'Decide later',costCls:'save',moodLbl:'PAUSE',moodEmoji:'⏸️',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'⏸️'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"Backpack acquired.",text:`Good deal on something you didn't need. $18 gone. By tomorrow, the urgency will be gone too — and you'll have a backpack you didn't originally want.`};
+        if(c===2) return {cls:'neu',title:"You waited overnight.",text:`The deal is still there. 'Only 2 remaining' hasn't changed in 12 hours. The urgency was manufactured — and now you have time to decide clearly.`};
+        return {cls:'pos',title:"You closed the tab.",text:`You weren't in the market. You still aren't. The deal is gone. Your $${b} isn't. That's how you beat manufactured urgency.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-thinking.png',txt:"'Only 2 remaining' is almost always a lie. And it worked. Next time you see it — pause for 10 seconds and ask: was I looking for this before the deal showed up? 🎒"};
+        if(c===2) return {img:'./milo-smile.png',txt:"The sleep-on-it rule. One of the best consumer habits you can develop. Tomorrow's version of you makes better decisions. ⏸️"};
+        return {img:'./milo-proud.png',txt:"You beat the algorithm. Manufactured urgency is powerful — and you walked right past it. 💪"};},
+    },
+    // DAY 3 — THE LOAN
+    { day:3, scTitle:'The $10 Loan Request',
+      scBody:`A classmate you're cool with asks to borrow $10 — says they'll pay you back next week. Their last 'I'll pay you back' from two months ago still hasn't come through. You have $${b}.`,
+      visEmoji:'💸', visCls:'vis-d3', visBadge:null,
+      preChat:"They still owe you from before. <strong>What do you do with that information?</strong> 🔨",
+      choices:[
+        {l:'A',title:'Lend the $10 — give them another chance',detail:"People deserve second chances. Maybe this time.",cost:10,opt:'lend_money',
+         costLbl:'−$10',costCls:'spend',moodLbl:'TRUST AGAIN',moodEmoji:'🤝',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🤝'},
+        {l:'B',title:'No — they still owe you from before',detail:"You can't lend what you haven't gotten back.",cost:0,opt:'decline_loan',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'BOUNDARY',moodEmoji:'🛑',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🛑'},
+        {l:'C',title:'Ask for the old $10 first',detail:"Clear the past balance before opening a new one.",cost:0,opt:'settle_first',
+         costLbl:'Settle up first',costCls:'save',moodLbl:'SETTLE FIRST',moodEmoji:'📋',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'📋'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"You lent $10.",text:`You now have $${b-10}. And you're still owed $10 from before. Total exposure: $20. Second chances are human — but patterns reveal character.`};
+        if(c===2) return {cls:'pos',title:"You asked for the old $10 first.",text:`They went quiet. That told you everything. Your $${b} stayed intact. Asking to clear a prior balance before opening a new one is excellent financial practice.`};
+        return {cls:'pos',title:"You said no.",text:`One missed repayment is forgivable. Two is a pattern. Your $${b} stayed where it belongs.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-concerned.png',txt:"$10 lent again. $10 already out. You're now $20 exposed. Track this — and decide what you'll do when it doesn't come back again. 🤝"};
+        if(c===2) return {img:'./milo-proud.png',txt:"'Clear the old balance first' — that's a real financial policy. Smart, fair, and firm. 📋"};
+        return {img:'./milo-proud.png',txt:"Past behavior is the best predictor of future behavior. You used that data correctly. 🛑"};},
+    },
+    // DAY 4 — THE LONG GAME
+    { day:4, scTitle:'The 30-Day Hold',
+      scBody:`Your school has a mini savings challenge: put $15 in a sealed envelope for 30 days — and your counselor adds $5 to it at the end. You'd get $20 back. You have $${b}.`,
+      visEmoji:'📬', visCls:'vis-d4', visBadge:'$15→$20\n30 DAYS',
+      preChat:"$15 locked away for a month. $20 comes back. <strong>Can you leave it alone?</strong> 🔨",
+      choices:[
+        {l:'A',title:'Lock the $15 away for 30 days',detail:"33% return in a month. That's a real investment.",cost:15,opt:'delay_gratify',
+         costLbl:'−$15 (get $20)',costCls:'save',moodLbl:'LONG GAME',moodEmoji:'⏳',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'⏳'},
+        {l:'B',title:'Keep the $15 now',detail:"30 days is a long time. You might need this money.",cost:0,opt:'take_now',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'KEEP NOW',moodEmoji:'💵',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'💵'},
+        {l:'C',title:'Put in $8 — smaller commitment',detail:"Still earns proportional bonus. Less risk.",cost:8,opt:'delay_partial',
+         costLbl:'−$8 (get +$3)',costCls:'save',moodLbl:'PARTIAL',moodEmoji:'🔰',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🔰'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"$15 locked in.",text:`30 days from now: $20. That's a $5 gain — or 33% return. The stock market averages 10% a year. You just beat it in one month by being patient.`};
+        if(c===2) return {cls:'neu',title:"$8 in — smaller gain.",text:`Proportional bonus applied. Less in, less out — but you still participated. Risk management through smaller commitments is a real strategy.`};
+        return {cls:'neu',title:"$15 kept.",text:`Fair — you might need it. But 30 days from now, you'll either have your $15 or you'll have $20. Notice which scenario you're in.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-encouraging.png',txt:"33% return in 30 days. That's the power of delayed gratification — and you just did it. ⏳"};
+        if(c===2) return {img:'./milo-smile.png',txt:"Smaller bet, still earning. Partial delayed gratification beats zero every time. 🔰"};
+        return {img:'./milo-thinking.png',txt:"$20 could have been yours in 30 days. Patience is worth practicing — because the real versions of this have much bigger numbers. 💵"};},
+    },
+    // DAY 5 — THE LEGACY
+    { day:5, scTitle:'Three Weeks — Your Money Identity',
+      scBody:`Three weeks. Fifteen choices. You have $${b} left. This is the final decision: how do you want to define yourself as a money thinker after all of this?`,
+      visEmoji:'🏆', visCls:'vis-d5', visBadge:null,
+      preChat:"The last one. <strong>Make it true.</strong> 🔨",
+      choices:[
+        {l:'A',title:'Spend on a real reward',detail:"Three weeks deserves something. Spend intentionally.",cost:Math.min(20,b),opt:'spend_reward',
+         costLbl:`−$${Math.min(20,b)}`,costCls:'spend',moodLbl:'EARNED TREAT',moodEmoji:'🎉',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎉'},
+        {l:'B',title:'Save everything — define the pattern',detail:"Full carry. Three weeks of building. Don't break it now.",cost:0,opt:'save',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'IDENTITY',moodEmoji:'🏦',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🏦'},
+        {l:'C',title:'Invest it in a goal — name it',detail:"Give this money a specific job. A named future.",cost:0,opt:'allocate_goal',
+         costLbl:'Earmarked',costCls:'save',moodLbl:'ARCHITECT',moodEmoji:'🎯',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🎯'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"Intentional reward.",text:`$${Math.min(20,b)} spent because you decided to — not because you impulse-bought. Three weeks of decisions, closed with intention. That's growth.`};
+        if(c===2) return {cls:'pos',title:"Money has a job.",text:`You named it. Named goals get built. Three weeks of discipline, closed with architecture. That's how wealth starts.`};
+        return {cls:'pos',title:"Three weeks. Full carry.",text:`$${b} saved across three weeks. Fifteen decisions. You built something — not just a balance, but a pattern. And patterns become who you are.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-happy.png',txt:"Three weeks of real decisions — closed with an intentional reward. That's the balance. You found it. 🎉"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Named goal, real purpose. Three weeks of discipline — now with direction. That's wealth-building behavior. 🎯"};
+        return {img:'./milo-closure.png',txt:"Three weeks. Fifteen choices. A real pattern. You walked in a student — you're walking out a thinker. 🏆"};},
+    },
+  ];
+}
+
+function getStrategistScenariosW3(){
+  const b=S.balance;
+  return [
+    // DAY 1 — THE UPGRADE
+    { day:1, scTitle:'The Laptop RAM Upgrade',
+      scBody:`Your laptop runs fine — handles everything you need. But a $75 RAM upgrade would make it noticeably faster. Not necessary. Just better. You have $${b}.`,
+      visEmoji:'💻', visCls:'vis-d1', visBadge:'UPGRADE\n$75',
+      preChat:"It works now. Better would cost $75. <strong>Is 'better' worth it right now?</strong> 🎯",
+      choices:[
+        {l:'A',title:'Buy the RAM upgrade',detail:"Faster is better. $75 is an investment in productivity.",cost:75,opt:'upgrade_functional',
+         costLbl:'−$75',costCls:'spend',moodLbl:'UPGRADE',moodEmoji:'💻',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'💻'},
+        {l:'B',title:'Skip it — works fine now',detail:"If it ain\'t broke. Use the $75 for something purposeful.",cost:0,opt:'contentment',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'DISCIPLINED',moodEmoji:'🎯',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🎯'},
+        {l:'C',title:'Research if upgrade is actually needed',detail:"Check if your tasks actually need more RAM first.",cost:0,opt:'research_first',
+         costLbl:'−$0 now',costCls:'save',moodLbl:'INFORMED',moodEmoji:'🔍',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🔍'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neu',title:"Upgraded.",text:`Laptop is faster. But it was working before too. The question isn't whether it's better — it's whether 'better' is worth $75 at this point in your financial life. Only you can answer that.`};
+        if(c===2) return {cls:'pos',title:"You researched first.",text:`Turns out your tasks use less than 4GB of RAM consistently. Your 8GB is fine. You just saved $75 with 10 minutes of research.`};
+        return {cls:'pos',title:"Skipped the upgrade.",text:`Works fine. Money stays. Discipline on functional-but-not-urgent upgrades is one of the most overlooked wealth habits.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-thinking.png',txt:"'Better' is a cost-benefit question. Was the $75 delta worth the performance gain given everything else in your financial picture? That's the real question. 💻"};
+        if(c===2) return {img:'./milo-proud.png',txt:"Research before purchasing. That 10-minute decision just saved you $75. That's 7.5% of your starting balance. 🔍"};
+        return {img:'./milo-proud.png',txt:"Resisting a functional upgrade when you have the money to buy it — that's advanced financial discipline. 🎯"};},
+    },
+    // DAY 2 — THE DEAL
+    { day:2, scTitle:'The Flash Sale Course',
+      scBody:`An online course you've seen mentioned — normally $49 — is $15 today only. It's on something useful: video editing. You weren't planning to buy it. But $15 for a $49 course… You have $${b}.`,
+      visEmoji:'🎬', visCls:'vis-d2', visBadge:'TODAY\n$15',
+      preChat:"Was this course in your plan before today? <strong>Be honest.</strong> 🎯",
+      choices:[
+        {l:'A',title:'Buy it — $15 for a $49 course is a steal',detail:"High value. Low cost. You'll use it eventually.",cost:15,opt:'spend_impulse',
+         costLbl:'−$15',costCls:'spend',moodLbl:'DEAL GRAB',moodEmoji:'🎬',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'🎬'},
+        {l:'B',title:'Skip it — it wasn\'t in your plan',detail:"'Eventually' is not a financial plan. Pass.",cost:0,opt:'resist_sale',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'DISCIPLINED',moodEmoji:'💪',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'💪'},
+        {l:'C',title:'Find a free version on YouTube first',detail:"If free content exists, exhaust it before paying.",cost:0,opt:'find_free',
+         costLbl:'−$0',costCls:'save',moodLbl:'SMART FIRST',moodEmoji:'📺',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'📺'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"Course purchased.",text:`$15 spent. The course is on your account. Statistics say 90% of impulse-bought courses are never completed. You might beat the odds — but ask yourself: was video editing in your plan this week?`};
+        if(c===2) return {cls:'pos',title:"You found YouTube content first.",text:`Hours of free video editing tutorials exist. You found three in 5 minutes. The $49 course can wait until you've exhausted the free option. $${b} saved.`};
+        return {cls:'pos',title:"You passed.",text:`The deal was real — but so was the fact that it wasn't in your plan. Discipline on timed discounts is a rare and valuable skill.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-thinking.png',txt:"$15 seems low. But multiply this habit across 20 'great deals' a year — that's $300 in courses you didn't plan and probably won't finish. Math matters. 🎬"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Free before paid. Exhaust the free option first. You just saved $15 and lost nothing. 📺"};
+        return {img:'./milo-proud.png',txt:"'Today only' is manufactured urgency. You spotted it, named it, and walked past it. Advanced consumer behavior. 💪"};},
+    },
+    // DAY 3 — THE LOAN
+    { day:3, scTitle:'The $25 Friend Loan',
+      scBody:`A close friend needs $25 — says they'll pay you back next week. You trust them. They've paid you back before — once. Out of two times. You have $${b}.`,
+      visEmoji:'💸', visCls:'vis-d3', visBadge:null,
+      preChat:"1 for 2 on repayment history. <strong>That's a 50% track record. Do the math.</strong> 🎯",
+      choices:[
+        {l:'A',title:'Lend the $25',detail:"They paid back before. You trust them.",cost:25,opt:'lend_money',
+         costLbl:'−$25',costCls:'spend',moodLbl:'LEND',moodEmoji:'🤝',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🤝'},
+        {l:'B',title:'Say no — 50% repayment rate isn\'t enough',detail:"Your financial decisions need to be based on patterns, not hope.",cost:0,opt:'decline_loan',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'DATA-BASED',moodEmoji:'📊',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'📊'},
+        {l:'C',title:'Offer $10 — what you\'re okay losing',detail:"Only lend what you'd be fine not getting back.",cost:10,opt:'lend_partial',
+         costLbl:'−$10',costCls:'spend',moodLbl:'RISK CAP',moodEmoji:'🔰',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🔰'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'neg',title:"$25 lent.",text:`You have $${b-25}. Track record: 1 for 3 now (they still need to repay this one). Hope is not a financial strategy — even with friends.`};
+        if(c===2) return {cls:'neu',title:"$10 out — capped risk.",text:`You helped. You limited exposure. $10 is what you were willing to lose — and that's the rule: never lend more than you're okay never seeing again.`};
+        return {cls:'pos',title:"Data over hope.",text:`50% repayment rate doesn't get a $25 loan. That's not cold — that's rational. Your $${b} is protected.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-concerned.png',txt:"1 repaid out of 2 — now 3 out. That's a 33% repayment rate developing. Watch the pattern. 🤝"};
+        if(c===2) return {img:'./milo-thinking.png',txt:"Risk-cap lending: only lend what you're okay losing. That's the real rule for peer loans. You applied it. 🔰"};
+        return {img:'./milo-proud.png',txt:"You made a data-based decision with a friend — not an emotion-based one. That's hard. And it's right. 📊"};},
+    },
+    // DAY 4 — THE LONG GAME
+    { day:4, scTitle:'The 30-Day Lock',
+      scBody:`A financial literacy challenge at school: lock $50 in a savings envelope for 30 days — don't touch it — and your school counselor adds $15 at the end. You'd get $65. You have $${b}.`,
+      visEmoji:'🔒', visCls:'vis-d4', visBadge:'$50→$65\n30 DAYS',
+      preChat:"30% return in 30 days. <strong>Can you actually leave it alone?</strong> 🎯",
+      choices:[
+        {l:'A',title:'Lock away the $50',detail:"$65 in 30 days. 30% return. No-brainer if you can wait.",cost:50,opt:'delay_gratify',
+         costLbl:'−$50 (get $65)',costCls:'save',moodLbl:'LONG GAME',moodEmoji:'⏳',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'⏳'},
+        {l:'B',title:'Keep the $50 accessible',detail:"30 days is too long. You need flexibility.",cost:0,opt:'take_now',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'FLEXIBILITY',moodEmoji:'💵',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'💵'},
+        {l:'C',title:'Lock $25 — split the commitment',detail:"Half in, half out. Earn on half, keep flexibility on half.",cost:25,opt:'delay_partial',
+         costLbl:'−$25 (get +$8)',costCls:'save',moodLbl:'BALANCED',moodEmoji:'⚖️',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'⚖️'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"$50 locked. $65 incoming.",text:`30% return in 30 days. The S&P 500 averages 10% annually. You just made that in a month by doing nothing except being patient. That's the power of delayed gratification.`};
+        if(c===2) return {cls:'neu',title:"$25 locked — proportional gain.",text:`$25 in. $33 back. You earned on half while keeping half liquid. Balancing liquidity with return is how real money managers think.`};
+        return {cls:'neu',title:"$50 kept accessible.",text:`Flexibility has a cost: $15. Whether that tradeoff was worth it depends on whether you actually needed the flexibility. Did you?`};},
+      milo(c){
+        if(c===0) return {img:'./milo-proud.png',txt:"$65 from $50 in 30 days. 30% return. The patience to leave money alone is worth learning now — because the real versions of this compound for decades. ⏳"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Split allocation — liquidity and return simultaneously. That's sophisticated capital management at your age. ⚖️"};
+        return {img:'./milo-thinking.png',txt:"$15 was the cost of flexibility. Sometimes that's worth it. Sometimes it isn't. The question is whether you actually used the $50 in those 30 days. 💵"};},
+    },
+    // DAY 5 — THE LEGACY
+    { day:5, scTitle:'Three Weeks — Financial Identity',
+      scBody:`Three weeks. Fifteen decisions. $${b} remaining. You've made choices about earning, comparing, planning, giving, upgrading, resisting deals, lending, and waiting. Who did you become?`,
+      visEmoji:'🏆', visCls:'vis-d5', visBadge:null,
+      preChat:"The last decision of three weeks. <strong>Make it the truest one.</strong> 🎯",
+      choices:[
+        {l:'A',title:'Spend some — intentional close',detail:"$25 or less. Deliberate reward for three weeks of work.",cost:Math.min(25,b),opt:'spend_reward',
+         costLbl:`−$${Math.min(25,b)}`,costCls:'spend',moodLbl:'INTENTIONAL',moodEmoji:'🎯',moodCls:'mood-social',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🎯'},
+        {l:'B',title:'Save everything — define the legacy',detail:"Full carry. Three weeks of discipline. The final statement.",cost:0,opt:'save',
+         costLbl:`Keep $${b}`,costCls:'save',moodLbl:'LEGACY',moodEmoji:'🏦',moodCls:'mood-smart',cardCls:'type-green',badgeCls:'badge-green',emoji:'🏦'},
+        {l:'C',title:'Allocate to a real financial goal',detail:"Name something real. Commit this balance to it.",cost:0,opt:'allocate_goal',
+         costLbl:'Earmarked',costCls:'save',moodLbl:'ARCHITECT',moodEmoji:'🏗️',moodCls:'mood-safe',cardCls:'type-teal',badgeCls:'badge-teal',emoji:'🏗️'},
+      ],
+      outcome(c){
+        if(c===0) return {cls:'pos',title:"Intentional close.",text:`$${Math.min(25,b)} spent with full awareness. Three weeks of decisions — closed with intention, not impulse. That distinction is everything.`};
+        if(c===2) return {cls:'pos',title:"Allocated with purpose.",text:`Named goal. Real commitment. Three weeks of discipline — now with architecture behind it. That's how net worth is built.`};
+        return {cls:'pos',title:"Full carry. Three weeks.",text:`$${b} remaining. Fifteen decisions behind you. A pattern in front of you. You didn't just manage money this month — you built a financial identity.`};},
+      milo(c){
+        if(c===0) return {img:'./milo-happy.png',txt:"Intentional spending after three weeks of discipline. That's balance — not deprivation, not recklessness. You found the line. 🎯"};
+        if(c===2) return {img:'./milo-encouraging.png',txt:"Purpose-driven allocation. Fifteen decisions, now with architecture. That's wealth-building behavior — and it starts exactly here. 🏗️"};
+        return {img:'./milo-closure.png',txt:"Three weeks. Fifteen choices. Full carry. You didn't just play a simulation — you built something real about who you are with money. 🏆"};},
+    },
+  ];
+}
+
 // ── SOUND SYSTEM ─────────────────────────────────────────────────
 const SFX=(()=>{
   let ctx;
@@ -1604,6 +2505,11 @@ function renderHome(){
       <span class="band-pill-emoji">${cfg.emoji}</span>
       <div class="band-pill-text"><strong>${cfg.label}</strong><em>${cfg.ages}</em></div>
     </button>`).join('');
+  const weekLabels=[{w:1,label:'Week 1',sub:'The Basics'},{w:2,label:'Week 2',sub:'Earning & Goals'},{w:3,label:'Week 3',sub:'The Long Game'}];
+  const weekPills=weekLabels.map(wl=>`
+    <button class="week-pill${S.week===wl.w?' active':''}" onclick="selectWeek(${wl.w})">
+      <strong>${wl.label}</strong><em>${wl.sub}</em>
+    </button>`).join('');
   const resumeBlock=saved?`
     <div class="resume-block">
       <div class="resume-hdr">
@@ -1640,6 +2546,10 @@ function renderHome(){
         <div class="band-selector">
           <div class="band-lbl">Who's playing?</div>
           <div class="band-pills">${bandPills}</div>
+        </div>
+        <div class="week-selector">
+          <div class="band-lbl">Which week?</div>
+          <div class="week-pills">${weekPills}</div>
         </div>
         ${resumeBlock}
         <div class="card-title">What will you do with <strong>$${sb}?</strong></div>
@@ -1683,7 +2593,7 @@ function renderDayIntro(){
   <div class="di-bg bg-d${S.day}"></div>
   <div class="band-di-overlay"></div>
   <div class="di-content">
-    <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Day ${S.day} of 5</div>
+    <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Week ${S.week||1} &nbsp;·&nbsp; Day ${S.day} of 5</div>
     <div class="di-day-name">${d.name}</div>
     <div class="di-subtitle">${d.sub}</div>
     <div class="di-tease">${d.tease}</div>
@@ -1780,7 +2690,7 @@ function renderSim(){
         <div class="sc-text-col">
           <div class="sc-tags">
             <span class="sc-tag sc-tag-day">📅 Day ${S.day}</span>
-            <span class="sc-tag sc-tag-theme">${getDaysMeta()[S.day-1].sub === 'THE DROP' ? '🔥' : S.day===2?'👥':S.day===3?'⚡':S.day===4?'💎':'🏁'} ${['TEMPTATION','SOCIAL PRESSURE','UNEXPECTED','OPPORTUNITY','REFLECTION'][S.day-1]}</span>
+            <span class="sc-tag sc-tag-theme">${({  'THE PICK':'🖍️','THE PULL':'👥','THE OOPS':'⚡','THE DROP':'🔥','THE MESS':'⚡','THE BLOW':'⚡','THE DEAL':'💎','THE BET':'💎','THE FINISH':'🏁','THE EARN':'💰','THE COMPARE':'👀','THE PLAN':'🎯','THE GIVE':'💙','THE REVIEW':'📊','THE UPGRADE':'🔧','THE LOAN':'🤝','THE LONG GAME':'⏳','THE LEGACY':'🏆' }[getDaysMeta()[S.day-1].sub])||'⭐'} ${getDaysMeta()[S.day-1].sub}</span>
           </div>
           <div class="sc-title">${sc.scTitle||''}</div>
           <div class="sc-body">${sc.scBody||''}</div>
@@ -2105,7 +3015,7 @@ function resetToHome(){
 const PROGRESS_KEY='fliq_100week_v1';
 function saveProgress(){
   if(!S.studentId) return;
-  try{ localStorage.setItem(PROGRESS_KEY,JSON.stringify({studentId:S.studentId,sessionId:S.sessionId,cohortId:S.cohortId,balance:S.balance,day:S.day,impulsiveN:S.impulsiveN,history:S.history,sessionStart:S.sessionStart,band:S.band||'builder',savedAt:Date.now()})); }catch(e){}
+  try{ localStorage.setItem(PROGRESS_KEY,JSON.stringify({studentId:S.studentId,sessionId:S.sessionId,cohortId:S.cohortId,balance:S.balance,day:S.day,impulsiveN:S.impulsiveN,history:S.history,sessionStart:S.sessionStart,band:S.band||'builder',week:S.week||1,savedAt:Date.now()})); }catch(e){}
 }
 function clearProgress(){ try{ localStorage.removeItem(PROGRESS_KEY); }catch(e){} }
 function loadProgress(){
@@ -2119,10 +3029,11 @@ function loadProgress(){
 }
 function resumeSession(){
   const p=loadProgress(); if(!p) return;
-  Object.assign(S,{studentId:p.studentId,sessionId:p.sessionId,cohortId:p.cohortId,balance:p.balance,day:p.day,impulsiveN:p.impulsiveN,history:p.history,sessionStart:p.sessionStart,band:p.band||'builder',screen:'dayintro'});
+  Object.assign(S,{studentId:p.studentId,sessionId:p.sessionId,cohortId:p.cohortId,balance:p.balance,day:p.day,impulsiveN:p.impulsiveN,history:p.history,sessionStart:p.sessionStart,band:p.band||'builder',week:p.week||1,screen:'dayintro'});
   render(); window.scrollTo({top:0,behavior:'smooth'});
 }
-function startFresh(){ const band=S.band||'builder'; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,band,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
+function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,band,week,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
+function selectWeek(w){ S.week=w; renderHome(); }
 
 // ── CONFETTI ─────────────────────────────────────────────────────
 function confetti(n=30){
