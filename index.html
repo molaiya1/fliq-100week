@@ -2387,23 +2387,51 @@ const SFX=(()=>{
   };
 })();
 
-// ── LOCAL FLIQ SCORE FALLBACK ─────────────────────────────────────
+// ── LOCAL FLIQ SCORE FALLBACK — opt-based, works across all 3 weeks ──
 function computeLocalProfile(){
-  const SB=getStartBal(), h=S.history;
-  const d1=h.find(x=>x.day===1), d2=h.find(x=>x.day===2);
-  const d3=h.find(x=>x.day===3), d4=h.find(x=>x.day===4), d5=h.find(x=>x.day===5);
-  // IC: impulse count (0=none, 1=one, 2+=two)
-  const ic=Math.max(0,2-S.impulsiveN);
-  // PO: saved on Day 1 AND Day 5
-  const po=((d1&&d1.choice!==0)?1:0)+((d5&&d5.choice!==0)?1:0);
-  // RA: declined/negotiated Day 4; penalise social spend when broke
-  let ra=1;
-  if(d4&&d4.choice>=1) ra=Math.min(2,ra+1);
-  if(d2&&d2.choice===0&&d2.balBefore<SB*0.35) ra=Math.max(0,ra-1);
-  // RB: handled Day 3 obligation; recovered after big Day 1 spend
-  let rb=1;
-  if(d3&&d3.choice!==1) rb=Math.min(2,rb+1);
-  if(d1&&d1.choice===0&&S.balance>=SB*0.25) rb=Math.min(2,rb+1);
+  const SB=getStartBal(), h=S.history, opts=h.map(x=>x.opt||'');
+
+  // ── IC: Impulse Control ──
+  // Measured by: (a) impulsiveN counter + (b) ending balance vs. start
+  const balRatio=S.balance/SB;
+  let ic=Math.max(0,2-S.impulsiveN);
+  // If student somehow kept IC high via impulsiveN but blew their balance, cap at 1
+  if(balRatio<0.2&&ic>1) ic=1;
+
+  // ── PO: Planning Orientation ──
+  const PO_POS=['save','save_goal','protect_goal','set_goal','allocate_goal','allocate_split',
+                'start_goal','delay_gratify','delay_partial','earn_work','negotiate_earn',
+                'decline_social','resist_sale','find_free','research_first','donate',
+                'give_intentional','spend_intentional'];
+  const PO_NEG=['spend_impulse','spend_nonessential','spend_social','upgrade_impulse',
+                'compare_react','borrow_social','barter_cover'];
+  const poPos=opts.filter(o=>PO_POS.includes(o)).length;
+  const poNeg=opts.filter(o=>PO_NEG.includes(o)).length;
+  const po=poNeg>=2?0:poPos>=3?2:poPos>=1?1:0;
+
+  // ── RA: Risk Awareness ──
+  const RA_POS=['decline_loan','settle_first','resist_sale','find_free','research_first',
+                'test_first','learn_first','delay_decide','negotiate_earn','negotiate_invest',
+                'decline_give','lend_partial','invest_partial','decline_invest','defer_decision'];
+  const RA_NEG=['lend_money','compare_react','spend_impulse','upgrade_impulse',
+                'give_social','invest','borrow_social'];
+  const raPos=opts.filter(o=>RA_POS.includes(o)).length;
+  const raNeg=opts.filter(o=>RA_NEG.includes(o)).length;
+  const brokeSpend=h.some(x=>PO_NEG.includes(x.opt||'')&&x.balBefore<SB*0.3);
+  let ra=raNeg>=2?0:raPos>=2?2:raPos>=1?1:brokeSpend?0:1;
+
+  // ── RB: Resilience & Bounce-Back ──
+  const RB_POS=['give_noncash','counter_offer','share_resource','earn_work','defer_earn',
+                'negotiate_payment','spend_essential','delay_partial','give_partial',
+                'spend_frugal','settle_first','contentment','protect_goal','give_intentional'];
+  const RB_NEG=['pass_earn','compare_react'];
+  const rbPos=opts.filter(o=>RB_POS.includes(o)).length;
+  const rbNeg=opts.filter(o=>RB_NEG.includes(o)).length;
+  // Bonus: if student spent heavily Day 1 but still finished with ≥40% balance, that's RB
+  const recoveredAfterBigSpend=h.length>0&&h[0].balAfter<SB*0.5&&balRatio>=0.4;
+  let rb=rbNeg>=2?0:rbPos>=2?2:rbPos>=1?1:0;
+  if(recoveredAfterBigSpend&&rb<2) rb=Math.min(2,rb+1);
+
   const total=ic+po+ra+rb;
   const labels=['Financial Starter','Financial Starter','Emerging','Explorer','Developing','Thinker','Advancing','Leading','Exceptional'];
   const ll=['Emerging','Developing','Strong'];
@@ -2928,11 +2956,12 @@ async function makeChoice(ci){
   });
 
   const opt=sc.choices[ci].opt;
-  if(['spend_nonessential','spend_social'].includes(opt)&&(S.balance/getStartBal())<0.4) S.impulsiveN++;
+  const IMPULSE_OPTS=['spend_nonessential','spend_social','spend_impulse','upgrade_impulse','compare_react','deal_grab'];
+  if(IMPULSE_OPTS.includes(opt)&&(S.balance/getStartBal())<0.4) S.impulsiveN++;
 
   const cost=sc.choices[ci].cost, newBal=Math.max(0,S.balance-cost);
   await recordEvent(ci,sc);
-  S.history.push({day:S.day,choice:ci,balBefore:S.balance,balAfter:newBal});
+  S.history.push({day:S.day,choice:ci,opt,week:S.week||1,balBefore:S.balance,balAfter:newBal});
   S.balance=newBal;
   saveProgress();
 
