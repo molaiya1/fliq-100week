@@ -905,7 +905,6 @@ const API_BASE      = 'https://fliq-api-production.up.railway.app';
 const PILOT_ORG     = '00000000-0000-0000-0000-000000000001';
 const SIM_ID        = 'sim_100week_v1';
 const PORTAL_API    = 'https://wwk-portal.vercel.app/api/activity';
-const PORTAL_SECRET = 'wwk-internal-2026';
 
 // ── AGE BANDS ────────────────────────────────────────────────────
 const BAND_CONFIG = {
@@ -1055,17 +1054,21 @@ function getExplorerScenarios(){
           costLbl:'−$3', costCls:'spend', moodLbl:'FUN MOVE', moodEmoji:'🍦', moodCls:'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🍦' },
         { l:'B', title:'Skip it this time',  detail: b<8?"You can't really afford it right now.":`Save the $3. You can get ice cream another day.`, cost:0, opt:'decline_social',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SAFE MOVE', moodEmoji:'🧠', moodCls:'mood-safe', cardCls:'type-green', badgeCls:'badge-green', emoji:'🏠' },
+        { l:'C', title:'Invite them to your house!', detail:"Hang out without spending. Your house, your rules!", cost:0, opt:'counter_offer',
+          costLbl:'−$0', costCls:'save', moodLbl:'CREATIVE!', moodEmoji:'🏠', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🏠' },
       ],
       outcome(c){
         if(c===0&&b<8) return { cls:'neg', title:"You went — but barely.",  text:`Fun! But you only have $${b-3} left now. The rest of the week is really tight.` };
         if(c===0)      return { cls:'neu', title:"You got the ice cream!",   text:`Yum! $3 spent. Keep an eye on that balance — the week isn't over.` };
+        if(c===2)      return { cls:'pos', title:"Creative solution!",       text:`You kept your money AND hung out with friends. That's called finding a third option — it's a superpower.` };
         if(b<8)        return { cls:'pos', title:"Smart call.",              text:`With $${b}, keeping your money was the right move. Saying no is a real skill.` };
         return                { cls:'pos', title:"You passed.",              text:`Your $${b} stays safe. Missing out stings a little — but your wallet is happy.` };
       },
       milo(c){
-        if(c===0&&b<8) return { img:'./milo-concerned.png', txt:`That was tight. $${b-3} left — this week just got harder.` };
-        if(c===0)      return { img:'./milo-smile.png',     txt:"Ice cream is great! Just watch that balance for the rest of the week. 🍦" };
-        return                { img:'./milo-proud.png',     txt:"Saying no to ice cream takes guts. That's real self-control! 💪" };
+        if(c===0&&b<8) return { img:'./milo-concerned.png',   txt:`That was tight. $${b-3} left — this week just got harder.` };
+        if(c===0)      return { img:'./milo-smile.png',        txt:"Ice cream is great! Just watch that balance for the rest of the week. 🍦" };
+        if(c===2)      return { img:'./milo-encouraging.png',  txt:"You created a whole new option instead of just choosing between the two. That's next-level thinking! 🌱" };
+        return                { img:'./milo-proud.png',        txt:"Saying no to ice cream takes guts. That's real self-control! 💪" };
       },
     },
     // DAY 3 — THE OOPS
@@ -1078,15 +1081,19 @@ function getExplorerScenarios(){
           costLbl: b>=5?'−$5':'Need help', costCls:'spend', moodLbl:'RESPONSIBLE', moodEmoji:'📚', moodCls:'mood-safe', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'📚' },
         { l:'B', title:'Ignore it for now', detail:"Keep your money. Hope they forget about it.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SKIP IT', moodEmoji:'🛑', moodCls:'mood-tough', cardCls:'type-red', badgeCls:'badge-red', emoji:'🛑' },
+        { l:'C', title:'Tell a grown-up and ask for help', detail:"Some problems are easier with a grown-up's help.", cost:0, opt:'seek_help',
+          costLbl:'−$0', costCls:'save', moodLbl:'SMART ASK', moodEmoji:'🤝', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🤝' },
       ],
       outcome(c){
         if(c===0&&b<5) return { cls:'neg', title:"You couldn't cover it.",  text:"Your balance was too low. You had to ask for help. Spending earlier made this harder." };
         if(c===0)      return { cls:'neu', title:"All paid up!",            text:`$5 gone — but the problem is solved. The library is happy. You can borrow books again.` };
+        if(c===2)      return { cls:'pos', title:"Great instinct!",         text:"Knowing when to ask for help is one of the smartest skills you can have. You kept your money AND you're not facing this alone." };
         return                { cls:'neg', title:"You ignored it.",          text:"The fee is still there — and the library won't let you check out books. Small problems grow when you wait." };
       },
       milo(c){
         if(c===0&&b<5) return { img:'./milo-concerned.png',   txt:"This is why we hold onto money. Surprises always show up." };
         if(c===0)      return { img:'./milo-encouraging.png', txt:"Taking care of your responsibilities — that's what smart people do! 🌟" };
+        if(c===2)      return { img:'./milo-happy.png',        txt:"Asking for help isn't giving up — it's being smart about your resources. I'm proud of you! 🌱" };
         return                { img:'./milo-thinking.png',    txt:"Ignoring problems rarely makes them disappear. Something to think about…" };
       },
     },
@@ -1129,16 +1136,20 @@ function getExplorerScenarios(){
           costLbl:'−$5', costCls:'spend', moodLbl: b<6?'RISKY MOVE':'TREAT MOVE', moodEmoji: b<6?'⚠️':'🎁', moodCls: b<6?'mood-risky':'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'📓' },
         { l:'B', title: b<6?'Stop — save what\'s left':'Save it for later', detail: b<6?'You catch yourself. That takes real awareness.':'Next week starts stronger.', cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART FINISH', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'💰' },
+        { l:'C', title:'Save it for something I really want', detail:"Pick a goal. Tell yourself what you're saving toward.", cost:0, opt:'save_goal',
+          costLbl:'−$0', costCls:'save', moodLbl:'GOAL SAVE', moodEmoji:'🎯', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎯' },
       ],
       outcome(c){
         if(c===0&&b<6) return { cls:'neg', title:"You spent again.",          text:"The week ends the same way it started. But now you know your pattern — and patterns can change." };
         if(c===0)      return { cls:'neu', title:"You got the notebook!",     text:`Nice! $${b-5} left. Not a bad week overall — next one starts a little lighter.` };
+        if(c===2)      return { cls:'pos', title:"Goal-based saving!",        text:"Saving toward something specific is more powerful than just saving. You gave your money a job — and that's how real wealth-builders think." };
         if(b<6)        return { cls:'pos', title:"You stopped. That's huge!", text:"Seeing the pattern and choosing differently — that's one of the hardest money skills. You did it." };
         return                { cls:'pos', title:"Strong finish!",            text:`Week ends with $${b} saved. You made hard calls. That's real financial smarts.` };
       },
       milo(c){
         if(c===0&&b<6) return { img:'./milo-closure.png',     txt:"Every week teaches you something. Next week, you'll remember this moment. 💙" };
         if(c===0)      return { img:'./milo-smile.png',       txt:"Fair — you had the money. Next week just starts a little lighter." };
+        if(c===2)      return { img:'./milo-proud.png',       txt:"Saving with a goal in mind? That's the difference between saving and building. I'm so proud! 🌱" };
         if(b<6)        return { img:'./milo-proud.png',       txt:"You caught yourself. That's growth right there. I'm proud of you! 🙌" };
         return                { img:'./milo-closure.png',     txt:"That was a great week. Your future self is smiling at you right now. 🌟" };
       },
@@ -1181,16 +1192,20 @@ function getBuilderScenarios(){
           costLbl:'−$12', costCls:'spend', moodLbl:'SOCIAL MOVE', moodEmoji:'👥', moodCls:'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🍕' },
         { l:'B', title:'Sit this one out.',          detail: b<20?'You really can\'t afford this right now.':`Save the $12. You can always catch the next one.`, cost:0, opt:'decline_social',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SAFE MOVE', moodEmoji:'🧠', moodCls:'mood-safe', cardCls:'type-green', badgeCls:'badge-green', emoji:'🏠' },
+        { l:'C', title:'Suggest something free instead', detail:"Counter-propose. Park, game night, anything that costs $0.", cost:0, opt:'counter_offer',
+          costLbl:'−$0', costCls:'save', moodLbl:'LEADER MOVE', moodEmoji:'💡', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'💡' },
       ],
       outcome(c){
         if(c===0&&b<20) return { cls:'neg', title:"You went — but it cost you.",  text:`Good time. But you only have $${b-12} left. The week is about to get very tight.` };
         if(c===0)       return { cls:'neu', title:"Pizza night!",                  text:`Good time. $12 gone though — keep watching that balance.` };
+        if(c===2)       return { cls:'pos', title:"You led the group.",            text:`Suggesting an alternative instead of just saying no? That's leadership. Your money stays put AND you kept the crew together.` };
         if(b<20)        return { cls:'pos', title:"Smart call.",                   text:`With $${b}, staying in was the right move. Saying no to FOMO — that's real discipline.` };
         return                 { cls:'pos', title:"You held back.",                text:`$${b} stays put. The group will be fine without you for one night.` };
       },
       milo(c){
         if(c===0&&b<20) return { img:'./milo-concerned.png', txt:`Social pressure hits different. But $${b-12}? This week just got harder.` };
         if(c===0)       return { img:'./milo-smile.png',     txt:"You went! Nothing wrong with that — just watch the rest of the week." };
+        if(c===2)       return { img:'./milo-encouraging.png', txt:"Proposing an alternative instead of just saying no — that's how leaders handle social pressure. 🔨" };
         return                 { img:'./milo-proud.png',     txt:"Saying no to the group chat takes real strength. That's not easy." };
       },
     },
@@ -1204,15 +1219,19 @@ function getBuilderScenarios(){
           costLbl: b>=20?'−$20':'Need help', costCls:'spend', moodLbl: b>=20?'OWN IT':'HARD SPOT', moodEmoji: b>=20?'📱':'😬', moodCls:'mood-safe', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'📱' },
         { l:'B', title:'Ghost the situation',                      detail:"Keep your money. Hope they don't say anything.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'AVOID IT', moodEmoji:'🛑', moodCls:'mood-tough', cardCls:'type-red', badgeCls:'badge-red', emoji:'🛑' },
+        { l:'C', title:'Offer to work it off', detail:"No cash? Offer to do chores or help until you cover it.", cost:0, opt:'negotiate_payment',
+          costLbl:'−$0 now', costCls:'save', moodLbl:'INTEGRITY', moodEmoji:'🤝', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'🤝' },
       ],
       outcome(c){
         if(c===0&&b<20) return { cls:'neg', title:"You couldn't cover it.",  text:"Not enough in the balance. You had to ask for help — spending earlier in the week made this harder." };
         if(c===0)       return { cls:'neu', title:"Screen is fixed.",         text:`$20 gone — but the friendship is solid. You handled it with integrity. That matters.` };
+        if(c===2)       return { cls:'pos', title:"Integrity over cash.",    text:"Offering to work it off shows your character. You protected your balance AND your friendship. That's a rare combination." };
         return                 { cls:'neg', title:"You ghosted it.",          text:"The situation is still there — and your friend knows. Money saved. Trust lost." };
       },
       milo(c){
         if(c===0&&b<20) return { img:'./milo-concerned.png',   txt:"This is exactly why we hold money in reserve. Life throws curveballs." };
         if(c===0)       return { img:'./milo-encouraging.png', txt:"Owning your mistakes costs money sometimes. But it's always worth it. 🙌" };
+        if(c===2)       return { img:'./milo-proud.png',        txt:"You found a third way — integrity without breaking the bank. That's financial AND social intelligence. 🔨" };
         return                 { img:'./milo-thinking.png',    txt:"Sometimes the cheapest financial choice is the most expensive in other ways." };
       },
     },
@@ -1255,16 +1274,20 @@ function getBuilderScenarios(){
           costLbl:'−$20', costCls:'spend', moodLbl: b<20?'RISKY MOVE':'REWARD MOVE', moodEmoji: b<20?'⚠️':'🎁', moodCls: b<20?'mood-risky':'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🎮' },
         { l:'B', title: b<20?'Save what\'s left':'Save for something bigger', detail: b<20?'You catch yourself. That takes real awareness.':'Next week starts stronger.', cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART FINISH', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'💰' },
+        { l:'C', title:`Split it — half save, half treat`, detail:`$${Math.floor(b/2)} toward a goal, $${b-Math.floor(b/2)} to enjoy. Balanced.`, cost:b-Math.floor(b/2), opt:'allocate_split',
+          costLbl:`Spend $${b-Math.floor(b/2)}`, costCls:'spend', moodLbl:'ALLOCATE', moodEmoji:'⚖️', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'⚖️' },
       ],
       outcome(c){
         if(c===0&&b<20) return { cls:'neg', title:"You spent again.",           text:"Pattern shows up on Friday. But you see it now — and seeing it is the first step to changing it." };
         if(c===0)       return { cls:'neu', title:"Game downloaded!",           text:`$${b-20} left. Not a bad week. Next one just starts a little lighter.` };
+        if(c===2)       return { cls:'pos', title:"Smart allocation.",          text:`Splitting money between saving and spending is how budgets actually work. You kept $${Math.floor(b/2)} and got something today. That's balance.` };
         if(b<20)        return { cls:'pos', title:"You stopped yourself.",      text:"Seeing the pattern and choosing differently — that is one of the hardest financial skills. You nailed it." };
         return                 { cls:'pos', title:"Strong finish.",             text:`Week ends with $${b}. You made hard calls this week. That's what financial discipline looks like.` };
       },
       milo(c){
         if(c===0&&b<20) return { img:'./milo-closure.png',     txt:"Every week is a lesson. Next week, you'll remember this one." };
         if(c===0)       return { img:'./milo-smile.png',       txt:"Enjoy the game! Just remember — next week starts a little lighter." };
+        if(c===2)       return { img:'./milo-encouraging.png', txt:"Splitting money between goals and enjoyment — that's the 50/30/20 rule in action. You just did real budgeting. 🔨" };
         if(b<20)        return { img:'./milo-proud.png',       txt:"You caught yourself. I didn't see that coming. Well done. 🙌" };
         return                 { img:'./milo-closure.png',     txt:"That was a solid week. Your future self is nodding at you right now. 🔨" };
       },
@@ -1307,17 +1330,21 @@ function getStrategistScenarios() {
           costLbl:'−$30', costCls:'spend', moodLbl:'SOCIAL MOVE', moodEmoji:'👥', moodCls:'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🎟️' },
         { l:'B', title:'Stay home this time',  detail: b<40?"You can't afford this one right now. Keep what you have.":`Save the $30. It's okay to sit one out.`, cost:0, opt:'decline_social',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SAFE MOVE', moodEmoji:'🧠', moodCls:'mood-safe', cardCls:'type-green',  badgeCls:'badge-green',  emoji:'🏠' },
+        { l:'C', title:'Propose a cheaper alternative', detail:"Suggest something for half the price. Counter-negotiate the plan.", cost:0, opt:'counter_offer',
+          costLbl:'−$0', costCls:'save', moodLbl:'NEGOTIATE', moodEmoji:'⚖️', moodCls:'mood-smart', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'⚖️' },
       ],
       outcome(c){
         if(c===0&&b<40) return { cls:'neg', title:"You went — but it cost you.",  text:`Fun night. But you only have $${b-30} left. The rest of the week is really tight.` };
         if(c===0)       return { cls:'neu', title:"You went out.",                text:`Good time! You spent $30. Keep an eye on that balance.` };
+        if(c===2)       return { cls:'pos', title:"You negotiated.",              text:`Proposing an alternative instead of simply declining — that's a social and financial skill most adults never develop.` };
         if(b<40)        return { cls:'pos', title:"Smart call.",                  text:`With $${b} left, keeping your money was the right move. Saying no when the math says no — that's a real skill.` };
         return                 { cls:'pos', title:"You held back.",               text:`Your $${b} stays put. Missing out stings a little — but your wallet doesn't.` };
       },
       milo(c){
-        if(c===0&&b<40) return { img:'./milo-concerned.png', txt:`Social pressure is powerful. But $${b-30}? This week just got harder.` };
-        if(c===0)       return { img:'./milo-smile.png',     txt:"You went! Nothing wrong with that — just watch that balance." };
-        return                 { img:'./milo-proud.png',     txt:"Bold move saying no to the group chat. That's harder than it looks." };
+        if(c===0&&b<40) return { img:'./milo-concerned.png',  txt:`Social pressure is powerful. But $${b-30}? This week just got harder.` };
+        if(c===0)       return { img:'./milo-smile.png',      txt:"You went! Nothing wrong with that — just watch that balance." };
+        if(c===2)       return { img:'./milo-explorer.png',   txt:"Negotiating the terms instead of just accepting or declining — that's how executives think. 🎯" };
+        return                 { img:'./milo-proud.png',      txt:"Bold move saying no to the group chat. That's harder than it looks." };
       },
     },
     // ── DAY 3 ──
@@ -1330,15 +1357,19 @@ function getStrategistScenarios() {
           costLbl: b>=25?'−$25':'Need help', costCls:'spend', moodLbl: b>=25?'NECESSARY':'HARD SPOT', moodEmoji: b>=25?'🔧':'😬', moodCls:'mood-safe', cardCls:'type-teal',   badgeCls:'badge-teal',   emoji:'🔧' },
         { l:'B', title:'Leave it flat for now',                        detail:"Keep your money. Figure out another way to get there.", cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SKIP IT', moodEmoji:'🛑', moodCls:'mood-tough', cardCls:'type-red',    badgeCls:'badge-red',    emoji:'🛑' },
+        { l:'C', title:'Negotiate a payment plan', detail:"Pay half now, arrange the rest for next week.", cost: b>=13?13:0, opt:'negotiate_payment',
+          costLbl: b>=13?`−$13 now`:'−$0 now', costCls:'spend', moodLbl:'NEGOTIATE', moodEmoji:'⚖️', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'⚖️' },
       ],
       outcome(c){
         if(c===0&&b<25) return { cls:'neg', title:"You couldn't cover it.",  text:"Your balance was too low. You had to ask someone else to help. Spending earlier in the week made this moment harder." };
         if(c===0)       return { cls:'neu', title:"Tire is fixed.",           text:`$25 gone — but the problem is solved. You had enough because you held your money earlier.` };
+        if(c===2)       return { cls:'pos', title:"Structured repayment.",   text:"Negotiating partial payment now and the rest later is an actual financial strategy. You handled a $25 problem for $13 today. That's resourceful." };
         return                 { cls:'neg', title:"You left it.",             text:"You kept your money — but now you can't get to practice. Sometimes not spending creates its own problems." };
       },
       milo(c){
         if(c===0&&b<25) return { img:'./milo-concerned.png',   txt:"This is why we hold money back. The unexpected always shows up." };
         if(c===0)       return { img:'./milo-encouraging.png', txt:"Good. You had the money because you planned ahead. That's not luck — that's discipline." };
+        if(c===2)       return { img:'./milo-explorer.png',    txt:"A payment plan? That's literally how mortgages and business deals work. You just did that at 16. 🎯" };
         return                 { img:'./milo-thinking.png',    txt:"Saving is usually smart. But not every no-spend saves you." };
       },
     },
@@ -1381,22 +1412,78 @@ function getStrategistScenarios() {
           costLbl:'−$20', costCls:'spend', moodLbl: b<30?'RISKY MOVE':'REWARD MOVE', moodEmoji: b<30?'⚠️':'🎁', moodCls: b<30?'mood-risky':'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🛍️' },
         { l:'B', title: b<30?"Stop — save what's left":'Save it for next week', detail: b<30?'You catch yourself. That takes real awareness.':'Next week starts stronger with more saved.', cost:0, opt:'save',
           costLbl:`Keep $${b}`, costCls:'save', moodLbl:'SMART FINISH', moodEmoji:'⭐', moodCls:'mood-smart', cardCls:'type-green', badgeCls:'badge-green', emoji:'💰' },
+        { l:'C', title:'Allocate: 60% save, 40% discretionary', detail:`$${Math.round(b*0.6)} toward a goal. $${b-Math.round(b*0.6)} to spend intentionally.`, cost:b-Math.round(b*0.6), opt:'allocate_split',
+          costLbl:`Spend $${b-Math.round(b*0.6)}`, costCls:'spend', moodLbl:'PORTFOLIO', moodEmoji:'📊', moodCls:'mood-smart', cardCls:'type-teal', badgeCls:'badge-teal', emoji:'📊' },
       ],
       outcome(c){
         if(c===0&&b<30) return { cls:'neg', title:"You spent again.",             text:"The week ends the same way it started. But you now know your pattern. Next week — you'll know what to watch for." };
         if(c===0)       return { cls:'neu', title:"You treated yourself.",        text:`You had the money. $${b-20} is left. Not a bad week — next one just starts a little lighter.` };
+        if(c===2)       return { cls:'pos', title:"Intentional allocation.",      text:`You didn't just save or spend — you decided exactly where each dollar goes. That's the behavior pattern of people who build actual wealth.` };
         if(b<30)        return { cls:'pos', title:"You stopped. That took guts.", text:"Seeing the pattern and choosing different — that is one of the hardest financial skills there is. You did it." };
         return                 { cls:'pos', title:"Strong finish.",               text:`Week ends with $${b}. You saved when it was hard. That's what financial discipline actually looks like.` };
       },
       milo(c){
         if(c===0&&b<30) return { img:'./milo-closure.png',     txt:"Every week teaches you something. Next week, you'll remember this moment." };
         if(c===0)       return { img:'./milo-smile.png',       txt:"Fair. You had it. Just remember — next week starts lighter." };
+        if(c===2)       return { img:'./milo-explorer.png',    txt:"60/40 allocation on a Friday afternoon. That's portfolio thinking at its core. Genuinely impressive. 🎯" };
         if(b<30)        return { img:'./milo-proud.png',       txt:"You caught yourself. I didn't think you would. Proved me wrong. 🙌" };
         return                 { img:'./milo-closure.png',     txt:"Okay. That was a good week. Your future self is smiling at you right now." };
       },
     },
   ];
 } // end getStrategistScenarios
+
+// ── SOUND SYSTEM ─────────────────────────────────────────────────
+const SFX=(()=>{
+  let ctx;
+  function ac(){ if(!ctx){try{ctx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}} return ctx; }
+  function tone(freq,dur,type='sine',vol=0.22,delay=0){
+    const c=ac(); if(!c) return;
+    const o=c.createOscillator(),g=c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type=type; o.frequency.value=freq;
+    const t=c.currentTime+delay;
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(vol,t+0.018);
+    g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    o.start(t); o.stop(t+dur+0.05);
+  }
+  return {
+    tap(){   tone(540,0.07,'sine',0.12); },
+    good(){  tone(523,0.14,'sine',0.16); tone(659,0.14,'sine',0.16,0.11); tone(784,0.22,'sine',0.16,0.22); },
+    neu(){   tone(440,0.11,'sine',0.11); tone(494,0.16,'sine',0.11,0.09); },
+    bad(){   tone(330,0.16,'sine',0.13); tone(294,0.20,'sine',0.11,0.13); },
+    next(){  tone(659,0.09,'sine',0.18); tone(784,0.11,'sine',0.20,0.1); tone(1047,0.28,'sine',0.16,0.22); },
+    win(){   [523,659,784,1047,1319].forEach((f,i)=>tone(f,0.14,'sine',0.18,i*0.09)); },
+  };
+})();
+
+// ── LOCAL FLIQ SCORE FALLBACK ─────────────────────────────────────
+function computeLocalProfile(){
+  const SB=getStartBal(), h=S.history;
+  const d1=h.find(x=>x.day===1), d2=h.find(x=>x.day===2);
+  const d3=h.find(x=>x.day===3), d4=h.find(x=>x.day===4), d5=h.find(x=>x.day===5);
+  // IC: impulse count (0=none, 1=one, 2+=two)
+  const ic=Math.max(0,2-S.impulsiveN);
+  // PO: saved on Day 1 AND Day 5
+  const po=((d1&&d1.choice!==0)?1:0)+((d5&&d5.choice!==0)?1:0);
+  // RA: declined/negotiated Day 4; penalise social spend when broke
+  let ra=1;
+  if(d4&&d4.choice>=1) ra=Math.min(2,ra+1);
+  if(d2&&d2.choice===0&&d2.balBefore<SB*0.35) ra=Math.max(0,ra-1);
+  // RB: handled Day 3 obligation; recovered after big Day 1 spend
+  let rb=1;
+  if(d3&&d3.choice!==1) rb=Math.min(2,rb+1);
+  if(d1&&d1.choice===0&&S.balance>=SB*0.25) rb=Math.min(2,rb+1);
+  const total=ic+po+ra+rb;
+  const labels=['Financial Starter','Financial Starter','Emerging','Explorer','Developing','Thinker','Advancing','Leading','Exceptional'];
+  const ll=['Emerging','Developing','Strong'];
+  return {
+    profile_label:labels[Math.min(8,total)],
+    fliq_score:Math.round(15+(total/8)*80),
+    traits:{ ic:{score:ic,label:ll[ic]}, po:{score:po,label:ll[po]}, ra:{score:ra,label:ll[ra]}, rb:{score:rb,label:ll[rb]} }
+  };
+}
 
 // ── API ──────────────────────────────────────────────────────────
 async function api(path,body){
@@ -1422,7 +1509,7 @@ async function postToPortal(profile){
   try{
     await fetch(PORTAL_API,{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-wwk-api-key':PORTAL_SECRET},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         student_id:S.studentId||'anonymous',
         app_source:'100week',
@@ -1845,7 +1932,7 @@ function renderScore(){
   </div>
 </div>`;
   clearProgress();
-  confetti(72);
+  confetti(72); SFX.win();
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       const ring=document.getElementById('fliqRingFill');
@@ -1887,6 +1974,7 @@ async function boot(){
 function beginDay(){ S.screen='sim'; render(); window.scrollTo({top:0,behavior:'smooth'}); }
 
 async function makeChoice(ci){
+  SFX.tap();
   const sc=getScenarios()[S.day-1];
   // Lock grid
   const grid=document.getElementById('choiceGrid');
@@ -1954,15 +2042,17 @@ async function makeChoice(ci){
   const floatBubble=document.getElementById('miloFloatBubble');
   if(floatImg&&rxn){ floatImg.src=rxn.img; }
   if(floatBubble&&rxn){ floatBubble.innerHTML=rxn.txt; }
-  if(out?.cls==='pos') confetti(28);
+  if(out?.cls==='pos'){ confetti(28); SFX.good(); }
+  else if(out?.cls==='neg') SFX.bad();
+  else SFX.neu();
 
   const nb=document.getElementById('nextBtn'); if(nb) nb.classList.add('show');
 }
 
 async function nextDay(){
   if(S.day>=5){
-    confetti(58); S.screen='loading'; render();
-    S.profile=await completeSession();
+    SFX.win(); confetti(58); S.screen='loading'; render();
+    S.profile=await completeSession()||computeLocalProfile();
     postToPortal(S.profile); // non-blocking — closes Completed Loop in portal
     S.screen='score'; render();
   } else {
@@ -1971,6 +2061,7 @@ async function nextDay(){
     flash.className='day-flash';
     flash.innerHTML=`<div class="flash-check">✓</div><div class="flash-day">Day ${S.day}</div><div class="flash-lbl">Complete</div>`;
     document.body.appendChild(flash);
+    SFX.next();
     setTimeout(()=>{ flash.remove(); S.day++; saveProgress(); S.screen='dayintro'; render(); window.scrollTo({top:0,behavior:'smooth'}); },2200);
   }
 }
