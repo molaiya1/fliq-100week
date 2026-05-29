@@ -732,17 +732,19 @@
 
     @media(max-width:768px) {
 
-      /* ══ NAV — text-only brand lockup, no Milo ══ */
-      .nav { height:64px; padding:0 14px; gap:8px; }
+      /* ══ NAV — compact single-line brand + educator button ══ */
+      .nav { height:64px; padding:0 12px; gap:6px; overflow:hidden; }
       .nav-lockup {
-        background:rgba(11,29,58,0.05);
-        border-radius:12px; padding:6px 14px;
+        background:rgba(11,29,58,0.05); flex-shrink:1; min-width:0;
+        border-radius:12px; padding:6px 12px;
         border:1px solid rgba(11,29,58,0.08);
       }
-      .nav-brand-m { font-size:16px; }
-      .nav-brand-s { font-size:10px; letter-spacing:1.4px; }
+      .nav-brand { min-width:0; }
+      .nav-brand-m { font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .nav-brand-s { display:none; }
+      .nav-links { flex-shrink:0; }
       .nav-links .nav-link:not(.nav-link-edu) { display:none; }
-      .nav-link-edu { font-size:11px; padding:6px 10px; }
+      .nav-link-edu { font-size:11px; padding:6px 10px; white-space:nowrap; }
 
       /* ══ HOME SCREEN — game launcher, one viewport, no scroll ══ */
       #screen-home { height:100dvh; display:flex; flex-direction:column; overflow:hidden; background:transparent; }
@@ -1694,9 +1696,15 @@ function getExplorerScenariosW2(){
     },
     // DAY 2 — THE COMPARE
     { day:2, scTitle:"Your Friend's New Tablet",
-      scBody:`Your best friend just got a brand-new tablet for their birthday. It's so cool. You don't have one — and you feel kind of left out. You have $${b}.`,
+      scBody: priorChoice(1)===0
+        ? `You earned $5 helping Mrs. Kim yesterday — you have $${b}. Today your best friend shows up with a brand-new tablet. It's so cool. You don't have one — and you feel kind of left out.`
+        : priorChoice(1)===2
+        ? `Mrs. Kim's offer is still up in the air. You have $${b}. Today your best friend shows up with a brand-new tablet. It's so cool — and you feel kind of left out.`
+        : `You went to play yesterday instead of working. You still have $${b}. Today your best friend shows up with a brand-new tablet. It's so cool — and now you feel kind of left out.`,
       visEmoji:'📱', visCls:'vis-d2', visBadge:null,
-      preChat:"Feeling left out is real. <strong>But does that feeling have to cost you money?</strong> 📱",
+      preChat: priorChoice(1)===0
+        ? `You earned money yesterday. <strong>Don't let someone else's stuff undo that.</strong> 📱`
+        : "Feeling left out is real. <strong>But does that feeling have to cost you money?</strong> 📱",
       choices:[
         {l:'A',title:'Ask your parents to get one too',detail:"If they say yes, you might spend your own money too.",cost:0,opt:'compare_react',
          costLbl:'Could cost $0+',costCls:'spend',moodLbl:'FOMO MOVE',moodEmoji:'📱',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'📱'},
@@ -1719,8 +1727,10 @@ function getExplorerScenariosW2(){
       scBody:`You've been saving up for a $15 toy you really want. You have $${b} right now. The ice cream truck pulls up outside — it's $2. Your goal is SO close.`,
       visEmoji:'🎯', visCls:'vis-d3', visBadge:'GOAL\n$15',
       preChat: b>=15
-        ? `You already have enough for the toy! <strong>Do you really need the ice cream right now?</strong> 🎯`
-        : `You're $${15-b} away from your goal. <strong>$2 doesn't sound like much — but it pushes your goal further away.</strong> 🎯`,
+        ? `You have enough for the toy${priorChoice(1)===0?' — partly because you earned on Monday':''}! <strong>Do you really need the ice cream right now?</strong> 🎯`
+        : priorChoice(1)===0
+        ? `You earned Monday — now protect it. You're $${15-b} from your goal. <strong>$2 is a small spend with a real cost.</strong> 🎯`
+        : `You're $${15-b} away. <strong>$2 doesn't sound like much — but it pushes your goal further away.</strong> 🎯`,
       choices:[
         {l:'A',title:'Get the ice cream — it\'s only $2',detail:"Small treat. The goal can wait a little longer.",cost:2,opt:'spend_impulse',
          costLbl:'−$2',costCls:'spend',moodLbl:'IMPULSE',moodEmoji:'🍦',moodCls:'mood-risky',cardCls:'type-orange',badgeCls:'badge-orange',emoji:'🍦'},
@@ -1818,9 +1828,15 @@ function getBuilderScenariosW2(){
     },
     // DAY 2 — THE COMPARE
     { day:2, scTitle:"The New Sneakers Problem",
-      scBody:`A classmate showed up today in new $70 sneakers. Everyone's complimenting them. You look down at your own shoes. You have $${b}.`,
+      scBody: priorChoice(1)===0
+        ? `You mowed that lawn yesterday and earned $10 — you have $${b}. Today a classmate shows up in new $70 sneakers. Everyone's complimenting them. You look down at your own shoes.`
+        : priorChoice(1)===2
+        ? `You tried to negotiate a better rate yesterday — it didn't land. You have $${b}. Today a classmate shows up in new $70 sneakers. Everyone's talking about them.`
+        : `You took your day off yesterday. No extra earned. You have $${b}. Today a classmate shows up in new $70 sneakers. Everyone's complimenting them.`,
       visEmoji:'👟', visCls:'vis-d2', visBadge:null,
-      preChat:"That feeling when someone else has something you don't — <strong>it's real. But what do you DO with it?</strong> 👟",
+      preChat: priorChoice(1)===0
+        ? `You worked for your money yesterday. <strong>Don't let somebody else's shoes spend it.</strong> 👟`
+        : "That feeling when someone else has something you don't — <strong>it's real. But what do you DO with it?</strong> 👟",
       choices:[
         {l:'A',title:'Go home and ask for new shoes too',detail:"You want them. Make it known.",cost:0,opt:'compare_react',
          costLbl:'Could cost you',costCls:'spend',moodLbl:'FOMO MOVE',moodEmoji:'👟',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'👟'},
@@ -1843,8 +1859,10 @@ function getBuilderScenariosW2(){
       scBody:`You've been saving for a concert ticket — it costs $40 and goes on sale in two weeks. Today, a new video game dropped for $25. You have $${b}.`,
       visEmoji:'🎮', visCls:'vis-d3', visBadge:'NEW\n$25',
       preChat: b>=40
-        ? `You already have enough for the ticket. <strong>But do you also need the game right now?</strong> 🎯`
-        : `You're $${40-b} away from the ticket goal. <strong>This game would set you back.</strong> 🎯`,
+        ? `You have enough for the ticket${priorChoice(1)===0?' — the $10 you earned Monday helped get you here':''}. <strong>Do you also need the game right now?</strong> 🎯`
+        : priorChoice(1)===0
+        ? `You earned $10 Monday — now you're $${40-b} from the ticket. <strong>Don't let a game undo that progress.</strong> 🎯`
+        : `You're $${40-b} from the ticket goal. <strong>This game would set you back ${Math.round(((25/(40-b))*100))}% of the way there.</strong> 🎯`,
       choices:[
         {l:'A',title:'Buy the game now',detail:"It's out TODAY. The ticket can wait — you'll save again.",cost:25,opt:'spend_impulse',
          costLbl:'−$25',costCls:'spend',moodLbl:'IMPULSE BUY',moodEmoji:'🎮',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'🎮'},
@@ -1942,9 +1960,17 @@ function getStrategistScenariosW2(){
     },
     // DAY 2 — THE COMPARE
     { day:2, scTitle:"Your Friend Flipped Sneakers",
-      scBody:`A friend just told you they bought a pair of limited sneakers for $80 and resold them for $180. $100 profit. Now you feel behind. You have $${b}.`,
+      scBody: priorChoice(1)===0
+        ? `You took the babysitting gig Saturday and earned $20 — you have $${b}. Now a friend tells you they flipped limited sneakers for $100 profit. You feel behind despite the fact that you literally just earned money.`
+        : priorChoice(1)===2
+        ? `You negotiated your rate up to $25 Saturday — you have $${b}. Now a friend tells you they flipped sneakers for $100 profit. Suddenly your $25 feels small.`
+        : `You skipped the gig and went to the party Saturday. You have $${b}. Now a friend tells you they bought limited sneakers for $80 and resold them for $180 — $100 profit. Now you feel behind.`,
       visEmoji:'👟', visCls:'vis-d2', visBadge:'+$100\nFLIP',
-      preChat:"Someone made $100 while you weren't looking. <strong>What do you do with that information?</strong> 🎯",
+      preChat: priorChoice(1)===0
+        ? `You earned money two days ago. <strong>Don't let someone else's win make you feel like you lost.</strong> 🎯`
+        : priorChoice(1)===2
+        ? `You negotiated well on Day 1. <strong>Someone else's bigger win doesn't erase what you built.</strong> 🎯`
+        : "Someone made $100 while you weren't looking. <strong>What do you do with that information?</strong> 🎯",
       choices:[
         {l:'A',title:'Try to do the same thing — right now',detail:"Find a pair, buy it, flip it. You can do this.",cost:Math.min(b,60),opt:'compare_react',
          costLbl:`−$${Math.min(b,60)}`,costCls:'spend',moodLbl:'REACTIVE',moodEmoji:'👟',moodCls:'mood-risky',cardCls:'type-blue',badgeCls:'badge-blue',emoji:'👟'},
@@ -1967,7 +1993,9 @@ function getStrategistScenariosW2(){
       scBody:`You've been saving toward a $120 contribution toward a new laptop. You have $${b}. Today, a limited AirPods sale — normally $79, marked down to $49 for 24 hours.`,
       visEmoji:'🎧', visCls:'vis-d3', visBadge:'SALE\n$49',
       preChat: b>=120
-        ? `You actually already hit your laptop goal. <strong>Does that change the AirPods decision?</strong> 🎯`
+        ? `You hit the laptop goal${priorChoice(1)===0?' — and your Monday gig helped get you there':''}. <strong>Does that change the AirPods decision?</strong> 🎯`
+        : priorChoice(1)===0
+        ? `You earned this week — now you're $${120-b} from the laptop goal. <strong>$49 on AirPods would undo a lot of that progress.</strong> 🎯`
         : `You're $${120-b} from your laptop goal. <strong>$49 on AirPods would set you back significantly.</strong> 🎯`,
       choices:[
         {l:'A',title:'Buy the AirPods — great deal',detail:"$49 for AirPods is rare. Laptop can wait.",cost:49,opt:'spend_impulse',
