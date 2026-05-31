@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Ethics & Student Privacy — WealthWise Kids™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #1F3C88; --gold: #F4B223; --text: #1B2A4A;
+      --text2: #4A5A7A; --bg: #F7F5F0; --white: #FFFFFF;
+      --border: rgba(27,42,74,0.10); --green: #16A34A;
+    }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-top:80px; }
+
+    /* Topbar */
+    .topbar { position:fixed; top:0; left:0; right:0; height:72px; background:var(--white); border-bottom:1px solid var(--border); box-shadow:0 2px 16px rgba(27,42,74,0.07); display:flex; align-items:center; padding:0 28px; z-index:100; }
+    .topbar-brand { font-size:18px; font-weight:800; color:var(--navy); text-decoration:none; }
+    .topbar-sub { font-size:11px; font-weight:600; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase; margin-left:10px; padding-left:10px; border-left:2px solid var(--border); }
+    .topbar-back { margin-left:auto; font-size:13px; color:var(--text2); text-decoration:none; font-weight:500; }
+    .topbar-back:hover { color:var(--navy); }
+
+    /* Hero */
+    .hero { background:var(--navy); color:var(--white); padding:72px 28px 64px; text-align:center; }
+    .hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+    .hero h1 { font-size:clamp(28px,5vw,48px); font-weight:900; line-height:1.1; letter-spacing:-1px; margin-bottom:20px; }
+    .hero p { font-size:18px; color:rgba(255,255,255,0.75); max-width:620px; margin:0 auto; line-height:1.6; }
+
+    /* Commitment strip */
+    .strip { background:var(--gold); padding:18px 28px; }
+    .strip-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; gap:14px; }
+    .strip-icon { font-size:24px; flex-shrink:0; }
+    .strip-text { font-size:15px; font-weight:700; color:var(--navy); }
+
+    /* Content */
+    .container { max-width:860px; margin:0 auto; padding:60px 28px 80px; }
+
+    /* Section */
+    .section { margin-bottom:56px; }
+    .section-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+    .section h2 { font-size:24px; font-weight:800; color:var(--navy); margin-bottom:18px; letter-spacing:-0.3px; }
+    .section p { font-size:16px; line-height:1.75; color:var(--text2); margin-bottom:14px; }
+    .section p:last-child { margin-bottom:0; }
+    .section strong { color:var(--text); font-weight:700; }
+
+    /* Answer boxes */
+    .answer-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px; }
+    @media(max-width:640px){ .answer-grid { grid-template-columns:1fr; } }
+    .answer-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:24px; }
+    .answer-card.yes { border-color:rgba(22,163,74,0.3); background:rgba(22,163,74,0.04); }
+    .answer-card.no  { border-color:rgba(31,60,136,0.2); background:rgba(31,60,136,0.03); }
+    .answer-label { font-size:10px; font-weight:800; letter-spacing:2.5px; text-transform:uppercase; margin-bottom:8px; }
+    .answer-label.yes { color:var(--green); }
+    .answer-label.no  { color:var(--navy); }
+    .answer-card h3 { font-size:15px; font-weight:700; color:var(--text); margin-bottom:8px; }
+    .answer-card p  { font-size:14px; color:var(--text2); line-height:1.6; }
+
+    /* Principle cards */
+    .principles { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:24px; }
+    .principle { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:24px; }
+    .principle-num { font-size:32px; font-weight:900; color:var(--gold); line-height:1; margin-bottom:10px; }
+    .principle h3 { font-size:15px; font-weight:700; color:var(--navy); margin-bottom:8px; }
+    .principle p  { font-size:14px; color:var(--text2); line-height:1.6; }
+
+    /* Comparison table */
+    .compare-table { width:100%; border-collapse:collapse; margin-top:24px; border-radius:12px; overflow:hidden; }
+    .compare-table th { background:var(--navy); color:var(--white); padding:14px 18px; font-size:13px; font-weight:700; text-align:left; }
+    .compare-table td { padding:13px 18px; font-size:14px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .compare-table tr:last-child td { border-bottom:none; }
+    .compare-table tr:nth-child(even) td { background:rgba(27,42,74,0.025); }
+    .compare-table td:first-child { font-weight:600; color:var(--text); width:38%; }
+    .compare-table td:nth-child(2) { color:var(--text2); }
+    .check { color:var(--green); font-weight:700; }
+    .cross { color:#DC2626; font-weight:700; }
+
+    /* Statement box */
+    .statement { background:var(--navy); color:var(--white); border-radius:16px; padding:36px 32px; margin-top:24px; }
+    .statement h3 { font-size:20px; font-weight:800; margin-bottom:14px; }
+    .statement p { font-size:15px; color:rgba(255,255,255,0.8); line-height:1.7; }
+    .statement p + p { margin-top:12px; }
+
+    /* Contact */
+    .contact-box { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:32px; margin-top:24px; display:flex; gap:24px; align-items:flex-start; }
+    .contact-box .icon { font-size:36px; flex-shrink:0; }
+    .contact-box h3 { font-size:16px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+    .contact-box p  { font-size:14px; color:var(--text2); line-height:1.6; }
+    .contact-box a  { color:var(--navy); font-weight:600; }
+
+    /* Divider */
+    .divider { height:1px; background:var(--border); margin:0; }
+
+    /* Footer */
+    .footer { text-align:center; padding:28px; font-size:12px; color:var(--text2); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-brand">WealthWise Kids™</a>
+  <span class="topbar-sub">Data Ethics</span>
+  <a href="/legal.html" class="topbar-back">← Privacy &amp; Legal</a>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Transparency First</div>
+  <h1>Our Data Ethics Commitment</h1>
+  <p>We believe parents, educators, and administrators deserve plain-English answers about what happens with student data. Here they are.</p>
+</div>
+
+<div class="strip">
+  <div class="strip-inner">
+    <div class="strip-icon">🔒</div>
+    <div class="strip-text">WealthWise Kids™ does not collect, store, or share any personally identifiable information about any student. Ever.</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- What we collect -->
+  <div class="section">
+    <div class="section-label">The Basics</div>
+    <h2>What does WealthWise Kids™ actually collect?</h2>
+    <p>When a student uses The $100 Week™ or any WealthWise Kids™ program, here is the complete list of information we collect about that individual student:</p>
+    <p><strong>Nothing.</strong></p>
+    <p>No name. No email address. No student ID. No birthdate. No school. No photo. No device identifier. No IP address tied to a student profile. No cookies that track individual students across sessions.</p>
+    <p>Students participate through an anonymous session code provided by their facilitator. The session code connects their choices to a classroom cohort — not to them as an individual. When the session ends, the cohort data (aggregate behavioral patterns across all students in that classroom) is available to the facilitator. The individual session is not retained in a way that can ever be traced back to a specific student.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Parent Q&A -->
+  <div class="section" style="margin-top:56px;">
+    <div class="section-label">For Parents</div>
+    <h2>What does WealthWise Kids™ know about my child?</h2>
+    <p>The short answer: nothing individually. Here are the specific questions parents most often ask:</p>
+
+    <div class="answer-grid">
+      <div class="answer-card no">
+        <div class="answer-label no">We Do NOT Collect</div>
+        <h3>Your child's name</h3>
+        <p>Students are never asked for their name, initials, or any identifier. They choose a nickname or play anonymously.</p>
+      </div>
+      <div class="answer-card no">
+        <div class="answer-label no">We Do NOT Collect</div>
+        <h3>Location or device data</h3>
+        <p>We do not collect IP addresses, GPS data, or device identifiers tied to any individual student account.</p>
+      </div>
+      <div class="answer-card no">
+        <div class="answer-label no">We Do NOT Collect</div>
+        <h3>Individual behavioral profiles</h3>
+        <p>FLIQ Score™ data is aggregated at the classroom level. No persistent individual profile is created or stored.</p>
+      </div>
+      <div class="answer-card no">
+        <div class="answer-label no">We Do NOT Collect</div>
+        <h3>Parent or family information</h3>
+        <p>We never ask for parent contact information, household income, or any family data during student participation.</p>
+      </div>
+      <div class="answer-card yes">
+        <div class="answer-label yes">What We DO Collect</div>
+        <h3>Anonymous in-session choices</h3>
+        <p>During a session, students' in-game decisions are tracked to generate the end-of-session cohort report. This data is tied to a session ID, not a student name.</p>
+      </div>
+      <div class="answer-card yes">
+        <div class="answer-label yes">What We DO Collect</div>
+        <h3>Cohort-level FLIQ Score™ data</h3>
+        <p>Aggregate behavioral patterns across a classroom — the average IC, PO, RA, and RB scores for the group — are provided to the facilitator (teacher or program director).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- The FLIQ data question -->
+  <div class="section" style="margin-top:56px;">
+    <div class="section-label">The Harder Question</div>
+    <h2>Is behavioral data different from personal data?</h2>
+    <p>This is the question we take most seriously — and we want to answer it directly rather than bury it in legal language.</p>
+    <p>The FLIQ Score™ measures behavioral patterns: how students make financial decisions under simulated pressure. These patterns (Impulse Control, Planning Orientation, Risk Awareness, Resilience) are measured at the <strong>cohort level</strong> — meaning the classroom as a whole, not any individual student. A facilitator sees that "this class scored 1.4 out of 2.0 on Impulse Control on average." They do not see which student scored what.</p>
+    <p>We are not building individual behavioral profiles. We are not building a database of "which child is impulsive" to sell to insurance companies, lenders, or employers. That is not our business model, it is not our intent, and our architecture makes it structurally impossible — because we never collect the individual-level data that would be required to do so.</p>
+    <p><strong>What behavioral data is used for:</strong> Program improvement, educator outcome reporting, and academic research on whether financial behavior education works. That is the complete list.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Our principles -->
+  <div class="section" style="margin-top:56px;">
+    <div class="section-label">Our Principles</div>
+    <h2>Five commitments we make and keep</h2>
+    <div class="principles">
+      <div class="principle">
+        <div class="principle-num">01</div>
+        <h3>Zero PII — by design</h3>
+        <p>Our platform was architected from day one to collect no personally identifiable information. Privacy is not a feature we added — it is the foundation.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">02</div>
+        <h3>We will never sell student data</h3>
+        <p>Student behavioral data is not our product. It never will be. Our revenue comes from institutional program licenses, not data transactions.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">03</div>
+        <h3>Educators control their cohort</h3>
+        <p>The facilitator who creates a session controls who participates in it. Cohort reports go to that facilitator. Student data does not leave the institutional relationship.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">04</div>
+        <h3>COPPA and FERPA compliant</h3>
+        <p>Our zero-PII architecture satisfies the Children's Online Privacy Protection Act (COPPA) for children under 13, and our cohort-level data model is designed to be consistent with FERPA education privacy requirements.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">05</div>
+        <h3>Transparent, always</h3>
+        <p>If anything about our data practices changes, we will communicate it clearly and directly to all institutional partners — not bury it in a policy update email. This page will reflect current practice at all times.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Comparison table -->
+  <div class="section" style="margin-top:56px;">
+    <div class="section-label">Context</div>
+    <h2>How this compares to consumer EdTech</h2>
+    <p>Most student data concerns are justified — many consumer apps and platforms collect extensive data on children. WealthWise Kids™ operates under a fundamentally different model:</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Data Practice</th>
+          <th>Consumer EdTech Apps</th>
+          <th>WealthWise Kids™</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Student account / login required</td>
+          <td>Usually yes</td>
+          <td><span class="check">✓</span> Never — anonymous session only</td>
+        </tr>
+        <tr>
+          <td>Individual behavioral profiles stored</td>
+          <td>Often yes</td>
+          <td><span class="check">✓</span> No individual profiles created</td>
+        </tr>
+        <tr>
+          <td>Data shared with third parties</td>
+          <td>Sometimes</td>
+          <td><span class="check">✓</span> Never — data stays within institutional relationship</td>
+        </tr>
+        <tr>
+          <td>Advertising or retargeting</td>
+          <td>Sometimes</td>
+          <td><span class="check">✓</span> None. No ads, ever.</td>
+        </tr>
+        <tr>
+          <td>Data sold or monetized</td>
+          <td>Varies</td>
+          <td><span class="check">✓</span> Never — not our business model</td>
+        </tr>
+        <tr>
+          <td>COPPA compliance for under-13</td>
+          <td>Varies</td>
+          <td><span class="check">✓</span> Zero-PII architecture satisfies COPPA</td>
+        </tr>
+        <tr>
+          <td>Parent consent required per student</td>
+          <td>Often</td>
+          <td><span class="check">✓</span> Not required — no individual PII collected</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Our ethical statement -->
+  <div class="section" style="margin-top:56px;">
+    <div class="section-label">Our Position</div>
+    <h2>On the ethics of behavioral data in education</h2>
+    <div class="statement">
+      <h3>We will name the concern directly.</h3>
+      <p>There is a legitimate public concern about EdTech companies collecting behavioral data on children — particularly when that data is used to build persistent profiles, inform algorithmic decisions, or be packaged and sold to third parties. That concern is warranted, and the industry has earned the scrutiny.</p>
+      <p>WealthWise Kids™ is not that model. Our platform collects anonymous, session-level behavioral patterns in aggregate. We use that data to tell educators how their classroom is performing as a group, to improve our programs, and to conduct academic research on whether behavioral financial education works. The research question is genuine: does practicing financial decision-making in a low-stakes simulation change how students behave with real money? We believe the answer is yes. We are building the evidence to prove it.</p>
+      <p>We believe behavioral data in education — collected ethically, aggregated responsibly, and used to improve outcomes — is valuable. We also believe parents and administrators deserve to know exactly what is and isn't being collected. This page is our commitment to that standard. If you have a question this page doesn't answer, email us. We will respond directly.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Contact -->
+  <div class="section" style="margin-top:56px;">
+    <div class="section-label">Questions</div>
+    <h2>Talk to us directly</h2>
+    <p>If you are a parent, educator, district administrator, or researcher with questions about our data practices, we want to hear from you. No chatbot. No form that goes nowhere.</p>
+    <div class="contact-box">
+      <div class="icon">✉️</div>
+      <div>
+        <h3>Michael D. Olaiya — Founder, WealthWise Kids™</h3>
+        <p>Email: <a href="mailto:michael@versassists.com">michael@versassists.com</a><br>
+        Organization: <a href="mailto:info@wealthwisekids.org">info@wealthwisekids.org</a><br>
+        Platform: <a href="https://play.wealthwiselearning.com">play.wealthwiselearning.com</a></p>
+        <p style="margin-top:10px;">We aim to respond to all data practice inquiries within 2 business days.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>© 2026 WealthWise Kids™ LLC. All rights reserved. · <a href="/legal.html" style="color:inherit;">Privacy &amp; Legal</a> · <a href="/" style="color:inherit;">Back to Simulation</a></p>
+  <p style="margin-top:6px; color:#9ca3af;">WealthWise Kids™ · FLIQ Score™ · Financial Foundations™ are trademarks of WealthWise Kids IP Holdings LLC.</p>
+</div>
+
+</body>
+</html>
