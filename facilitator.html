@@ -1194,6 +1194,7 @@
 
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="goToScreen('launch')">← Back to Session</button>
+      <button class="btn btn-ghost" onclick="downloadCSV()">⬇ Download CSV</button>
       <button class="btn btn-ghost" onclick="window.print()">🖨 Print Report</button>
     </div>
   </div>
@@ -1363,6 +1364,8 @@ function updateStatusUI({ enrolled = 0, completed = 0, in_progress = 0 }) {
 }
 
 // ── Load Report ────────────────────────────────────────────────────────────
+let lastReportData = null;
+
 async function loadReport() {
   const btn = document.getElementById('btnReport');
   btn.disabled = true;
@@ -1371,6 +1374,7 @@ async function loadReport() {
     const res  = await fetch(`${API}/cohorts/${cohortId}/report`);
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
+    lastReportData = data;
     renderReport(data);
     goToScreen('report');
   } catch (err) {
@@ -1541,6 +1545,52 @@ function renderReport(data) {
       <div class="label-badge" style="background:${bg};color:${m.color};white-space:nowrap;">${cnt}${ofTotal}</div>
     </li>`;
   }).join('');
+}
+
+// ── CSV Export ─────────────────────────────────────────────────────────────
+function downloadCSV() {
+  if (!lastReportData) { toast('Load the report first'); return; }
+  const d = lastReportData;
+  const rows = [
+    ['The $100 Week™ — Class FLIQ Score™ Report'],
+    ['Generated', new Date().toLocaleDateString()],
+    ['Cohort ID', d.cohort_id || ''],
+    ['Students Enrolled', d.enrolled || 0],
+    ['Students Completed', d.completed_count || 0],
+    ['Class FLIQ Score', (d.class_fliq_score || 0).toFixed(2) + ' / 8'],
+    [],
+    ['CLASS TRAIT AVERAGES'],
+    ['Trait', 'Average (0–2)'],
+    ['Impulse Control', (d.trait_averages?.ic || 0).toFixed(2)],
+    ['Planning Orientation', (d.trait_averages?.po || 0).toFixed(2)],
+    ['Risk Awareness', (d.trait_averages?.ra || 0).toFixed(2)],
+    ['Resilience & Bounce-Back', (d.trait_averages?.rb || 0).toFixed(2)],
+    [],
+    ['SCORE DISTRIBUTION'],
+    ['Band', 'Count'],
+    ...Object.entries(d.score_bands || {}).map(([k, v]) => [k, v]),
+    [],
+    ['PROFILE DISTRIBUTION'],
+    ['Profile Label', 'Count'],
+    ...Object.entries(d.label_distribution || {}).map(([k, v]) => [k, v]),
+  ];
+  if (d.individual_profiles && d.individual_profiles.length) {
+    rows.push([]);
+    rows.push(['INDIVIDUAL STUDENT PROFILES (Anonymized)']);
+    rows.push(['Student #', 'FLIQ Score', 'Profile Label', 'Impulse Control', 'Planning', 'Risk Awareness', 'Resilience']);
+    d.individual_profiles.forEach(p => {
+      rows.push([p.student_num, p.fliq_score, p.profile_label, p.ic, p.po, p.ra, p.rb]);
+    });
+  }
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `FLIQ-Report-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Report downloaded');
 }
 
 // ── Reset Session ──────────────────────────────────────────────────────────

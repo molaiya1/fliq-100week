@@ -927,7 +927,7 @@
 
   <!-- Home mode links -->
   <div class="nav-links" id="navLinks">
-    <a href="#how-it-works" class="nav-link">⭐ How It Works</a>
+    <a href="#" class="nav-link" onclick="showHowItWorks();return false;">⭐ How It Works</a>
     <a href="/legal.html"   class="nav-link">🛡️ Privacy &amp; Safety</a>
     <a href="/facilitator.html" class="nav-link nav-link-edu">👥 Educator Login</a>
   </div>
@@ -2940,6 +2940,7 @@ function renderScore(){
     <div class="prof-name">${p.profile_label||'Explorer'}</div>
     <p class="prof-desc">${desc}</p>
     ${buildProfileStory(S.history, band, p, fb, SB)}
+    ${buildDefiningMoments(S.history, band)}
 
     <div class="bal-result">💰 You ended with $${fb}</div>
     <div class="trait-grid">${traitHtml}</div>
@@ -3006,6 +3007,76 @@ function buildProfileStory(history, band, profile, finalBal, startBal) {
   return `<p ${wrapper}>${sentence}</p>`;
 }
 
+function buildDefiningMoments(history, band) {
+  if (!history || history.length < 2) return '';
+  const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  const OM = {
+    spend_impulse:     {label:'Impulse Buy',           tone:'watch',  note:'Acting on want, not need.'},
+    spend_nonessential:{label:'Non-Essential Spend',   tone:'watch',  note:'Spent beyond what was necessary.'},
+    spend_social:      {label:'Social Spend',          tone:'watch',  note:'Peer influence shaped this choice.'},
+    upgrade_impulse:   {label:'Impulse Upgrade',       tone:'watch',  note:'Replaced something that still worked.'},
+    take_now:          {label:'Grabbed It Now',        tone:'watch',  note:'Chose immediate gain over waiting.'},
+    compare_react:     {label:'Comparison Spend',      tone:'watch',  note:"A peer's purchase triggered this one."},
+    borrow_social:     {label:'Social Borrowing',      tone:'watch',  note:'Borrowed to keep up socially.'},
+    invest:            {label:'Took a Risk',           tone:'watch',  note:'A calculated bet — outcome uncertain.'},
+    lend_money:        {label:'Lent to a Friend',      tone:'watch',  note:'Generosity with financial risk attached.'},
+    save:              {label:'Protected the Balance', tone:'strong', note:'Chose the long game over the moment.'},
+    save_goal:         {label:'Saved Toward a Goal',   tone:'strong', note:'Money put to work with a purpose.'},
+    decline_social:    {label:'Resisted Peer Pressure',tone:'strong', note:'Said no when everyone else said yes.'},
+    decline_invest:    {label:'Declined the Risk',     tone:'strong', note:'Read the situation and stepped back.'},
+    decline_loan:      {label:'Declined to Lend',      tone:'strong', note:'Protected the balance when asked.'},
+    resist_sale:       {label:'Resisted the Sale',     tone:'strong', note:'Saw through the urgency tactic.'},
+    contentment:       {label:'Chose Contentment',     tone:'strong', note:'Decided what they had was enough.'},
+    protect_goal:      {label:'Protected a Goal',      tone:'strong', note:'Kept focus when distraction showed up.'},
+    counter_offer:     {label:'Found a Third Option',  tone:'smart',  note:'Neither spend nor skip — a new path.'},
+    negotiate_payment: {label:'Negotiated',            tone:'smart',  note:'Bought time instead of just paying.'},
+    defer_decision:    {label:'Paused to Think',       tone:'smart',  note:"Didn't rush — asked for more time."},
+    delay_gratify:     {label:'Delayed Gratification', tone:'smart',  note:'Waited for a better outcome.'},
+    learn_first:       {label:'Got Informed First',    tone:'smart',  note:'Asked questions before committing.'},
+    research_first:    {label:'Researched First',      tone:'smart',  note:'Slowed down to make a better call.'},
+    find_free:         {label:'Found a Free Option',   tone:'smart',  note:'Got what was needed without spending.'},
+    split_cost:        {label:'Split the Cost',        tone:'smart',  note:'Reduced exposure by sharing it.'},
+    earn_work:         {label:'Chose to Earn',         tone:'smart',  note:'Created income instead of spending it.'},
+    invest_partial:    {label:'Partial Investment',    tone:'smart',  note:'Took measured risk, not full exposure.'},
+    give_intentional:  {label:'Intentional Giving',    tone:'strong', note:'A deliberate, values-driven choice.'},
+    donate:            {label:'Chose to Give',         tone:'strong', note:"Put someone else's need first."},
+  };
+  const TC={watch:'#F59E0B',strong:'#22C55E',smart:'#60A5FA'};
+  const TL={watch:'Watch',strong:'Strength',smart:'Smart Move'};
+  const scored=history.map(h=>{
+    const m=OM[h.opt]; if(!m) return null;
+    const drop=h.balBefore-h.balAfter;
+    return {...h,m,drop,sig:Math.abs(drop)+(m.tone==='watch'?5:0)+(h.day===1?3:0),dayName:DAYS[h.day-1]||('Day '+h.day)};
+  }).filter(Boolean);
+  if(!scored.length) return '';
+  const watches=scored.filter(s=>s.m.tone==='watch').sort((a,b)=>b.sig-a.sig);
+  const goods=scored.filter(s=>s.m.tone!=='watch').sort((a,b)=>b.sig-a.sig);
+  const picks=[];
+  if(watches[0]) picks.push(watches[0]);
+  if(goods[0]) picks.push(goods[0]);
+  if(goods[1]&&picks.length<3) picks.push(goods[1]);
+  if(watches[1]&&picks.length<3) picks.push(watches[1]);
+  const moments=picks.slice(0,3).sort((a,b)=>a.day-b.day);
+  if(!moments.length) return '';
+  const cards=moments.map(m=>{
+    const c=TC[m.m.tone],tag=TL[m.m.tone];
+    const bl=m.drop>0?`$${m.balBefore} → $${m.balAfter} (−$${m.drop})`:m.drop<0?`$${m.balBefore} → $${m.balAfter} (+$${Math.abs(m.drop)})`:`Balance held at $${m.balBefore}`;
+    return `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-left:3px solid ${c};border-radius:10px;padding:10px 12px;text-align:left;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+        <span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">${m.dayName}</span>
+        <span style="font-size:10px;font-weight:700;color:${c};background:${c}22;padding:2px 7px;border-radius:20px;">${tag}</span>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;">${m.m.label}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:4px;">${bl}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);font-style:italic;">${m.m.note}</div>
+    </div>`;
+  }).join('');
+  const hdr=band==='explorer'
+    ?`<div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin:20px 0 8px;">Your Big Moments 🌟</div>`
+    :`<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin:20px 0 8px;">Defining Moments</div>`;
+  return hdr+`<div style="display:flex;flex-direction:column;gap:8px;">${cards}</div>`;
+}
+
 // LOADING
 function renderLoading(){
   app.innerHTML=`<div id="screen-loading"><div class="spinner"></div><div class="loading-txt">Setting up your adventure…</div></div>`;
@@ -3030,8 +3101,12 @@ async function handleSolo(){ await boot(); }
 async function boot(){
   const band=S.band||'builder';
   S.screen='loading'; render();
-  const sid=await createStudent(S.cohortId);
-  const sess=sid?await startSession(sid):null;
+  // Solo play runs client-side only — no DB records created to protect instrument integrity
+  let sid=null,sess=null;
+  if(S.cohortId){
+    sid=await createStudent(S.cohortId);
+    sess=sid?await startSession(sid):null;
+  }
   Object.assign(S,{studentId:sid,sessionId:sess,band,balance:getStartBal(),day:1,impulsiveN:0,history:[],sessionStart:Date.now()});
   saveProgress();
   S.screen='dayintro'; render();
@@ -3217,6 +3292,49 @@ function confetti(n=30){
 }
 
 render();
+
+function showHowItWorks(){
+  document.getElementById('howItWorksModal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeHowItWorks(){
+  document.getElementById('howItWorksModal').style.display='none';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeHowItWorks(); });
 </script>
+
+<!-- How It Works Modal -->
+<div id="howItWorksModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#1B2A4A;border:1px solid rgba(255,255,255,0.12);border-radius:20px;max-width:480px;width:100%;padding:32px 28px;position:relative;max-height:90vh;overflow-y:auto;">
+    <button onclick="closeHowItWorks()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.6);font-size:18px;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F4B223;margin-bottom:8px;">The $100 Week™</div>
+    <h2 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;line-height:1.2;">How It Works</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:24px;line-height:1.6;">A 5-day financial behavior simulation. No right or wrong answers — just real choices, real pressure, and a score that reflects how you actually think about money.</p>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="background:#F4B22322;border:1px solid #F4B22344;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">💰</div>
+        <div><div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;">You get $100 for the week</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;">The starting amount depends on your age band — $20, $50, or $100. It's your money for the whole week.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="background:#60A5FA22;border:1px solid #60A5FA44;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📅</div>
+        <div><div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;">One scenario per day for 5 days</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;">Each day brings a different financial situation — temptation, peer pressure, unexpected costs, risks, and final choices.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="background:#22C55E22;border:1px solid #22C55E44;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🧠</div>
+        <div><div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;">Your choices reveal your behavior</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;">Every decision is measured across 4 behavioral traits: Impulse Control, Planning, Risk Awareness, and Resilience.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="background:#8B5CF622;border:1px solid #8B5CF644;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📊</div>
+        <div><div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;">You get a FLIQ Score™ at the end</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;">Your score (0–8) and profile label show how you naturally respond to financial pressure — not what you know, but how you act.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="background:#F59E0B22;border:1px solid #F59E0B44;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔒</div>
+        <div><div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;">100% private — no names, no accounts</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;">No personal information is ever collected. Your data is anonymous by design and never sold or shared.</div></div>
+      </div>
+    </div>
+    <button onclick="closeHowItWorks()" style="width:100%;padding:14px;background:#F4B223;border:none;border-radius:12px;color:#1B2A4A;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;">Got it — let's go →</button>
+  </div>
+</div>
 </body>
 </html>
