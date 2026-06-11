@@ -1045,8 +1045,16 @@
         <div class="live-dot"></div>
         Auto-refreshing every 20 seconds
       </div>
-      <div style="margin-top:10px;text-align:center;font-size:11px;">
-        <a id="resumeLink" href="#" style="color:var(--gold);opacity:0.7;text-decoration:underline;font-weight:500;">Bookmark this page to return to your session</a>
+    </div>
+
+    <!-- Facilitator return URL -->
+    <div class="card" style="background:rgba(245,166,35,0.06);border-color:rgba(245,166,35,0.25);">
+      <div class="section-label gold">Your Facilitator Return Link</div>
+      <p style="font-size:13px;color:var(--text-mid);margin:0 0 12px;">Write this down or bookmark it. Opens your session dashboard on any device — even after closing the browser or restarting your computer.</p>
+      <div class="url-row">
+        <span class="url-icon">🔖</span>
+        <span class="url-text" id="resumeLink" style="font-weight:700;color:white;"></span>
+        <button class="copy-btn" id="copyResumeBtn" onclick="copyResumeUrl()">Copy</button>
       </div>
     </div>
 
@@ -1438,32 +1446,60 @@ function clearSavedSession() {
 }
 
 function updateResumeLink() {
-  const url = `${window.location.origin}${window.location.pathname}?cohort=${cohortId}&code=${joinCode}`;
+  const url = `${window.location.origin}${window.location.pathname}?code=${joinCode}`;
   const el = document.getElementById('resumeLink');
-  if (el) { el.href = url; el.textContent = 'Bookmark this page to return to your session'; }
+  if (el) el.textContent = url;
+}
+
+function copyResumeUrl() {
+  const url = document.getElementById('resumeLink')?.textContent;
+  if (!url) return;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copyResumeBtn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2200);
+  });
 }
 
 // ── Resume from URL or localStorage ───────────────────────────────────────
-(function() {
+(async function() {
+  let code = null;
+
+  // 1. URL param takes priority
   const p = new URLSearchParams(window.location.search);
-  const cid = p.get('cohort'), code = p.get('code');
-  if (cid && code) {
-    cohortId = cid; joinCode = code;
-  } else {
+  const urlCode = p.get('code');
+
+  // 2. Fall back to localStorage
+  if (!urlCode) {
     try {
       const saved = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
       if (saved && saved.cohortId && saved.joinCode) {
-        cohortId = saved.cohortId; joinCode = saved.joinCode;
+        cohortId = saved.cohortId; joinCode = saved.joinCode; code = saved.joinCode;
       }
     } catch (e) {}
+  } else {
+    code = urlCode.toUpperCase().replace(/[^A-Z0-9]/g, '');
   }
-  if (cohortId && joinCode) {
-    document.getElementById('displayCode').textContent = joinCode;
-    document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
-    updateResumeLink();
-    goToScreen('launch');
-    startPolling();
+
+  if (!code) return;
+
+  // If we have a code but no cohortId yet, look it up
+  if (!cohortId) {
+    try {
+      const r = await fetch(`${API}/cohorts/by-code/${code}`);
+      if (!r.ok) return;
+      const data = await r.json();
+      cohortId = data.cohort_id;
+      joinCode = code;
+      saveSession();
+    } catch (e) { return; }
   }
+
+  document.getElementById('displayCode').textContent = joinCode;
+  document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+  updateResumeLink();
+  goToScreen('launch');
+  startPolling();
 })();
 </script>
 </body>
