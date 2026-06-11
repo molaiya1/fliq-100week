@@ -303,6 +303,24 @@
     .guide-key-row strong { color:#fff; }
     .guide-close-stmt { font-size:12px; color:rgba(255,255,255,0.55); font-style:italic; line-height:1.6; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08); }
     .guide-trait-badge { display:inline-block; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:20px; margin-bottom:10px; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3); color:#A78BFA; }
+    .guide-panel-milo   { background:linear-gradient(135deg,rgba(27,42,74,0.9),rgba(36,46,103,0.7)); border:1px solid rgba(244,178,35,0.3); border-left:3px solid var(--gold); }
+    .guide-panel-milo .guide-panel-label { color:var(--gold); }
+    .guide-milo-text { font-size:14px; color:rgba(255,255,255,0.88); line-height:1.7; font-style:italic; }
+    .guide-milo-text strong { color:var(--gold); font-style:normal; }
+    .guide-stance { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:10px; padding:12px 14px; margin-top:12px; }
+    .guide-stance-label { font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#F59E0B; margin-bottom:8px; }
+    .guide-stance-steps { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px; }
+    .guide-stance-steps li { font-size:12px; color:rgba(255,255,255,0.7); padding-left:18px; position:relative; line-height:1.5; }
+    .guide-stance-steps li::before { content:'→'; position:absolute; left:0; color:#F59E0B; font-weight:700; }
+    .guide-panel-gap    { background:rgba(251,146,60,0.07); border:1px solid rgba(251,146,60,0.2); border-left:3px solid #FB923C; }
+    .guide-panel-gap .guide-panel-label { color:#FB923C; }
+    .guide-gap-prompt { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.65; }
+    .guide-gap-prompt em { color:#FB923C; font-style:normal; font-weight:700; }
+    .guide-panel-teaser { background:linear-gradient(135deg,rgba(15,27,53,0.95),rgba(27,42,74,0.8)); border:1px solid rgba(0,180,216,0.2); border-left:3px solid var(--cyan); }
+    .guide-panel-teaser .guide-panel-label { color:var(--cyan); }
+    .guide-teaser-text { font-size:13px; color:rgba(255,255,255,0.75); line-height:1.7; font-style:italic; }
+    .guide-panel-closing { background:rgba(244,178,35,0.06); border:1px solid rgba(244,178,35,0.2); border-left:3px solid var(--gold); }
+    .guide-panel-closing .guide-panel-label { color:var(--gold); }
     .card-gold-accent {
       border-top: 2px solid var(--gold);
     }
@@ -1403,28 +1421,43 @@ const GUIDE_DATA = {
   1: {
     1: {
       title:'Day 1 — The Pick', trait:'Impulse Control',
+      miloBrief:'"First day. First choice. Before you make it — I want to ask you something. When you walk into a store with money in your pocket, what\'s the very first thing your brain does? For most people, it starts scanning for something it wants. That scan happens in under two seconds — and by the time you realize it\'s happening, you\'ve already started justifying the purchase. Today\'s choice happens in that two-second window. Let\'s see what you find there."',
+      stanceDebate:{
+        prompt:'Split the room down the middle. Left side: "Spend it — you earned it." Right side: "Wait — protect what you have." Each side has 90 seconds to make their case to the other.',
+        sides:['SPEND IT — you earned it, enjoyment has value, and money is meant to be used','WAIT — protecting your balance gives you options all week; the want will still be there tomorrow'],
+        note:'No right answer — you\'re measuring conviction and reasoning, not outcome. Watch who argues with data vs. who argues with feeling.'
+      },
       before:{
-        script:'"Before we open any devices — imagine you just got handed your money for the week. It\'s Monday morning. And the very first thing you see is something you\'ve been wanting. Before you touch anything — turn to the person next to you and answer this: would you buy it, or would you wait?"',
+        script:'"Before we open any devices — imagine you just got handed your money for the week. It\'s Day 1. The very first thing you see is something you\'ve been wanting. Before you touch anything — turn to the person next to you and answer this: would you buy it, or would you wait?"',
         questions:['What\'s the difference between wanting something and needing it?','If you spend big on Day 1, what does that do to the rest of your week?']
       },
       submit:'Have students open the sim, enter the session code, and make their Day 1 choice. No discussion during this window — this is individual decision time.',
+      knowingDoingGap:'"Before you touched the sim, most of you said you\'d [wait / spend]. Now look at what you actually did. If those two things don\'t match — that gap is the most important thing we\'ve learned today. What happened in the space between what you said and what you did?"',
       after:{
-        questions:['Who went with their first instinct? Did anyone change their mind right before submitting?','What would Monday-you tell Friday-you about that choice?'],
+        questions:['Who went with their first instinct? Did anyone change their mind right before submitting?','What would Day-1-you tell Day-5-you about that choice?'],
         key:[
           {pat:'If they spent (bought the item):','sig':'Immediate gratification over planning. Classic IC signal — the want won over the wait.'},
           {pat:'If they saved or passed:','sig':'Strong impulse control. They paused before acting on the want. This is the IC strength we\'re measuring.'},
           {pat:'If they chose the third option:','sig':'Creative problem-solving — found a middle path instead of a binary. Early PO signal.'},
         ],
         close:'"The first financial decision of any week sets a pattern. Your first choice anchors everything that follows — researchers call it the primacy effect. What you just saw your students do on Day 1 is the most honest data point of the whole week."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow, someone around you is going to spend money. And you\'re going to feel it. Come back ready — because the pull is harder on Day 2."'
     },
     2: {
       title:'Day 2 — The Pull', trait:'Impulse Control + Planning',
+      miloBrief:'"One thing I\'ve noticed about every person I\'ve ever watched make a financial decision: the hardest ones aren\'t between money and an item. They\'re between money and a feeling. The feeling of belonging. The feeling of not missing out. The feeling of being included. Today\'s choice is about that feeling — not about the money."',
+      stanceDebate:{
+        prompt:'One side of the room: "If your friends are going, you find a way — belonging matters." Other side: "If you can\'t afford it, you stay — no amount of FOMO is worth breaking your budget." 60 seconds each side.',
+        sides:['BELONGING WINS — being present with your people has social and emotional value money can\'t replace','BUDGET WINS — protecting your financial plan is more important than any single social moment'],
+        note:'This debate often gets heated — let it. The emotion in the room mirrors the emotion in the scenario.'
+      },
       before:{
         script:'"Raise your hand if you\'ve ever spent money because everyone else was doing something. [Pause.] Keep your hand up if you regretted it later. That\'s today. Before devices — if your five closest friends were going somewhere right now and you only had part of your money left, what goes through your head first: the money, or what they\'ll think of you?"',
         questions:['Why is peer pressure one of the hardest financial forces to resist — even for adults?','What\'s the difference between choosing to go because YOU want to, versus going because everyone else is?']
       },
       submit:'Students open devices and make their Day 2 choice silently and independently.',
+      knowingDoingGap:'"Before the scenario you said you\'d [go / stay]. Here\'s what you actually did. Now — be honest: was your decision really about the money? Or was it about the feeling of not being left out? Those are two very different decisions with the same dollar amount attached."',
       after:{
         questions:['For those who chose to go — what would you have to give up later this week because of that?','What\'s harder to recover from: missing out with friends, or running low on money before the week ends?'],
         key:[
@@ -1433,15 +1466,23 @@ const GUIDE_DATA = {
           {pat:'If they found an alternative:','sig':'Creative social navigation — engaged without full cost. Sophisticated PO signal.'},
         ],
         close:'"Peer pressure is the #1 driver of unplanned spending for every age group, including adults. Naming it out loud is the first layer of defense. Your students just experienced it in a controlled environment — that\'s exactly what the data is for."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow the week throws something at you that you didn\'t ask for and can\'t control. Let\'s see how you handle it."'
     },
     3: {
       title:'Day 3 — The Oops', trait:'Resilience & Bounce-Back',
+      miloBrief:'"Something I\'ve learned about money and people: it\'s not the expected costs that reveal who someone is. It\'s the unexpected ones. When something goes wrong that you didn\'t plan for — that\'s when you find out whether you handle problems or avoid them. Two very different paths. Very different futures."',
+      stanceDebate:{
+        prompt:'Side A: "Deal with it right now, whatever it takes — unresolved problems cost more than solved ones." Side B: "Find a smarter way around it — paying full price on demand is not the only option." 60 seconds each.',
+        sides:['HANDLE IT NOW — face the problem directly; avoidance always makes it worse and costs more later','FIND ANOTHER WAY — creative problem-solving under pressure is a strength, not avoidance'],
+        note:'Both sides are legitimate. Listen for reasoning quality — not which side wins.'
+      },
       before:{
         script:'"We\'re in the middle of the week. Take a second to think about where your balance is in the simulation right now. Now — life just threw something at you. An unexpected cost showed up that you didn\'t plan for. Before devices: what\'s your gut reaction when something unexpected takes money from you? Frustration? Acceptance? Problem-solving?"',
         questions:['What\'s the difference between a financial setback and a financial emergency?','If this happened in real life, what options do you have besides just paying it immediately?']
       },
       submit:'Students open devices and make their Day 3 choice.',
+      knowingDoingGap:'"When this showed up, most of you said your gut said to [handle it / find another way / wait]. What did you actually do? How does your gut feel about that right now? If your choice surprised you — that\'s important data."',
       after:{
         questions:['Who felt stressed when they saw this scenario? Why do unexpected costs feel worse than planned costs of the same size?','What\'s one thing you could do differently to be more prepared when something unexpected comes up?'],
         key:[
@@ -1450,15 +1491,23 @@ const GUIDE_DATA = {
           {pat:'If they avoided or deferred:','sig':'Short-term relief, long-term risk. Low RB signal — avoidance over adaptation.'},
         ],
         close:'"Financial resilience isn\'t about avoiding problems — it\'s about recovery speed. Research shows people with strong bounce-back patterns make better decisions in the 48 hours after a setback than those who avoid the problem. Today you just measured that."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow — an opportunity shows up. It looks good. Maybe it is. Maybe it\'s designed to look that way. Come back with your skepticism turned on."'
     },
     4: {
       title:'Day 4 — The Deal', trait:'Risk Awareness',
+      miloBrief:'"Here\'s a pattern I\'ve noticed across thousands of financial decisions: the ones that feel exciting — the ones that feel like an opportunity you have to grab RIGHT NOW — those are the ones that deserve the most skepticism. Not because good opportunities don\'t exist. They do. But because excitement is designed to move faster than thinking. Today\'s choice comes with that feeling attached."',
+      stanceDebate:{
+        prompt:'Side A: "If the upside is real, you take calculated risks — playing it safe is also a risk." Side B: "If you don\'t fully understand it, you walk away every single time — period." Defend your position.',
+        sides:['TAKE SMART RISKS — every major financial gain requires accepting some uncertainty; fear of risk is its own kind of loss','WALK AWAY — full understanding before commitment is non-negotiable; if you can\'t explain it, you can\'t afford to own it'],
+        note:'The goal is surface their risk philosophy before the choice — so the gap reveal lands harder.'
+      },
       before:{
         script:'"Day 4. You\'ve made three decisions this week. Today something different shows up — someone is offering you a deal. A financial opportunity. Before devices: what\'s the very first thing you ask yourself when someone tells you they can make your money grow? What\'s your gut check?"',
         questions:['What makes a financial opportunity feel legitimate versus suspicious?','What\'s the difference between a risk and a gamble?']
       },
       submit:'Students open devices and make their Day 4 choice.',
+      knowingDoingGap:'"Before the choice, your gut check was [their stated caution or excitement]. You said you\'d [take it / walk away / ask questions first]. Here\'s what you actually did. If you moved faster than you normally would — what got through your defense? That answer is what financial predators are paid to find."',
       after:{
         questions:['What information would you need before you\'d feel comfortable with a financial opportunity?','How do you know the difference between being smart and being scared when it comes to risk?'],
         key:[
@@ -1467,15 +1516,23 @@ const GUIDE_DATA = {
           {pat:'If they asked questions or researched first:','sig':'Best possible response — due diligence before committing. Sophisticated RA + PO signal. This is the pattern that separates informed risk from blind risk.'},
         ],
         close:'"The most common financial scams work because they feel exactly like what your students just saw — urgent, profitable, and coming from someone familiar. Pausing to ask questions is the highest-value financial skill. Today\'s data shows you who paused."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow is the end of Week 1. Your pattern is already written. Tomorrow you see what it adds up to — and you get to decide if that\'s who you want to be."'
     },
     5: {
       title:'Day 5 — The Finish', trait:'All Four Traits — Capstone',
+      miloBrief:'"Five decisions. That\'s what a week is — five choices that either compound into something you\'re proud of, or add up to something you have to recover from. Before the last choice: I\'m not asking what you\'ll do. I\'m asking you to look at the four decisions already behind you and name the pattern. That pattern has a name. And after today — you\'ll know what it is."',
+      stanceDebate:{
+        prompt:'This one is personal. Side A: "My choices this week reflect who I actually want to be." Side B: "My choices this week showed me a pattern I want to change." No fence-sitting — pick a side and explain why.',
+        sides:['MY PATTERN IS MINE — I made intentional choices and I own the outcomes, even the imperfect ones','I SEE A PATTERN TO CHANGE — the sim showed me something about myself I want to work on'],
+        note:'Both are correct answers. The honesty level in this debate predicts how much students will internalize their FLIQ profile.'
+      },
       before:{
         script:'"Last day. Whatever is in your balance right now is the result of four decisions you\'ve made over four days. Some of you have more than you started with. Some have less. Before we open devices — I want one honest answer from everyone: looking back at your four choices this week, are you proud of the pattern?"',
         questions:['If a financial advisor looked at your choices this week, what would they say your priority is — today, or tomorrow?','What\'s one choice this week you\'d make differently if you could?']
       },
       submit:'Students open devices and make their final Day 5 choice.',
+      knowingDoingGap:'"Look at your full week. Your first instinct on Day 1 — did it hold? Did you drift toward spending, protecting, or something in between? Name the pattern before we name it for you. Your FLIQ score is about to confirm or challenge what you\'re thinking."',
       after:{
         questions:['Did your final balance surprise you? Why or why not?','If your choices this week reflected your values — what did they say about what you value most?'],
         key:[
@@ -1484,17 +1541,25 @@ const GUIDE_DATA = {
           {pat:'If they gave, shared, or allocated to a goal:','sig':'Values-driven choice — sees money as a tool. High PO + intentional RB. Rare and significant.'},
         ],
         close:'"The five choices made this week are the same five choices your students will face in real life. The amounts change. The pressure types don\'t. The behavioral patterns you just collected — that\'s the data that matters."'
-      }
+      },
+      tomorrowTeaser:'"Week 2 is different. You\'re not just spending money — you\'re earning it. And earning reveals something spending never can. Come back ready to understand what a dollar actually costs to make."'
     }
   },
   2: {
     1: {
       title:'Day 1 — The Opportunity', trait:'Planning Orientation',
+      miloBrief:'"Week 2 changes the game. Last week you only spent. This week, you have a chance to earn. Here\'s what most people don\'t know about earning: it\'s not free. Every dollar you earn costs you something — time, energy, attention, or opportunity. The smartest earners don\'t just ask how much they\'ll make. They ask what it costs them to make it. That question is the difference between building something and just moving money around."',
+      stanceDebate:{
+        prompt:'Side A: "Any chance to earn is worth taking — income is income." Side B: "You should evaluate what earning will cost you before you commit — not every opportunity is worth the price." One minute each.',
+        sides:['TAKE THE OPPORTUNITY — income multiplies options; saying no to earning is also a choice with a cost','EVALUATE FIRST — the terms of earning matter as much as the amount; time and energy are finite resources'],
+        note:'Watch for students who\'ve never thought of their time as having financial value — this framing is often new for this age group.'
+      },
       before:{
         script:'"Something new enters the picture this week — a chance to earn. Before devices: what\'s your instinct when someone offers you a chance to make money? Do you jump on it, think about what it costs you in time and energy, or look for a better arrangement first?"',
         questions:['What\'s the difference between earning money and spending it? Which takes more from you?','If earning $10 costs you 2 hours of your time, is that always worth it?']
       },
       submit:'Students open devices and make their Day 1 choice.',
+      knowingDoingGap:'"You said you\'d [take it / evaluate the cost / negotiate]. The sim says you [took it / passed / negotiated]. Here\'s what I want to know: did you think about what it would cost you before you decided? Or did you just see the number and react to it? Those are two different decisions."',
       after:{
         questions:['Did anyone choose NOT to earn? What was the thinking behind that?','What\'s the hidden "cost" of earning money that people don\'t always talk about?'],
         key:[
@@ -1503,15 +1568,23 @@ const GUIDE_DATA = {
           {pat:'If they negotiated the terms:','sig':'Sophisticated response — weighed the arrangement before committing. Highest-value PO signal.'},
         ],
         close:'"Income is never free — it costs time, energy, or both. The financially strongest people don\'t just ask how much they\'ll earn. They ask what they\'re giving up to earn it. Week 2 just started measuring something Week 1 couldn\'t."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow someone around you gets something new. Watch what it does to how you feel about what you already have."'
     },
     2: {
       title:'Day 2 — The Comparison', trait:'Impulse Control',
+      miloBrief:'"I want to try something. Think about the last thing you bought because someone you knew had one. You don\'t have to say it out loud — just hold it in your head. Now ask yourself: did you actually want it before you saw theirs? This is comparison spending. It\'s not a character flaw. It\'s one of the most powerful forces in every economy on earth — and today\'s choice is designed to activate it in you."',
+      stanceDebate:{
+        prompt:'Be honest — this one is a personal honesty check. Side A: "What other people have genuinely doesn\'t affect what I want." Side B: "Seeing what others have absolutely affects my spending — and I\'m willing to admit that." Take the honest side.',
+        sides:['COMPARISON DOESN\'T MOVE ME — I want what I want based on my own evaluation, not what\'s in someone else\'s hands','COMPARISON IS REAL — the research is right; I\'ve spent money because of someone else and I can name a time it happened'],
+        note:'Side B is usually the more honest answer and requires more courage. Reward students who take it.'
+      },
       before:{
         script:'"Someone in your circle just got something nice. Before devices — be honest with yourself: do you feel differently about what you own when someone around you gets something better? You don\'t have to answer out loud. Just sit with that for a second."',
         questions:['Why does seeing what other people have change how we feel about what we already have?','What would you have to own to stop comparing yourself to others? (Take a moment with that one.)']
       },
       submit:'Students open devices and make their Day 2 choice.',
+      knowingDoingGap:'"Before the choice, you said comparison [does / doesn\'t] affect you. After seeing the scenario — did you spend in reaction to someone else? That answer is your real position. Not the one you gave before the sim — the one your money gave."',
       after:{
         questions:['Who felt the pull of comparison even in a simulation? What does that tell you?','What\'s one thing you\'re grateful you already have that you didn\'t think about before this scenario?'],
         key:[
@@ -1520,15 +1593,23 @@ const GUIDE_DATA = {
           {pat:'If they redirected their energy creatively:','sig':'Found a way to engage without spending. Sophisticated IC + PO combination.'},
         ],
         close:'"Researchers call it social comparison theory — humans are wired to measure themselves against others. It\'s not a character flaw; it\'s a design feature of the human brain. Knowing that is the first step to managing it."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow you\'ve been saving toward something specific. And something else shows up to compete with it. Let\'s find out what your goals are actually worth to you."'
     },
     3: {
       title:'Day 3 — The Goal', trait:'Planning Orientation',
+      miloBrief:'"There\'s a specific kind of financial strength that almost nobody talks about: the ability to protect a commitment you made to yourself. Not to someone else — to yourself. It turns out that\'s the hardest kind to keep. Because you can always negotiate with yourself. You always have a reason. Today\'s scenario puts your self-commitment directly in front of a temptation. We\'re about to find out how solid that commitment actually is."',
+      stanceDebate:{
+        prompt:'Side A: "Once I commit to a financial goal, that money is untouchable for anything else — period." Side B: "Goals have to be flexible when something genuinely better comes along — rigidity is its own financial risk." Take a position.',
+        sides:['GOALS ARE SACRED — committing to a future promise is the most important financial discipline; flexibility is a disguise for weakness','GOALS MUST FLEX — a goal that can\'t adapt to new information isn\'t a plan, it\'s stubbornness'],
+        note:'The debate reveals their relationship to delayed gratification before the choice activates it — listen carefully.'
+      },
       before:{
         script:'"You\'ve been saving toward something specific this week. Now something else shows up — and it\'s tempting to use that money. Before devices: what makes it harder to protect money you\'ve already committed to a goal versus money you haven\'t promised yet?"',
         questions:['Once you name a savings goal out loud, does it feel different to protect it? Why?','What\'s the real risk of using goal money for something unrelated to the goal?']
       },
       submit:'Students open devices and make their Day 3 choice.',
+      knowingDoingGap:'"You said goals are [sacred / flexible]. Then this temptation showed up. What did you actually do? If your choice surprised you — that gap between your stated belief and your actual behavior is the most important thing you\'ll learn about yourself today."',
       after:{
         questions:['Who felt guilty choosing their goal over the immediate option? Who felt proud?','What would make a goal feel real enough that you\'d actually protect it?'],
         key:[
@@ -1537,15 +1618,23 @@ const GUIDE_DATA = {
           {pat:'If they found a partial compromise:','sig':'Balanced — protected some, acknowledged present need. Thoughtful PO signal.'},
         ],
         close:'"Research on goal commitment shows that naming a goal and writing it down increases follow-through by over 40%. The simulation can\'t write it down for them — but their choice just showed you how strong that commitment already is."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow a friend needs something from you. And the way they ask is going to make the money feel like it doesn\'t matter. Watch what happens when it does."'
     },
     4: {
       title:'Day 4 — The Ask', trait:'Resilience & Bounce-Back',
+      miloBrief:'"The most complicated financial decisions I\'ve ever seen aren\'t about products or prices or risk. They\'re about people. What happens when someone you care about needs something from you financially. Because in that moment, it stops feeling like a financial decision — it feels like a relationship decision. The research is clear: those two things have to stay separate. Today\'s choice tests whether you can keep them that way."',
+      stanceDebate:{
+        prompt:'Side A: "If a friend asks for money and I have it, I help — that\'s what friendship is." Side B: "I never lend money I need, no matter who\'s asking — financial boundaries protect both people." Take a position and defend it.',
+        sides:['HELP FIRST — friendship is built on showing up; money is a tool and withholding it when you can give it damages trust','BOUNDARIES FIRST — the most damaging thing to a friendship is a loan that creates resentment; clarity upfront is kinder than generosity that breeds expectations'],
+        note:'This is the highest-emotion debate of the program. Let it breathe. The strongest students often take Side B.'
+      },
       before:{
         script:'"A friend needs money from you. Before devices — what goes through your head first: the friendship, the money, or both at the same time? There\'s no right answer. I just want you to notice which one came first."',
         questions:['What\'s the difference between generosity and a loan? Does it matter which one you\'re giving?','If a friend doesn\'t pay you back, what gets damaged more — your wallet or the relationship?']
       },
       submit:'Students open devices and make their Day 4 choice.',
+      knowingDoingGap:'"Before the choice, you felt [describe their earlier framing]. Your choice was [lend / partial / decline]. Here\'s the real question: did you make the financial decision, or the friendship decision? Because those aren\'t always the same thing — and your money can\'t tell the difference."',
       after:{
         questions:['Has anyone ever lent money and not gotten it back? How did that change the friendship?','What\'s a kind way to say no to a friend who needs money when you can\'t afford to give it?'],
         key:[
@@ -1554,15 +1643,23 @@ const GUIDE_DATA = {
           {pat:'If they declined:','sig':'Financial boundary set. Can reflect strong IC or avoidance depending on context — the debrief is where you learn which.'},
         ],
         close:'"Research consistently shows that mixing money and close relationships causes more long-term damage than almost any other dynamic. The most honest thing you can offer a friend is clarity about what you can and can\'t afford — not a loan that builds resentment."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow closes Week 2. You\'ve earned, protected a goal, navigated comparison, and made a call about a friend. Tomorrow you find out who you are when the earning is done."'
     },
     5: {
       title:'Day 5 — The Wrap', trait:'All Four Traits — Earning Capstone',
+      miloBrief:'"Two weeks in. Ten decisions on the board. Before the final choice of Week 2 — I want you to think about this: you came in with a number, your starting balance. Everything that happened to that number was a direct result of a choice you made. Not luck. Not the sim. You. That\'s the most important thing about financial literacy — it removes the story that things just happen to you. You happen to money. What you do next is on you."',
+      stanceDebate:{
+        prompt:'Personal audit round. Side A: "My Week 2 financial confidence is higher than Week 1 — I\'m learning." Side B: "I understand my patterns better but I\'m not sure I\'ve actually changed them yet." Which one is honest for you right now?',
+        sides:['CONFIDENCE RISING — earning changed how I think; I\'m making more intentional decisions than I was seven days ago','PATTERNS ARE STUBBORN — knowing what to do and actually doing it are different things; I see my pattern but I\'m still in it'],
+        note:'Both answers show growth. Side B often reflects more sophisticated self-awareness. Validate both.'
+      },
       before:{
         script:'"Last day of Week 2. You\'ve earned this week, protected a goal, navigated comparison, and made a call about a friend. Before devices: on a scale of 1 to 10, how financially confident do you feel right now compared to Day 1 of Week 1? Just hold that number in your head."',
         questions:['What did earning money teach you that spending money can\'t?','How did having a savings goal change the way you thought about every other choice this week?']
       },
       submit:'Students open devices and make their final Week 2 choice.',
+      knowingDoingGap:'"At the start of today you held a confidence number in your head. After ten decisions across two weeks — did your choices reflect the person you said you were? Or did they reveal something different? That gap between self-image and behavior — that\'s data. That\'s your FLIQ profile forming."',
       after:{
         questions:['Did your financial confidence number go up or down compared to Week 1? What moved it?','What\'s one financial habit from this week you\'d actually want to keep in real life?'],
         key:[
@@ -1571,17 +1668,25 @@ const GUIDE_DATA = {
           {pat:'If they gave or shared on the final day:','sig':'Generosity as financial identity — sees money as relational, not just personal. Strong values signal.'},
         ],
         close:'"Week 2 was about understanding that money moves in two directions. Most people only manage the outflow. The ones who build wealth manage both — and they know the difference between earning that costs too much and earning that builds something."'
-      }
+      },
+      tomorrowTeaser:'"Week 3. The real world version. This week we\'re not testing what you know — we\'re testing what you do when the world is trying to take your money professionally. Come back ready."'
     }
   },
   3: {
     1: {
       title:'Day 1 — The Upgrade', trait:'Impulse Control + Risk Awareness',
+      miloBrief:'"The economy you grew up in is built on one idea: what you have right now is not enough. There\'s always a newer version. A better model. An upgrade that makes the current one feel outdated — even though it still works perfectly. I\'m going to be direct with you: that feeling was manufactured. Professionally. By people whose full-time job is to make you feel like what you have is insufficient. Today\'s choice puts you inside that system. Let\'s see what you do."',
+      stanceDebate:{
+        prompt:'Side A: "Upgrading makes sense — newer technology has real functional value and staying current is smart." Side B: "If it works, you don\'t replace it — that\'s a financial principle, not a preference." One minute each. Defend it.',
+        sides:['UPGRADE IS SMART — technology evolves fast; falling behind has real costs, and the net value of an upgrade can be positive','FUNCTION OVER STATUS — the purpose of a thing is to work; replacing working things is marketing, not financial intelligence'],
+        note:'Watch for students who upgrade but can\'t explain the functional benefit — that\'s the IC signal you\'re looking for.'
+      },
       before:{
         script:'"Everything you own right now still works perfectly fine. But there\'s a newer, better version available. Before devices: how often do you upgrade things before they\'re broken? And honestly — why? What\'s actually driving it?"',
         questions:['What\'s the real reason we upgrade things that still work?','If your current version does the job, what are you actually paying for when you upgrade?']
       },
       submit:'Students open devices and make their Day 1 choice.',
+      knowingDoingGap:'"Before the choice your gut said to [upgrade / keep it / sell and upgrade]. After seeing the scenario — what did you actually do? And was your decision about function, or about something else? Name what it was really about."',
       after:{
         questions:['What would change about your spending if you only replaced things when they stopped working?','Who profits when you upgrade things you don\'t need to? Follow that money.'],
         key:[
@@ -1590,15 +1695,23 @@ const GUIDE_DATA = {
           {pat:'If they sold the old one first:','sig':'Sophisticated RA — reduced net cost before committing to the upgrade. The most financially mature response in this scenario.'},
         ],
         close:'"The upgrade economy is worth hundreds of billions annually — built entirely on the psychological gap between want and need. Every upgrade choice is a vote for what you actually value. Today\'s data shows you who\'s voting and why."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow someone is going to tell you that you have to decide right now or you\'ll miss it forever. I\'ll let you in on something: that\'s not an offer. That\'s a tactic."'
     },
     2: {
       title:'Day 2 — The Pressure', trait:'Risk Awareness',
+      miloBrief:'"There\'s a profession called conversion rate optimization. It\'s an entire industry — billions of dollars — dedicated to one thing: figuring out what words, colors, countdown timers, and triggers make you buy something before you\'ve had time to think. Every time you see \'Only 3 left!\' or \'Sale ends at midnight!\' — that\'s not information. That\'s a professionally designed interruption to your decision-making. Today you\'re going to feel it. I want you to notice the feeling — because the feeling is the product."',
+      stanceDebate:{
+        prompt:'Side A: "Urgency deals are often real — waiting costs you money sometimes." Side B: "Urgency is almost always manufactured and the 24-hour rule protects you every single time." Take a position and back it up.',
+        sides:['URGENCY CAN BE REAL — some limited offers are legitimate; always waiting means sometimes missing out on actual value','URGENCY IS A TACTIC — no legitimate offer disappears if you take 24 hours to think; urgency that requires instant action is designed to prevent rational thought'],
+        note:'Side B is empirically better-supported. Let the debate run, then close with the data.'
+      },
       before:{
         script:'"You\'re about to see a tactic used on every single person in this room, every single day. Before devices: what makes you feel like you need to buy something RIGHT NOW, today, before it\'s gone? What does that feeling actually feel like in your body?"',
         questions:['Have you ever bought something because it felt urgent — and then seen it available a week later at the same price?','What\'s the actual goal of "Only 2 left!" or "Sale ends tonight!"?']
       },
       submit:'Students open devices and make their Day 2 choice.',
+      knowingDoingGap:'"Before the choice, you knew this was designed to feel urgent. You had the information. Knowing that — did it still work? If you bought it anyway: what got through your defense? That answer is exactly what the marketing professionals are paid to find — and you just gave it to them for free."',
       after:{
         questions:['Raise your hand if you\'ve ever bought something because of urgency and later regretted it. What would have happened if you had waited 24 hours?','What\'s a personal rule you could make for yourself when something feels urgent?'],
         key:[
@@ -1607,15 +1720,23 @@ const GUIDE_DATA = {
           {pat:'If they paused or researched first:','sig':'Best possible response — interrupted the urgency loop before it could land. Exceptional RA signal.'},
         ],
         close:'"Every \'limited time offer\' is designed by a professional whose only job is to make you feel like you\'ll regret not buying. You can\'t out-feel a professional. But you can out-pause them. Pausing is the entire defense."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow you\'ll face a version of something you\'ve already seen earlier in this program. Same ask, different week. Let\'s find out if your patterns learn from experience."'
     },
     3: {
       title:'Day 3 — The Repeat Ask', trait:'Impulse Control + Resilience',
+      miloBrief:'"Here\'s something I\'ve noticed: the second time someone asks you for something — whether it\'s your time, your money, or your energy — the decision is always harder than the first time. Because now you have history. And history either builds trust or builds data. If someone borrowed from you before and made it right, that\'s trust. If they didn\'t — that\'s data. Today\'s choice asks you which one you\'re working with."',
+      stanceDebate:{
+        prompt:'Side A: "Past behavior is the best predictor of future behavior — history matters in every financial decision involving people." Side B: "Every ask deserves to be evaluated on its own merit, regardless of what happened before." Defend your position.',
+        sides:['HISTORY MATTERS — prior behavior is statistically the strongest predictor available; ignoring it isn\'t generosity, it\'s denial','EACH ASK IS FRESH — holding past failure permanently against someone prevents growth; people can change and the ask deserves an honest look'],
+        note:'Both positions have real merit — the quality of the reasoning matters more than which side they take.'
+      },
       before:{
         script:'"Someone has borrowed from you before. They\'re asking again. Before devices — does their history with you change how you see this ask? Should it? Sit with that for a second before you answer."',
         questions:['What\'s the difference between giving someone a second chance and being taken advantage of?','How do you say no to someone who\'s asked before — without permanently damaging the relationship?']
       },
       submit:'Students open devices and make their Day 3 choice.',
+      knowingDoingGap:'"You came in knowing the history. You said history [should / shouldn\'t] affect the decision. What did you actually do? And if you went against your stated position — what argument did you make to yourself to justify it? Name it out loud."',
       after:{
         questions:['Is there a number of times someone can borrow from you before it changes your relationship with them permanently?','What would you need to hear from someone before you\'d be comfortable lending to them again?'],
         key:[
@@ -1624,32 +1745,48 @@ const GUIDE_DATA = {
           {pat:'If they offered a partial or conditional response:','sig':'Sophisticated — gave something while setting terms. Highest-value RB signal in this scenario.'},
         ],
         close:'"Financial boundaries and personal boundaries are the same skill. The most financially healthy people have both — not because they\'re selfish, but because they understand that a boundary protects both people in the relationship."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow something good is waiting for you — but you have to give up something now to get it. We\'re about to find out how much you actually trust the future."'
     },
     4: {
       title:'Day 4 — The Wait', trait:'Planning Orientation + Resilience',
+      miloBrief:'"There\'s a concept in behavioral economics called hyperbolic discounting. It means: most people value something available today significantly more than the same thing available in the future — even when the future thing is mathematically better. In plain terms: your brain thinks the bird in hand is worth three in the bush, even when the math says otherwise. Today\'s choice is a live test of that. And I want to be upfront: this is one of the hardest things to override in human wiring. Let\'s see what you\'ve got."',
+      stanceDebate:{
+        prompt:'Side A: "A guaranteed future reward is always worth waiting for — the math wins." Side B: "The present moment is real; future rewards can disappear, so taking what you can now is rational self-protection." Take a side.',
+        sides:['WAIT FOR THE BETTER THING — if the reward is guaranteed and larger, the math is clear; impatience is just the feeling, not the right decision','TAKE WHAT\'S NOW — certainty has value that the future can\'t match; a definite thing today beats a probable thing tomorrow'],
+        note:'Listen for students who argue the present-bias side using "but what if it doesn\'t happen" — that\'s the key psychological insight to surface.'
+      },
       before:{
         script:'"Today\'s scenario asks you to give something up right now for a guaranteed payoff later. Before devices — what\'s the longest you\'ve ever waited for something you really wanted? And when you got it, was the wait worth it?"',
         questions:['Why does waiting feel like losing, even when the reward is guaranteed?','What does it take to trust a future payoff more than an immediate one?']
       },
       submit:'Students open devices and make their Day 4 choice.',
+      knowingDoingGap:'"You said the [wait / immediate] was the right call. Here\'s what you actually chose. Now — was that a genuine belief, or did the immediate option just feel more certain in the moment? There\'s a difference between trusting the future and being afraid of it. Which one was driving your choice?"',
       after:{
-        questions:['Who felt almost physically uncomfortable choosing to wait? That\'s a documented biological response — why do you think our brains are wired to want things NOW?','If you could apply the \'wait and get more\' principle to one area of your real life right now, what would it be?'],
+        questions:['Who felt almost physically uncomfortable choosing to wait? That\'s a documented biological response — why do you think our brains are wired to want things NOW?','If you could apply the "wait and get more" principle to one area of your real life right now, what would it be?'],
         key:[
           {pat:'If they waited for the full reward:','sig':'Strong delayed gratification — PO + RB strength. This is one of the most predictive behavioral signals of long-term financial wellbeing.'},
           {pat:'If they took the immediate option:','sig':'Present preference — immediate feels more certain. Extremely common and worth normalizing.'},
           {pat:'If they took partial or a compromise:','sig':'Balanced patience — some delayed gratification, some present orientation. Shows awareness of the trade-off.'},
         ],
         close:'"The ability to delay gratification is the single strongest predictor of financial wellbeing across every income level, age group, and culture studied. It\'s not willpower — it\'s what you believe about the future. Today\'s data tells you who believes."'
-      }
+      },
+      tomorrowTeaser:'"Tomorrow is the last choice of the entire program. Three weeks. Fifteen decisions. One question left: who are you with money — and is that who you want to be?"'
     },
     5: {
       title:'Day 5 — Who Are You With Money?', trait:'All Four Traits — Identity Capstone',
+      miloBrief:'"Last one. I\'ve been in here with you for three weeks. I\'ve watched you spend. I\'ve watched you protect. I\'ve watched you choose peer pressure over savings, goals over temptation, or the reverse. I\'ve watched you face urgency, unexpected costs, opportunities, and repeat asks. Now comes the final question — and it\'s the only one that actually matters: knowing everything you\'ve learned about your pattern... what do you do next? Your FLIQ Score will tell you who you\'ve been. This last choice is the first choice of who you want to become."',
+      stanceDebate:{
+        prompt:'No sides this time — open floor. Go around the room. Everyone gets 10 seconds max. Complete this sentence: "The most important financial habit I\'m leaving this simulation with is..."',
+        sides:['Open floor — no debate, just declarations','Each student names one concrete habit or insight they\'re taking with them'],
+        note:'This replaces debate with commitment. Students who articulate a habit out loud are significantly more likely to apply it. This is the highest-value 5 minutes of the entire program.'
+      },
       before:{
         script:'"Three weeks. Fifteen decisions. Before the final choice — take 60 seconds and think about the pattern across everything you\'ve done. Were you mostly spending or mostly protecting? Mostly reacting or mostly planning? You don\'t have to say it out loud. Just know it."',
         questions:['What kind of money thinker are you right now — and is that who you want to be?','If you could change one pattern from all three weeks, what would it be and why?']
       },
       submit:'Students open devices and make their final choice of the entire program.',
+      knowingDoingGap:'"Fifteen decisions. Before I show you your FLIQ profile — say it out loud: were you mostly a spender, a protector, a planner, or someone who\'s still figuring it out? Hold that self-assessment. Then look at your profile. How close was your self-image to what the data actually shows? That gap — or lack of one — is the final thing this simulation was designed to measure."',
       after:{
         questions:['Did your FLIQ profile surprise you, confirm what you already knew, or challenge something you thought about yourself?','What\'s one decision you\'ll actually make differently in real life because of what you learned about yourself in these three weeks?'],
         key:[
@@ -1658,7 +1795,8 @@ const GUIDE_DATA = {
           {pat:'If they gave, donated, or goal-allocated:','sig':'Values-driven final act — money as a tool, not an end. The rarest and most significant behavioral signal in the entire simulation.'},
         ],
         close:'"The $100 Week was never about $100. It was about the patterns behind every financial decision your students will ever make. Those patterns are theirs. And unlike most things in life — they are completely changeable. That\'s why this data matters. That\'s why you\'re here."'
-      }
+      },
+      tomorrowTeaser: null
     }
   }
 };
@@ -1679,39 +1817,77 @@ function renderGuide() {
   const g = GUIDE_DATA[currentGuideWeek]?.[currentGuideDay];
   if (!g) return;
 
-  // Day pills
   document.getElementById('guideDayPills').innerHTML = [1,2,3,4,5].map(d =>
     `<button class="guide-day-pill${d===currentGuideDay?' active':''}" onclick="setGuideDay(${d})">Day ${d}</button>`
   ).join('');
 
-  // Key rows
   const keyRows = g.after.key.map(k =>
     `<div class="guide-key-row"><strong>${k.pat}</strong> ${k.sig}</div>`
   ).join('');
 
+  const stanceHtml = g.stanceDebate ? `
+    <div class="guide-stance">
+      <div class="guide-stance-label">⚡ The Stance — 5 min</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-bottom:8px;line-height:1.5;">${g.stanceDebate.prompt}</div>
+      <ul class="guide-stance-steps">
+        <li><strong>Side A:</strong> ${g.stanceDebate.sides[0]}</li>
+        <li><strong>Side B:</strong> ${g.stanceDebate.sides[1]}</li>
+        <li><em>${g.stanceDebate.note}</em></li>
+      </ul>
+    </div>` : '';
+
+  const teaserHtml = g.tomorrowTeaser
+    ? `<div class="guide-panel guide-panel-teaser">
+        <div class="guide-panel-label">🔮 Tomorrow's Teaser — 3 min</div>
+        <div class="guide-teaser-text">${g.tomorrowTeaser}</div>
+       </div>`
+    : `<div class="guide-panel guide-panel-closing">
+        <div class="guide-panel-label">🏁 What Comes Next</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.65;">
+          The simulation is complete. Your students' FLIQ Scores are live on this dashboard.<br><br>
+          Share the class report, return to their profiles, or close the session — the data belongs to you.
+          <br><br><strong style="color:var(--gold);">Thank you for bringing the $100 Week™ to your students.</strong>
+        </div>
+       </div>`;
+
   document.getElementById('guideContent').innerHTML = `
     <div class="guide-trait-badge">Trait Focus: ${g.trait}</div>
 
+    <div class="guide-panel guide-panel-milo">
+      <div class="guide-panel-label">🦉 Milo's Daily Brief — 3 min</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(244,178,35,0.5);margin-bottom:8px;">Read aloud to the group</div>
+      <div class="guide-milo-text">${g.miloBrief}</div>
+    </div>
+
     <div class="guide-panel guide-panel-before">
-      <div class="guide-panel-label">⏱ Before the Choice — 10 min</div>
+      <div class="guide-panel-label">⏱ Before the Choice — 8 min</div>
       <div class="guide-script">${g.before.script}</div>
-      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">Discussion Questions</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;margin-top:10px;">Discussion Questions</div>
       <ul class="guide-qs">${g.before.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
+      ${stanceHtml}
     </div>
 
     <div class="guide-panel guide-panel-submit">
-      <div class="guide-panel-label">📱 The Submission — 2 min</div>
+      <div class="guide-panel-label">📱 The Choice — 2 min</div>
       <div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;">${g.submit}</div>
     </div>
 
+    <div class="guide-panel guide-panel-gap">
+      <div class="guide-panel-label">🔍 The Knowing-Doing Gap — 5 min</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(251,146,60,0.5);margin-bottom:8px;">Read aloud — let it land before moving on</div>
+      <div class="guide-gap-prompt">${g.knowingDoingGap}</div>
+    </div>
+
     <div class="guide-panel guide-panel-after">
-      <div class="guide-panel-label">💬 After the Choice — 10 min</div>
-      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">Debrief Questions</div>
+      <div class="guide-panel-label">💬 The Debrief — 10 min</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">Discussion Questions</div>
       <ul class="guide-qs">${g.after.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
       <button class="guide-key-toggle" onclick="toggleKey(this)">▸ Show Behavioral Answer Key</button>
       <div class="guide-key" style="display:none;">${keyRows}</div>
       <div class="guide-close-stmt">${g.after.close}</div>
-    </div>`;
+    </div>
+
+    ${teaserHtml}`;
 }
 
 function toggleKey(btn) {
