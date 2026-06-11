@@ -321,6 +321,10 @@
     .guide-teaser-text { font-size:13px; color:rgba(255,255,255,0.75); line-height:1.7; font-style:italic; }
     .guide-panel-closing { background:rgba(244,178,35,0.06); border:1px solid rgba(244,178,35,0.2); border-left:3px solid var(--gold); }
     .guide-panel-closing .guide-panel-label { color:var(--gold); }
+    .guide-panel-story   { background:linear-gradient(135deg,rgba(27,42,74,0.9),rgba(36,46,103,0.7)); border:1px solid rgba(244,178,35,0.25); border-left:3px solid var(--gold); }
+    .guide-panel-story .guide-panel-label { color:var(--gold); }
+    .guide-panel-warmup  { background:rgba(0,180,216,0.06); border:1px solid rgba(0,180,216,0.2); border-left:3px solid var(--cyan); }
+    .guide-panel-warmup .guide-panel-label { color:var(--cyan); }
     .card-gold-accent {
       border-top: 2px solid var(--gold);
     }
@@ -1418,131 +1422,140 @@ let currentGuideDay  = 1;
 let currentGuideWeek = 1;
 
 const GUIDE_DATA = {
+  // ── WEEK 1: SILENT BASELINE ─────────────────────────────────────────────
+  // No behavioral concepts named to students. Activities are concept-blind.
+  // All answer keys are facilitator-only — hidden until clicked.
+  // FLIQ Scores from Week 1 = clean, uncontaminated behavioral baseline.
   1: {
     1: {
       title:'Day 1 — The Pick', trait:'Impulse Control',
-      miloBrief:'"First day. First choice. Before you make it — I want to ask you something. When you walk into a store with money in your pocket, what\'s the very first thing your brain does? For most people, it starts scanning for something it wants. That scan happens in under two seconds — and by the time you realize it\'s happening, you\'ve already started justifying the purchase. Today\'s choice happens in that two-second window. Let\'s see what you find there."',
-      stanceDebate:{
-        prompt:'Split the room down the middle. Left side: "Spend it — you earned it." Right side: "Wait — protect what you have." Each side has 90 seconds to make their case to the other.',
-        sides:['SPEND IT — you earned it, enjoyment has value, and money is meant to be used','WAIT — protecting your balance gives you options all week; the want will still be there tomorrow'],
-        note:'No right answer — you\'re measuring conviction and reasoning, not outcome. Watch who argues with data vs. who argues with feeling.'
+      characterStory:'Introduce the crew. Read aloud:\n\n"Meet Miller. First day of the program. Somebody just handed him money for the week. He hasn\'t even put it in his pocket yet — and he already knows exactly what he wants to spend it on. He\'s been thinking about it for two days. Sai says wait. Ava says go for it. Macon is already halfway out the door.\n\nToday — Miller decides for himself."\n\n[Pause. Let it sit before moving on.]',
+      warmupActivity:{
+        name:'The $100 List',
+        instructions:'60 seconds, no wrong answers. Every student calls out or writes the first 3 things they\'d buy if someone handed them $100 right now.\n\nGo around the room fast — volume and energy over deliberation. After everyone shares:\n\n"Keep those in your head. No judgment on any of it. That was just the honest version."',
+        facilitatorNote:'[FACILITATOR ONLY] Note: needs vs. wants vs. experiences vs. status items. This is revealed-preference pre-data before any financial choice is made. Do NOT categorize or label out loud.'
       },
-      before:{
-        script:'"Before we open any devices — imagine you just got handed your money for the week. It\'s Day 1. The very first thing you see is something you\'ve been wanting. Before you touch anything — turn to the person next to you and answer this: would you buy it, or would you wait?"',
-        questions:['What\'s the difference between wanting something and needing it?','If you spend big on Day 1, what does that do to the rest of your week?']
+      submit:'Open devices, enter the session code, make Day 1 choice. No hints, no discussion. This window is individual decision time only.',
+      reactionRound:[
+        'What went through your head right before you hit submit? Describe the feeling — not the choice.',
+        'Did anyone almost change their mind at the last second? What almost made you go the other way?',
+        'One word for how you feel about your balance right now.'
+      ],
+      wrapGame:{
+        name:'Advice to Miller',
+        instructions:'"Miller went with his gut on Day 1. One sentence each — without telling me what YOU chose — if Miller asked for your advice right now, what would you tell him?\n\nGo around the room. Fast."',
+        facilitatorNote:'[FACILITATOR ONLY] Students who advise opposite to their own choice are showing IC second-guessing or social desirability. Students whose advice mirrors their choice are showing IC consistency. Note alignment privately — do not comment.'
       },
-      submit:'Have students open the sim, enter the session code, and make their Day 1 choice. No discussion during this window — this is individual decision time.',
-      knowingDoingGap:'"Before you touched the sim, most of you said you\'d [wait / spend]. Now look at what you actually did. If those two things don\'t match — that gap is the most important thing we\'ve learned today. What happened in the space between what you said and what you did?"',
-      after:{
-        questions:['Who went with their first instinct? Did anyone change their mind right before submitting?','What would Day-1-you tell Day-5-you about that choice?'],
-        key:[
-          {pat:'If they spent (bought the item):','sig':'Immediate gratification over planning. Classic IC signal — the want won over the wait.'},
-          {pat:'If they saved or passed:','sig':'Strong impulse control. They paused before acting on the want. This is the IC strength we\'re measuring.'},
-          {pat:'If they chose the third option:','sig':'Creative problem-solving — found a middle path instead of a binary. Early PO signal.'},
-        ],
-        close:'"The first financial decision of any week sets a pattern. Your first choice anchors everything that follows — researchers call it the primacy effect. What you just saw your students do on Day 1 is the most honest data point of the whole week."'
-      },
-      tomorrowTeaser:'"Tomorrow, someone around you is going to spend money. And you\'re going to feel it. Come back ready — because the pull is harder on Day 2."'
+      facilOnlyKey:[
+        {pat:'Spent on Day 1:','sig':'IC signal — immediate gratification priority. The want won over the wait.'},
+        {pat:'Saved or passed:','sig':'IC strength — paused before acting on want.'},
+        {pat:'Chose middle option:','sig':'Early PO signal — found a third path rather than defaulting to the binary choice.'},
+      ],
+      narrativeTeaser:'[Read aloud] "Tomorrow the crew gets an invitation. Sai hasn\'t decided yet whether to go. Come back ready."'
     },
     2: {
       title:'Day 2 — The Pull', trait:'Impulse Control + Planning',
-      miloBrief:'"One thing I\'ve noticed about every person I\'ve ever watched make a financial decision: the hardest ones aren\'t between money and an item. They\'re between money and a feeling. The feeling of belonging. The feeling of not missing out. The feeling of being included. Today\'s choice is about that feeling — not about the money."',
-      stanceDebate:{
-        prompt:'One side of the room: "If your friends are going, you find a way — belonging matters." Other side: "If you can\'t afford it, you stay — no amount of FOMO is worth breaking your budget." 60 seconds each side.',
-        sides:['BELONGING WINS — being present with your people has social and emotional value money can\'t replace','BUDGET WINS — protecting your financial plan is more important than any single social moment'],
-        note:'This debate often gets heated — let it. The emotion in the room mirrors the emotion in the scenario.'
-      },
-      before:{
-        script:'"Raise your hand if you\'ve ever spent money because everyone else was doing something. [Pause.] Keep your hand up if you regretted it later. That\'s today. Before devices — if your five closest friends were going somewhere right now and you only had part of your money left, what goes through your head first: the money, or what they\'ll think of you?"',
-        questions:['Why is peer pressure one of the hardest financial forces to resist — even for adults?','What\'s the difference between choosing to go because YOU want to, versus going because everyone else is?']
+      characterStory:'Read aloud:\n\n"Sai\'s phone has been going off since this morning. The whole crew is doing something after the session. It\'s going to be a whole thing. Sai looked at the balance. Then looked at the messages. Then looked at the balance again.\n\nThe group is waiting for an answer right now."\n\n[Hold the pause. Don\'t fill it.]',
+      warmupActivity:{
+        name:'The Group Map',
+        instructions:'Fast show-of-hands — no setup, no framing. Just questions:\n\n"Raise your hand if you\'ve ever done something just because everyone else was doing it."\n"Keep it up if you were glad you did."\n\n[Pause.]\n\n"Now — raise your hand if you\'ve ever said no to something the whole group was doing."\n"Keep it up if you were glad you said no."\n\nNo debrief. Just let the room see itself. Move straight to the sim.',
+        facilitatorNote:'[FACILITATOR ONLY] Watch faces on "glad I said no" — confidence vs. hesitation here is a live IC signal. Do not comment on what you observe.'
       },
       submit:'Students open devices and make their Day 2 choice silently and independently.',
-      knowingDoingGap:'"Before the scenario you said you\'d [go / stay]. Here\'s what you actually did. Now — be honest: was your decision really about the money? Or was it about the feeling of not being left out? Those are two very different decisions with the same dollar amount attached."',
-      after:{
-        questions:['For those who chose to go — what would you have to give up later this week because of that?','What\'s harder to recover from: missing out with friends, or running low on money before the week ends?'],
-        key:[
-          {pat:'If they spent to join the group:','sig':'Social compliance — chose belonging over financial planning. The most common spending trigger for every age group.'},
-          {pat:'If they stayed and saved:','sig':'Resisted social pressure — strong IC + early PO. This student thinks past the moment.'},
-          {pat:'If they found an alternative:','sig':'Creative social navigation — engaged without full cost. Sophisticated PO signal.'},
-        ],
-        close:'"Peer pressure is the #1 driver of unplanned spending for every age group, including adults. Naming it out loud is the first layer of defense. Your students just experienced it in a controlled environment — that\'s exactly what the data is for."'
+      reactionRound:[
+        'One word for what you felt when you saw today\'s scenario.',
+        'Did today\'s choice feel different from yesterday\'s? How would you describe the difference?',
+        'If you could see what everyone else in this room chose — would that change your answer? Why or why not?'
+      ],
+      wrapGame:{
+        name:'Advice to Sai',
+        instructions:'"Sai is asking the group what to do. One sentence each — what do you tell Sai? Go around the room."\n\nClose with: "Whatever Sai decides — it\'s on Sai. Just like yours was on you."',
+        facilitatorNote:'[FACILITATOR ONLY] Students who give advice opposite to their own choice are showing self-awareness of their tendency — strong IC self-monitoring. Note alignment vs. gap privately.'
       },
-      tomorrowTeaser:'"Tomorrow the week throws something at you that you didn\'t ask for and can\'t control. Let\'s see how you handle it."'
+      facilOnlyKey:[
+        {pat:'Spent to join the group:','sig':'Social compliance — chose belonging over planning. Most common spending trigger across all age groups.'},
+        {pat:'Stayed and saved:','sig':'Resisted social pressure — strong IC + early PO. Thinks past the moment.'},
+        {pat:'Found alternative (partial/creative):','sig':'Creative social navigation. Sophisticated PO signal.'},
+      ],
+      narrativeTeaser:'[Read aloud] "Day 3 — something hits Ava\'s balance out of nowhere. She didn\'t see it coming. Come back tomorrow."'
     },
     3: {
       title:'Day 3 — The Oops', trait:'Resilience & Bounce-Back',
-      miloBrief:'"Something I\'ve learned about money and people: it\'s not the expected costs that reveal who someone is. It\'s the unexpected ones. When something goes wrong that you didn\'t plan for — that\'s when you find out whether you handle problems or avoid them. Two very different paths. Very different futures."',
-      stanceDebate:{
-        prompt:'Side A: "Deal with it right now, whatever it takes — unresolved problems cost more than solved ones." Side B: "Find a smarter way around it — paying full price on demand is not the only option." 60 seconds each.',
-        sides:['HANDLE IT NOW — face the problem directly; avoidance always makes it worse and costs more later','FIND ANOTHER WAY — creative problem-solving under pressure is a strength, not avoidance'],
-        note:'Both sides are legitimate. Listen for reasoning quality — not which side wins.'
+      characterStory:'Read aloud:\n\n"Ava\'s week was going exactly how she planned it. Balance looking good. Two more days left.\n\nThen Wednesday happened. Something showed up that she didn\'t budget for, didn\'t ask for, didn\'t want. It just appeared.\n\nAva took a breath. Then she had to make a call."\n\n[Move directly into the warm-up. No explanation of what\'s coming.]',
+      warmupActivity:{
+        name:'Curveball Cards',
+        instructions:'Read each one out loud. Students rate 1-5 (fingers up) — how stressful is this if it happens to you RIGHT NOW:\n\n• "Your phone screen cracks. Just a crack — still works."\n• "You lose your lunch. It\'s just gone."\n• "Your earbuds die mid-song."\n• "Your shoes get soaked walking in."\n• "You forgot you owe someone $5."\n\nKeep it fast, keep it fun. No financial framing.',
+        facilitatorNote:'[FACILITATOR ONLY] Students who rate minor disruptions 4-5 have lower financial disruption tolerance — predicts RB pattern. Calm 1-2 across the board shows resilience floor. Note — do not comment.'
       },
-      before:{
-        script:'"We\'re in the middle of the week. Take a second to think about where your balance is in the simulation right now. Now — life just threw something at you. An unexpected cost showed up that you didn\'t plan for. Before devices: what\'s your gut reaction when something unexpected takes money from you? Frustration? Acceptance? Problem-solving?"',
-        questions:['What\'s the difference between a financial setback and a financial emergency?','If this happened in real life, what options do you have besides just paying it immediately?']
+      submit:'Students open devices and make their Day 3 choice silently.',
+      reactionRound:[
+        'What was your gut feeling the instant you saw today\'s scenario — before you touched anything?',
+        'Did you feel stressed, calm, or somewhere in between? Be specific if you can.',
+        'Did where your balance was at this point in the week affect how you handled today\'s choice?'
+      ],
+      wrapGame:{
+        name:'Best & Worst',
+        instructions:'"Two things — go around fast:\n1. One decision from your first three days you feel good about.\n2. One moment where you thought \'hmm, maybe not that.\'\n\nNo judgment on either. We\'re just taking inventory."',
+        facilitatorNote:'[FACILITATOR ONLY] Students who can name a "maybe not" are showing self-monitoring — strong RB and IC signal. Students who struggle to name one: either highly confident or low self-awareness. Note which.'
       },
-      submit:'Students open devices and make their Day 3 choice.',
-      knowingDoingGap:'"When this showed up, most of you said your gut said to [handle it / find another way / wait]. What did you actually do? How does your gut feel about that right now? If your choice surprised you — that\'s important data."',
-      after:{
-        questions:['Who felt stressed when they saw this scenario? Why do unexpected costs feel worse than planned costs of the same size?','What\'s one thing you could do differently to be more prepared when something unexpected comes up?'],
-        key:[
-          {pat:'If they addressed it immediately:','sig':'Responsibility-first — dealt with the problem directly. Shows strong RB orientation even if it strained the balance.'},
-          {pat:'If they negotiated or asked for help:','sig':'Creative problem-solving under pressure — the highest-value RB signal. Sought alternatives before just paying.'},
-          {pat:'If they avoided or deferred:','sig':'Short-term relief, long-term risk. Low RB signal — avoidance over adaptation.'},
-        ],
-        close:'"Financial resilience isn\'t about avoiding problems — it\'s about recovery speed. Research shows people with strong bounce-back patterns make better decisions in the 48 hours after a setback than those who avoid the problem. Today you just measured that."'
-      },
-      tomorrowTeaser:'"Tomorrow — an opportunity shows up. It looks good. Maybe it is. Maybe it\'s designed to look that way. Come back with your skepticism turned on."'
+      facilOnlyKey:[
+        {pat:'Addressed immediately:','sig':'Responsibility-first, strong RB — dealt with it directly even if it strained balance.'},
+        {pat:'Negotiated or asked for help:','sig':'Highest-value RB signal — creative problem-solving under pressure.'},
+        {pat:'Avoided or deferred:','sig':'Short-term relief, long-term risk. Low RB — avoidance over adaptation.'},
+      ],
+      narrativeTeaser:'[Read aloud] "Day 4 — Macon hears about something from an older kid. Sounds like a really good deal. Macon hasn\'t decided yet. Come back tomorrow."'
     },
     4: {
       title:'Day 4 — The Deal', trait:'Risk Awareness',
-      miloBrief:'"Here\'s a pattern I\'ve noticed across thousands of financial decisions: the ones that feel exciting — the ones that feel like an opportunity you have to grab RIGHT NOW — those are the ones that deserve the most skepticism. Not because good opportunities don\'t exist. They do. But because excitement is designed to move faster than thinking. Today\'s choice comes with that feeling attached."',
-      stanceDebate:{
-        prompt:'Side A: "If the upside is real, you take calculated risks — playing it safe is also a risk." Side B: "If you don\'t fully understand it, you walk away every single time — period." Defend your position.',
-        sides:['TAKE SMART RISKS — every major financial gain requires accepting some uncertainty; fear of risk is its own kind of loss','WALK AWAY — full understanding before commitment is non-negotiable; if you can\'t explain it, you can\'t afford to own it'],
-        note:'The goal is surface their risk philosophy before the choice — so the gap reveal lands harder.'
+      characterStory:'Read aloud:\n\n"Macon has been hearing about this thing for two days now. An older kid said it\'s easy money. Said a bunch of people are already doing it. Said you\'d be leaving money on the table if you passed.\n\nMacon\'s been thinking about it since breakfast. The question isn\'t whether it sounds good.\n\nThe question is whether it is good."',
+      warmupActivity:{
+        name:'The Pitch Game',
+        instructions:'Ask for 3 volunteers. Each one has 30 seconds to pitch a completely made-up business to the room — the sillier the better. Examples: "rent-a-goldfish delivery," "professional nap consulting."\n\nAfter each pitch, room votes: thumbs up = "I\'d put money in this" / thumbs down = "I wouldn\'t."\n\nKeep it fast, keep it fun. No financial framing.',
+        facilitatorNote:'[FACILITATOR ONLY] Watch how students evaluate — logic/proof-based voting ("but HOW does it make money?") = RA orientation. Excitement/energy-based voting = speculative RA. Pre-signal before the choice. Do not name what you\'re observing.'
       },
-      before:{
-        script:'"Day 4. You\'ve made three decisions this week. Today something different shows up — someone is offering you a deal. A financial opportunity. Before devices: what\'s the very first thing you ask yourself when someone tells you they can make your money grow? What\'s your gut check?"',
-        questions:['What makes a financial opportunity feel legitimate versus suspicious?','What\'s the difference between a risk and a gamble?']
+      submit:'Students open devices and make their Day 4 choice silently.',
+      reactionRound:[
+        'What was the very first thing you asked yourself when you saw today\'s scenario?',
+        'Did you trust the situation right away, or did something feel off? What created that feeling?',
+        'How long did you think before you submitted?'
+      ],
+      wrapGame:{
+        name:'Advice to Macon',
+        instructions:'"Macon is still thinking about that deal. One sentence — what do you tell Macon? Go around the room."\n\nClose with: "Whatever Macon decides — the question Macon asked first is the one that matters most."',
+        facilitatorNote:'[FACILITATOR ONLY] Students who advise caution but chose the deal are showing social desirability or second-guessing. Students whose advice matches their choice are RA-consistent. Note alignment vs. gap.'
       },
-      submit:'Students open devices and make their Day 4 choice.',
-      knowingDoingGap:'"Before the choice, your gut check was [their stated caution or excitement]. You said you\'d [take it / walk away / ask questions first]. Here\'s what you actually did. If you moved faster than you normally would — what got through your defense? That answer is what financial predators are paid to find."',
-      after:{
-        questions:['What information would you need before you\'d feel comfortable with a financial opportunity?','How do you know the difference between being smart and being scared when it comes to risk?'],
-        key:[
-          {pat:'If they took the deal:','sig':'Chose potential upside over certainty — speculative RA signal. Not necessarily wrong, but the reasoning matters.'},
-          {pat:'If they declined:','sig':'Recognized risk or uncertainty and stepped back. Strong RA — protection over potential.'},
-          {pat:'If they asked questions or researched first:','sig':'Best possible response — due diligence before committing. Sophisticated RA + PO signal. This is the pattern that separates informed risk from blind risk.'},
-        ],
-        close:'"The most common financial scams work because they feel exactly like what your students just saw — urgent, profitable, and coming from someone familiar. Pausing to ask questions is the highest-value financial skill. Today\'s data shows you who paused."'
-      },
-      tomorrowTeaser:'"Tomorrow is the end of Week 1. Your pattern is already written. Tomorrow you see what it adds up to — and you get to decide if that\'s who you want to be."'
+      facilOnlyKey:[
+        {pat:'Took the deal:','sig':'Speculative RA — potential upside over certainty. Not wrong; reasoning is the data.'},
+        {pat:'Declined:','sig':'Strong RA — protection over potential. Saw risk or uncertainty and stepped back.'},
+        {pat:'Asked questions or paused before deciding:','sig':'Highest-value response — due diligence before commitment. Sophisticated RA + PO.'},
+      ],
+      narrativeTeaser:'[Read aloud] "Day 5 — last day of the week. Naiya saved almost everything. Brooke-Lynn went for it every single day. Both of them have something to say about it. Come back and find out."'
     },
     5: {
-      title:'Day 5 — The Finish', trait:'All Four Traits — Capstone',
-      miloBrief:'"Five decisions. That\'s what a week is — five choices that either compound into something you\'re proud of, or add up to something you have to recover from. Before the last choice: I\'m not asking what you\'ll do. I\'m asking you to look at the four decisions already behind you and name the pattern. That pattern has a name. And after today — you\'ll know what it is."',
-      stanceDebate:{
-        prompt:'This one is personal. Side A: "My choices this week reflect who I actually want to be." Side B: "My choices this week showed me a pattern I want to change." No fence-sitting — pick a side and explain why.',
-        sides:['MY PATTERN IS MINE — I made intentional choices and I own the outcomes, even the imperfect ones','I SEE A PATTERN TO CHANGE — the sim showed me something about myself I want to work on'],
-        note:'Both are correct answers. The honesty level in this debate predicts how much students will internalize their FLIQ profile.'
+      title:'Day 5 — The Finish', trait:'All Four Traits — Baseline Capstone',
+      characterStory:'Read aloud:\n\n"Last day of Week 1 for the whole crew.\n\nNaiya\'s been careful all week — her balance is the highest in the group. Brooke-Lynn went for it every single day — her balance is the lowest. They\'re sitting next to each other right now.\n\nNeither one says anything. But they\'re both thinking the same thing: \'Was my week worth it?\'\n\nThat\'s the question Day 5 is really asking everyone."',
+      warmupActivity:{
+        name:'The Time Capsule',
+        instructions:'Hand out a small card to every student. They write ONE sentence — privately, not shared:\n\n"One thing I\'d do differently about my Week 1 choices is _____"\n\nCollect the cards. Seal them in an envelope. Write "Open — Week 3, Day 5" on the outside. Place the envelope somewhere visible in the room.\n\nDo NOT discuss the cards. Do NOT read them. Seal the envelope and move on.',
+        facilitatorNote:'[FACILITATOR ONLY] This is pre/post self-awareness data. The Week 3 reveal will show whether their stated intention matched actual behavior. Hold the envelope — you\'ll need it for Week 3 Day 5.'
       },
-      before:{
-        script:'"Last day. Whatever is in your balance right now is the result of four decisions you\'ve made over four days. Some of you have more than you started with. Some have less. Before we open devices — I want one honest answer from everyone: looking back at your four choices this week, are you proud of the pattern?"',
-        questions:['If a financial advisor looked at your choices this week, what would they say your priority is — today, or tomorrow?','What\'s one choice this week you\'d make differently if you could?']
+      submit:'Students open devices and make their final Day 5 choice of Week 1.',
+      reactionRound:[
+        'Was your final balance what you expected — more, less, or exactly right?',
+        'One word for your entire Week 1.',
+        'Without saying what you chose each day: did your week go the way you thought it would? Or did it surprise you?'
+      ],
+      wrapGame:{
+        name:'Profile Prediction',
+        instructions:'"Before we close Week 1 — predict something. In a couple of weeks, you\'re going to get a financial profile based on all your choices. Without any hints from me — write down privately which of these sounds most like you:\n\n💸 Spender — went for what felt right in the moment\n🛡️ Protector — kept the balance safe above all else\n🎲 Risk-Taker — took chances when they showed up\n📋 Planner — thought ahead before deciding\n\nFold it. Keep it. We\'ll come back to it."',
+        facilitatorNote:'[FACILITATOR ONLY] Students who accurately predict their eventual FLIQ profile show strong self-awareness — itself a behavioral signal. The gap between prediction and actual profile is a powerful Week 3 debrief anchor. Keep mental note.'
       },
-      submit:'Students open devices and make their final Day 5 choice.',
-      knowingDoingGap:'"Look at your full week. Your first instinct on Day 1 — did it hold? Did you drift toward spending, protecting, or something in between? Name the pattern before we name it for you. Your FLIQ score is about to confirm or challenge what you\'re thinking."',
-      after:{
-        questions:['Did your final balance surprise you? Why or why not?','If your choices this week reflected your values — what did they say about what you value most?'],
-        key:[
-          {pat:'If they spent their remaining balance:','sig':'Spend-forward orientation — present bias on the final day. IC signal worth discussing.'},
-          {pat:'If they saved what was left:','sig':'Protection orientation — chose to finish strong. PO + IC strength.'},
-          {pat:'If they gave, shared, or allocated to a goal:','sig':'Values-driven choice — sees money as a tool. High PO + intentional RB. Rare and significant.'},
-        ],
-        close:'"The five choices made this week are the same five choices your students will face in real life. The amounts change. The pressure types don\'t. The behavioral patterns you just collected — that\'s the data that matters."'
-      },
-      tomorrowTeaser:'"Week 2 is different. You\'re not just spending money — you\'re earning it. And earning reveals something spending never can. Come back ready to understand what a dollar actually costs to make."'
+      facilOnlyKey:[
+        {pat:'Spent remaining balance:','sig':'Spend-forward, present bias on final day. IC signal — track into Weeks 2 and 3.'},
+        {pat:'Saved what was left:','sig':'Protection orientation — finished strong. PO + IC baseline strength.'},
+        {pat:'Gave, shared, or goal-allocated:','sig':'Values-driven choice — money as a tool. High PO + intentional RB. Rare even in baseline week.'},
+      ],
+      narrativeTeaser:'[Read aloud] "Week 2 starts next session. The crew isn\'t just spending this time — they\'re earning. And earning changes everything. Come back ready."'
     }
   },
   2: {
@@ -1821,6 +1834,71 @@ function renderGuide() {
     `<button class="guide-day-pill${d===currentGuideDay?' active':''}" onclick="setGuideDay(${d})">Day ${d}</button>`
   ).join('');
 
+  // ── Week 1: Silent Baseline format ───────────────────────────────────────
+  if (currentGuideWeek === 1) {
+    const keyRows = (g.facilOnlyKey||[]).map(k =>
+      `<div class="guide-key-row"><strong>${k.pat}</strong> ${k.sig}</div>`
+    ).join('');
+
+    const storyLines = g.characterStory.replace(/\n/g,'<br>');
+    const warmupLines = g.warmupActivity.instructions.replace(/\n/g,'<br>');
+    const teaserHtml = g.narrativeTeaser
+      ? `<div class="guide-panel guide-panel-teaser">
+          <div class="guide-panel-label">🌅 Tomorrow's Story — 2 min</div>
+          <div class="guide-teaser-text">${g.narrativeTeaser}</div>
+         </div>` : '';
+
+    document.getElementById('guideContent').innerHTML = `
+      <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <div class="guide-trait-badge">Week 1 — Baseline Week</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(251,146,60,0.7);padding:3px 9px;border-radius:20px;background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.2);">No Concepts Revealed to Students</div>
+      </div>
+
+      <div class="guide-panel guide-panel-story">
+        <div class="guide-panel-label">🎭 Character Story — 3 min</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(244,178,35,0.5);margin-bottom:8px;">Read aloud to the group</div>
+        <div class="guide-milo-text">${storyLines}</div>
+      </div>
+
+      <div class="guide-panel guide-panel-warmup">
+        <div class="guide-panel-label">🎮 ${g.warmupActivity.name} — 8 min</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.7;">${warmupLines}</div>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.15);border-radius:8px;font-size:11px;color:rgba(251,146,60,0.8);">
+          <strong>Facilitator Note:</strong> ${g.warmupActivity.facilitatorNote}
+        </div>
+      </div>
+
+      <div class="guide-panel guide-panel-submit">
+        <div class="guide-panel-label">📱 The Choice — 2 min</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;">${g.submit}</div>
+      </div>
+
+      <div class="guide-panel guide-panel-after">
+        <div class="guide-panel-label">💬 Reaction Round — 7 min</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">Open questions — feelings and observations only. No right/wrong framing.</div>
+        <ul class="guide-qs">${(g.reactionRound||[]).map(q=>`<li>${q}</li>`).join('')}</ul>
+      </div>
+
+      <div class="guide-panel guide-panel-before">
+        <div class="guide-panel-label">🎯 ${g.wrapGame.name} — 6 min</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.7;">${g.wrapGame.instructions.replace(/\n/g,'<br>')}</div>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.15);border-radius:8px;font-size:11px;color:rgba(251,146,60,0.8);">
+          <strong>Facilitator Note:</strong> ${g.wrapGame.facilitatorNote}
+        </div>
+      </div>
+
+      <div class="guide-panel" style="border:1px solid rgba(139,92,246,0.15);background:rgba(139,92,246,0.04);">
+        <div class="guide-panel-label" style="color:rgba(139,92,246,0.7);">🔒 Behavioral Answer Key — Facilitator Only</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px;">Not shared with students. Used for your private observation during the session.</div>
+        <button class="guide-key-toggle" onclick="toggleKey(this)">▸ Show Answer Key</button>
+        <div class="guide-key" style="display:none;">${keyRows}</div>
+      </div>
+
+      ${teaserHtml}`;
+    return;
+  }
+
+  // ── Weeks 2 & 3: Full 30-minute episode format ───────────────────────────
   const keyRows = g.after.key.map(k =>
     `<div class="guide-key-row"><strong>${k.pat}</strong> ${k.sig}</div>`
   ).join('');
