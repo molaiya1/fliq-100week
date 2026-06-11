@@ -491,10 +491,6 @@
     .ch-cost { font-size:15px; font-weight:900; color:rgba(255,255,255,0.92); }
     .ch-cost.spend,.ch-cost.save,.ch-cost.risk { color:rgba(255,255,255,0.92); }
     .ch-cost.earn { color:#4ADE80; }
-    .ch-after-bal { font-size:10.5px; font-weight:600; margin-top:6px; padding:4px 8px; border-radius:8px; text-align:center; }
-    .after-bal-good { background:rgba(74,222,128,0.15); color:#4ADE80; }
-    .after-bal-ok   { background:rgba(251,191,36,0.15);  color:#FBBF24; }
-    .after-bal-low  { background:rgba(239,68,68,0.15);   color:#F87171; }
     /* Mood labels hidden — no judgment cues on choices */
     .mood-label { display:none; }
 
@@ -2698,14 +2694,7 @@ function renderSim(){
   const bs  = balStatus(S.balance);
   const dayNames=['Monday','Tuesday','Wednesday','Thursday','Friday'];
 
-  const choicesHtml = sc.choices.map((c,i)=>{
-    const afterBal = Math.max(0, S.balance - c.cost);
-    const afterPct = Math.round((afterBal / SB) * 100);
-    const afterCls = afterPct >= 60 ? 'after-bal-good' : afterPct >= 30 ? 'after-bal-ok' : 'after-bal-low';
-    const afterLine = c.cost > 0
-      ? `<div class="ch-after-bal ${afterCls}">You'd have: <strong>$${afterBal}</strong> left</div>`
-      : `<div class="ch-after-bal after-bal-good">Balance stays: <strong>$${afterBal}</strong></div>`;
-    return `
+  const choicesHtml = sc.choices.map((c,i)=>`
     <button class="choice-card ${c.cardCls}" id="cc${i}" onclick="makeChoice(${i})">
       <div class="choice-card-top">
         <div class="ch-badge ${c.badgeCls}">${c.l}</div>
@@ -2717,9 +2706,7 @@ function renderSim(){
         <span class="ch-cost ${c.costCls}">${c.costLbl}</span>
         <span class="mood-label ${c.moodCls}">${c.moodEmoji} ${c.moodLbl}</span>
       </div>
-      ${afterLine}
-    </button>`;
-  }).join('');
+    </button>`).join('');
 
   const visBadgeHtml = sc.visBadge
     ? `<div class="sc-vis-badge">${sc.visBadge.replace('\n','<br>')}</div>` : '';
