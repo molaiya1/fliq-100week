@@ -685,8 +685,10 @@
       align-items: flex-end;
       gap: 16px;
       height: 100px;
+      padding-top: 28px;
       padding-bottom: 2px;
       margin-bottom: 12px;
+      box-sizing: content-box;
     }
     .band-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .band-bar {
@@ -1065,7 +1067,7 @@
       <button class="btn btn-ghost" onclick="forceRefresh()">↻ Refresh</button>
     </div>
     <p style="text-align:center;font-size:11px;color:var(--text-dim);margin-top:10px;font-weight:500">
-      Report unlocks after at least 1 student completes the simulation.
+      Report unlocks after 5 or more students complete the simulation.
     </p>
 
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);text-align:center">
@@ -1124,6 +1126,18 @@
     <div class="card">
       <div class="section-label">Profile Distribution</div>
       <ul class="label-list" id="labelList"></ul>
+    </div>
+
+    <!-- CTA -->
+    <div class="card" style="background:linear-gradient(135deg,rgba(27,60,136,0.55) 0%,rgba(15,27,53,0.7) 100%);border-color:rgba(244,178,35,0.35);text-align:center;padding:28px 24px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">What's Next for Your Students</div>
+      <div style="font-size:20px;font-weight:800;color:white;margin-bottom:10px;line-height:1.3;">Your class just completed Week 1.<br>The full Financial Foundations™ curriculum goes deeper.</div>
+      <p style="font-size:13px;color:var(--text-mid);margin:0 0 20px;max-width:480px;margin-left:auto;margin-right:auto;">Financial Foundations™ is a structured 10-week curriculum built on your class's FLIQ Score™ data — targeting the exact pressure points your students showed. Available for Fall 2026.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="mailto:michael@versassists.com?subject=FF%20Curriculum%20Interest%20-%20%24100%20Week%20Pilot&body=Hi%2C%20I%20just%20completed%20The%20%24100%20Week%20pilot%20and%20would%20like%20to%20learn%20more%20about%20the%20Financial%20Foundations%20curriculum." style="display:inline-block;padding:13px 24px;background:linear-gradient(135deg,#F4B223,#d9960f);border-radius:12px;color:#1F3C88;font-weight:800;font-size:14px;text-decoration:none;">Request Full Curriculum Info →</a>
+        <a href="https://wealthwisekids.org" target="_blank" style="display:inline-block;padding:13px 24px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:12px;color:white;font-weight:700;font-size:14px;text-decoration:none;">Learn More About WWK</a>
+      </div>
+      <p style="font-size:10px;color:var(--text-dim);margin:16px 0 0;">WealthWise Kids™ · michael@versassists.com · wealthwisekids.org</p>
     </div>
 
     <div class="btn-row">
@@ -1255,6 +1269,9 @@ function updateStatusUI({ enrolled = 0, completed = 0, in_progress = 0 }) {
   if (completed === 0 && in_progress === 0) {
     document.getElementById('progressHeadline').textContent = 'Waiting for students to join…';
     document.getElementById('progressDetail').textContent  = 'Share the join code or link above.';
+  } else if (completed < 5) {
+    document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} finished`;
+    document.getElementById('progressDetail').textContent  = `${in_progress} in progress. Report unlocks at 5 completions.`;
   } else {
     document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} completed`;
     document.getElementById('progressDetail').textContent  = `${in_progress} still in progress. Your class report is ready.`;
