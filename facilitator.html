@@ -87,29 +87,24 @@
     .topbar-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
     }
-    .topbar-logo {
-      width: 48px;
-      height: auto;
-      display: block;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
-    }
-    .topbar-name {
+    .topbar-wordmark {
       display: flex;
       flex-direction: column;
-      line-height: 1.1;
+      line-height: 1.15;
+      padding-left: 12px;
+      border-left: 3px solid var(--gold);
     }
-    .topbar-name .brand-main {
-      font-size: 14px;
+    .topbar-wordmark .brand-main {
+      font-size: 15px;
       font-weight: 800;
       color: var(--white);
       letter-spacing: -0.3px;
     }
-    .topbar-name .brand-sub {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
+    .topbar-wordmark .brand-sub {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--cyan);
     }
@@ -891,8 +886,7 @@
 <!-- ── Top Navigation Bar ── -->
 <nav class="topbar">
   <div class="topbar-brand">
-    <img src="./milo.png" alt="Milo" class="topbar-logo" />
-    <div class="topbar-name">
+    <div class="topbar-wordmark">
       <span class="brand-main">WealthWise Kids™</span>
       <span class="brand-sub">FLIQ Score™ Platform</span>
     </div>
