@@ -1045,6 +1045,9 @@
         <div class="live-dot"></div>
         Auto-refreshing every 20 seconds
       </div>
+      <div style="margin-top:10px;text-align:center;font-size:11px;">
+        <a id="resumeLink" href="#" style="color:var(--gold);opacity:0.7;text-decoration:underline;font-weight:500;">Bookmark this page to return to your session</a>
+      </div>
     </div>
 
     <div class="btn-row">
@@ -1208,6 +1211,8 @@ async function createCohort() {
     joinCode  = data.code;
     document.getElementById('displayCode').textContent = joinCode;
     document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+    saveSession();
+    updateResumeLink();
     goToScreen('launch');
   } catch (err) {
     toast('Error: ' + err.message);
@@ -1389,6 +1394,7 @@ async function resetSession() {
   }
   cohortId = null;
   joinCode  = null;
+  clearSavedSession();
   document.getElementById('facilName').value   = '';
   document.getElementById('cohortName').value  = '';
   document.getElementById('gradeBand').value   = '';
@@ -1418,15 +1424,45 @@ function copyUrl() {
   });
 }
 
-// ── Resume from URL ────────────────────────────────────────────────────────
+// ── Session persistence (localStorage) ────────────────────────────────────
+const LS_KEY = 'fliq_facilitator_session';
+
+function saveSession() {
+  if (cohortId && joinCode) {
+    localStorage.setItem(LS_KEY, JSON.stringify({ cohortId, joinCode }));
+  }
+}
+
+function clearSavedSession() {
+  localStorage.removeItem(LS_KEY);
+}
+
+function updateResumeLink() {
+  const url = `${window.location.origin}${window.location.pathname}?cohort=${cohortId}&code=${joinCode}`;
+  const el = document.getElementById('resumeLink');
+  if (el) { el.href = url; el.textContent = 'Bookmark this page to return to your session'; }
+}
+
+// ── Resume from URL or localStorage ───────────────────────────────────────
 (function() {
   const p = new URLSearchParams(window.location.search);
   const cid = p.get('cohort'), code = p.get('code');
   if (cid && code) {
     cohortId = cid; joinCode = code;
-    document.getElementById('displayCode').textContent = code;
-    document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + code;
+  } else {
+    try {
+      const saved = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+      if (saved && saved.cohortId && saved.joinCode) {
+        cohortId = saved.cohortId; joinCode = saved.joinCode;
+      }
+    } catch (e) {}
+  }
+  if (cohortId && joinCode) {
+    document.getElementById('displayCode').textContent = joinCode;
+    document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+    updateResumeLink();
     goToScreen('launch');
+    startPolling();
   }
 })();
 </script>
