@@ -1006,6 +1006,12 @@
     <div class="card card-gold-accent">
       <div class="section-label gold">Step 2 — Share With Your Students</div>
 
+      <div id="sessionNameDisplay" style="display:none;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px;">Active Session</div>
+        <div id="sessionNameText" style="font-size:20px;font-weight:800;color:#fff;line-height:1.2;"></div>
+        <div id="sessionFacilText" style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:3px;"></div>
+      </div>
+
       <div class="code-card">
         <div class="code-eyebrow">Class Join Code</div>
         <div class="join-code" id="displayCode">––––</div>
@@ -1305,6 +1311,10 @@ async function createCohort() {
     const wkLabels = {1:'Week 1 — The Basics', 2:'Week 2 — Earning & Goals', 3:'Week 3 — The Long Game'};
     const wb = document.getElementById('weekBadge');
     if (wb) { wb.textContent = wkLabels[weekNumber] || ('Week ' + weekNumber); wb.style.display = 'block'; }
+    const snd = document.getElementById('sessionNameDisplay');
+    const snt = document.getElementById('sessionNameText');
+    const sft = document.getElementById('sessionFacilText');
+    if (snd && snt) { snt.textContent = cohortName; sft.textContent = facilName ? 'Facilitator: ' + facilName : ''; snd.style.display = 'block'; }
     document.getElementById('displayCode').textContent = joinCode;
     document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
     saveSession();
@@ -1559,6 +1569,8 @@ async function resetSession() {
   document.getElementById('classSize').value   = '';
   const wb = document.getElementById('weekBadge');
   if (wb) { wb.textContent = ''; wb.style.display = 'none'; }
+  const snd = document.getElementById('sessionNameDisplay');
+  if (snd) snd.style.display = 'none';
   document.getElementById('btnCreate').disabled    = false;
   document.getElementById('btnCreate').textContent = 'Create Session & Get Join Code →';
   document.getElementById('btnReport').disabled    = true;
