@@ -1119,10 +1119,11 @@
     <!-- Trait averages -->
     <div class="card">
       <div class="section-label">Behavioral Trait Averages</div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0 0 16px;line-height:1.5;">The FLIQ Score™ framework measures four behavioral domains — each scored 0–2 based on how students responded to financial pressure in the simulation. These are not academic grades. They reflect decision-making tendencies.</p>
       <div id="traitBars"></div>
       <div class="info-strip info-blue" style="margin-top:16px;margin-bottom:0">
         <span class="info-strip-icon">💡</span>
-        <span>Each trait is scored 0–2. Class averages above 1.5 indicate strength. Below 1.0 suggests a pressure point worth addressing in your next session.</span>
+        <span><strong>Reading these scores:</strong> 1.5–2.0 = Strength · 1.0–1.4 = Building · Below 1.0 = Focus Area. First-session scores in the Emerging range are normal — the value is in the pattern across all four traits.</span>
       </div>
     </div>
 
@@ -1369,79 +1370,135 @@ function traitColor(v) {
   return 'linear-gradient(90deg, #7A8FA6, #5A6E82)';
 }
 
+// ── Trait-specific facilitation insights ───────────────────────────────────
+const TRAIT_INSIGHTS = {
+  ic: {
+    headline: 'Impulse Control is your class\'s growth edge.',
+    advice: 'Students are making fast decisions without pausing to evaluate options. Try a "stop and think" warm-up before financial scenarios — ask students to name one consequence before they choose.',
+  },
+  po: {
+    headline: 'Planning Orientation is your class\'s growth edge.',
+    advice: 'Students are responding to immediate needs without thinking ahead. Try a short "future self" exercise — have students describe one financial goal 30 days from now before making any spending decision.',
+  },
+  ra: {
+    headline: 'Risk Awareness is your class\'s growth edge.',
+    advice: 'Students are accepting or avoiding risk without evaluating it. Use a simple "best case / worst case" framework in your next session — ask students to name both before any choice that involves uncertainty.',
+  },
+  rb: {
+    headline: 'Resilience & Bounce-Back is your class\'s growth edge.',
+    advice: 'Students struggled to adjust after setbacks in the simulation. Dedicate time to reframing financial mistakes as data, not failure — try a "what would I do differently?" reflection after each scenario.',
+  },
+};
+
+// ── Score level label ───────────────────────────────────────────────────────
+function fliqScoreContext(score) {
+  if (score >= 6.5) return { label: 'Strong', note: 'Your class is demonstrating advanced financial decision-making behaviors for this age group.' };
+  if (score >= 4.5) return { label: 'Developing', note: 'Your class is building core financial behaviors. Targeted practice will move these scores meaningfully.' };
+  if (score >= 2.5) return { label: 'Emerging', note: 'Early-stage financial behavior patterns. This is a normal starting point — the data tells you exactly where to focus.' };
+  return { label: 'Baseline', note: 'First-session scores at this level are common and expected. This report is your starting line, not a grade.' };
+}
+
 // ── Render Report ──────────────────────────────────────────────────────────
 function renderReport(data) {
   const { completed_count = 0, enrolled = 0, class_fliq_score = 0,
           trait_averages = {}, label_distribution = {},
           score_bands = {}, weakest_trait } = data;
 
-  // Metrics
+  const scoreCtx = fliqScoreContext(class_fliq_score || 0);
+
+  // Metrics — replace "Behavioral Readiness %" with contextualized score level
   const grid = document.getElementById('metricGrid');
   const metrics = [
-    { icon:'👥', value: completed_count, label:'Completed' },
+    { icon:'👥', value: completed_count, label:'Students Completed' },
     { icon:'⚡', value: (class_fliq_score||0).toFixed(1)+'/8', label:'Class FLIQ Score™' },
     { icon:'📊', value: enrolled, label:'Enrolled' },
-    { icon:'🎯', value: Math.round(((class_fliq_score||0)/8)*100)+'%', label:'Behavioral Readiness' },
+    { icon:'🎯', value: scoreCtx.label, label:'Score Level' },
   ];
   grid.innerHTML = metrics.map(m => `
     <div class="metric-card">
       <div class="metric-icon">${m.icon}</div>
-      <div class="metric-value">${m.value}</div>
+      <div class="metric-value" style="font-size:${m.label==='Score Level'?'18px':''};">${m.value}</div>
       <div class="metric-label">${m.label}</div>
     </div>`).join('');
 
-  // Insight
-  if (weakest_trait && weakest_trait.avg < 1.2) {
-    document.getElementById('insightCard').classList.add('show');
-    document.getElementById('insightText').textContent =
-      `Your class's pressure point is ${weakest_trait.label} (avg ${weakest_trait.avg}/2). `+
-      `Consider dedicating your next session to practicing pause-before-you-act strategies.`;
+  // Score context note under the metric grid
+  const existingNote = document.getElementById('scoreContextNote');
+  if (!existingNote) {
+    const note = document.createElement('p');
+    note.id = 'scoreContextNote';
+    note.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.5);margin:10px 0 0;line-height:1.5;font-style:italic;';
+    note.textContent = scoreCtx.note;
+    document.getElementById('metricGrid').insertAdjacentElement('afterend', note);
   }
 
-  // Score bands
-  const bandColors = ['band-bar-low','band-bar-dev','band-bar-prof','band-bar-adv'];
+  // Insight — trait-specific, always shows for weakest trait
+  if (weakest_trait) {
+    const insightData = TRAIT_INSIGHTS[weakest_trait.key] || TRAIT_INSIGHTS.ic;
+    document.getElementById('insightCard').classList.add('show');
+    document.getElementById('insightText').innerHTML =
+      `<strong>${insightData.headline}</strong><br><br>${insightData.advice}` +
+      `<br><br><span style="font-size:11px;opacity:0.6;">Class average: ${weakest_trait.avg.toFixed(1)}/2 · Scores below 1.0 indicate a meaningful pressure point worth addressing.</span>`;
+  }
+
+  // Score bands — show range in label
+  const bandMeta = [
+    { cls:'band-bar-low',  range:'0–2' },
+    { cls:'band-bar-dev',  range:'3–4' },
+    { cls:'band-bar-prof', range:'5–6' },
+    { cls:'band-bar-adv',  range:'7–8' },
+  ];
   const bandEl = document.getElementById('bandChart');
   const maxBand = Math.max(1, ...Object.values(score_bands));
   bandEl.innerHTML = Object.entries(score_bands).map(([lbl, cnt], i) => {
-    const h = Math.max(4, Math.round((cnt / maxBand) * 86));
+    const h  = Math.max(4, Math.round((cnt / maxBand) * 86));
+    const bm = bandMeta[i] || bandMeta[0];
     return `<div class="band-col">
       <div class="band-num">${cnt}</div>
-      <div class="band-bar ${bandColors[i]||'band-bar-prof'}" style="height:${h}px"></div>
+      <div class="band-bar ${bm.cls}" style="height:${h}px"></div>
       <div class="band-label">${lbl.split(' ')[0]}</div>
+      <div style="font-size:8px;color:rgba(255,255,255,0.3);margin-top:2px;">${bm.range}</div>
     </div>`;
   }).join('');
 
-  // Trait bars
+  // Trait bars — add strength/focus tag next to each score
   const traitIcons = { ic:'🧘', po:'📅', ra:'👁️', rb:'💪' };
   const traitMap = [
-    { key:'ic', label:'Impulse Control' },
-    { key:'po', label:'Planning Orientation' },
-    { key:'ra', label:'Risk Awareness' },
-    { key:'rb', label:'Resilience & Bounce-Back' },
+    { key:'ic', label:'Impulse Control',        desc:'Can students pause before reacting to financial pressure?' },
+    { key:'po', label:'Planning Orientation',    desc:'Do students think ahead when making financial decisions?' },
+    { key:'ra', label:'Risk Awareness',          desc:'Can students identify and weigh risk before choosing?' },
+    { key:'rb', label:'Resilience & Bounce-Back',desc:'Do students adapt and recover after a financial setback?' },
   ];
-  document.getElementById('traitBars').innerHTML = traitMap.map(({ key, label }) => {
+  document.getElementById('traitBars').innerHTML = traitMap.map(({ key, label, desc }) => {
     const avg = (trait_averages[key] || 0);
     const pct = (avg / 2) * 100;
-    return `<div class="trait-row">
+    const tag = avg >= 1.5 ? ['Strength', '#22C55E'] : avg >= 1.0 ? ['Building', '#F59E0B'] : ['Focus Area', '#EF4444'];
+    return `<div class="trait-row" style="flex-wrap:wrap;gap:4px;">
       <div class="trait-icon">${traitIcons[key]}</div>
-      <div class="trait-name">${label}</div>
-      <div class="trait-bar-wrap">
-        <div class="trait-bar-fill" style="width:${pct}%;background:${traitColor(avg)}"></div>
+      <div class="trait-name" style="flex:1;min-width:120px;">
+        ${label}
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:400;margin-top:2px;">${desc}</div>
       </div>
-      <div class="trait-score-wrap">
-        <span class="trait-score">${avg.toFixed(1)}</span>
-        <span class="trait-max">/2</span>
+      <div style="display:flex;align-items:center;gap:8px;width:100%;padding-left:44px;">
+        <div class="trait-bar-wrap" style="flex:1;">
+          <div class="trait-bar-fill" style="width:${pct}%;background:${traitColor(avg)}"></div>
+        </div>
+        <div class="trait-score-wrap">
+          <span class="trait-score">${avg.toFixed(1)}</span>
+          <span class="trait-max">/2</span>
+        </div>
+        <span style="font-size:10px;font-weight:700;color:${tag[1]};background:${tag[1]}22;padding:2px 7px;border-radius:20px;white-space:nowrap;">${tag[0]}</span>
       </div>
     </div>`;
   }).join('');
 
-  // Labels
+  // Profile labels — add "X of Y students" denominator
   const entries = Object.entries(label_distribution).sort((a,b) => b[1]-a[1]);
   const maxLbl  = Math.max(1, ...entries.map(e => e[1]));
   document.getElementById('labelList').innerHTML = entries.map(([lbl, cnt]) => {
     const m   = getLbl(lbl);
     const pct = (cnt / maxLbl) * 100;
     const bg  = m.color + '22';
+    const ofTotal = completed_count > 0 ? ` of ${completed_count}` : '';
     return `<li class="label-item">
       <div class="label-dot" style="background:${m.color}"></div>
       <div class="label-emoji">${m.emoji}</div>
@@ -1452,7 +1509,7 @@ function renderReport(data) {
       <div class="label-bar-wrap">
         <div class="label-bar-fill" style="width:${pct}%;background:${m.color}"></div>
       </div>
-      <div class="label-badge" style="background:${bg};color:${m.color}">${cnt}</div>
+      <div class="label-badge" style="background:${bg};color:${m.color};white-space:nowrap;">${cnt}${ofTotal}</div>
     </li>`;
   }).join('');
 }
