@@ -969,6 +969,10 @@
           <label class="form-label">Organization <span style="color:rgba(255,255,255,0.25);font-weight:400">(optional)</span></label>
           <input class="form-input" type="text" id="orgName" placeholder="e.g. Star-C Community Programs" />
         </div>
+        <div class="form-group full">
+          <label class="form-label">Session PIN <span style="color:rgba(255,255,255,0.25);font-weight:400">(4 digits — keeps students out of this dashboard)</span></label>
+          <input class="form-input" type="password" id="facilPin" placeholder="e.g. 4821" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" />
+        </div>
       </div>
 
       <button class="btn btn-primary" id="btnCreate" onclick="createCohort()">
@@ -1129,15 +1133,40 @@
     </div>
 
     <!-- CTA -->
-    <div class="card" style="background:linear-gradient(135deg,rgba(27,60,136,0.55) 0%,rgba(15,27,53,0.7) 100%);border-color:rgba(244,178,35,0.35);text-align:center;padding:28px 24px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">What's Next for Your Students</div>
-      <div style="font-size:20px;font-weight:800;color:white;margin-bottom:10px;line-height:1.3;">Your class just completed Week 1.<br>The full Financial Foundations™ curriculum goes deeper.</div>
-      <p style="font-size:13px;color:var(--text-mid);margin:0 0 20px;max-width:480px;margin-left:auto;margin-right:auto;">Financial Foundations™ is a structured 10-week curriculum built on your class's FLIQ Score™ data — targeting the exact pressure points your students showed. Available for Fall 2026.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <a href="mailto:michael@versassists.com?subject=FF%20Curriculum%20Interest%20-%20%24100%20Week%20Pilot&body=Hi%2C%20I%20just%20completed%20The%20%24100%20Week%20pilot%20and%20would%20like%20to%20learn%20more%20about%20the%20Financial%20Foundations%20curriculum." style="display:inline-block;padding:13px 24px;background:linear-gradient(135deg,#F4B223,#d9960f);border-radius:12px;color:#1F3C88;font-weight:800;font-size:14px;text-decoration:none;">Request Full Curriculum Info →</a>
-        <a href="https://wealthwisekids.org" target="_blank" style="display:inline-block;padding:13px 24px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:12px;color:white;font-weight:700;font-size:14px;text-decoration:none;">Learn More About WWK</a>
+    <div class="card" style="background:linear-gradient(135deg,rgba(27,60,136,0.55) 0%,rgba(15,27,53,0.7) 100%);border-color:rgba(244,178,35,0.35);padding:28px 24px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;text-align:center;">Your Students Just Got Started</div>
+      <div style="font-size:19px;font-weight:800;color:white;margin-bottom:8px;line-height:1.3;text-align:center;">The $100 Week™ is one piece of a complete financial learning ecosystem.</div>
+      <p style="font-size:13px;color:var(--text-mid);margin:0 0 24px;text-align:center;">WealthWise Kids™ builds financial behavior — not just financial literacy. Every product below connects to your students' FLIQ Score™ data.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
+          <div style="font-size:18px;margin-bottom:6px;">📚</div>
+          <div style="font-size:13px;font-weight:800;color:white;margin-bottom:4px;">Financial Foundations™</div>
+          <div style="font-size:11px;color:var(--text-mid);line-height:1.5;">Structured 10-week curriculum mapped to your class's exact FLIQ pressure points. Available Fall 2026.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
+          <div style="font-size:18px;margin-bottom:6px;">🏦</div>
+          <div style="font-size:13px;font-weight:800;color:white;margin-bottom:4px;">CoinQuest™</div>
+          <div style="font-size:11px;color:var(--text-mid);line-height:1.5;">A simulated digital banking app where students save, spend, and invest with virtual money — building real habits.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
+          <div style="font-size:18px;margin-bottom:6px;">🎮</div>
+          <div style="font-size:13px;font-weight:800;color:white;margin-bottom:4px;">WWK PlayLabs™</div>
+          <div style="font-size:11px;color:var(--text-mid);line-height:1.5;">Game-based financial simulations including FLIQ Runner™ — play-to-learn experiences that reinforce classroom concepts.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
+          <div style="font-size:18px;margin-bottom:6px;">📖</div>
+          <div style="font-size:13px;font-weight:800;color:white;margin-bottom:4px;">WWK Adventures™</div>
+          <div style="font-size:11px;color:var(--text-mid);line-height:1.5;">Story-driven experiences where the Crew characters navigate real financial decisions — connecting narrative to behavior.</div>
+        </div>
       </div>
-      <p style="font-size:10px;color:var(--text-dim);margin:16px 0 0;">WealthWise Kids™ · michael@versassists.com · wealthwisekids.org</p>
+
+      <div style="text-align:center;">
+        <a href="mailto:michael@versassists.com?subject=WWK%20Full%20Platform%20Interest%20-%20%24100%20Week%20Pilot&body=Hi%2C%20I%20just%20completed%20The%20%24100%20Week%20pilot%20and%20would%20like%20to%20learn%20more%20about%20the%20full%20WealthWise%20Kids%20platform." style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#F4B223,#d9960f);border-radius:12px;color:#1F3C88;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:12px;">Request a Platform Overview →</a>
+        <br>
+        <a href="https://wealthwisekids.org" target="_blank" style="font-size:12px;color:rgba(244,178,35,0.7);text-decoration:underline;">wealthwisekids.org</a>
+        <p style="font-size:10px;color:var(--text-dim);margin:10px 0 0;">WealthWise Kids™ LLC · michael@versassists.com · All products available for institutional licensing Fall 2026</p>
+      </div>
     </div>
 
     <div class="btn-row">
@@ -1160,6 +1189,20 @@
 
 <div id="toast"></div>
 
+<!-- PIN prompt overlay (new device resume) -->
+<div id="pinOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,18,40,0.92);z-index:999;display:none;align-items:center;justify-content:center;">
+  <div style="background:#1a2748;border:1px solid rgba(244,178,35,0.3);border-radius:20px;padding:36px 32px;max-width:340px;width:90%;text-align:center;">
+    <div style="font-size:28px;margin-bottom:12px;">🔒</div>
+    <div style="font-size:17px;font-weight:800;color:white;margin-bottom:8px;">Enter Your Session PIN</div>
+    <p style="font-size:13px;color:rgba(255,255,255,0.55);margin:0 0 20px;">You set this PIN when you created the session. It keeps students out of this dashboard.</p>
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="4" placeholder="4-digit PIN"
+      style="width:100%;padding:14px;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.15);border-radius:12px;color:white;font-size:22px;font-weight:800;letter-spacing:6px;text-align:center;outline:none;box-sizing:border-box;font-family:inherit;"
+      onkeydown="if(event.key==='Enter')submitPin()" />
+    <div id="pinErr" style="color:#EF4444;font-size:12px;margin:8px 0 0;min-height:16px;"></div>
+    <button onclick="submitPin()" style="width:100%;margin-top:16px;padding:13px;background:linear-gradient(135deg,#F4B223,#d9960f);border:none;border-radius:12px;color:#1F3C88;font-size:15px;font-weight:800;cursor:pointer;">Unlock Dashboard →</button>
+  </div>
+</div>
+
 <script>
 // ── Config ─────────────────────────────────────────────────────────────────
 const API          = 'https://fliq-api-production.up.railway.app';
@@ -1167,9 +1210,11 @@ const ORG_ID       = '00000000-0000-0000-0000-000000000001';
 const STUDENT_URL  = 'https://play.wealthwiselearning.com/';
 
 // ── State ──────────────────────────────────────────────────────────────────
-let cohortId  = null;
-let joinCode  = null;
-let pollTimer = null;
+let cohortId     = null;
+let joinCode     = null;
+let facilitorPin = null;
+let pollTimer    = null;
+let pendingCode  = null; // holds code while waiting for PIN entry
 
 // ── Toast ──────────────────────────────────────────────────────────────────
 function toast(msg, dur = 2400) {
@@ -1209,7 +1254,9 @@ async function createCohort() {
   const facilName  = document.getElementById('facilName').value.trim();
   const cohortName = document.getElementById('cohortName').value.trim();
   const gradeBand  = document.getElementById('gradeBand').value;
+  const pin        = document.getElementById('facilPin').value.trim();
   if (!cohortName) { toast('Please enter a class name first'); return; }
+  if (!pin || !/^\d{4}$/.test(pin)) { toast('Please enter a 4-digit PIN to protect your session'); return; }
 
   const btn = document.getElementById('btnCreate');
   btn.disabled = true;
@@ -1224,13 +1271,15 @@ async function createCohort() {
         cohort_name: cohortName,
         grade_band: gradeBand || null,
         facilitator_name: facilName || null,
+        facilitator_pin: pin,
       }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'API error');
 
-    cohortId = data.cohort_id;
-    joinCode  = data.code;
+    cohortId     = data.cohort_id;
+    joinCode     = data.code;
+    facilitorPin = pin;
     document.getElementById('displayCode').textContent = joinCode;
     document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
     saveSession();
@@ -1417,8 +1466,9 @@ async function resetSession() {
       await fetch(`${API}/cohorts/${cohortId}/reset`, { method: 'POST' });
     } catch (e) {}
   }
-  cohortId = null;
-  joinCode  = null;
+  cohortId     = null;
+  joinCode     = null;
+  facilitorPin = null;
   clearSavedSession();
   document.getElementById('facilName').value   = '';
   document.getElementById('cohortName').value  = '';
@@ -1454,7 +1504,7 @@ const LS_KEY = 'fliq_facilitator_session';
 
 function saveSession() {
   if (cohortId && joinCode) {
-    localStorage.setItem(LS_KEY, JSON.stringify({ cohortId, joinCode }));
+    localStorage.setItem(LS_KEY, JSON.stringify({ cohortId, joinCode, facilitorPin }));
   }
 }
 
@@ -1463,7 +1513,8 @@ function clearSavedSession() {
 }
 
 function updateResumeLink() {
-  const url = `${window.location.origin}${window.location.pathname}?code=${joinCode}`;
+  const pin = facilitorPin ? `&pin=${facilitorPin}` : '';
+  const url = `${window.location.origin}${window.location.pathname}?code=${joinCode}${pin}`;
   const el = document.getElementById('resumeLink');
   if (el) el.textContent = url;
 }
@@ -1478,45 +1529,89 @@ function copyResumeUrl() {
   });
 }
 
+// ── PIN prompt ─────────────────────────────────────────────────────────────
+function showPinOverlay() {
+  const el = document.getElementById('pinOverlay');
+  el.style.display = 'flex';
+  setTimeout(() => document.getElementById('pinInput')?.focus(), 100);
+}
+
+async function submitPin() {
+  const pin = (document.getElementById('pinInput')?.value || '').trim();
+  const errEl = document.getElementById('pinErr');
+  if (!pin) { errEl.textContent = 'Please enter your PIN.'; return; }
+  errEl.textContent = '';
+
+  try {
+    const r = await fetch(`${API}/cohorts/facilitator/${pendingCode}?pin=${encodeURIComponent(pin)}`);
+    if (r.status === 401) { errEl.textContent = 'Incorrect PIN. Try again.'; return; }
+    if (!r.ok) { errEl.textContent = 'Session not found. Check your code.'; return; }
+    const data = await r.json();
+    cohortId     = data.cohort_id;
+    joinCode     = pendingCode;
+    facilitorPin = pin;
+    pendingCode  = null;
+    document.getElementById('pinOverlay').style.display = 'none';
+    saveSession();
+    document.getElementById('displayCode').textContent = joinCode;
+    document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+    updateResumeLink();
+    goToScreen('launch');
+    startPolling();
+  } catch (e) {
+    errEl.textContent = 'Connection error. Try again.';
+  }
+}
+
 // ── Resume from URL or localStorage ───────────────────────────────────────
 (async function() {
-  let code = null;
-
-  // 1. URL param takes priority
   const p = new URLSearchParams(window.location.search);
   const urlCode = p.get('code');
+  const urlPin  = p.get('pin');
 
-  // 2. Fall back to localStorage
+  // 1. localStorage (same device — already authenticated)
   if (!urlCode) {
     try {
       const saved = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
       if (saved && saved.cohortId && saved.joinCode) {
-        cohortId = saved.cohortId; joinCode = saved.joinCode; code = saved.joinCode;
+        cohortId     = saved.cohortId;
+        joinCode     = saved.joinCode;
+        facilitorPin = saved.facilitorPin || null;
+        document.getElementById('displayCode').textContent = joinCode;
+        document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+        updateResumeLink();
+        goToScreen('launch');
+        startPolling();
       }
     } catch (e) {}
-  } else {
-    code = urlCode.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    return;
   }
 
-  if (!code) return;
+  const code = urlCode.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
-  // If we have a code but no cohortId yet, look it up
-  if (!cohortId) {
+  // 2. URL has both code and PIN — auto-authenticate
+  if (urlPin) {
     try {
-      const r = await fetch(`${API}/cohorts/by-code/${code}`);
-      if (!r.ok) return;
-      const data = await r.json();
-      cohortId = data.cohort_id;
-      joinCode = code;
-      saveSession();
-    } catch (e) { return; }
+      const r = await fetch(`${API}/cohorts/facilitator/${code}?pin=${encodeURIComponent(urlPin)}`);
+      if (r.ok) {
+        const data = await r.json();
+        cohortId     = data.cohort_id;
+        joinCode     = code;
+        facilitorPin = urlPin;
+        saveSession();
+        document.getElementById('displayCode').textContent = joinCode;
+        document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+        updateResumeLink();
+        goToScreen('launch');
+        startPolling();
+        return;
+      }
+    } catch (e) {}
   }
 
-  document.getElementById('displayCode').textContent = joinCode;
-  document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
-  updateResumeLink();
-  goToScreen('launch');
-  startPolling();
+  // 3. URL has code only — show PIN prompt
+  pendingCode = code;
+  showPinOverlay();
 })();
 </script>
 </body>
