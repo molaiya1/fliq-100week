@@ -2624,13 +2624,14 @@ function renderHome(){
           <div class="band-lbl">Who's playing?</div>
           <div class="band-pills">${bandPills}</div>
         </div>
+        <div id="bandAutoNote" style="display:none;font-size:11px;color:rgba(255,255,255,0.45);margin:-6px 0 8px;text-align:center;">Your session sets this automatically.</div>
         ${resumeBlock}
         <div class="card-title">What will you do with <strong>$${sb}?</strong></div>
         <div class="card-sub">Your $${sb} is waiting. Find out what kind of money thinker you are.</div>
         <div class="join-block">
           <div class="join-block-hdr"><div class="join-block-icon ic-blue">👥</div>Join a Session</div>
           <div class="join-block-desc">Enter the session code your teacher gave you.</div>
-          <input class="join-input" id="codeInput" type="text" maxlength="8" placeholder="Enter session code" autocomplete="off" spellcheck="false" />
+          <input class="join-input" id="codeInput" type="text" maxlength="8" placeholder="Enter session code" autocomplete="off" spellcheck="false" oninput="onCodeInput(this.value)" />
           <button class="join-btn-full" onclick="handleJoin()">Join Session ›</button>
           <div class="err-msg" id="codeErr">That code doesn't match a session. Try again.</div>
         </div>
@@ -2656,6 +2657,18 @@ function renderHome(){
 function selectBand(band){
   S.band=band;
   renderHome();
+}
+function onCodeInput(val){
+  const bs=document.querySelector('.band-selector');
+  const note=document.getElementById('bandAutoNote');
+  if(!bs) return;
+  if(val.trim().length>0){
+    bs.style.opacity='0.35';bs.style.pointerEvents='none';
+    if(note) note.style.display='block';
+  } else {
+    bs.style.opacity='';bs.style.pointerEvents='';
+    if(note) note.style.display='none';
+  }
 }
 
 // DAY INTRO
@@ -3006,7 +3019,7 @@ async function handleJoin(){
   if(errEl) errEl.classList.remove('show');
   try{
     const r=await fetch(`${API_BASE}/cohorts/by-code/${code}`);
-    if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;S.week=d.week_number||1;}
+    if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;S.week=d.week_number||1;if(['explorer','builder','strategist'].includes(d.grade_band)) S.band=d.grade_band;}
     else{if(errEl){errEl.textContent='That code doesn\'t match a session. Check with your teacher.';errEl.classList.add('show');}return;}
   }catch(e){
     if(errEl){errEl.textContent='Can\'t connect right now. Try again or play on your own.';errEl.classList.add('show');}return;
