@@ -1054,7 +1054,7 @@
       <button class="btn btn-ghost" onclick="forceRefresh()">↻ Refresh</button>
     </div>
     <p style="text-align:center;font-size:11px;color:var(--text-dim);margin-top:10px;font-weight:500">
-      Report unlocks after 5 or more students complete the simulation.
+      Report unlocks after at least 1 student completes the simulation.
     </p>
 
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);text-align:center">
@@ -1242,9 +1242,6 @@ function updateStatusUI({ enrolled = 0, completed = 0, in_progress = 0 }) {
   if (completed === 0 && in_progress === 0) {
     document.getElementById('progressHeadline').textContent = 'Waiting for students to join…';
     document.getElementById('progressDetail').textContent  = 'Share the join code or link above.';
-  } else if (completed < 5) {
-    document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} finished`;
-    document.getElementById('progressDetail').textContent  = `${in_progress} in progress. Report unlocks at 5 completions.`;
   } else {
     document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} completed`;
     document.getElementById('progressDetail').textContent  = `${in_progress} still in progress. Your class report is ready.`;
