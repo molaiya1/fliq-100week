@@ -279,6 +279,30 @@
     .card-accent {
       border-top: 2px solid var(--cyan);
     }
+
+    /* ── Day Guide ── */
+    .guide-day-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+    .guide-day-pill { padding:6px 14px; border-radius:20px; border:1.5px solid rgba(255,255,255,0.15); background:transparent; color:rgba(255,255,255,0.45); font-size:11px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+    .guide-day-pill.active { border-color:var(--gold); background:rgba(244,178,35,0.12); color:var(--gold); }
+    .guide-panel { border-radius:12px; padding:16px; margin-top:12px; }
+    .guide-panel-before { background:rgba(0,180,216,0.07); border:1px solid rgba(0,180,216,0.18); border-left:3px solid var(--cyan); }
+    .guide-panel-submit { background:rgba(244,178,35,0.07); border:1px solid rgba(244,178,35,0.18); border-left:3px solid var(--gold); }
+    .guide-panel-after  { background:rgba(34,197,94,0.07);  border:1px solid rgba(34,197,94,0.18);  border-left:3px solid var(--green); }
+    .guide-panel-label { font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+    .guide-panel-before .guide-panel-label { color:var(--cyan); }
+    .guide-panel-submit .guide-panel-label { color:var(--gold); }
+    .guide-panel-after  .guide-panel-label { color:var(--green); }
+    .guide-script { font-size:13px; font-style:italic; color:rgba(255,255,255,0.8); line-height:1.6; background:rgba(0,0,0,0.2); border-radius:8px; padding:12px; margin-bottom:10px; }
+    .guide-qs { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+    .guide-qs li { font-size:12px; color:rgba(255,255,255,0.65); padding-left:16px; position:relative; line-height:1.5; }
+    .guide-qs li::before { content:'›'; position:absolute; left:0; color:rgba(255,255,255,0.3); }
+    .guide-key-toggle { background:none; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:5px 12px; font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); cursor:pointer; font-family:inherit; margin-top:10px; }
+    .guide-key-toggle:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.7); }
+    .guide-key { display:none; margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+    .guide-key-row { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.5; padding-left:12px; border-left:2px solid rgba(255,255,255,0.1); }
+    .guide-key-row strong { color:#fff; }
+    .guide-close-stmt { font-size:12px; color:rgba(255,255,255,0.55); font-style:italic; line-height:1.6; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08); }
+    .guide-trait-badge { display:inline-block; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:20px; margin-bottom:10px; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3); color:#A78BFA; }
     .card-gold-accent {
       border-top: 2px solid var(--gold);
     }
@@ -1065,6 +1089,18 @@
       </div>
     </div>
 
+    <!-- Day Guide -->
+    <div class="card" id="dayGuideCard" style="display:none;border-top:2px solid rgba(139,92,246,0.5);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div class="section-label" style="color:#A78BFA;">📖 Daily Session Guide</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;">Use this to run each 20-minute block — before, during, and after the choice.</div>
+        </div>
+      </div>
+      <div class="guide-day-pills" id="guideDayPills"></div>
+      <div id="guideContent" style="margin-top:4px;"></div>
+    </div>
+
     <!-- Facilitator return URL -->
     <div class="card" style="background:rgba(245,166,35,0.06);border-color:rgba(245,166,35,0.25);">
       <div class="section-label gold">Your Facilitator Return Link</div>
@@ -1313,6 +1349,7 @@ async function createCohort() {
     document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
     saveSession();
     updateResumeLink();
+    initGuide(weekNumber);
     goToScreen('launch');
   } catch (err) {
     toast('Error: ' + err.message);
@@ -1358,6 +1395,332 @@ function updateStatusUI({ enrolled = 0, completed = 0, in_progress = 0 }) {
 }
 
 // ── Load Report ────────────────────────────────────────────────────────────
+// ── Day Guide ──────────────────────────────────────────────────────────────
+let currentGuideDay  = 1;
+let currentGuideWeek = 1;
+
+const GUIDE_DATA = {
+  1: {
+    1: {
+      title:'Day 1 — The Pick', trait:'Impulse Control',
+      before:{
+        script:'"Before we open any devices — imagine you just got handed your money for the week. It\'s Monday morning. And the very first thing you see is something you\'ve been wanting. Before you touch anything — turn to the person next to you and answer this: would you buy it, or would you wait?"',
+        questions:['What\'s the difference between wanting something and needing it?','If you spend big on Day 1, what does that do to the rest of your week?']
+      },
+      submit:'Have students open the sim, enter the session code, and make their Day 1 choice. No discussion during this window — this is individual decision time.',
+      after:{
+        questions:['Who went with their first instinct? Did anyone change their mind right before submitting?','What would Monday-you tell Friday-you about that choice?'],
+        key:[
+          {pat:'If they spent (bought the item):','sig':'Immediate gratification over planning. Classic IC signal — the want won over the wait.'},
+          {pat:'If they saved or passed:','sig':'Strong impulse control. They paused before acting on the want. This is the IC strength we\'re measuring.'},
+          {pat:'If they chose the third option:','sig':'Creative problem-solving — found a middle path instead of a binary. Early PO signal.'},
+        ],
+        close:'"The first financial decision of any week sets a pattern. Your first choice anchors everything that follows — researchers call it the primacy effect. What you just saw your students do on Day 1 is the most honest data point of the whole week."'
+      }
+    },
+    2: {
+      title:'Day 2 — The Pull', trait:'Impulse Control + Planning',
+      before:{
+        script:'"Raise your hand if you\'ve ever spent money because everyone else was doing something. [Pause.] Keep your hand up if you regretted it later. That\'s today. Before devices — if your five closest friends were going somewhere right now and you only had part of your money left, what goes through your head first: the money, or what they\'ll think of you?"',
+        questions:['Why is peer pressure one of the hardest financial forces to resist — even for adults?','What\'s the difference between choosing to go because YOU want to, versus going because everyone else is?']
+      },
+      submit:'Students open devices and make their Day 2 choice silently and independently.',
+      after:{
+        questions:['For those who chose to go — what would you have to give up later this week because of that?','What\'s harder to recover from: missing out with friends, or running low on money before the week ends?'],
+        key:[
+          {pat:'If they spent to join the group:','sig':'Social compliance — chose belonging over financial planning. The most common spending trigger for every age group.'},
+          {pat:'If they stayed and saved:','sig':'Resisted social pressure — strong IC + early PO. This student thinks past the moment.'},
+          {pat:'If they found an alternative:','sig':'Creative social navigation — engaged without full cost. Sophisticated PO signal.'},
+        ],
+        close:'"Peer pressure is the #1 driver of unplanned spending for every age group, including adults. Naming it out loud is the first layer of defense. Your students just experienced it in a controlled environment — that\'s exactly what the data is for."'
+      }
+    },
+    3: {
+      title:'Day 3 — The Oops', trait:'Resilience & Bounce-Back',
+      before:{
+        script:'"We\'re in the middle of the week. Take a second to think about where your balance is in the simulation right now. Now — life just threw something at you. An unexpected cost showed up that you didn\'t plan for. Before devices: what\'s your gut reaction when something unexpected takes money from you? Frustration? Acceptance? Problem-solving?"',
+        questions:['What\'s the difference between a financial setback and a financial emergency?','If this happened in real life, what options do you have besides just paying it immediately?']
+      },
+      submit:'Students open devices and make their Day 3 choice.',
+      after:{
+        questions:['Who felt stressed when they saw this scenario? Why do unexpected costs feel worse than planned costs of the same size?','What\'s one thing you could do differently to be more prepared when something unexpected comes up?'],
+        key:[
+          {pat:'If they addressed it immediately:','sig':'Responsibility-first — dealt with the problem directly. Shows strong RB orientation even if it strained the balance.'},
+          {pat:'If they negotiated or asked for help:','sig':'Creative problem-solving under pressure — the highest-value RB signal. Sought alternatives before just paying.'},
+          {pat:'If they avoided or deferred:','sig':'Short-term relief, long-term risk. Low RB signal — avoidance over adaptation.'},
+        ],
+        close:'"Financial resilience isn\'t about avoiding problems — it\'s about recovery speed. Research shows people with strong bounce-back patterns make better decisions in the 48 hours after a setback than those who avoid the problem. Today you just measured that."'
+      }
+    },
+    4: {
+      title:'Day 4 — The Deal', trait:'Risk Awareness',
+      before:{
+        script:'"Day 4. You\'ve made three decisions this week. Today something different shows up — someone is offering you a deal. A financial opportunity. Before devices: what\'s the very first thing you ask yourself when someone tells you they can make your money grow? What\'s your gut check?"',
+        questions:['What makes a financial opportunity feel legitimate versus suspicious?','What\'s the difference between a risk and a gamble?']
+      },
+      submit:'Students open devices and make their Day 4 choice.',
+      after:{
+        questions:['What information would you need before you\'d feel comfortable with a financial opportunity?','How do you know the difference between being smart and being scared when it comes to risk?'],
+        key:[
+          {pat:'If they took the deal:','sig':'Chose potential upside over certainty — speculative RA signal. Not necessarily wrong, but the reasoning matters.'},
+          {pat:'If they declined:','sig':'Recognized risk or uncertainty and stepped back. Strong RA — protection over potential.'},
+          {pat:'If they asked questions or researched first:','sig':'Best possible response — due diligence before committing. Sophisticated RA + PO signal. This is the pattern that separates informed risk from blind risk.'},
+        ],
+        close:'"The most common financial scams work because they feel exactly like what your students just saw — urgent, profitable, and coming from someone familiar. Pausing to ask questions is the highest-value financial skill. Today\'s data shows you who paused."'
+      }
+    },
+    5: {
+      title:'Day 5 — The Finish', trait:'All Four Traits — Capstone',
+      before:{
+        script:'"Last day. Whatever is in your balance right now is the result of four decisions you\'ve made over four days. Some of you have more than you started with. Some have less. Before we open devices — I want one honest answer from everyone: looking back at your four choices this week, are you proud of the pattern?"',
+        questions:['If a financial advisor looked at your choices this week, what would they say your priority is — today, or tomorrow?','What\'s one choice this week you\'d make differently if you could?']
+      },
+      submit:'Students open devices and make their final Day 5 choice.',
+      after:{
+        questions:['Did your final balance surprise you? Why or why not?','If your choices this week reflected your values — what did they say about what you value most?'],
+        key:[
+          {pat:'If they spent their remaining balance:','sig':'Spend-forward orientation — present bias on the final day. IC signal worth discussing.'},
+          {pat:'If they saved what was left:','sig':'Protection orientation — chose to finish strong. PO + IC strength.'},
+          {pat:'If they gave, shared, or allocated to a goal:','sig':'Values-driven choice — sees money as a tool. High PO + intentional RB. Rare and significant.'},
+        ],
+        close:'"The five choices made this week are the same five choices your students will face in real life. The amounts change. The pressure types don\'t. The behavioral patterns you just collected — that\'s the data that matters."'
+      }
+    }
+  },
+  2: {
+    1: {
+      title:'Day 1 — The Opportunity', trait:'Planning Orientation',
+      before:{
+        script:'"Something new enters the picture this week — a chance to earn. Before devices: what\'s your instinct when someone offers you a chance to make money? Do you jump on it, think about what it costs you in time and energy, or look for a better arrangement first?"',
+        questions:['What\'s the difference between earning money and spending it? Which takes more from you?','If earning $10 costs you 2 hours of your time, is that always worth it?']
+      },
+      submit:'Students open devices and make their Day 1 choice.',
+      after:{
+        questions:['Did anyone choose NOT to earn? What was the thinking behind that?','What\'s the hidden "cost" of earning money that people don\'t always talk about?'],
+        key:[
+          {pat:'If they took the earning opportunity:','sig':'Initiative and work orientation — strong PO signal. Values future income over present comfort.'},
+          {pat:'If they passed:','sig':'Values time or energy over immediate income. Not a weakness — shows they weigh trade-offs, not just dollars.'},
+          {pat:'If they negotiated the terms:','sig':'Sophisticated response — weighed the arrangement before committing. Highest-value PO signal.'},
+        ],
+        close:'"Income is never free — it costs time, energy, or both. The financially strongest people don\'t just ask how much they\'ll earn. They ask what they\'re giving up to earn it. Week 2 just started measuring something Week 1 couldn\'t."'
+      }
+    },
+    2: {
+      title:'Day 2 — The Comparison', trait:'Impulse Control',
+      before:{
+        script:'"Someone in your circle just got something nice. Before devices — be honest with yourself: do you feel differently about what you own when someone around you gets something better? You don\'t have to answer out loud. Just sit with that for a second."',
+        questions:['Why does seeing what other people have change how we feel about what we already have?','What would you have to own to stop comparing yourself to others? (Take a moment with that one.)']
+      },
+      submit:'Students open devices and make their Day 2 choice.',
+      after:{
+        questions:['Who felt the pull of comparison even in a simulation? What does that tell you?','What\'s one thing you\'re grateful you already have that you didn\'t think about before this scenario?'],
+        key:[
+          {pat:'If they spent in reaction to comparison:','sig':'Comparison trigger activated — social IC signal. Extremely common and worth normalizing before addressing.'},
+          {pat:'If they held their balance:','sig':'Strong IC — their identity isn\'t driven by what peers have. This is harder than it sounds.'},
+          {pat:'If they redirected their energy creatively:','sig':'Found a way to engage without spending. Sophisticated IC + PO combination.'},
+        ],
+        close:'"Researchers call it social comparison theory — humans are wired to measure themselves against others. It\'s not a character flaw; it\'s a design feature of the human brain. Knowing that is the first step to managing it."'
+      }
+    },
+    3: {
+      title:'Day 3 — The Goal', trait:'Planning Orientation',
+      before:{
+        script:'"You\'ve been saving toward something specific this week. Now something else shows up — and it\'s tempting to use that money. Before devices: what makes it harder to protect money you\'ve already committed to a goal versus money you haven\'t promised yet?"',
+        questions:['Once you name a savings goal out loud, does it feel different to protect it? Why?','What\'s the real risk of using goal money for something unrelated to the goal?']
+      },
+      submit:'Students open devices and make their Day 3 choice.',
+      after:{
+        questions:['Who felt guilty choosing their goal over the immediate option? Who felt proud?','What would make a goal feel real enough that you\'d actually protect it?'],
+        key:[
+          {pat:'If they used goal money for something else:','sig':'Present preference over future commitment — IC gap under temptation. Common and correctable.'},
+          {pat:'If they protected the goal:','sig':'Strong planning commitment — PO strength. They honored a future promise they made to themselves.'},
+          {pat:'If they found a partial compromise:','sig':'Balanced — protected some, acknowledged present need. Thoughtful PO signal.'},
+        ],
+        close:'"Research on goal commitment shows that naming a goal and writing it down increases follow-through by over 40%. The simulation can\'t write it down for them — but their choice just showed you how strong that commitment already is."'
+      }
+    },
+    4: {
+      title:'Day 4 — The Ask', trait:'Resilience & Bounce-Back',
+      before:{
+        script:'"A friend needs money from you. Before devices — what goes through your head first: the friendship, the money, or both at the same time? There\'s no right answer. I just want you to notice which one came first."',
+        questions:['What\'s the difference between generosity and a loan? Does it matter which one you\'re giving?','If a friend doesn\'t pay you back, what gets damaged more — your wallet or the relationship?']
+      },
+      submit:'Students open devices and make their Day 4 choice.',
+      after:{
+        questions:['Has anyone ever lent money and not gotten it back? How did that change the friendship?','What\'s a kind way to say no to a friend who needs money when you can\'t afford to give it?'],
+        key:[
+          {pat:'If they lent the full amount:','sig':'Generosity-first — relationship prioritized over financial protection. Watch for pattern repetition in Week 3.'},
+          {pat:'If they lent partially:','sig':'Balanced — gave what they could without full exposure. Mature PO + RB signal.'},
+          {pat:'If they declined:','sig':'Financial boundary set. Can reflect strong IC or avoidance depending on context — the debrief is where you learn which.'},
+        ],
+        close:'"Research consistently shows that mixing money and close relationships causes more long-term damage than almost any other dynamic. The most honest thing you can offer a friend is clarity about what you can and can\'t afford — not a loan that builds resentment."'
+      }
+    },
+    5: {
+      title:'Day 5 — The Wrap', trait:'All Four Traits — Earning Capstone',
+      before:{
+        script:'"Last day of Week 2. You\'ve earned this week, protected a goal, navigated comparison, and made a call about a friend. Before devices: on a scale of 1 to 10, how financially confident do you feel right now compared to Day 1 of Week 1? Just hold that number in your head."',
+        questions:['What did earning money teach you that spending money can\'t?','How did having a savings goal change the way you thought about every other choice this week?']
+      },
+      submit:'Students open devices and make their final Week 2 choice.',
+      after:{
+        questions:['Did your financial confidence number go up or down compared to Week 1? What moved it?','What\'s one financial habit from this week you\'d actually want to keep in real life?'],
+        key:[
+          {pat:'If they finished with more than they started:','sig':'Net positive week — earning orientation working. Strong PO pattern across the week.'},
+          {pat:'If they finished with less but protected their goal:','sig':'Values-anchored — prioritized commitment over balance. Sophisticated and significant.'},
+          {pat:'If they gave or shared on the final day:','sig':'Generosity as financial identity — sees money as relational, not just personal. Strong values signal.'},
+        ],
+        close:'"Week 2 was about understanding that money moves in two directions. Most people only manage the outflow. The ones who build wealth manage both — and they know the difference between earning that costs too much and earning that builds something."'
+      }
+    }
+  },
+  3: {
+    1: {
+      title:'Day 1 — The Upgrade', trait:'Impulse Control + Risk Awareness',
+      before:{
+        script:'"Everything you own right now still works perfectly fine. But there\'s a newer, better version available. Before devices: how often do you upgrade things before they\'re broken? And honestly — why? What\'s actually driving it?"',
+        questions:['What\'s the real reason we upgrade things that still work?','If your current version does the job, what are you actually paying for when you upgrade?']
+      },
+      submit:'Students open devices and make their Day 1 choice.',
+      after:{
+        questions:['What would change about your spending if you only replaced things when they stopped working?','Who profits when you upgrade things you don\'t need to? Follow that money.'],
+        key:[
+          {pat:'If they upgraded:','sig':'Novelty and status drive over function — IC signal. Extremely common and worth unpacking without judgment.'},
+          {pat:'If they kept what works:','sig':'Strong IC — function over status. This student can distinguish want from need even under aesthetic pressure.'},
+          {pat:'If they sold the old one first:','sig':'Sophisticated RA — reduced net cost before committing to the upgrade. The most financially mature response in this scenario.'},
+        ],
+        close:'"The upgrade economy is worth hundreds of billions annually — built entirely on the psychological gap between want and need. Every upgrade choice is a vote for what you actually value. Today\'s data shows you who\'s voting and why."'
+      }
+    },
+    2: {
+      title:'Day 2 — The Pressure', trait:'Risk Awareness',
+      before:{
+        script:'"You\'re about to see a tactic used on every single person in this room, every single day. Before devices: what makes you feel like you need to buy something RIGHT NOW, today, before it\'s gone? What does that feeling actually feel like in your body?"',
+        questions:['Have you ever bought something because it felt urgent — and then seen it available a week later at the same price?','What\'s the actual goal of "Only 2 left!" or "Sale ends tonight!"?']
+      },
+      submit:'Students open devices and make their Day 2 choice.',
+      after:{
+        questions:['Raise your hand if you\'ve ever bought something because of urgency and later regretted it. What would have happened if you had waited 24 hours?','What\'s a personal rule you could make for yourself when something feels urgent?'],
+        key:[
+          {pat:'If they bought immediately:','sig':'Urgency tactic succeeded — low RA in this context. Not a character flaw; this tactic is professionally designed to work.'},
+          {pat:'If they passed:','sig':'Recognized the manipulation and stepped back. Strong RA — saw through the tactic.'},
+          {pat:'If they paused or researched first:','sig':'Best possible response — interrupted the urgency loop before it could land. Exceptional RA signal.'},
+        ],
+        close:'"Every \'limited time offer\' is designed by a professional whose only job is to make you feel like you\'ll regret not buying. You can\'t out-feel a professional. But you can out-pause them. Pausing is the entire defense."'
+      }
+    },
+    3: {
+      title:'Day 3 — The Repeat Ask', trait:'Impulse Control + Resilience',
+      before:{
+        script:'"Someone has borrowed from you before. They\'re asking again. Before devices — does their history with you change how you see this ask? Should it? Sit with that for a second before you answer."',
+        questions:['What\'s the difference between giving someone a second chance and being taken advantage of?','How do you say no to someone who\'s asked before — without permanently damaging the relationship?']
+      },
+      submit:'Students open devices and make their Day 3 choice.',
+      after:{
+        questions:['Is there a number of times someone can borrow from you before it changes your relationship with them permanently?','What would you need to hear from someone before you\'d be comfortable lending to them again?'],
+        key:[
+          {pat:'If they lent again:','sig':'Generosity pattern repeating — relationship prioritized. Watch for boundary awareness; compassion without limits creates resentment.'},
+          {pat:'If they declined based on history:','sig':'Boundary set using past experience as data. Strong IC + RB — learned from a prior pattern and applied it.'},
+          {pat:'If they offered a partial or conditional response:','sig':'Sophisticated — gave something while setting terms. Highest-value RB signal in this scenario.'},
+        ],
+        close:'"Financial boundaries and personal boundaries are the same skill. The most financially healthy people have both — not because they\'re selfish, but because they understand that a boundary protects both people in the relationship."'
+      }
+    },
+    4: {
+      title:'Day 4 — The Wait', trait:'Planning Orientation + Resilience',
+      before:{
+        script:'"Today\'s scenario asks you to give something up right now for a guaranteed payoff later. Before devices — what\'s the longest you\'ve ever waited for something you really wanted? And when you got it, was the wait worth it?"',
+        questions:['Why does waiting feel like losing, even when the reward is guaranteed?','What does it take to trust a future payoff more than an immediate one?']
+      },
+      submit:'Students open devices and make their Day 4 choice.',
+      after:{
+        questions:['Who felt almost physically uncomfortable choosing to wait? That\'s a documented biological response — why do you think our brains are wired to want things NOW?','If you could apply the \'wait and get more\' principle to one area of your real life right now, what would it be?'],
+        key:[
+          {pat:'If they waited for the full reward:','sig':'Strong delayed gratification — PO + RB strength. This is one of the most predictive behavioral signals of long-term financial wellbeing.'},
+          {pat:'If they took the immediate option:','sig':'Present preference — immediate feels more certain. Extremely common and worth normalizing.'},
+          {pat:'If they took partial or a compromise:','sig':'Balanced patience — some delayed gratification, some present orientation. Shows awareness of the trade-off.'},
+        ],
+        close:'"The ability to delay gratification is the single strongest predictor of financial wellbeing across every income level, age group, and culture studied. It\'s not willpower — it\'s what you believe about the future. Today\'s data tells you who believes."'
+      }
+    },
+    5: {
+      title:'Day 5 — Who Are You With Money?', trait:'All Four Traits — Identity Capstone',
+      before:{
+        script:'"Three weeks. Fifteen decisions. Before the final choice — take 60 seconds and think about the pattern across everything you\'ve done. Were you mostly spending or mostly protecting? Mostly reacting or mostly planning? You don\'t have to say it out loud. Just know it."',
+        questions:['What kind of money thinker are you right now — and is that who you want to be?','If you could change one pattern from all three weeks, what would it be and why?']
+      },
+      submit:'Students open devices and make their final choice of the entire program.',
+      after:{
+        questions:['Did your FLIQ profile surprise you, confirm what you already knew, or challenge something you thought about yourself?','What\'s one decision you\'ll actually make differently in real life because of what you learned about yourself in these three weeks?'],
+        key:[
+          {pat:'If they spent on the final day:','sig':'Spend-forward to the end — consistent present orientation. Not a failure; it\'s honest behavioral data. The pattern is the point.'},
+          {pat:'If they saved or protected:','sig':'Finished with discipline — the pattern held under no pressure. Strong IC + PO capstone.'},
+          {pat:'If they gave, donated, or goal-allocated:','sig':'Values-driven final act — money as a tool, not an end. The rarest and most significant behavioral signal in the entire simulation.'},
+        ],
+        close:'"The $100 Week was never about $100. It was about the patterns behind every financial decision your students will ever make. Those patterns are theirs. And unlike most things in life — they are completely changeable. That\'s why this data matters. That\'s why you\'re here."'
+      }
+    }
+  }
+};
+
+function initGuide(week) {
+  currentGuideWeek = parseInt(week) || 1;
+  currentGuideDay  = 1;
+  document.getElementById('dayGuideCard').style.display = 'block';
+  renderGuide();
+}
+
+function setGuideDay(day) {
+  currentGuideDay = day;
+  renderGuide();
+}
+
+function renderGuide() {
+  const g = GUIDE_DATA[currentGuideWeek]?.[currentGuideDay];
+  if (!g) return;
+
+  // Day pills
+  document.getElementById('guideDayPills').innerHTML = [1,2,3,4,5].map(d =>
+    `<button class="guide-day-pill${d===currentGuideDay?' active':''}" onclick="setGuideDay(${d})">Day ${d}</button>`
+  ).join('');
+
+  // Key rows
+  const keyRows = g.after.key.map(k =>
+    `<div class="guide-key-row"><strong>${k.pat}</strong> ${k.sig}</div>`
+  ).join('');
+
+  document.getElementById('guideContent').innerHTML = `
+    <div class="guide-trait-badge">Trait Focus: ${g.trait}</div>
+
+    <div class="guide-panel guide-panel-before">
+      <div class="guide-panel-label">⏱ Before the Choice — 10 min</div>
+      <div class="guide-script">${g.before.script}</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">Discussion Questions</div>
+      <ul class="guide-qs">${g.before.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
+    </div>
+
+    <div class="guide-panel guide-panel-submit">
+      <div class="guide-panel-label">📱 The Submission — 2 min</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;">${g.submit}</div>
+    </div>
+
+    <div class="guide-panel guide-panel-after">
+      <div class="guide-panel-label">💬 After the Choice — 10 min</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">Debrief Questions</div>
+      <ul class="guide-qs">${g.after.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
+      <button class="guide-key-toggle" onclick="toggleKey(this)">▸ Show Behavioral Answer Key</button>
+      <div class="guide-key" style="display:none;">${keyRows}</div>
+      <div class="guide-close-stmt">${g.after.close}</div>
+    </div>`;
+}
+
+function toggleKey(btn) {
+  const keyEl = btn.nextElementSibling;
+  const visible = keyEl.style.display !== 'none';
+  keyEl.style.display = visible ? 'none' : 'flex';
+  btn.textContent = visible ? '▸ Show Behavioral Answer Key' : '▾ Hide Answer Key';
+}
+
 let lastReportData = null;
 
 async function loadReport() {
@@ -1644,7 +2007,7 @@ const LS_KEY = 'fliq_facilitator_session';
 
 function saveSession() {
   if (cohortId && joinCode) {
-    localStorage.setItem(LS_KEY, JSON.stringify({ cohortId, joinCode, facilitorPin }));
+    localStorage.setItem(LS_KEY, JSON.stringify({ cohortId, joinCode, facilitorPin, weekNumber: currentGuideWeek }));
   }
 }
 
@@ -1696,6 +2059,7 @@ async function submitPin() {
     document.getElementById('displayCode').textContent = joinCode;
     document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
     updateResumeLink();
+    initGuide(data.week_number || 1);
     goToScreen('launch');
     startPolling();
   } catch (e) {
@@ -1720,6 +2084,7 @@ async function submitPin() {
         document.getElementById('displayCode').textContent = joinCode;
         document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
         updateResumeLink();
+        initGuide(saved.weekNumber || 1);
         goToScreen('launch');
         startPolling();
       }
@@ -1742,6 +2107,7 @@ async function submitPin() {
         document.getElementById('displayCode').textContent = joinCode;
         document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
         updateResumeLink();
+        initGuide(data.week_number || 1);
         goToScreen('launch');
         startPolling();
         return;
