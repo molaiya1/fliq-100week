@@ -973,6 +973,18 @@
           <label class="form-label">Session PIN <span style="color:rgba(255,255,255,0.25);font-weight:400">(4 digits — keeps students out of this dashboard)</span></label>
           <input class="form-input" type="password" id="facilPin" placeholder="e.g. 4821" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" />
         </div>
+        <div class="form-group">
+          <label class="form-label">Which Week?</label>
+          <select class="form-input" id="weekNumber">
+            <option value="1">Week 1 — The Basics</option>
+            <option value="2">Week 2 — Earning &amp; Goals</option>
+            <option value="3">Week 3 — The Long Game</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Class Size <span style="color:rgba(255,255,255,0.25);font-weight:400">(approx. number of students)</span></label>
+          <input class="form-input" type="number" id="classSize" placeholder="e.g. 24" min="5" max="200" />
+        </div>
       </div>
 
       <button class="btn btn-primary" id="btnCreate" onclick="createCohort()">
@@ -998,6 +1010,7 @@
         <div class="code-eyebrow">Class Join Code</div>
         <div class="join-code" id="displayCode">––––</div>
         <div class="code-hint">Students enter this code on the join screen</div>
+        <div id="weekBadge" style="display:none;margin-top:10px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);"></div>
       </div>
 
       <div class="divider">or share the direct link</div>
@@ -1260,6 +1273,8 @@ async function createCohort() {
   const cohortName = document.getElementById('cohortName').value.trim();
   const gradeBand  = document.getElementById('gradeBand').value;
   const pin        = document.getElementById('facilPin').value.trim();
+  const weekNumber = parseInt(document.getElementById('weekNumber').value) || 1;
+  const classSize  = parseInt(document.getElementById('classSize').value) || null;
   if (!cohortName) { toast('Please enter a class name first'); return; }
   if (!pin || !/^\d{4}$/.test(pin)) { toast('Please enter a 4-digit PIN to protect your session'); return; }
 
@@ -1277,6 +1292,8 @@ async function createCohort() {
         grade_band: gradeBand || null,
         facilitator_name: facilName || null,
         facilitator_pin: pin,
+        week_number: weekNumber,
+        expected_size: classSize,
       }),
     });
     const data = await res.json();
@@ -1285,6 +1302,9 @@ async function createCohort() {
     cohortId     = data.cohort_id;
     joinCode     = data.code;
     facilitorPin = pin;
+    const wkLabels = {1:'Week 1 — The Basics', 2:'Week 2 — Earning & Goals', 3:'Week 3 — The Long Game'};
+    const wb = document.getElementById('weekBadge');
+    if (wb) { wb.textContent = wkLabels[weekNumber] || ('Week ' + weekNumber); wb.style.display = 'block'; }
     document.getElementById('displayCode').textContent = joinCode;
     document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
     saveSession();
@@ -1535,6 +1555,10 @@ async function resetSession() {
   document.getElementById('cohortName').value  = '';
   document.getElementById('gradeBand').value   = '';
   document.getElementById('orgName').value     = '';
+  document.getElementById('weekNumber').value  = '1';
+  document.getElementById('classSize').value   = '';
+  const wb = document.getElementById('weekBadge');
+  if (wb) { wb.textContent = ''; wb.style.display = 'none'; }
   document.getElementById('btnCreate').disabled    = false;
   document.getElementById('btnCreate').textContent = 'Create Session & Get Join Code →';
   document.getElementById('btnReport').disabled    = true;

@@ -2587,11 +2587,6 @@ function renderHome(){
       <span class="band-pill-emoji">${cfg.emoji}</span>
       <div class="band-pill-text"><strong>${cfg.label}</strong><em>${cfg.ages}</em></div>
     </button>`).join('');
-  const weekLabels=[{w:1,label:'Week 1',sub:'The Basics'},{w:2,label:'Week 2',sub:'Earning & Goals'},{w:3,label:'Week 3',sub:'The Long Game'}];
-  const weekPills=weekLabels.map(wl=>`
-    <button class="week-pill${S.week===wl.w?' active':''}" onclick="selectWeek(${wl.w})">
-      <strong>${wl.label}</strong><em>${wl.sub}</em>
-    </button>`).join('');
   const resumeBlock=saved?`
     <div class="resume-block">
       <div class="resume-hdr">
@@ -2628,10 +2623,6 @@ function renderHome(){
         <div class="band-selector">
           <div class="band-lbl">Who's playing?</div>
           <div class="band-pills">${bandPills}</div>
-        </div>
-        <div class="week-selector">
-          <div class="band-lbl">Which week?</div>
-          <div class="week-pills">${weekPills}</div>
         </div>
         ${resumeBlock}
         <div class="card-title">What will you do with <strong>$${sb}?</strong></div>
@@ -3015,7 +3006,7 @@ async function handleJoin(){
   if(errEl) errEl.classList.remove('show');
   try{
     const r=await fetch(`${API_BASE}/cohorts/by-code/${code}`);
-    if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;}
+    if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;S.week=d.week_number||1;}
     else{if(errEl){errEl.textContent='That code doesn\'t match a session. Check with your teacher.';errEl.classList.add('show');}return;}
   }catch(e){
     if(errEl){errEl.textContent='Can\'t connect right now. Try again or play on your own.';errEl.classList.add('show');}return;
@@ -3201,7 +3192,6 @@ function resumeSession(){
   render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,band,week,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
-function selectWeek(w){ S.week=w; renderHome(); }
 
 // ── CONFETTI ─────────────────────────────────────────────────────
 function confetti(n=30){
