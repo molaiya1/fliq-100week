@@ -900,6 +900,220 @@
       .week-selector { display:none; }
       .band-pill-emoji { font-size:14px; }
     }
+
+    /* ══════════════════════════════════════════════════════
+       HOME SCREEN v2 — Layered premium game launcher
+    ══════════════════════════════════════════════════════ */
+
+    /* Nav transparent when on home */
+    .nav.nav-home {
+      background:linear-gradient(to bottom,rgba(8,22,46,0.72) 0%,rgba(8,22,46,0) 100%);
+      border-bottom:none; box-shadow:none;
+    }
+    .nav.nav-home .nav-lockup { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.18); }
+    .nav.nav-home .nav-brand-m { color:white; text-shadow:0 1px 6px rgba(0,0,0,0.4); }
+    .nav.nav-home .nav-brand-s { color:rgba(255,255,255,0.7); border-left-color:rgba(255,255,255,0.2); }
+    .nav.nav-home .nav-link { color:rgba(255,255,255,0.8); }
+    .nav.nav-home .nav-link:hover { background:rgba(255,255,255,0.12); color:white; }
+    .nav.nav-home .nav-link-edu { background:rgba(255,255,255,0.15); border-color:rgba(255,255,255,0.3); color:white; }
+    .nav.nav-home .nav-link-edu:hover { background:white; color:var(--navy); border-color:white; }
+
+    /* Screen container */
+    #screen-home.home-v2 {
+      min-height:100dvh; display:flex; flex-direction:column;
+      overflow-y:auto; overflow-x:hidden;
+    }
+
+    /* Full-viewport backgrounds */
+    .home-bg {
+      position:fixed; inset:0; z-index:0;
+      background:url('./bg-home-mobile.png') center bottom/cover no-repeat;
+    }
+    @media(min-width:600px){
+      .home-bg { background-image:url('./bg-home-desktop.png'); background-position:center center; }
+    }
+    .home-vignette {
+      position:fixed; inset:0; z-index:1; pointer-events:none;
+      background:linear-gradient(to bottom,
+        rgba(8,22,46,0.25) 0%,
+        rgba(8,22,46,0.02) 30%,
+        rgba(8,22,46,0.02) 55%,
+        rgba(8,22,46,0.45) 100%);
+    }
+
+    /* Hero zone: Milo + headline */
+    .home-hero-zone {
+      padding:88px 20px 0;
+      display:flex; align-items:flex-end; justify-content:center; gap:14px;
+      position:relative; z-index:10;
+    }
+    .home-milo {
+      width:min(34vw,148px); height:auto; flex-shrink:0;
+      filter:drop-shadow(0 16px 32px rgba(0,0,0,0.45));
+      margin-bottom:-12px;
+    }
+    .home-hero-copy { flex:1; min-width:0; padding-bottom:4px; }
+    .home-h1 {
+      font-size:clamp(22px,6.5vw,38px); font-weight:900; color:white;
+      line-height:1.08; letter-spacing:-1px;
+      text-shadow:0 2px 20px rgba(0,0,0,0.55);
+    }
+    .home-h1 em { font-style:normal; }
+    .home-amount {
+      color:var(--gold);
+      text-decoration:underline;
+      text-decoration-color:rgba(244,178,35,0.45);
+      text-underline-offset:3px;
+      text-decoration-thickness:2px;
+    }
+    .home-tagline {
+      font-size:12.5px; color:rgba(255,255,255,0.82); margin-top:7px;
+      font-style:italic; text-shadow:0 1px 8px rgba(0,0,0,0.4);
+      line-height:1.4;
+    }
+
+    /* Main panel */
+    .home-panel {
+      background:rgba(11,29,58,0.9); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
+      border:2px solid var(--gold); border-radius:28px;
+      margin:16px 10px 0; padding:18px 16px 20px;
+      position:relative; z-index:5;
+      box-shadow:0 0 0 1px rgba(244,178,35,0.1),
+                 0 24px 64px rgba(0,0,0,0.45),
+                 0 0 50px rgba(244,178,35,0.06) inset;
+    }
+
+    /* Section header: ✦ ═══ WHO'S PLAYING? ═══ ✦ */
+    .home-section-hdr {
+      text-align:center; font-size:9.5px; font-weight:800; letter-spacing:2.5px;
+      text-transform:uppercase; color:rgba(244,178,35,0.9);
+      margin-bottom:11px; display:flex; align-items:center; justify-content:center; gap:8px;
+    }
+    .home-star-dec { color:rgba(244,178,35,0.4); font-size:10px; letter-spacing:3px; }
+
+    /* Band cards */
+    .home-band-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:2px; }
+    .home-band-card {
+      background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.11);
+      border-radius:14px; padding:10px 6px 9px; cursor:pointer;
+      transition:all 0.2s; display:flex; flex-direction:column;
+      align-items:center; gap:5px; -webkit-tap-highlight-color:transparent;
+    }
+    .home-band-card:hover { background:rgba(255,255,255,0.11); border-color:rgba(255,255,255,0.22); }
+    .home-band-card:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+    .home-band-card.explorer.active  { border-color:#22C55E; background:rgba(34,197,94,0.1);  box-shadow:0 0 16px rgba(34,197,94,0.14);  }
+    .home-band-card.builder.active   { border-color:var(--gold); background:rgba(244,185,66,0.1); box-shadow:0 0 16px rgba(244,185,66,0.18); }
+    .home-band-card.strategist.active{ border-color:#EF4444; background:rgba(239,68,68,0.1);  box-shadow:0 0 16px rgba(239,68,68,0.14);  }
+
+    /* Band icons from sprite */
+    .home-band-icon {
+      width:52px; height:52px; flex-shrink:0;
+      background:url('./band-icons.png') no-repeat;
+      background-size:300% auto;
+    }
+    .home-band-icon.explorer   { background-position:0%   50%; }
+    .home-band-icon.builder    { background-position:50%  50%; }
+    .home-band-icon.strategist { background-position:100% 50%; }
+    .home-band-name  { font-size:12px; font-weight:800; color:white; line-height:1.2; }
+    .home-band-card.explorer  .home-band-name { color:#86EFAC; }
+    .home-band-card.builder   .home-band-name { color:var(--gold); }
+    .home-band-card.strategist.home-band-name { color:#FCA5A5; }
+    .home-band-card.strategist .home-band-name { color:#FCA5A5; }
+    .home-band-desc  { font-size:9.5px; color:rgba(255,255,255,0.45); line-height:1.3; text-align:center; }
+
+    /* Auto-note when code typed */
+    .home-auto-note { font-size:10px; color:rgba(255,255,255,0.38); text-align:center; margin:-2px 0 5px; display:none; }
+
+    /* Dividers */
+    .home-divider {
+      display:flex; align-items:center; gap:10px;
+      margin:13px 0 9px; font-size:9px; font-weight:700; letter-spacing:2px;
+      text-transform:uppercase; color:rgba(255,255,255,0.3);
+    }
+    .home-divider::before,.home-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.1); }
+
+    /* Session row */
+    .home-session-row { display:flex; gap:7px; align-items:stretch; }
+    .home-code-input {
+      flex:1; padding:12px 13px; background:rgba(255,255,255,0.09);
+      border:1.5px solid rgba(255,255,255,0.14); border-radius:12px;
+      color:white; font-family:'Inter',sans-serif; font-size:15px;
+      font-weight:700; letter-spacing:2px; outline:none;
+      transition:border-color 0.18s,background 0.18s;
+    }
+    .home-code-input:focus { border-color:var(--gold); background:rgba(255,255,255,0.13); }
+    .home-code-input::placeholder { color:rgba(255,255,255,0.25); letter-spacing:0.5px; font-size:12px; font-weight:400; }
+    .home-join-btn {
+      padding:12px 15px; background:rgba(255,255,255,0.11);
+      border:1.5px solid rgba(255,255,255,0.18); border-radius:12px;
+      color:white; font-family:'Inter',sans-serif; font-size:12px; font-weight:700;
+      cursor:pointer; white-space:nowrap; transition:all 0.18s;
+      display:flex; align-items:center;
+    }
+    .home-join-btn:hover { background:var(--gold); border-color:var(--gold); color:var(--navy); }
+    .home-join-btn:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+
+    /* Start button */
+    .home-start-btn {
+      width:100%; padding:16px; background:var(--gold); border:none; border-radius:14px;
+      color:var(--navy); font-family:'Inter',sans-serif; font-size:17px; font-weight:900;
+      letter-spacing:-0.3px; cursor:pointer; transition:all 0.2s;
+      box-shadow:0 4px 22px rgba(244,185,66,0.5);
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      animation:homeGlow 2.5s ease-in-out infinite; min-height:52px;
+    }
+    .home-start-btn:hover  { transform:translateY(-2px); box-shadow:0 8px 32px rgba(244,185,66,0.65); }
+    .home-start-btn:focus-visible { outline:2px solid white; outline-offset:3px; }
+    @keyframes homeGlow {
+      0%,100%{ box-shadow:0 4px 22px rgba(244,185,66,0.45); }
+      50%    { box-shadow:0 4px 32px rgba(244,185,66,0.75); }
+    }
+
+    /* Error, privacy, resume */
+    .home-err { background:rgba(239,68,68,0.14); border:1.5px solid rgba(239,68,68,0.32); border-radius:10px; padding:8px 11px; font-size:12px; color:#FCA5A5; margin-top:6px; display:none; }
+    .home-err.show { display:block; }
+    .home-privacy { display:flex; align-items:flex-start; gap:6px; margin-top:12px; padding:8px 10px; background:rgba(244,178,35,0.06); border:1px solid rgba(244,178,35,0.15); border-radius:10px; font-size:10px; color:rgba(255,255,255,0.45); line-height:1.4; }
+    .home-privacy strong { color:rgba(244,178,35,0.75); }
+    .home-resume { background:rgba(255,255,255,0.06); border:1.5px solid rgba(244,178,35,0.28); border-radius:13px; padding:11px 13px; margin-bottom:10px; }
+    .home-resume-hdr { display:flex; align-items:center; gap:9px; margin-bottom:9px; }
+    .home-resume-title { font-size:12px; font-weight:800; color:white; }
+    .home-resume-sub { font-size:10.5px; color:rgba(255,255,255,0.5); margin-top:1px; }
+    .home-resume-btn { width:100%; padding:9px; background:var(--gold); color:var(--navy); border:none; border-radius:9px; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:5px; font-family:'Inter',sans-serif; }
+    .home-resume-fresh { display:block; width:100%; text-align:center; font-size:10.5px; color:rgba(255,255,255,0.38); background:none; border:none; cursor:pointer; padding:2px; text-decoration:underline; font-family:'Inter',sans-serif; }
+
+    /* Footer */
+    .home-footer { padding:14px 20px 20px; text-align:center; font-size:10px; color:rgba(255,255,255,0.28); position:relative; z-index:5; }
+    .home-footer-link { color:rgba(255,255,255,0.38); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.18); }
+
+    /* Desktop overrides */
+    @media(min-width:600px){
+      .home-hero-zone { padding-top:96px; max-width:520px; margin:0 auto; }
+      .home-milo { width:min(28vw,165px); margin-bottom:-16px; }
+      .home-h1 { font-size:clamp(28px,4.5vw,42px); }
+      .home-panel { max-width:480px; margin:18px auto 0; border-radius:28px; }
+      .home-band-icon { width:60px; height:60px; }
+      .home-band-name { font-size:13px; }
+      .home-band-desc { font-size:10px; }
+      .home-start-btn { font-size:18px; padding:17px; }
+    }
+    @media(min-width:900px){
+      .home-hero-zone { max-width:600px; gap:20px; padding-top:100px; }
+      .home-h1 { font-size:44px; }
+      .home-panel { max-width:500px; }
+      .home-band-icon { width:66px; height:66px; }
+    }
+    /* Mobile safe-area bottom padding */
+    @media(max-width:599px){
+      .home-footer { padding-bottom:calc(16px + env(safe-area-inset-bottom,0px)); }
+    }
+    /* Tiny phones: compress slightly */
+    @media(max-width:599px) and (max-height:700px){
+      .home-milo { width:min(30vw,118px); }
+      .home-h1 { font-size:20px; }
+      .home-band-icon { width:44px; height:44px; }
+      .home-band-desc { display:none; }
+      .home-privacy { display:none; }
+    }
   </style>
 </head>
 <body>
@@ -2547,6 +2761,9 @@ async function postToPortal(profile){
 // ── NAV UPDATER ──────────────────────────────────────────────────
 function updateNav(){
   const simMode = (S.screen==='sim'||S.screen==='score');
+  const homeMode = (S.screen==='home');
+  const nav = document.querySelector('.nav');
+  if(nav) nav.classList.toggle('nav-home', homeMode);
   document.getElementById('dayDots').classList.toggle('show', simMode);
   document.getElementById('streakBadge').classList.toggle('show', simMode);
   document.getElementById('navLinks').style.display = simMode?'none':'flex';
@@ -2577,87 +2794,123 @@ function balStatus(b){
 const app=document.getElementById('app');
 function render(){ updateNav(); ({home:renderHome,dayintro:renderDayIntro,sim:renderSim,reflect:renderReflect,score:renderScore,loading:renderLoading}[S.screen]||renderHome)(); }
 
-// HOME
+// HOME v2
 function renderHome(){
   const saved=loadProgress();
   const sb=getStartBal();
   const bc=BAND_CONFIG[S.band]||BAND_CONFIG.builder;
-  const bandPills=Object.entries(BAND_CONFIG).map(([key,cfg])=>`
-    <button class="band-pill${S.band===key?' active':''}" onclick="selectBand('${key}')">
-      <span class="band-pill-emoji">${cfg.emoji}</span>
-      <div class="band-pill-text"><strong>${cfg.label}</strong><em>${cfg.ages}</em></div>
+
+  const bandCards=Object.entries(BAND_CONFIG).map(([key,cfg])=>`
+    <button class="home-band-card ${key}${S.band===key?' active':''}"
+      onclick="selectBand('${key}')"
+      aria-pressed="${S.band===key?'true':'false'}"
+      aria-label="${cfg.label}, ${cfg.ages}">
+      <div class="home-band-icon ${key}"></div>
+      <div class="home-band-name">${cfg.label}</div>
+      <div class="home-band-desc">${cfg.ages}</div>
     </button>`).join('');
+
   const resumeBlock=saved?`
-    <div class="resume-block">
-      <div class="resume-hdr">
-        <span class="resume-icon">📍</span>
+    <div class="home-resume">
+      <div class="home-resume-hdr">
+        <span style="font-size:18px;">📍</span>
         <div>
-          <div class="resume-title">Session in progress</div>
-          <div class="resume-sub">Day ${saved.day} of 5 &nbsp;·&nbsp; $${saved.balance} remaining</div>
+          <div class="home-resume-title">Session in progress</div>
+          <div class="home-resume-sub">Day ${saved.day} of 5 &nbsp;·&nbsp; $${saved.balance} remaining</div>
         </div>
       </div>
-      <button class="resume-btn" onclick="resumeSession()">Continue my week →</button>
-      <button class="resume-fresh" onclick="startFresh()">Start over instead</button>
+      <button class="home-resume-btn" onclick="resumeSession()">Continue My Week →</button>
+      <button class="home-resume-fresh" onclick="startFresh()">Start over instead</button>
     </div>
-    <div class="resume-divider">or start new</div>`:'';
+    <div class="home-divider"><span>or start new</span></div>` : '';
+
   app.innerHTML=`
-<div id="screen-home">
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-band-tint band-${S.band}"></div>
-    <div class="hero-content">
-      <div class="hero-left">
-        <div class="hero-milo-wrap">
-          <div class="milo-col">
-            <img src="./milo-hero.png" alt="Milo" class="hero-milo" />
-            <div class="hero-hundred-badge">$${sb} 💰</div>
-          </div>
-          <div class="hero-speech">I'm <strong>Milo.</strong> You've got $${sb} — let's see what you do with it!</div>
-        </div>
-        <div class="hero-text">
-          <h1 class="hero-h1">Your choices.<br>Your <span class="gld">future.</span></h1>
-          <h1 class="hero-h1-mobile">What would YOU do<br>with <span class="gld">$${sb}?</span></h1>
-        </div>
-      </div>
-      <div class="hero-card">
-        <div class="band-selector">
-          <div class="band-lbl">Who's playing?</div>
-          <div class="band-pills">${bandPills}</div>
-        </div>
-        <div id="bandAutoNote" style="display:none;font-size:11px;color:rgba(255,255,255,0.45);margin:-6px 0 8px;text-align:center;">Your session sets this automatically.</div>
-        ${resumeBlock}
-        <div class="card-title">What will you do with <strong>$${sb}?</strong></div>
-        <div class="card-sub">Your $${sb} is waiting. Find out what kind of money thinker you are.</div>
-        <div class="join-block">
-          <div class="join-block-hdr"><div class="join-block-icon ic-blue">👥</div>Join a Session</div>
-          <div class="join-block-desc">Enter the session code your teacher gave you.</div>
-          <input class="join-input" id="codeInput" type="text" maxlength="8" placeholder="Enter session code" autocomplete="off" spellcheck="false" oninput="onCodeInput(this.value)" />
-          <button class="join-btn-full" onclick="handleJoin()">Join Session ›</button>
-          <div class="err-msg" id="codeErr">That code doesn't match a session. Try again.</div>
-        </div>
-        <div class="or-row">or</div>
-        <div class="join-block">
-          <div class="join-block-hdr"><div class="join-block-icon ic-purple">🎮</div>Play on Your Own</div>
-          <div class="join-block-desc">Explore the challenge and track your progress.</div>
-          <button class="solo-btn solo-desktop" onclick="handleSolo()">Play Now ›</button>
-          <button class="solo-btn solo-mobile" onclick="handleSolo()">Start My Week! →</button>
-        </div>
-        <div class="privacy-note">🔒 <div><strong>Safe. Private.</strong> No personal info required. We never collect names, emails, or anything personal.</div></div>
-      </div>
+<div id="screen-home" class="home-v2">
+  <div class="home-bg" aria-hidden="true"></div>
+  <div class="home-vignette" aria-hidden="true"></div>
+
+  <div class="home-hero-zone">
+    <img src="./milo-pointing.png" alt="Milo the owl mascot, pointing toward the challenge" class="home-milo" />
+    <div class="home-hero-copy">
+      <h1 class="home-h1">What would you do<br>with <span id="heroAmount" class="home-amount">$${sb}?</span></h1>
+      <p class="home-tagline">Real choices. Real thinking. No right answer.</p>
     </div>
   </div>
-  <footer class="site-footer">
-    <div class="footer-copy">© 2026 WealthWise Kids™ LLC. All rights reserved.</div>
-    <div class="footer-min">© 2026 WealthWise Kids™ LLC &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Safety</a></div>
+
+  <div class="home-panel" role="main">
+    <div class="home-section-hdr">
+      <span class="home-star-dec">✦ ✦</span>
+      Who's playing?
+      <span class="home-star-dec">✦ ✦</span>
+    </div>
+    <div class="home-band-grid" role="group" aria-label="Select your age group">
+      ${bandCards}
+    </div>
+    <p class="home-auto-note" id="bandAutoNote">Your session sets this automatically.</p>
+
+    <div class="home-divider"><span>join a session</span></div>
+
+    <div class="home-session-row">
+      <input class="home-code-input" id="codeInput" type="text" maxlength="8"
+        placeholder="Session code from teacher"
+        autocomplete="off" autocapitalize="characters" spellcheck="false"
+        oninput="homeOnCodeInput(this.value)"
+        aria-label="Session code" />
+      <button class="home-join-btn" onclick="handleJoin()" aria-label="Join session">Join ›</button>
+    </div>
+    <div class="home-err" id="codeErr">That code doesn't match a session. Double-check with your teacher.</div>
+
+    <div class="home-divider"><span>or play solo</span></div>
+
+    ${resumeBlock}
+
+    <button class="home-start-btn" onclick="handleSolo()">
+      <span>Start My $${sb} Challenge</span>
+      <span aria-hidden="true">→</span>
+    </button>
+
+    <div class="home-privacy" role="note">
+      <span aria-hidden="true">🔒</span>
+      <span><strong>Safe &amp; Private.</strong> No name, email, or personal info required. Solo play runs entirely on your device.</span>
+    </div>
+  </div>
+
+  <footer class="home-footer">
+    © 2026 WealthWise Kids™ LLC &nbsp;·&nbsp;
+    <a href="/legal.html" class="home-footer-link">Privacy &amp; Safety</a>
   </footer>
 </div>`;
+
   const code=new URLSearchParams(window.location.search).get('code');
-  if(code){const el=document.getElementById('codeInput');if(el) el.value=code.toUpperCase();}
+  if(code){const el=document.getElementById('codeInput');if(el){el.value=code.toUpperCase();homeOnCodeInput(code);}}
 }
+
 function selectBand(band){
   S.band=band;
-  renderHome();
+  const sb=getStartBal();
+  // Update amount text without full re-render
+  const amountEl=document.getElementById('heroAmount');
+  if(amountEl) amountEl.textContent=`$${sb}`;
+  const startBtn=document.querySelector('.home-start-btn span:first-child');
+  if(startBtn) startBtn.textContent=`Start My $${sb} Challenge`;
+  // Toggle active states on band cards
+  document.querySelectorAll('.home-band-card').forEach(el=>{
+    const isBand=el.classList.contains(band);
+    el.classList.toggle('active', isBand);
+    el.setAttribute('aria-pressed', isBand?'true':'false');
+  });
 }
+
+function homeOnCodeInput(val){
+  const grid=document.querySelector('.home-band-grid');
+  const note=document.getElementById('bandAutoNote');
+  const has=val.trim().length>0;
+  if(grid) grid.style.opacity=has?'0.45':'1';
+  if(note) note.style.display=has?'block':'none';
+  const err=document.getElementById('codeErr');
+  if(err) err.classList.remove('show');
+}
+
 function onCodeInput(val){
   const bs=document.querySelector('.band-selector');
   const note=document.getElementById('bandAutoNote');
