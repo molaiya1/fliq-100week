@@ -938,9 +938,9 @@
 
     /* Sky — headline lives here */
     .home-sky {
-      flex:1; min-height:36vh; position:relative; z-index:5;
+      flex:1; min-height:max(38vh,260px); position:relative; z-index:5;
       display:flex; align-items:flex-end;
-      padding:76px 20px 22px 38%;
+      padding:76px 20px 20px 38%;
     }
     .home-headline-zone { width:100%; }
     .home-h1 {
@@ -969,12 +969,15 @@
       /* overflow visible so Milo can extend upward into sky */
     }
 
-    /* Milo perched on upper-left of panel */
+    /* Milo perched on upper-left of panel — feet at 84.2% of height, aspect 1130:1392
+       top = -(feet_from_top) = -(width × 1392/1130 × 0.842) = -(width × 1.037) */
     .home-milo {
-      position:absolute; left:3%; top:-58px;
-      width:min(44vw,178px); height:auto;
+      position:absolute; left:3%;
+      --mw:min(44vw,164px);
+      width:var(--mw); height:auto;
+      top:calc(var(--mw) * -1.037);
       z-index:30;
-      filter:drop-shadow(0 16px 28px rgba(0,0,0,0.38));
+      filter:drop-shadow(0 18px 30px rgba(0,0,0,0.4));
       pointer-events:none;
     }
 
@@ -985,7 +988,7 @@
       border-radius:36px;
       box-shadow:0 30px 80px rgba(0,0,0,0.46),0 0 42px rgba(244,178,35,0.12),inset 0 1px 0 rgba(255,255,255,0.07);
       backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-      transform:perspective(1400px) rotateX(2.5deg) rotateZ(-1.5deg);
+      transform:perspective(1100px) rotateX(4deg) rotateZ(-2.5deg);
       transform-origin:center top;
       padding:20px 18px 22px;
       margin:0 2px;
@@ -1014,15 +1017,11 @@
     .home-band-card.builder.active   { border-color:#F4B223; background:rgba(244,178,35,0.11); box-shadow:0 0 22px rgba(244,178,35,0.22); }
     .home-band-card.strategist.active{ border-color:#EF4444; background:rgba(239,68,68,0.11);  box-shadow:0 0 22px rgba(239,68,68,0.2);  }
 
-    /* Icons — CSS sprite with true-alpha PNG */
+    /* Icons — individual transparent PNGs, used as <img> */
     .home-band-icon {
-      width:56px; height:56px; flex-shrink:0;
-      background:url('./band-icons.png') no-repeat;
-      background-size:300% auto;
+      width:58px; height:58px; flex-shrink:0;
+      object-fit:contain; display:block;
     }
-    .home-band-icon.explorer   { background-position:0%   50%; }
-    .home-band-icon.builder    { background-position:50%  50%; }
-    .home-band-icon.strategist { background-position:100% 50%; }
 
     .home-band-name { font-size:12.5px; font-weight:800; color:white; line-height:1.2; text-align:center; }
     .home-band-card.explorer.active  .home-band-name { color:#86EFAC; }
@@ -1096,24 +1095,25 @@
 
     /* Desktop */
     @media(min-width:600px){
-      .home-sky { min-height:40vh; padding-left:min(44%,260px); padding-right:28px; }
+      .home-sky { min-height:max(42vh,280px); padding-left:min(44%,248px); padding-right:28px; }
       .home-h1 { font-size:clamp(30px,5.5vw,48px); }
       .home-stage { max-width:510px; margin:0 auto; }
-      .home-milo { width:min(40vw,185px); top:-70px; }
-      .home-band-icon { width:62px; height:62px; }
+      .home-milo { --mw:min(38vw,182px); width:var(--mw); top:calc(var(--mw) * -1.037); }
+      .home-band-icon { width:64px; height:64px; }
       .home-start-btn { font-size:19px; }
     }
     @media(min-width:900px){
       .home-sky { max-width:510px; margin:0 auto; width:100%; }
       .home-stage { max-width:510px; }
       .home-h1 { font-size:46px; }
+      /* At 900px+ milo-w is capped at 182px, top = 182 × -1.037 = -189px */
     }
     /* Tiny phones */
     @media(max-width:370px){
       .home-h1 { font-size:20px; }
       .home-band-icon { width:46px; height:46px; }
       .home-band-desc { display:none; }
-      .home-milo { width:40vw; top:-50px; }
+      .home-milo { --mw:40vw; width:var(--mw); top:calc(var(--mw) * -1.037); }
       .home-sky { padding-left:35%; }
     }
     @media(max-width:599px){
@@ -2809,7 +2809,7 @@ function renderHome(){
       onclick="selectBand('${key}')"
       aria-pressed="${S.band===key?'true':'false'}"
       aria-label="${cfg.label}, ${cfg.ages}">
-      <div class="home-band-icon ${key}"></div>
+      <img src="./icon-${key}.png" class="home-band-icon" alt="" />
       <div class="home-band-name">${cfg.label}</div>
       <div class="home-band-desc">${cfg.ages}</div>
     </button>`).join('');
