@@ -76,7 +76,8 @@
        Now min-height allows natural expansion; hero-bg fixed so background always fills viewport. */
     #screen-home { min-height:100vh; display:flex; flex-direction:column; overflow:hidden; }
     .hero { flex:1; min-height:0; padding-top:72px; position:relative; display:flex; align-items:center; justify-content:stretch; overflow:hidden; }
-    .hero-bg { position:fixed; inset:0; z-index:0; background:url('./bg-home.jpg') center bottom/cover no-repeat; }
+    .hero-bg { position:fixed; inset:0; z-index:0; background:url('./bg-home-mobile.png') center bottom/cover no-repeat; }
+    @media(min-width:600px){ .hero-bg { background-image:url('./bg-home-desktop.png'); background-position:center center; } }
 
     /* No height:100% — grid is auto-height, hero flex-centers it vertically.
        align-items:start so both columns START at the same Y (matches reference). */
