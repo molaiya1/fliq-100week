@@ -969,15 +969,17 @@
       /* overflow visible so Milo can extend upward into sky */
     }
 
-    /* Milo perched on upper-left of panel — feet at 84.2% of height, aspect 1130:1392
-       top = -(feet_from_top) = -(width × 1392/1130 × 0.842) = -(width × 1.037) */
+    /* Milo perched on upper-left of panel.
+       Feet at 84.2% of Milo height = width × 1.037.
+       Multiplier -0.96 plants feet ~6% of width BELOW panel top edge
+       so he looks grounded, not hovering at the seam. */
     .home-milo {
-      position:absolute; left:3%;
+      position:absolute; left:2%;
       --mw:min(44vw,164px);
       width:var(--mw); height:auto;
-      top:calc(var(--mw) * -1.037);
+      top:calc(var(--mw) * -0.96);
       z-index:30;
-      filter:drop-shadow(0 18px 30px rgba(0,0,0,0.4));
+      filter:drop-shadow(0 18px 32px rgba(0,0,0,0.42));
       pointer-events:none;
     }
 
@@ -988,7 +990,7 @@
       border-radius:36px;
       box-shadow:0 30px 80px rgba(0,0,0,0.46),0 0 42px rgba(244,178,35,0.12),inset 0 1px 0 rgba(255,255,255,0.07);
       backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-      transform:perspective(1100px) rotateX(4deg) rotateZ(-2.5deg);
+      transform:perspective(900px) rotateX(12deg);
       transform-origin:center top;
       padding:20px 18px 22px;
       margin:0 2px;
@@ -1098,7 +1100,7 @@
       .home-sky { min-height:max(42vh,280px); padding-left:min(44%,248px); padding-right:28px; }
       .home-h1 { font-size:clamp(30px,5.5vw,48px); }
       .home-stage { max-width:510px; margin:0 auto; }
-      .home-milo { --mw:min(38vw,182px); width:var(--mw); top:calc(var(--mw) * -1.037); }
+      .home-milo { --mw:min(38vw,182px); width:var(--mw); top:calc(var(--mw) * -0.96); }
       .home-band-icon { width:64px; height:64px; }
       .home-start-btn { font-size:19px; }
     }
@@ -1113,7 +1115,7 @@
       .home-h1 { font-size:20px; }
       .home-band-icon { width:46px; height:46px; }
       .home-band-desc { display:none; }
-      .home-milo { --mw:40vw; width:var(--mw); top:calc(var(--mw) * -1.037); }
+      .home-milo { --mw:40vw; width:var(--mw); top:calc(var(--mw) * -0.96); }
       .home-sky { padding-left:35%; }
     }
     @media(max-width:599px){
