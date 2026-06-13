@@ -636,8 +636,13 @@
     .prof-desc { font-size:14px; color:rgba(255,255,255,0.75); line-height:1.7; max-width:420px; margin:0 auto 16px; animation:fadeUp 0.5s 0.6s both; }
     .bal-result { display:inline-flex; align-items:center; gap:8px; border-radius:20px; padding:8px 20px; font-size:14px; font-weight:700; margin-bottom:18px; background:rgba(244,178,35,0.15); border:1.5px solid rgba(244,178,35,0.3); color:var(--gold); }
     /* Ecosystem CTA */
-    .fliq-ecosystem-cta { margin-top:4px; margin-bottom:14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 16px; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.65; animation:fadeUp 0.5s 1s both; }
-    .fliq-ecosystem-cta strong { color:white; }
+    .teacher-moment { margin:0 0 16px; background:rgba(244,178,35,0.07); border:1.5px solid rgba(244,178,35,0.32); border-radius:16px; padding:18px 18px 16px; text-align:left; animation:fadeUp 0.5s 0.9s both; }
+    .teacher-moment-top { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .teacher-moment-icon { font-size:22px; flex-shrink:0; }
+    .teacher-moment-head { font-size:14px; font-weight:800; color:var(--gold); line-height:1.3; }
+    .teacher-moment-sub { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.65; margin-bottom:14px; }
+    .teacher-moment-btn { display:inline-flex; align-items:center; gap:6px; background:var(--gold); color:var(--navy); font-size:12px; font-weight:800; padding:10px 20px; border-radius:10px; text-decoration:none; font-family:'Inter',sans-serif; transition:all 0.2s; letter-spacing:0.1px; }
+    .teacher-moment-btn:hover { background:#E8A91A; transform:translateY(-1px); }
     .trait-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:18px; text-align:left; }
     .trait-tile { background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.12); border-radius:16px; padding:14px; }
     .t-name { display:flex; align-items:center; gap:6px; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:6px; }
@@ -2909,6 +2914,9 @@ function renderScore(){
       },
       replayLabel:'Play Again! 🌱',
       ecosystemNote:"🌟 <strong>Tell a grown-up about this!</strong> Your teacher or parent can see your full report and help you keep growing your money smarts.",
+      teacherHead:"Tell a grown-up about your score! 🌟",
+      teacherSub:"Your teacher or a parent can see your full results — and unlock even more money challenges for you. Show them this!",
+      teacherBtnLabel:"Show My Teacher →",
     },
     builder:{
       eyebrow:'Week Complete 🔨',
@@ -2933,6 +2941,9 @@ function renderScore(){
       },
       replayLabel:'Play Again 🔨',
       ecosystemNote:"📋 <strong>Tell your teacher about WealthWise Kids™</strong> — they can unlock your full behavioral report and track how your FLIQ Score grows over time.",
+      teacherHead:"Show this to your teacher.",
+      teacherSub:"Your educator can unlock your full behavioral report, see how your FLIQ Score™ compares to your class, and bring more WealthWise Kids™ programs to your school.",
+      teacherBtnLabel:"Share With My Teacher →",
     },
     strategist:{
       eyebrow:'Behavioral Intelligence Profile',
@@ -2957,6 +2968,9 @@ function renderScore(){
       },
       replayLabel:'Try Different Choices 🎯',
       ecosystemNote:"📊 <strong>Share this with your educator</strong> — your full behavioral data report is available through the WealthWise Kids™ facilitator dashboard.",
+      teacherHead:"Share your results with your educator.",
+      teacherSub:"Your facilitator can access your full FLIQ behavioral profile, track your score over time, and use your data to shape the curriculum for your cohort.",
+      teacherBtnLabel:"Share With My Educator →",
     },
   };
   const cfg=bandCfg[band]||bandCfg.builder;
@@ -3003,8 +3017,14 @@ function renderScore(){
     <div class="bal-result">💰 You ended with $${fb}</div>
     <div class="trait-grid">${traitHtml}</div>
 
-    <div class="fliq-ecosystem-cta">${cfg.ecosystemNote}</div>
-    <div class="edu-note">Your profile builds over time — <strong>this is just the start.</strong></div>
+    <div class="teacher-moment">
+      <div class="teacher-moment-top">
+        <div class="teacher-moment-icon">📋</div>
+        <div class="teacher-moment-head">${cfg.teacherHead}</div>
+      </div>
+      <div class="teacher-moment-sub">${cfg.teacherSub}</div>
+      <a href="/brief.html" target="_blank" rel="noopener" class="teacher-moment-btn">${cfg.teacherBtnLabel}</a>
+    </div>
     <button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button>
 
     <!-- CoinQuest CTA -->
