@@ -84,15 +84,35 @@
        align-items:start so both columns START at the same Y (matches reference). */
     .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:8px 28px 20px; display:grid; grid-template-columns:1fr 400px; gap:32px; align-items:flex-end; }
     .hero-left { display:flex; flex-direction:column; align-items:flex-start; }
-    .hero-milo-wrap { margin-bottom:0; align-self:center; display:flex; flex-direction:row; align-items:flex-start; gap:0; animation:miloFloat 4s ease-in-out infinite; }
+    /* Milo wrap: column layout, position:relative so bubble can anchor to him */
+    .hero-milo-wrap { position:relative; margin-bottom:0; align-self:flex-end; display:flex; flex-direction:column; align-items:center; gap:0; animation:miloFloat 4s ease-in-out infinite; }
     .milo-col { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
     .hero-milo { width:min(220px,22vw); max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); }
     .milo-col::after { content:''; display:block; width:90px; height:16px; background:radial-gradient(ellipse,rgba(0,0,0,0.28) 0%,transparent 72%); margin:-6px auto 0; border-radius:50%; }
     @keyframes miloFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-    /* Speech bubble: flows to the right of Milo, tail points LEFT back toward his beak */
-    .hero-speech { position:relative; margin-top:32px; align-self:flex-start; z-index:2; background:var(--navy); color:white; border-radius:14px; padding:11px 14px; font-size:12.5px; font-weight:600; line-height:1.5; max-width:185px; box-shadow:0 6px 22px rgba(11,29,58,0.24); animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+    /* Speech bubble: absolute above Milo, tail points DOWN toward his beak */
+    .hero-speech {
+      position:absolute;
+      bottom:82%; /* floats above Milo's beak (beak ≈ top 18% of figure) */
+      left:55%;   /* shifts right so bubble clears his body */
+      z-index:2;
+      background:rgba(11,29,58,0.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      color:white; border-radius:14px 14px 14px 4px;
+      padding:10px 13px; font-size:12px; font-weight:600; line-height:1.5;
+      max-width:180px; white-space:normal;
+      box-shadow:0 6px 22px rgba(11,29,58,0.35);
+      border:1px solid rgba(255,255,255,0.12);
+      animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
     .hero-speech strong { color:var(--gold); }
-    .hero-speech::before { content:''; position:absolute; top:14px; left:-10px; width:12px; height:14px; background:var(--navy); clip-path:polygon(100% 0,100% 100%,0 50%); }
+    /* Tail points DOWN-LEFT toward beak */
+    .hero-speech::before {
+      content:''; position:absolute;
+      bottom:-9px; left:16px;
+      width:14px; height:10px;
+      background:rgba(11,29,58,0.92);
+      clip-path:polygon(0 0, 40% 0, 0 100%);
+    }
     .hero-speech::after { display:none; }
     @keyframes speechPop { from{opacity:0;transform:scale(0.75) translateY(10px);} to{opacity:1;transform:scale(1) translateY(0);} }
     .hero-text { background:none; border:none; padding:0; box-shadow:none; margin-top:10px; }
@@ -143,12 +163,8 @@
     .resume-divider { display:flex; align-items:center; gap:8px; color:rgba(255,255,255,0.3); font-size:11px; font-weight:500; margin-bottom:14px; }
     .resume-divider::before,.resume-divider::after { content:''; flex:1; height:1px; background:rgba(11,29,58,0.1); }
 
-    .pilot-strip { background:#0a1628; border-top:1px solid rgba(244,185,66,0.22); padding:8px 28px; flex-shrink:0; position:relative; z-index:10; }
-    .pilot-strip-inner { max-width:1120px; margin:0 auto; display:flex; align-items:center; gap:14px; }
-    .pilot-strip-badge { flex-shrink:0; background:var(--gold); color:var(--navy); font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:20px; white-space:nowrap; }
-    .pilot-strip-text { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.5; }
-    @media(max-width:768px){ .pilot-strip { display:none; } }
-    .feature-bar { background:var(--navy); padding:10px 28px; flex-shrink:0; position:relative; z-index:10; }
+    .pilot-strip { display:none; }
+    .feature-bar { display:none; }
     .feature-bar-inner { max-width:1120px; margin:0 auto; display:flex; justify-content:space-around; gap:16px; }
     .feat { display:flex; align-items:center; gap:12px; flex:1; }
     .feat-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
@@ -227,6 +243,9 @@
     /* ══════════════════════════════════════
        BAND SELECTOR
     ══════════════════════════════════════ */
+    .pilot-card-badge { display:flex; align-items:flex-start; gap:8px; background:rgba(244,185,66,0.08); border:1px solid rgba(244,185,66,0.22); border-radius:10px; padding:7px 10px; font-size:10.5px; color:rgba(255,255,255,0.6); line-height:1.5; margin-bottom:10px; }
+    .pilot-card-dot { flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:4px; }
+    @media(max-width:768px){ .pilot-card-badge { display:none; } }
     .band-selector { margin-bottom:10px; }
     .band-lbl { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:8px; }
     .band-pills { display:flex; gap:6px; }
@@ -2633,6 +2652,10 @@ function renderHome(){
         </div>
       </div>
       <div class="hero-card">
+        <div class="pilot-card-badge">
+          <span class="pilot-card-dot"></span>
+          Pilot cohorts: majority of students improved their FLIQ Score™ and demonstrated measurable gains in financial decision-making confidence.
+        </div>
         <div class="band-selector">
           <div class="band-lbl">Who's playing?</div>
           <div class="band-pills">${bandPills}</div>
