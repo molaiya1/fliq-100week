@@ -3270,16 +3270,16 @@ async function makeChoice(ci){
 
 // ── Reflection prompts per day ────────────────────────────────────
 const REFLECT_PROMPTS = [
-  { q:"Day 1 in the books. What drove that decision?",
-    opts:["I thought about the full week ahead", "It felt right in the moment", "I was looking for a smarter option"] },
-  { q:"Someone else's situation almost changed your plan. How did you navigate that?",
-    opts:["I stayed focused on my own goals", "The pressure shifted my thinking", "I found a path that worked for both"] },
-  { q:"An unexpected cost hit. What does your response reveal about how you think?",
-    opts:["I dealt with it right away", "I needed more time to process it", "I adapted and kept moving forward"] },
-  { q:"You made a risk call. What tipped it?",
-    opts:["Protecting my position mattered more", "The potential upside was worth it", "I wanted more information first"] },
-  { q:"Week done. Looking back — what did your choices this week reveal about how you think?",
-    opts:["I lead with long-term thinking", "I trust my instincts and adjust", "I'm still building my own approach"] },
+  { q:"Day 1 done. What happened when you made that call?",
+    opts:["I already had a plan going in", "I made the call in the moment", "I looked for another way first"] },
+  { q:"Something else pulled at your decision today. How did it play out?",
+    opts:["I went with what I had in mind", "What was happening around me changed my direction", "I tried to find something that worked for everyone"] },
+  { q:"An unexpected cost came up. Walk through what happened.",
+    opts:["I handled it right away and kept moving", "I slowed down before deciding what to do", "I adjusted my approach and moved on"] },
+  { q:"You took a position on risk today. What was behind that?",
+    opts:["Holding my position felt more important", "The potential reward drove the decision", "I wanted to know more before committing"] },
+  { q:"Five days done. How would you describe the pattern across your choices?",
+    opts:["I had a consistent approach from day one", "I felt things out and adjusted as I went", "My approach shifted depending on the situation"] },
 ];
 
 function renderReflect(){
