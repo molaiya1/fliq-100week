@@ -2595,7 +2595,6 @@ function updateNav(){
   const simMode = (S.screen==='sim'||S.screen==='score');
   document.getElementById('dayDots').classList.toggle('show', simMode);
   document.getElementById('navLinks').style.display = simMode?'none':'flex';
-  document.getElementById('navMenu').classList.toggle('show', simMode);
 
   if(simMode){
     [1,2,3,4,5].forEach(d=>{
