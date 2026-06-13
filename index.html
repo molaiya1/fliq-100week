@@ -75,13 +75,13 @@
     /* Fixed height was the culprit — grid taller than viewport got symmetrically clipped.
        Now min-height allows natural expansion; hero-bg fixed so background always fills viewport. */
     #screen-home { min-height:100vh; display:flex; flex-direction:column; overflow:hidden; }
-    .hero { flex:1; min-height:0; padding-top:72px; position:relative; display:flex; align-items:center; justify-content:stretch; overflow:hidden; }
+    .hero { flex:1; min-height:0; padding-top:72px; position:relative; display:flex; align-items:flex-end; justify-content:stretch; overflow:hidden; }
     .hero-bg { position:fixed; inset:0; z-index:0; background:url('./bg-home-mobile.png') center bottom/cover no-repeat; }
     @media(min-width:600px){ .hero-bg { background-image:url('./bg-home-desktop.png'); background-position:center center; } }
 
     /* No height:100% — grid is auto-height, hero flex-centers it vertically.
        align-items:start so both columns START at the same Y (matches reference). */
-    .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:8px 28px; display:grid; grid-template-columns:1fr 400px; gap:32px; align-items:center; }
+    .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:8px 28px 32px; display:grid; grid-template-columns:1fr 400px; gap:32px; align-items:flex-end; }
     .hero-left { display:flex; flex-direction:column; align-items:flex-start; }
     .hero-milo-wrap { margin-bottom:0; align-self:center; display:flex; flex-direction:row; align-items:flex-start; gap:0; animation:miloFloat 4s ease-in-out infinite; }
     .milo-col { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
@@ -142,6 +142,11 @@
     .resume-divider { display:flex; align-items:center; gap:8px; color:rgba(255,255,255,0.3); font-size:11px; font-weight:500; margin-bottom:14px; }
     .resume-divider::before,.resume-divider::after { content:''; flex:1; height:1px; background:rgba(11,29,58,0.1); }
 
+    .pilot-strip { background:#0a1628; border-top:1px solid rgba(244,185,66,0.22); padding:11px 28px; flex-shrink:0; position:relative; z-index:10; }
+    .pilot-strip-inner { max-width:1120px; margin:0 auto; display:flex; align-items:center; gap:14px; }
+    .pilot-strip-badge { flex-shrink:0; background:var(--gold); color:var(--navy); font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:20px; white-space:nowrap; }
+    .pilot-strip-text { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.5; }
+    @media(max-width:768px){ .pilot-strip { display:none; } }
     .feature-bar { background:var(--navy); padding:14px 28px; flex-shrink:0; position:relative; z-index:10; }
     .feature-bar-inner { max-width:1120px; margin:0 auto; display:flex; justify-content:space-around; gap:16px; }
     .feat { display:flex; align-items:center; gap:12px; flex:1; }
@@ -203,9 +208,9 @@
       position:fixed; inset:0; z-index:1; pointer-events:none;
       background:linear-gradient(to bottom,
         rgba(5,15,38,0)    0%,
-        rgba(5,15,38,0)    30%,
-        rgba(5,15,38,0.12) 62%,
-        rgba(5,15,38,0.52) 100%);
+        rgba(5,15,38,0)    20%,
+        rgba(5,15,38,0.08) 55%,
+        rgba(5,15,38,0.65) 100%);
       transition:background 0.5s ease;
     }
     .hero-band-tint.band-explorer,
@@ -213,9 +218,9 @@
     .hero-band-tint.band-strategist {
       background:linear-gradient(to bottom,
         rgba(5,15,38,0)    0%,
-        rgba(5,15,38,0)    30%,
-        rgba(5,15,38,0.12) 62%,
-        rgba(5,15,38,0.52) 100%);
+        rgba(5,15,38,0)    20%,
+        rgba(5,15,38,0.08) 55%,
+        rgba(5,15,38,0.65) 100%);
     }
 
     /* ══════════════════════════════════════
@@ -2648,6 +2653,12 @@ function renderHome(){
         </div>
         <div class="privacy-note">🔒 <div><strong>Safe &amp; Private.</strong> No name, email, or personal info required.</div></div>
       </div>
+    </div>
+  </div>
+  <div class="pilot-strip">
+    <div class="pilot-strip-inner">
+      <span class="pilot-strip-badge">Pilot Results</span>
+      <span class="pilot-strip-text">Across pilot cohorts, the majority of students improved their FLIQ Score™ and demonstrated measurable gains in financial decision-making confidence, tradeoff recognition, and goal-setting behavior.</span>
     </div>
   </div>
   <div class="feature-bar">
