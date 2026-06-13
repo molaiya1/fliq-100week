@@ -132,16 +132,17 @@
     }
     .report-meta {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(6, 1fr);
       gap: 0;
       border-top: 1px solid rgba(255,255,255,0.10);
       padding-top: 28px;
     }
     .meta-item {
       display: flex; flex-direction: column; gap: 6px;
-      padding-right: 24px;
+      padding: 0 20px;
       border-right: 1px solid rgba(255,255,255,0.08);
     }
+    .meta-item:first-child { padding-left: 0; }
     .meta-item:last-child { border-right: none; }
     .meta-label { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.30); }
     .meta-value { font-size: 18px; font-weight: 800; color: #ffffff; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
@@ -432,6 +433,11 @@
       .day-grid { grid-template-columns: 1fr 1fr; }
       .report-header { padding: 32px 28px; }
       .card, .insight-card, .cta-card { padding: 28px 24px; }
+      .report-meta { grid-template-columns: repeat(3, 1fr); row-gap: 20px; }
+      .meta-item { border-right: 1px solid rgba(255,255,255,0.08); }
+      .meta-item:nth-child(3), .meta-item:nth-child(6) { border-right: none; }
+      .meta-item { padding: 0 14px; }
+      .meta-item:first-child { padding-left: 0; }
     }
     @media (max-width: 440px) {
       .day-grid { grid-template-columns: 1fr; }
