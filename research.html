@@ -278,38 +278,99 @@
       padding: 0 48px;
     }
 
-    /* ── Cost table ── */
-    .cost-table-wrap { margin: 28px 0; overflow-x: auto; }
-    .cost-table {
-      width: 100%; border-collapse: collapse;
-      font-size: 14px;
+    /* ── Byline avatar ── */
+    .byline-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.2);
+      filter: grayscale(20%);
     }
-    .cost-table thead tr {
-      border-bottom: 2px solid var(--navy);
+    .byline-text { display: flex; flex-direction: column; gap: 3px; }
+    .byline-sub { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+    /* ── FLIQ Impact Chart ── */
+    .fliq-chart {
+      background: var(--navy-dk);
+      padding: 52px 0 44px;
+      margin: 36px -48px 0;
+      width: calc(100% + 96px);
     }
-    .cost-table th {
-      font-size: 10px; font-weight: 800; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--text3);
-      text-align: left; padding: 12px 16px;
+    .fliq-chart-inner {
+      max-width: 860px; margin: 0 auto; padding: 0 48px;
     }
-    .cost-table th:first-child { padding-left: 0; }
-    .cost-table td {
-      padding: 18px 16px;
-      border-bottom: 1px solid var(--border);
-      line-height: 1.6; color: var(--text2);
-      vertical-align: top;
+    .fliq-chart-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 10px;
     }
-    .cost-table td:first-child {
-      padding-left: 0;
-      font-weight: 700; color: var(--text);
-      font-size: 13px;
-    }
-    .cost-table tr:last-child td { border-bottom: none; }
-    .cost-val {
+    .fliq-chart-title {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: 20px; font-weight: 800;
-      color: var(--red); letter-spacing: -0.5px;
-      display: block; margin-bottom: 4px;
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 800; color: #fff;
+      line-height: 1.2; margin-bottom: 10px;
+    }
+    .fliq-chart-sub {
+      font-size: 13px; color: rgba(255,255,255,0.4);
+      line-height: 1.7; margin-bottom: 36px; max-width: 680px;
+    }
+    .fliq-bars { display: flex; flex-direction: column; }
+    .fliq-row {
+      display: grid;
+      grid-template-columns: 48px 1fr 150px;
+      gap: 18px; align-items: center;
+      padding: 18px 0;
+      border-top: 1px solid rgba(255,255,255,0.055);
+    }
+    .fliq-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.055); }
+    .fliq-badge {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .fliq-po { background: rgba(185,28,28,0.22); color: #FCA5A5; border: 1.5px solid rgba(185,28,28,0.45); }
+    .fliq-ic { background: rgba(194,65,12,0.22); color: #FDBA74; border: 1.5px solid rgba(194,65,12,0.45); }
+    .fliq-rb { background: rgba(180,130,0,0.22); color: #FDE68A; border: 1.5px solid rgba(180,130,0,0.4); }
+    .fliq-ra { background: rgba(31,60,136,0.4); color: rgba(255,255,255,0.55); border: 1.5px solid rgba(100,130,200,0.35); }
+    .fliq-row-mid { display: flex; flex-direction: column; gap: 7px; }
+    .fliq-row-label { display: flex; flex-direction: column; gap: 1px; }
+    .fliq-domain-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); }
+    .fliq-domain-sub { font-size: 11px; color: rgba(255,255,255,0.32); line-height: 1.5; }
+    .fliq-bar-track {
+      height: 7px; background: rgba(255,255,255,0.055);
+      border-radius: 4px; overflow: hidden; width: 100%;
+    }
+    .fliq-bar {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, #991B1B 0%, #DC2626 100%);
+    }
+    .fliq-bar-ic  { background: linear-gradient(90deg, #9A3412 0%, #EA580C 100%); }
+    .fliq-bar-rb  { background: linear-gradient(90deg, #92400E 0%, #D97706 100%); }
+    .fliq-bar-ra  { background: linear-gradient(90deg, #1e3a7a 0%, #3B5FD1 100%); }
+    .fliq-row-source { font-size: 10px; color: rgba(255,255,255,0.18); font-style: italic; }
+    .fliq-cost { text-align: right; }
+    .fliq-cost-num {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px; font-weight: 900;
+      line-height: 1; margin-bottom: 3px; letter-spacing: -0.5px;
+    }
+    .fliq-po .fliq-cost-num, .fliq-row:nth-child(1) .fliq-cost-num { color: #FCA5A5; }
+    .cn-ic  { color: #FDBA74; }
+    .cn-rb  { color: #FDE68A; }
+    .cn-ra  { color: rgba(255,255,255,0.5); }
+    .fliq-cost-label { font-size: 10px; color: rgba(255,255,255,0.22); line-height: 1.4; }
+    .fliq-chart-footer {
+      margin-top: 24px; padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.055);
+      display: flex; justify-content: space-between; gap: 20px;
+      font-size: 10px; color: rgba(255,255,255,0.2); font-style: italic;
+    }
+    @media (max-width: 720px) {
+      .fliq-chart { margin-left: -24px; margin-right: -24px; width: calc(100% + 48px); }
+      .fliq-chart-inner { padding: 0 24px; }
+      .fliq-row { grid-template-columns: 40px 1fr; }
+      .fliq-cost { display: none; }
+      .fliq-domain-name::after { content: attr(data-cost); display: block; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5); margin-top: 2px; }
     }
 
     /* ── Philosophy section ── */
@@ -423,11 +484,11 @@
     <div class="hero-eyebrow">WealthWise Kids™ · Research Foundation</div>
     <h1 class="hero-h1">Financial Intelligence Is Behavioral, Not Informational.</h1>
     <div class="hero-byline">
-      <strong>WealthWise Kids™ LLC</strong>
-      <span>·</span>
-      <span>Research Brief for Administrators, Program Directors & Institutional Partners</span>
-      <span>·</span>
-      <span>2026</span>
+      <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=88&h=88&auto=format&fit=crop&q=80" alt="" class="byline-avatar" />
+      <div class="byline-text">
+        <strong>WealthWise Kids™ Research Advisory</strong>
+        <span class="byline-sub">Research Brief for Program Directors, Administrators & Institutional Partners · 2026</span>
+      </div>
     </div>
   </div>
 </div>
@@ -568,6 +629,14 @@
     </div>
   </div>
 
+  </div><!-- /article: close before full-bleed image -->
+
+  <!-- Midpage image — Part 2 → Part 3 transition -->
+  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&auto=format&fit=crop&q=80" alt="Data analytics and behavioral research" style="width:100%;height:340px;object-fit:cover;object-position:center 55%;display:block;margin:48px 0 0;" />
+  <p style="font-size:11px;color:#888;font-style:italic;text-align:center;padding:10px 48px 40px;background:var(--cream);">Behavioral data — not test scores — is the leading indicator of long-term financial health. The FLIQ Score™ measures what other assessments ignore.</p>
+
+  <div class="article">
+
   <!-- SECTION 3 -->
   <hr class="section-rule" />
   <div class="section-header">
@@ -577,55 +646,84 @@
 
   <p class="body-text">The FLIQ Score™ measures four behavioral domains — Impulse Control, Planning Orientation, Risk Awareness, and Resilience. Each domain, when underdeveloped, carries a documented, quantifiable lifetime cost. This table gives administrators and program directors the stakes behind each dimension of what students are practicing when they complete The $100 Week™.</p>
 
-  <div class="cost-table-wrap">
-    <table class="cost-table">
-      <thead>
-        <tr>
-          <th style="width:18%;">FLIQ Domain</th>
-          <th style="width:24%;">Underdeveloped Pattern</th>
-          <th style="width:22%;">Documented Lifetime Cost</th>
-          <th>Source</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Impulse Control (IC)</td>
-          <td>Chronic impulsive spending; inability to delay gratification in financial decisions</td>
-          <td>
-            <span class="cost-val">$280K–$400K</span>
-            Cumulative lost wealth from high-interest debt and missed compound savings, ages 18–65
-          </td>
-          <td style="font-size:12px;color:#888;font-style:italic;">Consumer Financial Protection Bureau, 2016</td>
-        </tr>
-        <tr>
-          <td>Planning Orientation (PO)</td>
-          <td>No savings habit; reactive vs. proactive financial behavior; no long-range planning</td>
-          <td>
-            <span class="cost-val">$1.4M+</span>
-            Median wealth gap between those who begin saving at age 22 versus age 35, at 7% avg. annual return
-          </td>
-          <td style="font-size:12px;color:#888;font-style:italic;">Vanguard Retirement Research, 2022</td>
-        </tr>
-        <tr>
-          <td>Risk Awareness (RA)</td>
-          <td>Inability to identify predatory or asymmetric financial situations; high vulnerability to scams and high-fee products</td>
-          <td>
-            <span class="cost-val">$3,000/yr avg.</span>
-            Annual losses to financial fraud, predatory lending, and high-fee financial products for low-literacy households
-          </td>
-          <td style="font-size:12px;color:#888;font-style:italic;">FTC Consumer Sentinel Network, 2023</td>
-        </tr>
-        <tr>
-          <td>Resilience / Recovery (RB)</td>
-          <td>Sustained negative behavior change following financial setbacks; inability to course-correct after loss or unexpected costs</td>
-          <td>
-            <span class="cost-val">2–3× more likely</span>
-            To accumulate long-term debt following first major financial shock (job loss, medical event, emergency)
-          </td>
-          <td style="font-size:12px;color:#888;font-style:italic;">Urban Institute Financial Health Research, 2021</td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- FLIQ Impact Visualization — replaces flat table -->
+  <div class="fliq-chart">
+    <div class="fliq-chart-inner">
+      <div class="fliq-chart-eyebrow">FLIQ™ Impact Analysis · Exhibit 1</div>
+      <h3 class="fliq-chart-title">Lifetime Financial Cost of Underdeveloped Behavior — By Domain</h3>
+      <p class="fliq-chart-sub">Estimated cumulative financial exposure per individual when each FLIQ domain remains underdeveloped through adulthood. Costs aggregate debt accumulation, foregone savings, fraud exposure, and behavioral risk multipliers. Planning Orientation ($1.4M compound gap) serves as the index baseline.</p>
+      <div class="fliq-bars">
+
+        <div class="fliq-row">
+          <div class="fliq-badge fliq-po">PO</div>
+          <div class="fliq-row-mid">
+            <div class="fliq-row-label">
+              <span class="fliq-domain-name" data-cost="$1.4M+">Planning Orientation</span>
+              <span class="fliq-domain-sub">No savings habit · reactive financial behavior · no long-range planning</span>
+            </div>
+            <div class="fliq-bar-track"><div class="fliq-bar" style="width:100%;"></div></div>
+            <div class="fliq-row-source">Vanguard Retirement Research, 2022 · 7% avg. annual return, age 22 vs. 35 savings start</div>
+          </div>
+          <div class="fliq-cost">
+            <div class="fliq-cost-num" style="color:#FCA5A5;">$1.4M+</div>
+            <div class="fliq-cost-label">compound savings gap</div>
+          </div>
+        </div>
+
+        <div class="fliq-row">
+          <div class="fliq-badge fliq-ic">IC</div>
+          <div class="fliq-row-mid">
+            <div class="fliq-row-label">
+              <span class="fliq-domain-name" data-cost="$280–400K">Impulse Control</span>
+              <span class="fliq-domain-sub">Chronic impulsive spending · high-interest debt accumulation · delayed gratification failure</span>
+            </div>
+            <div class="fliq-bar-track"><div class="fliq-bar fliq-bar-ic" style="width:26%;"></div></div>
+            <div class="fliq-row-source">Consumer Financial Protection Bureau Research Brief, 2016 · ages 18–65</div>
+          </div>
+          <div class="fliq-cost">
+            <div class="fliq-cost-num cn-ic">$280–$400K</div>
+            <div class="fliq-cost-label">cumulative lost wealth</div>
+          </div>
+        </div>
+
+        <div class="fliq-row">
+          <div class="fliq-badge fliq-rb">RB</div>
+          <div class="fliq-row-mid">
+            <div class="fliq-row-label">
+              <span class="fliq-domain-name" data-cost="2–3× risk">Resilience &amp; Recovery</span>
+              <span class="fliq-domain-sub">Long-term debt accumulation following first major financial shock (job loss, medical, emergency)</span>
+            </div>
+            <div class="fliq-bar-track"><div class="fliq-bar fliq-bar-rb" style="width:44%;"></div></div>
+            <div class="fliq-row-source">Urban Institute Financial Health Research, 2021</div>
+          </div>
+          <div class="fliq-cost">
+            <div class="fliq-cost-num cn-rb">2–3×</div>
+            <div class="fliq-cost-label">higher long-term debt risk</div>
+          </div>
+        </div>
+
+        <div class="fliq-row">
+          <div class="fliq-badge fliq-ra">RA</div>
+          <div class="fliq-row-mid">
+            <div class="fliq-row-label">
+              <span class="fliq-domain-name" data-cost="$3K/yr">Risk Awareness</span>
+              <span class="fliq-domain-sub">Annual losses to financial fraud, predatory lending, and high-fee financial products</span>
+            </div>
+            <div class="fliq-bar-track"><div class="fliq-bar fliq-bar-ra" style="width:12%;"></div></div>
+            <div class="fliq-row-source">FTC Consumer Sentinel Network, 2023 · low financial-literacy household avg.</div>
+          </div>
+          <div class="fliq-cost">
+            <div class="fliq-cost-num cn-ra">$3,000<span style="font-size:14px;font-weight:700;letter-spacing:0">/yr</span></div>
+            <div class="fliq-cost-label">avg. annual loss</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="fliq-chart-footer">
+        <span>Bars show relative lifetime financial impact indexed to PO baseline ($1.4M compound savings gap = 100%).</span>
+        <span>WealthWise Kids™ LLC · Research Analysis · 2026</span>
+      </div>
+    </div>
   </div>
 
   <div class="wwk-connection" style="margin-bottom: 0;">
