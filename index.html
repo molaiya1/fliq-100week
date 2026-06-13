@@ -84,35 +84,34 @@
        align-items:start so both columns START at the same Y (matches reference). */
     .hero-content { position:relative; z-index:10; width:100%; max-width:1120px; margin:0 auto; padding:8px 28px 20px; display:grid; grid-template-columns:1fr 400px; gap:32px; align-items:flex-end; }
     .hero-left { display:flex; flex-direction:column; align-items:flex-start; }
-    .hero-milo-wrap { margin-bottom:0; display:flex; flex-direction:column; align-items:center; gap:0; animation:miloFloat 4s ease-in-out infinite; }
+    .hero-milo-wrap { margin-bottom:0; display:flex; flex-direction:row; align-items:flex-start; gap:12px; animation:miloFloat 4s ease-in-out infinite; }
     .milo-col { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
     .hero-milo { width:min(220px,22vw); max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); }
     .milo-col::after { content:''; display:block; width:90px; height:16px; background:radial-gradient(ellipse,rgba(0,0,0,0.28) 0%,transparent 72%); margin:-6px auto 0; border-radius:50%; }
     @keyframes miloFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-    /* Speech bubble — comic book style: static flow above Milo, tail points DOWN toward his beak */
+    /* Speech bubble — sits to the right of Milo in flex row, tail points LEFT toward his beak */
     .hero-speech {
       position:relative;
-      display:inline-block;
-      margin-bottom:10px;
-      margin-left:16px;   /* aligns tail with Milo's beak */
+      margin-top:48px;   /* drops bubble to beak level (~20% down Milo's height) */
+      align-self:flex-start;
       z-index:2;
       background:rgba(11,29,58,0.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-      color:white; border-radius:16px;
-      padding:11px 16px; font-size:13px; font-weight:600; line-height:1.55;
-      max-width:240px;
+      color:white; border-radius:14px;
+      padding:11px 15px; font-size:13px; font-weight:600; line-height:1.55;
+      max-width:210px;
       box-shadow:0 6px 22px rgba(11,29,58,0.4);
       border:1px solid rgba(255,255,255,0.14);
       animation:speechPop 0.5s 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
     }
     .hero-speech strong { color:var(--gold); }
-    /* Tail: CSS triangle pointing DOWN-LEFT toward Milo's beak */
+    /* Tail: triangle pointing LEFT toward Milo's beak */
     .hero-speech::before {
       content:''; position:absolute;
-      bottom:-12px; left:28px;
+      top:16px; left:-11px;
       width:0; height:0;
-      border-left:10px solid transparent;
-      border-right:6px solid transparent;
-      border-top:13px solid rgba(11,29,58,0.92);
+      border-top:8px solid transparent;
+      border-bottom:8px solid transparent;
+      border-right:11px solid rgba(11,29,58,0.92);
     }
     .hero-speech::after { display:none; }
     @keyframes speechPop { from{opacity:0;transform:scale(0.75) translateY(10px);} to{opacity:1;transform:scale(1) translateY(0);} }
@@ -2639,12 +2638,12 @@ function renderHome(){
     <div class="hero-band-tint band-${S.band}"></div>
     <div class="hero-content">
       <div class="hero-left">
-        <div class="hero-speech">I'm <strong>Milo.</strong> You've got <strong>$${sb}</strong> — let's see what you do with it!</div>
         <div class="hero-milo-wrap">
           <div class="milo-col">
             <img src="./milo-hero.png" alt="Milo" class="hero-milo" />
             <div class="hero-hundred-badge">$${sb} 💰</div>
           </div>
+          <div class="hero-speech">I'm <strong>Milo.</strong> You've got <strong>$${sb}</strong> — let's see what you do with it!</div>
         </div>
         <div class="hero-text">
           <h1 class="hero-h1">What would <strong>YOU</strong> do<br>with <span class="gld">$${sb}?</span></h1>
