@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The WealthWise Kids™ Ecosystem — Platform Overview</title>
+  <link rel="icon" type="image/png" href="./milo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!--
+  ═══════════════════════════════════════════════════════════════════
+  HANDOFF NOTE FOR CLAUDE (claude.ai)
+  ═══════════════════════════════════════════════════════════════════
+  This is the content-complete version of the WealthWise Kids™
+  Ecosystem One-Pager. The structure, copy, and data are final.
+
+  Please redesign this page to Fortune 500 institutional standard:
+  - This is a PRINT-READY one-pager (letter size, single sheet or two-page at most)
+  - Primary use: emailed as a PDF attachment to partner orgs (YMCA, Urban League, school districts)
+  - Brand: WealthWise Kids™ — premium EdTech, NOT a kids craft project
+  - Think: McKinsey brief meets Sesame Street Workshop annual report
+  - Colors: Body Navy #1F3C88 · Gold #F4B223 · White · Light gray backgrounds
+  - Typography: Inter (already linked above) — tight, confident, zero fluff
+  - The 4 program tiles should feel like a product suite, not a list
+  - The Journey Flow should be a clean visual connector (arrows or line)
+  - The iMPACT Partners section should feel credentialing-grade serious
+  - Print CSS: @page { size: letter; margin: 18mm 20mm; }
+  - No decorative illustrations needed — structure, data, and typography carry it
+  - Milo (the blue owl mascot) does NOT appear on institutional documents
+  ═══════════════════════════════════════════════════════════════════
+  -->
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #1F3C88;
+      --navy-dk: #0B1D3A;
+      --gold:    #F4B223;
+      --gold-lt: #FFF8E7;
+      --white:   #FFFFFF;
+      --gray:    #F5F6F8;
+      --border:  #E2E6EF;
+      --text:    #0B1D3A;
+      --text2:   #4A5980;
+      --text3:   #8A9ABF;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #EBEBEB;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Page shell ── */
+    .page {
+      background: var(--white);
+      max-width: 816px; /* 8.5in at 96dpi */
+      margin: 32px auto;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.12);
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: var(--navy-dk);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; }
+    .topbar-brand-name { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+    .topbar-brand-name span { color: var(--gold); }
+    .topbar-tag {
+      font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--navy);
+      padding: 48px 40px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gold);
+    }
+    .hero-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .hero-h1 {
+      font-size: 32px; font-weight: 900; color: #fff;
+      line-height: 1.15; letter-spacing: -0.8px;
+      max-width: 560px;
+      margin-bottom: 16px;
+    }
+    .hero-h1 em { color: var(--gold); font-style: normal; }
+    .hero-sub {
+      font-size: 14px; color: rgba(255,255,255,0.65);
+      max-width: 580px; line-height: 1.65;
+    }
+
+    /* ── Section ── */
+    .section { padding: 40px 40px 0; }
+    .section-head {
+      font-size: 9px; font-weight: 800; letter-spacing: 3.5px;
+      text-transform: uppercase; color: var(--navy);
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--navy);
+      margin-bottom: 28px;
+    }
+
+    /* ── Journey Flow ── */
+    .journey {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin-bottom: 0;
+    }
+    .journey-step {
+      flex: 1;
+      background: var(--gray);
+      padding: 16px 14px;
+      position: relative;
+      text-align: center;
+    }
+    .journey-step::after {
+      content: '→';
+      position: absolute;
+      right: -12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px; font-weight: 700;
+      color: var(--text3);
+      z-index: 2;
+    }
+    .journey-step:last-child::after { display: none; }
+    .journey-label {
+      font-size: 11px; font-weight: 800; color: var(--navy);
+      letter-spacing: -0.2px; margin-bottom: 4px;
+    }
+    .journey-sub {
+      font-size: 10px; color: var(--text3); line-height: 1.4;
+    }
+    .journey-step.highlight { background: var(--navy); }
+    .journey-step.highlight .journey-label { color: var(--gold); }
+    .journey-step.highlight .journey-sub { color: rgba(255,255,255,0.5); }
+
+    /* ── Program tiles ── */
+    .program-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 2px;
+    }
+    .program-tile {
+      background: var(--gray);
+      padding: 24px 26px;
+      border-left: 4px solid var(--navy);
+    }
+    .tile-eyebrow {
+      font-size: 9px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--text3);
+      margin-bottom: 6px;
+    }
+    .tile-name {
+      font-size: 17px; font-weight: 900; color: var(--navy);
+      letter-spacing: -0.4px; margin-bottom: 4px;
+    }
+    .tile-ages {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; color: var(--navy);
+      background: rgba(31,60,136,0.08);
+      border-radius: 2px; padding: 2px 8px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .tile-desc {
+      font-size: 12px; color: var(--text2);
+      line-height: 1.65; margin-bottom: 14px;
+    }
+    .tile-generates {
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--text3); margin-bottom: 6px;
+    }
+    .tile-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tile-tag {
+      font-size: 10px; font-weight: 600;
+      color: var(--navy); background: rgba(31,60,136,0.07);
+      border: 1px solid rgba(31,60,136,0.12);
+      border-radius: 2px; padding: 3px 8px;
+    }
+    .tile-connector {
+      font-size: 11px; font-weight: 600; color: var(--text3);
+      border-top: 1px solid var(--border);
+      margin-top: 14px; padding-top: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tile-connector::before {
+      content: '↳';
+      color: var(--gold); font-size: 13px;
+    }
+
+    /* Gold accent tile */
+    .program-tile.gold { border-left-color: var(--gold); }
+    .program-tile.gold .tile-name { color: var(--navy); }
+
+    /* ── iMPACT Partners section ── */
+    .impact-block {
+      background: var(--navy-dk);
+      margin: 0 40px;
+      padding: 32px 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .impact-left {}
+    .impact-eyebrow {
+      font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .impact-title {
+      font-size: 22px; font-weight: 900; color: #fff;
+      letter-spacing: -0.5px; line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .impact-title span { color: var(--gold); }
+    .impact-desc {
+      font-size: 12px; color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+    }
+    .impact-right {}
+    .impact-benefits-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+      margin-bottom: 12px;
+    }
+    .impact-benefit {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .benefit-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0; margin-top: 7px;
+    }
+    .benefit-text { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+    .benefit-text strong { color: #fff; }
+    .impact-qualifies {
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 11px; color: rgba(255,255,255,0.35);
+    }
+
+    /* ── Stats strip ── */
+    .stats-strip {
+      background: var(--gold-lt);
+      border-top: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      margin: 0;
+      padding: 22px 40px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+    }
+    .stat-item {
+      text-align: center;
+      border-right: 1px solid rgba(31,60,136,0.12);
+      padding: 0 12px;
+    }
+    .stat-item:first-child { padding-left: 0; }
+    .stat-item:last-child { border-right: none; }
+    .stat-val {
+      font-size: 26px; font-weight: 900; color: var(--navy);
+      letter-spacing: -1px; font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-lbl {
+      font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--text3);
+      line-height: 1.4;
+    }
+
+    /* ── CTA section ── */
+    .cta-section {
+      background: var(--white);
+      padding: 36px 40px 40px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    .cta-left {}
+    .cta-headline {
+      font-size: 18px; font-weight: 900; color: var(--navy);
+      letter-spacing: -0.4px; margin-bottom: 6px;
+    }
+    .cta-sub {
+      font-size: 12px; color: var(--text2); line-height: 1.6;
+    }
+    .cta-buttons {
+      display: flex; flex-direction: column; gap: 8px;
+      align-items: flex-end;
+    }
+    .cta-btn-primary {
+      display: inline-block;
+      background: var(--navy);
+      color: #fff; font-size: 12px; font-weight: 800;
+      padding: 12px 22px; border-radius: 4px;
+      text-decoration: none; letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+    .cta-btn-ghost {
+      display: inline-block;
+      background: transparent;
+      color: var(--navy); font-size: 11px; font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .cta-btn-ghost:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    .doc-footer {
+      background: var(--navy-dk);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
+    }
+    .footer-contact {
+      font-size: 11px; color: rgba(255,255,255,0.3);
+    }
+
+    /* ── Section spacers ── */
+    .section-spacer { height: 40px; }
+
+    /* ── Print ── */
+    @media print {
+      @page { size: letter; margin: 14mm 16mm; }
+      body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { box-shadow: none; margin: 0; max-width: 100%; }
+    }
+
+    /* ── Screen fallback ── */
+    @media (max-width: 860px) {
+      .page { margin: 0; box-shadow: none; }
+      .program-grid { grid-template-columns: 1fr; }
+      .impact-block { grid-template-columns: 1fr; }
+      .cta-section { grid-template-columns: 1fr; }
+      .cta-buttons { align-items: flex-start; }
+      .stats-strip { grid-template-columns: repeat(3, 1fr); row-gap: 20px; }
+      .stat-item:nth-child(3) { border-right: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-brand-name">WealthWise Kids<span>™</span></div>
+    </div>
+    <div class="topbar-tag">Platform Overview — Partner Reference</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">The Platform Behind The $100 Week™</div>
+    <h1 class="hero-h1">One simulation.<br><em>A full financial literacy ecosystem.</em></h1>
+    <p class="hero-sub">The $100 Week™ is the entry point. WealthWise Kids™ is the platform — a connected suite of tools, curriculum, and experiences that builds measurable financial intelligence from ages 8 through 18.</p>
+  </div>
+
+  <!-- Journey Flow -->
+  <div class="section">
+    <div class="section-head">The Student Journey</div>
+  </div>
+  <div style="padding: 0 40px 40px;">
+    <div class="journey">
+      <div class="journey-step highlight">
+        <div class="journey-label">The $100 Week™</div>
+        <div class="journey-sub">Free 5-day sim · Entry point</div>
+      </div>
+      <div class="journey-step">
+        <div class="journey-label">FLIQ Score™</div>
+        <div class="journey-sub">Behavioral profile generated</div>
+      </div>
+      <div class="journey-step">
+        <div class="journey-label">Financial Foundations™</div>
+        <div class="journey-sub">Data-informed curriculum</div>
+      </div>
+      <div class="journey-step">
+        <div class="journey-label">CoinQuest™ + FLIQ Runner™</div>
+        <div class="journey-sub">App + game reinforcement</div>
+      </div>
+      <div class="journey-step">
+        <div class="journey-label">WWK Adventures™</div>
+        <div class="journey-sub">Narrative home engagement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Program Tiles -->
+  <div class="section">
+    <div class="section-head">The Full Ecosystem</div>
+  </div>
+
+  <div style="padding: 0 40px;">
+    <div class="program-grid">
+
+      <!-- Financial Foundations -->
+      <div class="program-tile">
+        <div class="tile-eyebrow">Core Curriculum</div>
+        <div class="tile-name">Financial Foundations™</div>
+        <div class="tile-ages">Ages 11–18 · Builder & Strategist</div>
+        <p class="tile-desc">An 8-unit, standards-aligned curriculum delivered by trained iMPACT Partners™. Instruction responds directly to FLIQ Score™ data — so facilitators know exactly which behavioral patterns to address in each student before the first lesson begins.</p>
+        <div class="tile-generates">Generates</div>
+        <div class="tile-tags">
+          <span class="tile-tag">Pre/post FLIQ assessments</span>
+          <span class="tile-tag">Facilitator data dashboard</span>
+          <span class="tile-tag">Score progression tracking</span>
+          <span class="tile-tag">Outcome documentation</span>
+        </div>
+        <div class="tile-connector">Deepens what The $100 Week™ reveals</div>
+      </div>
+
+      <!-- CoinQuest -->
+      <div class="program-tile gold">
+        <div class="tile-eyebrow">Student Fintech App</div>
+        <div class="tile-name">CoinQuest™</div>
+        <div class="tile-ages">Ages 8–14 · Explorer & Builder</div>
+        <p class="tile-desc">A school-safe student banking simulation where learners manage a checking account, set savings goals, and navigate real financial decisions in a private, data-protected environment. No real money. No ads. No personal information required.</p>
+        <div class="tile-generates">Generates</div>
+        <div class="tile-tags">
+          <span class="tile-tag">Banking literacy data</span>
+          <span class="tile-tag">Savings behavior records</span>
+          <span class="tile-tag">Goal-completion rates</span>
+          <span class="tile-tag">Spending pattern insights</span>
+        </div>
+        <div class="tile-connector">Extends $100 Week™ concepts into ongoing daily practice</div>
+      </div>
+
+      <!-- FLIQ Runner -->
+      <div class="program-tile">
+        <div class="tile-eyebrow">Gamified Assessment</div>
+        <div class="tile-name">FLIQ Runner™</div>
+        <div class="tile-ages">Ages 8–18 · All Bands</div>
+        <p class="tile-desc">An arcade-style game set in Vela City where students make financial decisions under time pressure. Every in-game choice generates behavioral data that teachers can monitor in real time — making assessment feel like play and eliminating test anxiety entirely.</p>
+        <div class="tile-generates">Generates</div>
+        <div class="tile-tags">
+          <span class="tile-tag">Real-time FLIQ Score™ data</span>
+          <span class="tile-tag">Decision-speed patterns</span>
+          <span class="tile-tag">Classroom discussion prompts</span>
+          <span class="tile-tag">Pre/post assessment data</span>
+        </div>
+        <div class="tile-connector">Used as pre-assessment before $100 Week™ or reinforcement after</div>
+      </div>
+
+      <!-- Adventures -->
+      <div class="program-tile gold">
+        <div class="tile-eyebrow">Character IP & Media</div>
+        <div class="tile-name">WWK Adventures™</div>
+        <div class="tile-ages">Ages 8–12 · Explorer Band</div>
+        <p class="tile-desc">A book series, read-along portal, and animated content universe featuring The Crew — six kids who navigate real-world financial situations together. Financial concepts are embedded in narrative, building vocabulary and engagement long before formal instruction begins.</p>
+        <div class="tile-generates">Generates</div>
+        <div class="tile-tags">
+          <span class="tile-tag">Home engagement</span>
+          <span class="tile-tag">Early financial vocabulary</span>
+          <span class="tile-tag">Brand recognition</span>
+          <span class="tile-tag">Parent-child conversations</span>
+        </div>
+        <div class="tile-connector">The narrative layer that keeps learning alive outside the classroom</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-spacer"></div>
+
+  <!-- Stats Strip -->
+  <div class="stats-strip">
+    <div class="stat-item">
+      <div class="stat-val">5</div>
+      <div class="stat-lbl">Programs in<br>the Ecosystem</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">8–18</div>
+      <div class="stat-lbl">Age Range<br>Served</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">9</div>
+      <div class="stat-lbl">FLIQ Profile™<br>Types Generated</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">4</div>
+      <div class="stat-lbl">Behavioral Traits<br>Measured</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">2</div>
+      <div class="stat-lbl">Active Pilot<br>Deployments</div>
+    </div>
+  </div>
+
+  <!-- iMPACT Partners -->
+  <div class="section-spacer"></div>
+  <div style="padding: 0 40px;">
+    <div class="section-head">iMPACT Partners™</div>
+  </div>
+
+  <div class="impact-block">
+    <div class="impact-left">
+      <div class="impact-eyebrow">The Practitioner Network</div>
+      <div class="impact-title">The credential that<br><span>unlocks the platform.</span></div>
+      <p class="impact-desc">iMPACT Partners™ are trained youth workers, educators, and program staff who are certified to deploy WealthWise Kids™ programs. Certification is online, self-paced, and free for qualifying partner organizations. It's how we guarantee program fidelity — and how partners get everything.</p>
+    </div>
+    <div class="impact-right">
+      <div class="impact-benefits-label">What Partners Receive</div>
+      <div class="impact-benefit">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Cohort FLIQ Score™ Reports</strong> — real behavioral data on every student who completes a program</div>
+      </div>
+      <div class="impact-benefit">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Full Curriculum Access</strong> — Financial Foundations™ facilitator guides, session decks, and student materials</div>
+      </div>
+      <div class="impact-benefit">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>iMPACT Certification</strong> — credentialed via online module library, stackable across programs</div>
+      </div>
+      <div class="impact-benefit">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Partner Portal Access</strong> — dashboard, session management, reporting, and resource downloads</div>
+      </div>
+      <div class="impact-benefit">
+        <div class="benefit-dot"></div>
+        <div class="benefit-text"><strong>Dedicated Support</strong> — direct WWK contact for onboarding, facilitation questions, and outcomes documentation</div>
+      </div>
+      <div class="impact-qualifies">
+        Qualifying organizations: Youth-serving nonprofits · Schools & districts · After-school programs · Community centers · Libraries · Faith-based youth programs
+      </div>
+    </div>
+  </div>
+
+  <div class="section-spacer"></div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-left">
+      <div class="cta-headline">Ready to bring WealthWise Kids™ to your program?</div>
+      <p class="cta-sub">The $100 Week™ is free to run — no accounts, no training, no IT setup required. Becoming an iMPACT Partner™ is how you unlock everything else: curriculum, data, certification, and ongoing support.</p>
+    </div>
+    <div class="cta-buttons">
+      <a href="https://play.wealthwiselearning.com/apply.html" class="cta-btn-primary">Apply as a Pilot Partner →</a>
+      <a href="https://play.wealthwiselearning.com/sample-report.html" class="cta-btn-ghost">View a Sample Cohort Report →</a>
+      <a href="https://play.wealthwiselearning.com/brief.html" class="cta-btn-ghost">Download the Program Brief →</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="doc-footer">
+    <div class="footer-brand">WealthWise Kids™ LLC · For Partner Use</div>
+    <div class="footer-contact">info@wealthwisekids.org · wealthwisekids.org · play.wealthwiselearning.com</div>
+  </div>
+
+</div>
+
+</body>
+</html>
