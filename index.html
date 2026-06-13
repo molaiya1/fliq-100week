@@ -86,7 +86,7 @@
     .hero-left { display:flex; flex-direction:column; align-items:flex-start; }
     .hero-milo-wrap { margin-bottom:0; display:flex; flex-direction:row; align-items:flex-start; gap:12px; animation:miloFloat 4s ease-in-out infinite; }
     .milo-col { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
-    .hero-milo { width:min(220px,22vw); max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); }
+    .hero-milo { width:min(250px,25vw); max-width:100%; filter:drop-shadow(0 24px 48px rgba(0,0,0,0.35)); }
     .milo-col::after { content:''; display:block; width:90px; height:16px; background:radial-gradient(ellipse,rgba(0,0,0,0.28) 0%,transparent 72%); margin:-6px auto 0; border-radius:50%; }
     @keyframes miloFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
     /* Speech bubble — sits to the right of Milo in flex row, tail points LEFT toward his beak */
@@ -107,7 +107,7 @@
     /* Tail: triangle pointing LEFT, vertically centered on the bubble */
     .hero-speech::before {
       content:''; position:absolute;
-      top:50%; transform:translateY(-50%);
+      top:30%; transform:translateY(-50%);
       left:-11px;
       width:0; height:0;
       border-top:8px solid transparent;
