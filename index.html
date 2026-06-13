@@ -965,7 +965,8 @@
   </div>
 
   <!-- Sim mode actions -->
-  <button class="nav-btn" id="navMenu" onclick="void(0)">☰ Menu</button>
+  <!-- nav-btn reserved for future menu -->
+
 </nav>
 
 <div id="app"></div>
@@ -2668,7 +2669,7 @@ function renderHome(){
           <div class="join-block-desc">Enter the session code your teacher gave you.</div>
           <input class="join-input" id="codeInput" type="text" maxlength="8" placeholder="Enter session code" autocomplete="off" spellcheck="false" oninput="onCodeInput(this.value)" />
           <button class="join-btn-full" onclick="handleJoin()">Join Session ›</button>
-          <div class="err-msg" id="codeErr">That code doesn't match a session. Try again.</div>
+          <div class="err-msg" id="codeErr">Code not found — check with your teacher and try again.</div>
         </div>
         <div class="or-row">or</div>
         <div class="join-block">
@@ -2999,10 +3000,10 @@ function renderScore(){
 
     <!-- CoinQuest CTA -->
     <div class="coinquest-cta">
-      <div class="coinquest-cta-label">Next Level</div>
-      <div class="coinquest-cta-title">Ready to do more with money?</div>
-      <div class="coinquest-cta-desc">CoinQuest™ is your personal money app — save, set goals, and track your FLIQ Score™ as it grows.</div>
-      <a href="https://coinquest-wwk.vercel.app" target="_blank" rel="noopener" class="coinquest-cta-btn">Explore CoinQuest™ →</a>
+      <div class="coinquest-cta-label">Continue Your Journey</div>
+      <div class="coinquest-cta-title">There's more to explore.</div>
+      <div class="coinquest-cta-desc">CoinQuest™ is part of the WealthWise Kids™ platform — a simulated banking experience where your FLIQ Score™ keeps growing through real financial decisions in a safe environment.</div>
+      <a href="https://coinquest-wwk.vercel.app" target="_blank" rel="noopener" class="coinquest-cta-btn">See CoinQuest™ →</a>
     </div>
   </div>
 </div>`;
@@ -3127,7 +3128,7 @@ function buildDefiningMoments(history, band) {
 
 // LOADING
 function renderLoading(){
-  app.innerHTML=`<div id="screen-loading"><div class="spinner"></div><div class="loading-txt">Setting up your adventure…</div></div>`;
+  app.innerHTML=`<div id="screen-loading"><div class="spinner"></div><div class="loading-txt">Calculating your results…</div><div style="font-size:12px;color:rgba(11,29,58,0.4);margin-top:8px;font-weight:500;">This takes just a moment.</div></div>`;
 }
 
 // ── INTERACTIONS ─────────────────────────────────────────────────
