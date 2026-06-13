@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sample Cohort Report — The $100 Week™ | WealthWise Kids</title>
+  <link rel="icon" type="image/png" href="./milo.png" />
+  <meta property="og:title" content="Sample Cohort Report — The $100 Week™" />
+  <meta property="og:description" content="See what a real FLIQ Score™ cohort report looks like. Aggregate behavioral data, domain breakdown, and facilitation insights for a class of 23 students." />
+  <meta property="og:image" content="https://play.wealthwiselearning.com/milo.png" />
+  <meta property="og:url" content="https://play.wealthwiselearning.com/sample-report.html" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #1F3C88;
+      --navy-dk: #0B1D3A;
+      --gold:    #F4B223;
+      --gold-lt: #FFF8E7;
+      --cyan:    #00B4D8;
+      --cyan-lt: #E8F8FC;
+      --green:   #16A34A;
+      --green-lt:#F0FDF4;
+      --red:     #DC2626;
+      --text:    #1B2A4A;
+      --text2:   #4A5A7A;
+      --text3:   #8A9EC0;
+      --bg:      #F4F6FB;
+      --white:   #FFFFFF;
+      --border:  rgba(27,42,74,0.10);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 16px rgba(27,42,74,0.07);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      height: 72px;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar img { width: 52px; height: 52px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(244,178,35,0.30)); }
+    .topbar-name { display: flex; flex-direction: column; line-height: 1.2; }
+    .topbar-brand { font-size: 14px; font-weight: 800; color: var(--navy); }
+    .topbar-sub   { font-size: 10px; font-weight: 600; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .topbar-badge {
+      background: rgba(244,178,35,0.1);
+      border: 1.5px solid rgba(244,178,35,0.3);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .topbar-back {
+      font-size: 12px; font-weight: 700; color: var(--navy);
+      text-decoration: none;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .topbar-back:hover { border-color: var(--navy); background: #F0F4FF; }
+
+    /* ── Sample Banner ── */
+    .sample-banner {
+      background: var(--gold-lt);
+      border-bottom: 2px solid var(--gold);
+      padding: 10px 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sample-banner-icon { font-size: 16px; flex-shrink: 0; }
+    .sample-banner-text { font-size: 12px; font-weight: 700; color: #92610A; }
+    .sample-banner-text span { font-weight: 400; color: #B07A20; margin-left: 6px; }
+
+    /* ── Page wrapper ── */
+    .page { max-width: 960px; margin: 0 auto; padding: 36px 24px 80px; }
+
+    /* ── Report header ── */
+    .report-header {
+      background: var(--navy-dk);
+      border-radius: 20px;
+      padding: 36px 40px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .report-header::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: rgba(244,178,35,0.06);
+      pointer-events: none;
+    }
+    .report-eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 10px;
+    }
+    .report-title {
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 900; color: #ffffff;
+      letter-spacing: -0.5px; margin-bottom: 6px;
+    }
+    .report-subtitle {
+      font-size: 13px; color: rgba(255,255,255,0.5);
+      margin-bottom: 28px;
+    }
+    .report-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .meta-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .meta-value { font-size: 15px; font-weight: 800; color: #ffffff; }
+    .meta-value.gold { color: var(--gold); }
+    .meta-value.cyan { color: var(--cyan); }
+
+    /* ── Section header ── */
+    .section-head {
+      display: flex; align-items: center; gap: 12px;
+      margin: 32px 0 16px;
+    }
+    .section-eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--text3);
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
+    }
+
+    /* ── FLIQ Score section ── */
+    .fliq-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .fliq-ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .fliq-ring-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); }
+    .fliq-score-num { font-size: 52px; font-weight: 900; color: var(--navy); letter-spacing: -2px; line-height: 1; }
+    .fliq-score-denom { font-size: 18px; color: var(--text3); font-weight: 600; }
+    .fliq-profile-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(31,60,136,0.07);
+      border: 1.5px solid rgba(31,60,136,0.15);
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 12px; font-weight: 800;
+      color: var(--navy);
+    }
+    .fliq-ring-svg { width: 160px; height: 160px; }
+    .fliq-right-head { font-size: 22px; font-weight: 900; color: var(--navy); letter-spacing: -0.4px; margin-bottom: 10px; }
+    .fliq-right-desc {
+      font-size: 14px; line-height: 1.75; color: var(--text2);
+      border-left: 3px solid var(--gold);
+      padding-left: 16px;
+      margin-bottom: 20px;
+    }
+    .fliq-stat-row { display: flex; gap: 24px; flex-wrap: wrap; }
+    .fliq-stat { display: flex; flex-direction: column; gap: 3px; }
+    .fliq-stat-val { font-size: 22px; font-weight: 900; color: var(--navy); }
+    .fliq-stat-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; }
+
+    /* ── Domain grid ── */
+    .domain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .domain-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+    }
+    .domain-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+    .domain-name { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 2px; }
+    .domain-abbr { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; }
+    .domain-score-badge {
+      font-size: 20px; font-weight: 900; color: var(--navy);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 4px 12px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .domain-bar-wrap { margin-bottom: 10px; }
+    .domain-bar-track { height: 8px; background: rgba(27,42,74,0.08); border-radius: 4px; overflow: hidden; }
+    .domain-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+    .domain-bar-fill.high   { background: linear-gradient(90deg, var(--navy), var(--cyan)); }
+    .domain-bar-fill.mid    { background: linear-gradient(90deg, var(--navy), #5B8DEF); }
+    .domain-bar-fill.low    { background: linear-gradient(90deg, #6B7FA8, var(--text3)); }
+    .domain-insight { font-size: 12px; color: var(--text2); line-height: 1.6; }
+    .domain-insight strong { color: var(--text); font-weight: 700; }
+
+    /* ── Profile distribution ── */
+    .dist-table { width: 100%; border-collapse: collapse; }
+    .dist-row { display: grid; grid-template-columns: 120px 1fr 56px 56px; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .dist-row:last-child { border-bottom: none; }
+    .dist-row.header { padding: 0 0 10px; border-bottom: 2px solid var(--border); }
+    .dist-label { font-size: 12px; font-weight: 700; color: var(--text); }
+    .dist-label.header { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); }
+    .dist-bar-track { height: 10px; background: var(--bg); border-radius: 5px; overflow: hidden; }
+    .dist-bar-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--navy), var(--cyan)); }
+    .dist-count { font-size: 13px; font-weight: 800; color: var(--navy); text-align: right; }
+    .dist-pct { font-size: 12px; font-weight: 600; color: var(--text3); text-align: right; }
+    .dist-count.header, .dist-pct.header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); }
+
+    /* ── Day patterns ── */
+    .day-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .day-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+    .day-num { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .day-theme { font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .day-choice { margin-bottom: 7px; }
+    .day-choice-bar-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .day-choice-label { font-size: 10px; font-weight: 700; color: var(--text2); width: 14px; flex-shrink: 0; }
+    .day-choice-track { flex: 1; height: 7px; background: rgba(27,42,74,0.08); border-radius: 4px; overflow: hidden; }
+    .day-choice-fill { height: 100%; border-radius: 4px; }
+    .day-choice-fill.a { background: #EF6C35; }
+    .day-choice-fill.b { background: var(--green); }
+    .day-choice-fill.c { background: var(--navy); }
+    .day-choice-pct { font-size: 10px; font-weight: 800; color: var(--text); width: 28px; text-align: right; flex-shrink: 0; }
+    .day-signal {
+      margin-top: 10px;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 3px 8px; border-radius: 4px;
+      display: inline-block;
+    }
+    .day-signal.watch { background: rgba(239,107,53,0.12); color: #C45A20; }
+    .day-signal.strong { background: var(--green-lt); color: var(--green); }
+    .day-signal.mixed  { background: rgba(31,60,136,0.08); color: var(--navy); }
+
+    /* ── Facilitation insight ── */
+    .insight-card {
+      background: var(--navy-dk);
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin-bottom: 16px;
+    }
+    .insight-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .insight-title { font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: -0.3px; margin-bottom: 16px; }
+    .insight-body { font-size: 14px; color: rgba(255,255,255,0.72); line-height: 1.8; margin-bottom: 12px; }
+    .insight-body strong { color: #ffffff; font-weight: 700; }
+    .insight-body + .insight-body { padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .insight-prompt-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin: 20px 0 10px; }
+    .prompt-pills { display: flex; flex-direction: column; gap: 8px; }
+    .prompt-pill {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5;
+    }
+    .prompt-pill::before { content: '→'; color: var(--gold); font-weight: 900; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── CTA ── */
+    .cta-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 36px;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .cta-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-title { font-size: 22px; font-weight: 900; color: var(--navy); margin-bottom: 8px; letter-spacing: -0.3px; }
+    .cta-desc { font-size: 14px; color: var(--text2); line-height: 1.7; max-width: 520px; margin: 0 auto 24px; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-btn-primary {
+      display: inline-block; padding: 14px 28px;
+      background: linear-gradient(135deg, var(--gold), #d9960f);
+      color: var(--navy); font-weight: 800; font-size: 14px;
+      text-decoration: none; border-radius: 12px;
+      letter-spacing: 0.2px;
+    }
+    .cta-btn-secondary {
+      display: inline-block; padding: 14px 24px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--navy); font-weight: 700; font-size: 13px;
+      text-decoration: none; border-radius: 12px;
+    }
+    .cta-btn-secondary:hover { border-color: var(--navy); background: #F0F4FF; }
+
+    /* ── Compliance strip ── */
+    .compliance-strip {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      margin-top: 20px;
+    }
+    .comp-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 4px 10px; border-radius: 6px;
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--text3); letter-spacing: 0.5px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center; padding: 28px;
+      font-size: 11px; color: var(--text3); line-height: 1.7;
+    }
+    .footer a { color: var(--text3); }
+
+    /* ── Print ── */
+    @media print {
+      @page { margin: 16mm 18mm; size: letter; }
+      body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .topbar { position: static; box-shadow: none; }
+      .sample-banner { display: flex !important; }
+      .topbar-back { display: none; }
+      .cta-card { page-break-before: always; }
+      .page { padding: 20px 0 40px; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .fliq-row { grid-template-columns: 1fr; }
+      .fliq-ring-wrap { margin: 0 auto 20px; }
+      .domain-grid { grid-template-columns: 1fr; }
+      .day-grid { grid-template-columns: 1fr 1fr; }
+      .report-header { padding: 28px 24px; }
+      .card { padding: 22px 20px; }
+    }
+    @media (max-width: 440px) {
+      .day-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <nav class="topbar">
+    <img src="./milo.png" alt="Milo" />
+    <div class="topbar-name">
+      <span class="topbar-brand">WealthWise Kids™</span>
+      <span class="topbar-sub">Facilitator Report</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-badge">Sample Data</span>
+      <a href="./facilitator.html" class="topbar-back">← Facilitator Dashboard</a>
+    </div>
+  </nav>
+
+  <!-- Sample banner -->
+  <div class="sample-banner">
+    <div class="sample-banner-icon">📊</div>
+    <div class="sample-banner-text">
+      SAMPLE REPORT — For Demonstration Purposes Only
+      <span>This report uses anonymized demo data to show what a real cohort report looks like after your class completes The $100 Week™.</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- Report header -->
+    <div class="report-header">
+      <div class="report-eyebrow">FLIQ Score™ Cohort Report · The $100 Week™</div>
+      <div class="report-title">Metro Youth Development Program</div>
+      <div class="report-subtitle">Builder Band · Ages 11–14 · $50 Starting Balance · Session B7K2</div>
+      <div class="report-meta">
+        <div class="meta-item">
+          <span class="meta-label">Students Completed</span>
+          <span class="meta-value gold">23</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Session Date</span>
+          <span class="meta-value">June 2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Program</span>
+          <span class="meta-value">The $100 Week™</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Avg FLIQ Score</span>
+          <span class="meta-value cyan">58 / 100</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Avg Ending Balance</span>
+          <span class="meta-value">$31.40</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Completion Rate</span>
+          <span class="meta-value gold">100%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: FLIQ Score Overview -->
+    <div class="section-head">
+      <span class="section-eyebrow">FLIQ Score™ Overview</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="fliq-row">
+        <div class="fliq-ring-wrap">
+          <svg class="fliq-ring-svg" viewBox="0 0 160 160" fill="none">
+            <circle cx="80" cy="80" r="68" stroke="rgba(27,42,74,0.08)" stroke-width="12"/>
+            <circle cx="80" cy="80" r="68"
+              stroke="url(#ringGrad)"
+              stroke-width="12"
+              stroke-linecap="round"
+              stroke-dasharray="427.3"
+              stroke-dashoffset="179.5"
+              transform="rotate(-90 80 80)"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#1F3C88"/>
+                <stop offset="100%" stop-color="#00B4D8"/>
+              </linearGradient>
+            </defs>
+            <text x="80" y="75" text-anchor="middle" font-family="Inter,sans-serif" font-size="34" font-weight="900" fill="#1B2A4A">58</text>
+            <text x="80" y="95" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#8A9EC0">out of 100</text>
+          </svg>
+          <div class="fliq-ring-label">Class Average</div>
+          <div class="fliq-profile-badge">🔨 Thinker Profile</div>
+        </div>
+        <div>
+          <div class="fliq-right-head">Solid behavioral foundation — with a clear growth signal.</div>
+          <div class="fliq-right-desc">
+            This cohort demonstrates strong Planning Orientation — students consistently accounted for future consequences when given time to deliberate. The development area is Impulse Control under social pressure. When the group was watching, decision quality dropped. That gap is your most valuable teaching moment.
+          </div>
+          <div class="fliq-stat-row">
+            <div class="fliq-stat">
+              <span class="fliq-stat-val">1.6<span style="font-size:14px;color:var(--text3);font-weight:600;">/2.0</span></span>
+              <span class="fliq-stat-lbl">Planning Orientation</span>
+            </div>
+            <div class="fliq-stat">
+              <span class="fliq-stat-val">1.3<span style="font-size:14px;color:var(--text3);font-weight:600;">/2.0</span></span>
+              <span class="fliq-stat-lbl">Impulse Control</span>
+            </div>
+            <div class="fliq-stat">
+              <span class="fliq-stat-val">1.4<span style="font-size:14px;color:var(--text3);font-weight:600;">/2.0</span></span>
+              <span class="fliq-stat-lbl">Risk Awareness</span>
+            </div>
+            <div class="fliq-stat">
+              <span class="fliq-stat-val">1.1<span style="font-size:14px;color:var(--text3);font-weight:600;">/2.0</span></span>
+              <span class="fliq-stat-lbl">Resilience</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Domain Breakdown -->
+    <div class="section-head">
+      <span class="section-eyebrow">Domain Breakdown</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="domain-grid">
+
+      <div class="domain-card">
+        <div class="domain-top">
+          <div>
+            <div class="domain-name">Impulse Control</div>
+            <div class="domain-abbr">IC · Domain 1</div>
+          </div>
+          <div class="domain-score-badge">1.3 / 2.0</div>
+        </div>
+        <div class="domain-bar-wrap">
+          <div class="domain-bar-track">
+            <div class="domain-bar-fill mid" style="width:65%"></div>
+          </div>
+        </div>
+        <div class="domain-insight">
+          <strong>Development area.</strong> 52% of students spent on Day 1 (Impulse purchase) and 43% followed the group on Day 2. The pattern suggests students know better — but act differently under time pressure or social observation. This is the most common profile for this age band.
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-top">
+          <div>
+            <div class="domain-name">Planning Orientation</div>
+            <div class="domain-abbr">PO · Domain 2</div>
+          </div>
+          <div class="domain-score-badge">1.6 / 2.0</div>
+        </div>
+        <div class="domain-bar-wrap">
+          <div class="domain-bar-track">
+            <div class="domain-bar-fill high" style="width:80%"></div>
+          </div>
+        </div>
+        <div class="domain-insight">
+          <strong>Class strength.</strong> 61% of students paid the Day 3 unexpected expense immediately — the highest-integrity response available — and 70% chose to save or goal-save on Day 5. This cohort thinks ahead when the stakes are clear. Leverage this in your debrief.
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-top">
+          <div>
+            <div class="domain-name">Risk Awareness</div>
+            <div class="domain-abbr">RA · Domain 3</div>
+          </div>
+          <div class="domain-score-badge">1.4 / 2.0</div>
+        </div>
+        <div class="domain-bar-wrap">
+          <div class="domain-bar-track">
+            <div class="domain-bar-fill mid" style="width:70%"></div>
+          </div>
+        </div>
+        <div class="domain-insight">
+          <strong>Developing.</strong> On Day 4 (The Bet), students split almost evenly — 39% took the 50/50 risk, 48% declined. The students who took the risk while low on funds (below $15) represent the highest-priority debrief conversation. They took asymmetric risk without the capital to absorb a loss.
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-top">
+          <div>
+            <div class="domain-name">Resilience</div>
+            <div class="domain-abbr">RB · Domain 4</div>
+          </div>
+          <div class="domain-score-badge">1.1 / 2.0</div>
+        </div>
+        <div class="domain-bar-wrap">
+          <div class="domain-bar-track">
+            <div class="domain-bar-fill low" style="width:55%"></div>
+          </div>
+        </div>
+        <div class="domain-insight">
+          <strong>Lowest domain — priority growth area.</strong> Students who made poor early choices tended to compound them rather than course-correct. Day 3 and Day 5 data shows that students who spent heavily on Days 1–2 were significantly more likely to continue spending rather than pulling back. Pattern recognition is the skill to build here.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Section: Profile Distribution -->
+    <div class="section-head">
+      <span class="section-eyebrow">Profile Distribution — 23 Students</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="dist-row header">
+        <span class="dist-label header">Profile</span>
+        <span class="dist-label header">Distribution</span>
+        <span class="dist-count header">Count</span>
+        <span class="dist-pct header">Share</span>
+      </div>
+      <div class="dist-row">
+        <span class="dist-label">Financial Starter</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:4%;background:#CBD5E1;"></div></div>
+        <span class="dist-count">1</span><span class="dist-pct">4%</span>
+      </div>
+      <div class="dist-row">
+        <span class="dist-label">Emerging</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:13%;background:#94A3B8;"></div></div>
+        <span class="dist-count">3</span><span class="dist-pct">13%</span>
+      </div>
+      <div class="dist-row">
+        <span class="dist-label">Explorer</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:17%;background:#7B90C4;"></div></div>
+        <span class="dist-count">4</span><span class="dist-pct">17%</span>
+      </div>
+      <div class="dist-row">
+        <span class="dist-label">Developing</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:26%;"></div></div>
+        <span class="dist-count" style="font-weight:900;color:var(--navy);">6</span><span class="dist-pct">26%</span>
+      </div>
+      <div class="dist-row">
+        <span class="dist-label" style="font-weight:800;">Builder ← Median</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:22%;background:linear-gradient(90deg,var(--navy),var(--gold));"></div></div>
+        <span class="dist-count" style="font-weight:900;color:var(--navy);">5</span><span class="dist-pct">22%</span>
+      </div>
+      <div class="dist-row">
+        <span class="dist-label">Thinker</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:13%;"></div></div>
+        <span class="dist-count">3</span><span class="dist-pct">13%</span>
+      </div>
+      <div class="dist-row">
+        <span class="dist-label">Advancing</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:4%;background:var(--cyan);"></div></div>
+        <span class="dist-count">1</span><span class="dist-pct">4%</span>
+      </div>
+      <div class="dist-row" style="border-bottom:none;">
+        <span class="dist-label" style="color:var(--text3);">Leading / Exceptional</span>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:0%;"></div></div>
+        <span class="dist-count" style="color:var(--text3);">0</span><span class="dist-pct" style="color:var(--text3);">—</span>
+      </div>
+    </div>
+
+    <!-- Section: Day-by-Day Patterns -->
+    <div class="section-head">
+      <span class="section-eyebrow">Decision Patterns — Day by Day</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="day-grid">
+
+      <div class="day-card">
+        <div class="day-num">Day 1</div>
+        <div class="day-theme">The Drop</div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">A</span><div class="day-choice-track"><div class="day-choice-fill a" style="width:52%"></div></div><span class="day-choice-pct">52%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">B</span><div class="day-choice-track"><div class="day-choice-fill b" style="width:30%"></div></div><span class="day-choice-pct">30%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">C</span><div class="day-choice-track"><div class="day-choice-fill c" style="width:18%"></div></div><span class="day-choice-pct">18%</span></div>
+        <span class="day-signal watch">Watch — IC</span>
+      </div>
+
+      <div class="day-card">
+        <div class="day-num">Day 2</div>
+        <div class="day-theme">The Pull</div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">A</span><div class="day-choice-track"><div class="day-choice-fill a" style="width:43%"></div></div><span class="day-choice-pct">43%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">B</span><div class="day-choice-track"><div class="day-choice-fill b" style="width:35%"></div></div><span class="day-choice-pct">35%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">C</span><div class="day-choice-track"><div class="day-choice-fill c" style="width:22%"></div></div><span class="day-choice-pct">22%</span></div>
+        <span class="day-signal watch">Watch — Social</span>
+      </div>
+
+      <div class="day-card">
+        <div class="day-num">Day 3</div>
+        <div class="day-theme">The Blow</div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">A</span><div class="day-choice-track"><div class="day-choice-fill b" style="width:61%"></div></div><span class="day-choice-pct">61%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">B</span><div class="day-choice-track"><div class="day-choice-fill c" style="width:25%"></div></div><span class="day-choice-pct">25%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">C</span><div class="day-choice-track"><div class="day-choice-fill a" style="width:14%"></div></div><span class="day-choice-pct">14%</span></div>
+        <span class="day-signal strong">Strong — PO</span>
+      </div>
+
+      <div class="day-card">
+        <div class="day-num">Day 4</div>
+        <div class="day-theme">The Bet</div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">A</span><div class="day-choice-track"><div class="day-choice-fill a" style="width:39%"></div></div><span class="day-choice-pct">39%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">B</span><div class="day-choice-track"><div class="day-choice-fill b" style="width:48%"></div></div><span class="day-choice-pct">48%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">C</span><div class="day-choice-track"><div class="day-choice-fill c" style="width:13%"></div></div><span class="day-choice-pct">13%</span></div>
+        <span class="day-signal mixed">Mixed — RA</span>
+      </div>
+
+      <div class="day-card">
+        <div class="day-num">Day 5</div>
+        <div class="day-theme">The Finish</div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">A</span><div class="day-choice-track"><div class="day-choice-fill a" style="width:30%"></div></div><span class="day-choice-pct">30%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">B</span><div class="day-choice-track"><div class="day-choice-fill b" style="width:44%"></div></div><span class="day-choice-pct">44%</span></div>
+        <div class="day-choice-bar-wrap"><span class="day-choice-label">C</span><div class="day-choice-track"><div class="day-choice-fill c" style="width:26%"></div></div><span class="day-choice-pct">26%</span></div>
+        <span class="day-signal strong">Strong — PO</span>
+      </div>
+
+    </div>
+
+    <!-- Section: Facilitation Insight -->
+    <div class="section-head">
+      <span class="section-eyebrow">Facilitation Insight</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-eyebrow">Behavioral Interpretation · Generated from Session B7K2</div>
+      <div class="insight-title">Your class can plan — but social pressure breaks their execution.</div>
+      <div class="insight-body">
+        The most consistent signal from this session is a <strong>gap between stated intent and observed behavior under social pressure.</strong> On Day 3 (unexpected expense) and Day 5 (final choice), students made strong, forward-looking decisions — 61% and 70% respectively chose the financially disciplined path. But when the group was watching on Day 1 and Day 2, discipline dropped sharply. This is not a knowledge gap. It is a <strong>knowing-doing gap</strong> — and it is the most common pattern we see in this age band.
+      </div>
+      <div class="insight-body">
+        The Day 4 risk data adds an important nuance: <strong>students who were already low on funds took the 50/50 bet at a higher rate</strong> than students with comfortable balances. This is the "nothing to lose" risk pattern — and it directly mirrors how adults fall into debt cycles. Naming this pattern explicitly in your debrief is the highest-leverage conversation you can have.
+      </div>
+      <div class="insight-prompt-label">Suggested Debrief Prompts</div>
+      <div class="prompt-pills">
+        <div class="prompt-pill">On Day 2, nearly half the class spent money even when they were already low. What makes it hard to say no to the group — even when you know you should?</div>
+        <div class="prompt-pill">Some students in the class bet on Day 4 when they could least afford to lose. Why do you think that happens — in the game, and in real life?</div>
+        <div class="prompt-pill">Your class finished strong on Day 5 — most of you saved or set a goal. What would it look like to carry that same energy into Day 1 next time?</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-card">
+      <div class="cta-eyebrow">What Comes Next</div>
+      <div class="cta-title">This is one week of data.<br>Imagine a full year.</div>
+      <div class="cta-desc">
+        The $100 Week™ is the entry point. The full WealthWise Kids™ platform includes a 36-lesson K–12 curriculum, a student fintech simulator, and a game-based assessment — all powered by the same FLIQ Score™ behavioral framework. Every product generates data. Every data point builds the picture.
+      </div>
+      <div class="cta-btns">
+        <a href="./brief.html" class="cta-btn-primary">View Full Program Brief →</a>
+        <a href="mailto:info@wealthwisekids.org?subject=The%20%24100%20Week%20-%20Full%20Platform%20Inquiry&body=Hi%2C%20I%20reviewed%20the%20sample%20cohort%20report%20and%20would%20like%20to%20learn%20more%20about%20bringing%20the%20full%20WealthWise%20Kids%20platform%20to%20our%20program." class="cta-btn-secondary">Email info@wealthwisekids.org</a>
+        <a href="./apply.html" class="cta-btn-secondary">Apply as Pilot Partner</a>
+      </div>
+      <div class="compliance-strip">
+        <span class="comp-badge">COPPA Compliant</span>
+        <span class="comp-badge">FERPA Aligned</span>
+        <span class="comp-badge">Zero PII Collected</span>
+        <span class="comp-badge">Anonymous by Design</span>
+        <span class="comp-badge">No Data Sold — Ever</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>© 2026 WealthWise Kids LLC · All rights reserved · <a href="./legal.html">Privacy &amp; Legal</a> · <a href="./data-ethics.html">Data Ethics</a><br>
+    The $100 Week™ · FLIQ Score™ · Financial Foundations™ are trademarks of WealthWise Kids IP Holdings LLC<br>
+    <strong>This is a sample report using anonymized demonstration data.</strong></p>
+  </div>
+
+</body>
+</html>
