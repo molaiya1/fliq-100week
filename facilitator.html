@@ -106,7 +106,7 @@
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--cyan);
+      color: var(--gold);
     }
     .topbar-right {
       display: flex;
@@ -114,15 +114,15 @@
       gap: 12px;
     }
     .topbar-badge {
-      background: rgba(0,180,216,0.12);
-      border: 1px solid rgba(0,180,216,0.25);
+      background: rgba(245,166,35,0.12);
+      border: 1px solid rgba(245,166,35,0.25);
       border-radius: 20px;
       padding: 4px 12px;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--cyan);
+      color: var(--gold);
     }
     .topbar-version {
       font-size: 10px;
@@ -197,7 +197,7 @@
       background: var(--border);
       transition: background 0.4s;
     }
-    .step-item.done:not(:last-child)::after { background: var(--cyan); }
+    .step-item.done:not(:last-child)::after { background: var(--gold); }
     .step-icon {
       width: 36px; height: 36px;
       border-radius: 50%;
@@ -214,14 +214,14 @@
       z-index: 1;
     }
     .step-item.active .step-icon {
-      border-color: var(--cyan);
-      background: rgba(0,180,216,0.15);
-      color: var(--cyan);
-      box-shadow: 0 0 16px rgba(0,180,216,0.3);
+      border-color: var(--gold);
+      background: rgba(245,166,35,0.15);
+      color: var(--gold);
+      box-shadow: 0 0 16px rgba(245,166,35,0.3);
     }
     .step-item.done .step-icon {
-      border-color: var(--cyan);
-      background: var(--cyan);
+      border-color: var(--gold);
+      background: var(--gold);
       color: var(--navy);
     }
     .step-label {
@@ -232,7 +232,7 @@
       color: var(--text-dim);
       transition: color 0.3s;
     }
-    .step-item.active .step-label { color: var(--cyan); }
+    .step-item.active .step-label { color: var(--gold); }
     .step-item.done .step-label { color: var(--text-mid); }
 
     /* ══════════════════════════════════════
@@ -277,7 +277,7 @@
       transition: border-color 0.2s;
     }
     .card-accent {
-      border-top: 2px solid var(--cyan);
+      border-top: 2px solid var(--gold);
     }
 
     /* ── Day Guide ── */
@@ -412,11 +412,11 @@
     .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--cyan) 0%, var(--cyan-d) 100%);
-      color: var(--white);
-      box-shadow: 0 4px 24px rgba(0,180,216,0.35);
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-d) 100%);
+      color: var(--navy);
+      box-shadow: 0 4px 24px rgba(245,166,35,0.35);
     }
-    .btn-primary:hover { box-shadow: 0 6px 32px rgba(0,180,216,0.5); }
+    .btn-primary:hover { box-shadow: 0 6px 32px rgba(245,166,35,0.5); }
 
     .btn-gold {
       background: linear-gradient(135deg, var(--gold) 0%, var(--gold-d) 100%);
@@ -918,12 +918,65 @@
        PRINT
     ══════════════════════════════════════ */
     @media print {
+      @page { margin: 18mm 20mm; }
       body::before { display: none; }
-      .topbar, .stepper, .btn-row, .page-footer, #toast { display: none !important; }
-      body { background: #fff; color: #000; }
-      .card { background: #f9f9f9; border: 1px solid #ddd; break-inside: avoid; }
-      .metric-value, .join-code { color: #1B2A4A; }
-      .section-label, .section-label::before { color: #1B2A4A; background: #1B2A4A; }
+      .topbar, .stepper, .btn-row, .page-footer, #toast, .info-strip { display: none !important; }
+      #screen-setup, #screen-launch { display: none !important; }
+      #screen-report { display: block !important; animation: none !important; }
+      body { background: #fff; color: #111; }
+      .page-wrap { padding: 0 !important; }
+      .card {
+        background: #fafafa !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+      .card-accent, .card-gold-accent { border-top: 3px solid #1F3C88 !important; }
+      .metric-value { color: #1F3C88 !important; }
+      .metric-label { color: #555 !important; }
+      .metric-icon { display: none; }
+      .join-code { color: #1F3C88; }
+      .section-label { color: #1F3C88 !important; }
+      .section-label::before { background: #1F3C88 !important; }
+      .trait-bar-wrap { background: #e0e0e0 !important; }
+      .trait-score { color: #111 !important; }
+      .trait-name { color: #333 !important; }
+      .trait-max { color: #555 !important; }
+      .band-num, .band-label { color: #111 !important; }
+      .label-name { color: #111 !important; }
+      .label-desc { color: #555 !important; }
+      .insight-card { background: #fffbf0 !important; border: 1px solid #F4B223 !important; }
+      .insight-card.show { display: block !important; }
+      .insight-title { color: #B45309 !important; }
+      .insight-text { color: #333 !important; }
+      /* Institutional report header */
+      #screen-report::before {
+        content: 'WealthWise Kids™  ·  The $100 Week™  ·  FLIQ Score™ Class Report';
+        display: block;
+        font-size: 13px;
+        font-weight: 800;
+        color: #1F3C88;
+        text-align: center;
+        padding: 0 0 12px;
+        border-bottom: 2px solid #1F3C88;
+        margin-bottom: 20px;
+        letter-spacing: -0.2px;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+      }
+      /* Institutional report footer */
+      #screen-report::after {
+        content: 'WealthWise Kids™ LLC  ·  info@wealthwisekids.org  ·  Confidential — Authorized Facilitator Use Only';
+        display: block;
+        font-size: 8px;
+        color: #999;
+        text-align: center;
+        padding: 12px 0 0;
+        border-top: 1px solid #ddd;
+        margin-top: 20px;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+      }
     }
   </style>
 </head>
@@ -939,7 +992,7 @@
   </div>
   <div class="topbar-right">
     <span class="topbar-badge">Facilitator Dashboard</span>
-    <span class="topbar-version">v1.0</span>
+    <span class="topbar-version">Pilot Release · 2026</span>
   </div>
 </nav>
 
@@ -950,6 +1003,10 @@
     <div class="hero-eyebrow">The $100 Week™</div>
     <h1>Your Class.<br>Their <em>Financial Mind</em>.</h1>
     <p class="hero-sub">Set up a session, share the link, and watch your class reveal how they really make financial decisions.</p>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(244,178,35,0.08);border:1px solid rgba(244,178,35,0.22);border-radius:20px;padding:6px 16px;margin-top:16px;font-size:11px;font-weight:700;color:rgba(244,178,35,0.85);letter-spacing:1.5px;text-transform:uppercase;">
+      <span style="width:6px;height:6px;border-radius:50%;background:#F4B223;display:inline-block;flex-shrink:0;"></span>
+      2 Pilot Cohorts &nbsp;·&nbsp; Georgia &amp; California
+    </div>
   </div>
 
   <!-- ── Stepper ── -->
@@ -983,7 +1040,7 @@
   ═══════════════════════════════════════ -->
   <div class="screen active" id="screen-setup">
     <div class="card card-accent">
-      <div class="section-label">Step 1 — Create Your Class Session</div>
+      <div class="section-label gold">Step 1 — Create Your Class Session</div>
 
       <div class="form-grid">
         <div class="form-group">
@@ -1114,9 +1171,12 @@
     <!-- Day Guide -->
     <div class="card" id="dayGuideCard" style="display:none;border-top:2px solid rgba(139,92,246,0.5);">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <div>
-          <div class="section-label" style="color:#A78BFA;">📖 Daily Session Guide</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;">Use this to run each 20-minute block — before, during, and after the choice.</div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <img src="./milo-hero.png" alt="Milo" style="height:56px;width:auto;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.4));flex-shrink:0;" />
+          <div>
+            <div class="section-label" style="color:#A78BFA;margin-bottom:2px;">📖 Daily Session Guide</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);">Use this to run each 20-minute block — before, during, and after the choice.</div>
+          </div>
         </div>
       </div>
       <div class="guide-day-pills" id="guideDayPills"></div>
@@ -1124,9 +1184,9 @@
     </div>
 
     <!-- Facilitator return URL -->
-    <div class="card" style="background:rgba(245,166,35,0.06);border-color:rgba(245,166,35,0.25);">
+    <div class="card card-gold-accent" style="background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.3);">
       <div class="section-label gold">Your Facilitator Return Link</div>
-      <p style="font-size:13px;color:var(--text-mid);margin:0 0 12px;">Write this down or bookmark it. Opens your session dashboard on any device — even after closing the browser or restarting your computer.</p>
+      <p style="font-size:13px;color:var(--text-mid);margin:0 0 12px;"><strong style="color:rgba(255,255,255,0.8);">Bookmark this link before you leave.</strong> It reopens your live dashboard on any device — even after closing the browser or restarting your computer. Students can still complete the sim while you're gone.</p>
       <div class="url-row">
         <span class="url-icon">🔖</span>
         <span class="url-text" id="resumeLink" style="font-weight:700;color:white;"></span>
@@ -1164,7 +1224,7 @@
 
     <!-- Headline metrics -->
     <div class="card card-accent">
-      <div class="section-label">Class FLIQ Score™ Report</div>
+      <div class="section-label gold">Class FLIQ Score™ Report</div>
       <div class="metric-grid" id="metricGrid"></div>
     </div>
 
@@ -1237,10 +1297,10 @@
       </div>
 
       <div style="text-align:center;">
-        <a href="mailto:michael@versassists.com?subject=WWK%20Full%20Platform%20Interest%20-%20%24100%20Week%20Pilot&body=Hi%2C%20I%20just%20completed%20The%20%24100%20Week%20pilot%20and%20would%20like%20to%20learn%20more%20about%20the%20full%20WealthWise%20Kids%20platform." style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#F4B223,#d9960f);border-radius:12px;color:#1F3C88;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:12px;">Request a Platform Overview →</a>
+        <a href="mailto:info@wealthwisekids.org?subject=WWK%20Full%20Platform%20Interest%20-%20%24100%20Week%20Pilot&body=Hi%2C%20I%20just%20completed%20The%20%24100%20Week%20pilot%20and%20would%20like%20to%20learn%20more%20about%20the%20full%20WealthWise%20Kids%20platform." style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#F4B223,#d9960f);border-radius:12px;color:#1F3C88;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:12px;">Request a Platform Overview →</a>
         <br>
         <a href="https://wealthwisekids.org" target="_blank" style="font-size:12px;color:rgba(244,178,35,0.7);text-decoration:underline;">wealthwisekids.org</a>
-        <p style="font-size:10px;color:var(--text-dim);margin:10px 0 0;">WealthWise Kids™ LLC · michael@versassists.com · All products available for institutional licensing Fall 2026</p>
+        <p style="font-size:10px;color:var(--text-dim);margin:10px 0 0;">WealthWise Kids™ LLC · info@wealthwisekids.org · All products available for institutional licensing Fall 2026</p>
       </div>
     </div>
 
