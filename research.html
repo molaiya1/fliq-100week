@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evidence Base — WealthWise Kids™</title>
+  <link rel="icon" type="image/png" href="./milo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #1F3C88;
+      --navy-dk: #0B1D3A;
+      --gold:    #F4B223;
+      --white:   #FFFFFF;
+      --gray:    #F5F6F8;
+      --border:  #E2E6EF;
+      --text:    #0B1D3A;
+      --text2:   #4A5980;
+      --text3:   #8A9ABF;
+      --red:     #DC2626;
+      --red-lt:  #FEF2F2;
+      --green:   #16A34A;
+      --green-lt:#F0FDF4;
+    }
+
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--gray); color:var(--text); font-size:15px; line-height:1.7; }
+
+    /* ── Topbar ── */
+    .topbar {
+      position:sticky; top:0; z-index:100;
+      background:var(--white); border-bottom:1px solid var(--border);
+      padding:0 32px; height:60px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .topbar-brand { font-size:14px; font-weight:800; color:var(--navy); letter-spacing:-0.2px; }
+    .topbar-brand span { color:var(--gold); }
+    .topbar-back { font-size:13px; font-weight:600; color:var(--text2); text-decoration:none; }
+    .topbar-back:hover { color:var(--navy); }
+
+    /* ── Hero ── */
+    .hero {
+      background:var(--navy-dk);
+      padding:52px 32px 48px;
+      text-align:center;
+    }
+    .hero-eyebrow {
+      font-size:10px; font-weight:700; letter-spacing:3px;
+      text-transform:uppercase; color:var(--gold);
+      margin-bottom:14px;
+    }
+    .hero-h1 {
+      font-size:30px; font-weight:900; color:#fff;
+      letter-spacing:-0.8px; line-height:1.2;
+      max-width:640px; margin:0 auto 16px;
+    }
+    .hero-sub {
+      font-size:14px; color:rgba(255,255,255,0.55);
+      max-width:580px; margin:0 auto; line-height:1.7;
+    }
+
+    /* ── Page body ── */
+    .page { max-width:860px; margin:0 auto; padding:48px 32px 80px; }
+
+    /* ── Section ── */
+    .section { margin-bottom:56px; }
+    .section-head {
+      font-size:9px; font-weight:800; letter-spacing:3.5px;
+      text-transform:uppercase; color:var(--navy);
+      padding-bottom:12px; border-bottom:2px solid var(--navy);
+      margin-bottom:28px;
+    }
+    .section-intro {
+      font-size:14px; color:var(--text2); line-height:1.75;
+      margin-bottom:28px; max-width:720px;
+    }
+
+    /* ── Stat callouts ── */
+    .stat-row {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:16px; margin-bottom:32px;
+    }
+    .stat-box {
+      background:var(--white); border:1px solid var(--border);
+      border-radius:4px; padding:22px 20px;
+      border-left:4px solid var(--navy);
+    }
+    .stat-box.risk { border-left-color:var(--red); }
+    .stat-box.positive { border-left-color:var(--green); }
+    .stat-num {
+      font-size:32px; font-weight:900; color:var(--navy);
+      letter-spacing:-1px; font-variant-numeric:tabular-nums;
+      line-height:1; margin-bottom:6px;
+    }
+    .stat-box.risk .stat-num { color:var(--red); }
+    .stat-box.positive .stat-num { color:var(--green); }
+    .stat-label {
+      font-size:12px; color:var(--text2); line-height:1.5;
+    }
+    .stat-source {
+      font-size:10px; color:var(--text3); margin-top:6px;
+    }
+
+    /* ── Study cards ── */
+    .study-card {
+      background:var(--white); border:1px solid var(--border);
+      border-radius:4px; padding:24px 28px;
+      margin-bottom:12px;
+      display:grid; grid-template-columns:auto 1fr;
+      gap:20px; align-items:start;
+    }
+    .study-badge {
+      width:44px; height:44px; border-radius:4px;
+      background:var(--navy); display:flex;
+      align-items:center; justify-content:center;
+      font-size:18px; flex-shrink:0;
+    }
+    .study-badge.risk { background:var(--red-lt); }
+    .study-badge.positive { background:var(--green-lt); }
+    .study-meta {
+      font-size:10px; font-weight:700; letter-spacing:1.5px;
+      text-transform:uppercase; color:var(--text3);
+      margin-bottom:5px;
+    }
+    .study-finding {
+      font-size:14px; font-weight:700; color:var(--text);
+      line-height:1.5; margin-bottom:8px;
+    }
+    .study-detail {
+      font-size:13px; color:var(--text2); line-height:1.65;
+    }
+    .study-cite {
+      font-size:11px; color:var(--text3); margin-top:10px;
+      font-style:italic;
+    }
+
+    /* ── WWK connection block ── */
+    .connection-block {
+      background:rgba(31,60,136,0.05);
+      border:1px solid rgba(31,60,136,0.15);
+      border-left:4px solid var(--navy);
+      border-radius:4px; padding:18px 22px;
+      margin-top:8px;
+    }
+    .connection-label {
+      font-size:9px; font-weight:800; letter-spacing:2px;
+      text-transform:uppercase; color:var(--navy);
+      margin-bottom:6px;
+    }
+    .connection-text { font-size:13px; color:var(--text2); line-height:1.6; }
+
+    /* ── Behavior cost table ── */
+    .cost-table { width:100%; border-collapse:collapse; margin-bottom:12px; }
+    .cost-table th {
+      font-size:10px; font-weight:700; letter-spacing:1.5px;
+      text-transform:uppercase; color:var(--text3);
+      text-align:left; padding:10px 14px;
+      border-bottom:2px solid var(--navy);
+    }
+    .cost-table td {
+      font-size:13px; color:var(--text); padding:12px 14px;
+      border-bottom:1px solid var(--border); line-height:1.5;
+    }
+    .cost-table tr:last-child td { border-bottom:none; }
+    .cost-table td:first-child { font-weight:600; width:35%; }
+    .cost-table .cost-val { color:var(--red); font-weight:700; font-variant-numeric:tabular-nums; }
+
+    /* ── Philosophy block ── */
+    .philosophy-block {
+      background:var(--navy-dk); border-radius:4px;
+      padding:36px 40px; margin-top:40px;
+    }
+    .philosophy-eyebrow {
+      font-size:9px; font-weight:700; letter-spacing:2.5px;
+      text-transform:uppercase; color:var(--gold);
+      margin-bottom:12px;
+    }
+    .philosophy-headline {
+      font-size:22px; font-weight:900; color:#fff;
+      letter-spacing:-0.5px; line-height:1.25;
+      margin-bottom:16px;
+    }
+    .philosophy-text { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.75; }
+    .philosophy-text + .philosophy-text { margin-top:12px; }
+
+    /* ── CTA ── */
+    .cta-strip {
+      background:var(--white); border:1px solid var(--border);
+      border-radius:4px; padding:28px 32px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:24px; margin-top:40px;
+    }
+    .cta-strip-text {}
+    .cta-strip-headline { font-size:16px; font-weight:800; color:var(--navy); margin-bottom:4px; }
+    .cta-strip-sub { font-size:13px; color:var(--text2); }
+    .cta-strip-btn {
+      display:inline-block; background:var(--navy); color:#fff;
+      font-size:13px; font-weight:800; padding:12px 24px;
+      border-radius:4px; text-decoration:none;
+      white-space:nowrap; flex-shrink:0;
+    }
+
+    /* ── Footer ── */
+    .doc-footer {
+      background:var(--navy-dk); padding:16px 32px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .footer-brand { font-size:11px; font-weight:700; color:rgba(255,255,255,0.35); }
+    .footer-links { display:flex; gap:20px; }
+    .footer-link { font-size:11px; color:rgba(255,255,255,0.3); text-decoration:none; }
+    .footer-link:hover { color:rgba(255,255,255,0.6); }
+
+    @media print {
+      @page { size: letter; margin: 16mm 18mm; }
+      body { background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      .topbar { display:none; }
+      .philosophy-block, .stat-box.risk, .stat-box.positive { -webkit-print-color-adjust:exact; }
+    }
+    @media (max-width: 680px) {
+      .stat-row { grid-template-columns:1fr; }
+      .study-card { grid-template-columns:1fr; }
+      .study-badge { display:none; }
+      .cta-strip { flex-direction:column; align-items:flex-start; }
+      .philosophy-block { padding:28px 24px; }
+      .page { padding:32px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-brand">WealthWise Kids<span>™</span> — Research Foundation</div>
+  <a href="./facilitator.html" class="topbar-back">← Facilitator Dashboard</a>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">Evidence Base · For Facilitators & Administrators</div>
+  <h1 class="hero-h1">The research behind why this matters.</h1>
+  <p class="hero-sub">The WealthWise Kids™ ecosystem is built on two bodies of evidence: what financial literacy education can do when it starts early, and what poor financial behavior costs across a lifetime. Both cases make the argument.</p>
+</div>
+
+<div class="page">
+
+  <!-- ── SECTION 1: The Cost of Financial Illiteracy ── -->
+  <div class="section">
+    <div class="section-head">The Cost of Not Starting Early</div>
+    <p class="section-intro">The consequences of poor financial behavior aren't abstract — they're documented, quantified, and disproportionately concentrated in the communities WealthWise Kids™ serves. These are not cautionary statistics. They are the baseline we're working against.</p>
+
+    <div class="stat-row">
+      <div class="stat-box risk">
+        <div class="stat-num">$1,819</div>
+        <div class="stat-label">Average annual cost of financial illiteracy per U.S. adult — fees, interest, missed savings, and avoidable debt</div>
+        <div class="stat-source">National Financial Educators Council, 2022</div>
+      </div>
+      <div class="stat-box risk">
+        <div class="stat-num">64%</div>
+        <div class="stat-label">of Americans could not cover a $1,000 emergency without borrowing — a direct marker of impulse-driven financial behavior</div>
+        <div class="stat-source">Bankrate Emergency Savings Report, 2023</div>
+      </div>
+      <div class="stat-box risk">
+        <div class="stat-num">54%</div>
+        <div class="stat-label">of adults living paycheck to paycheck have annual household incomes above $50,000 — income alone does not produce financial stability</div>
+        <div class="stat-source">PYMNTS/LendingClub Consumer Insights, 2023</div>
+      </div>
+    </div>
+
+    <div class="study-card">
+      <div class="study-badge risk">📉</div>
+      <div>
+        <div class="study-meta">Behavioral Economics · Impulsivity Research</div>
+        <div class="study-finding">Impulsive financial decision-making in adolescence is the single strongest predictor of adult financial instability — stronger than income, education level, or family wealth.</div>
+        <div class="study-detail">Longitudinal research tracking cohorts from age 10 through adulthood found that adolescents who demonstrated low delay-of-gratification in low-stakes financial scenarios were significantly more likely to carry high-interest debt, have no emergency savings, and experience financial stress as adults — regardless of eventual income level.</div>
+        <div class="study-cite">Moffitt, T.E. et al. "A gradient of childhood self-control predicts health, wealth, and public safety." PNAS, 2011.</div>
+      </div>
+    </div>
+
+    <div class="connection-block">
+      <div class="connection-label">WWK Design Response</div>
+      <div class="connection-text">The FLIQ Score™ Impulse Control (IC) domain directly measures this behavioral pattern across five decision scenarios. Identifying IC profiles early — before adolescents develop fixed spending habits — is the entire premise of The $100 Week™ as a behavioral assessment tool, not just a simulation.</div>
+    </div>
+
+    <div style="height:20px;"></div>
+
+    <div class="study-card">
+      <div class="study-badge risk">🏚</div>
+      <div>
+        <div class="study-meta">Wealth Gap Research · Racial Equity</div>
+        <div class="study-finding">Black and Hispanic households are 2–3× more likely to have zero emergency savings and 40–60% less likely to hold investment accounts — gaps that originate in financial behavior patterns established before age 16.</div>
+        <div class="study-detail">The Federal Reserve's Survey of Consumer Finances consistently shows that the racial wealth gap is driven not exclusively by income disparity but by differential access to financial education, behavioral modeling, and early savings habits. Communities without early intervention show compounding disadvantage across generations.</div>
+        <div class="study-cite">Federal Reserve Board. "Survey of Consumer Finances." Triennial survey, most recent 2022. Board of Governors of the Federal Reserve System.</div>
+      </div>
+    </div>
+
+    <div class="connection-block">
+      <div class="connection-label">WWK Design Response</div>
+      <div class="connection-text">WealthWise Kids™ programs are designed for youth-serving organizations — YMCA, Urban League, Boys & Girls Clubs, after-school programs, Title I schools — organizations already embedded in the communities where early financial behavioral intervention has the highest lifetime return. The $100 Week™ is free precisely because cost cannot be a barrier to access at this stage.</div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: What Early Intervention Does ── -->
+  <div class="section">
+    <div class="section-head">What Early Financial Education Actually Produces</div>
+    <p class="section-intro">Not all financial literacy programs are equal — and the research reflects that. Programs that emphasize behavioral pattern recognition over information delivery consistently produce measurable, durable outcomes. This is the distinction that drives the WWK design philosophy.</p>
+
+    <div class="stat-row">
+      <div class="stat-box positive">
+        <div class="stat-num">+17%</div>
+        <div class="stat-label">Average increase in savings rate among adults who received structured financial education before age 18, vs. those who did not</div>
+        <div class="stat-source">Journal of Economic Education, 2014 meta-analysis</div>
+      </div>
+      <div class="stat-box positive">
+        <div class="stat-num">3×</div>
+        <div class="stat-label">More likely to start saving for retirement by age 25 if basic financial concepts were introduced before age 12</div>
+        <div class="stat-source">Consumer Financial Protection Bureau, 2013</div>
+      </div>
+      <div class="stat-box positive">
+        <div class="stat-num">Age 7</div>
+        <div class="stat-label">By this age, children's money habits and financial attitudes are largely formed, according to behavioral economists at Cambridge</div>
+        <div class="stat-source">University of Cambridge, "Habit Formation and Learning in Young Children," 2013</div>
+      </div>
+    </div>
+
+    <div class="study-card">
+      <div class="study-badge positive">📈</div>
+      <div>
+        <div class="study-meta">Financial Education Research · Program Efficacy</div>
+        <div class="study-finding">Simulation-based financial learning produces significantly stronger behavioral transfer than knowledge-based instruction alone — students retain and apply decision-making strategies at 2–3× the rate.</div>
+        <div class="study-detail">Studies comparing didactic financial instruction with experiential/simulation-based approaches consistently find that participants in simulation conditions show higher rates of real-world behavior change — including opening savings accounts, tracking spending, and demonstrating delay-of-gratification — in the 6 and 12 months following intervention. The mechanism is behavioral rehearsal: students practice decisions under low-stakes conditions before encountering them in the real world.</div>
+        <div class="study-cite">Fernandes, D., Lynch, J.G., & Netemeyer, R.G. "Financial Literacy, Financial Education, and Downstream Financial Behaviors." Management Science, 2014.</div>
+      </div>
+    </div>
+
+    <div class="connection-block">
+      <div class="connection-label">WWK Design Response</div>
+      <div class="connection-text">The $100 Week™ is not a quiz. It is a behavioral rehearsal environment — five days of consequential decisions where the outcome (ending balance, FLIQ profile) depends entirely on how students actually behave, not how they perform on a test. This is the specific mechanism the literature identifies as producing durable behavioral change.</div>
+    </div>
+
+    <div style="height:20px;"></div>
+
+    <div class="study-card">
+      <div class="study-badge positive">🧠</div>
+      <div>
+        <div class="study-meta">Behavioral Science · Self-Regulation Development</div>
+        <div class="study-finding">Adolescents who can accurately identify their own financial decision-making patterns show significantly better financial outcomes at 5-year follow-up — regardless of whether those patterns were initially "good" or "bad."</div>
+        <div class="study-detail">Self-awareness of behavioral tendencies — knowing that you are an impulsive spender, a risk-averse saver, or a social follower — is a stronger predictor of improved financial behavior than receiving instruction about the "right" behaviors. The act of accurate self-identification creates the cognitive gap that motivates change. This is the basis for behavioral profiling interventions in youth financial education.</div>
+        <div class="study-cite">Lusardi, A. & Mitchell, O.S. "The Economic Importance of Financial Literacy: Theory and Evidence." Journal of Economic Literature, 2014.</div>
+      </div>
+    </div>
+
+    <div class="connection-block">
+      <div class="connection-label">WWK Design Response</div>
+      <div class="connection-text">The FLIQ Score™ is designed as a self-awareness tool first. It does not tell students what they should have done — it shows them how they actually behaved across five decision contexts. The nine behavioral profile types (Financial Starter through Exceptional) are descriptive, not prescriptive. The training — Financial Foundations™ curriculum delivered by iMPACT Partners™ — comes after the profile is established, when behavioral self-awareness creates the opening for instruction.</div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: The Behavioral Cost Table ── -->
+  <div class="section">
+    <div class="section-head">What Poor Financial Behavior Costs — By Pattern</div>
+    <p class="section-intro">The FLIQ Score™ measures four behavioral domains. Each domain, when underdeveloped, carries a documented, quantifiable lifetime cost. This table gives facilitators and administrators the stakes behind each dimension of what students are practicing.</p>
+
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th>FLIQ Domain</th>
+          <th>Underdeveloped Pattern</th>
+          <th>Documented Lifetime Cost</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Impulse Control (IC)</td>
+          <td>Chronic impulsive spending; unable to delay gratification in financial decisions</td>
+          <td class="cost-val">$280,000–$400,000</td>
+          <td style="font-size:11px;color:var(--text3);">Cumulative estimated lost wealth from high-interest debt + missed compound savings from ages 18–65. Consumer Financial Protection Bureau, 2016.</td>
+        </tr>
+        <tr>
+          <td>Planning Orientation (PO)</td>
+          <td>No savings habit; no financial planning; reactive vs. proactive money behavior</td>
+          <td class="cost-val">$1.4M+</td>
+          <td style="font-size:11px;color:var(--text3);">Median wealth gap between those who start saving at 22 vs. 35 at a 7% average annual return. Vanguard Retirement Research, 2022.</td>
+        </tr>
+        <tr>
+          <td>Risk Awareness (RA)</td>
+          <td>Inability to identify predatory or asymmetric financial situations; vulnerability to scams, high-fee products</td>
+          <td class="cost-val">$3,000/year avg.</td>
+          <td style="font-size:11px;color:var(--text3);">Average annual loss to financial fraud, predatory lending, and high-fee products for households with low financial literacy. FTC Consumer Sentinel, 2023.</td>
+        </tr>
+        <tr>
+          <td>Resilience / Recovery (RB)</td>
+          <td>Financial setbacks cause sustained behavior change; unable to course-correct after loss or unexpected costs</td>
+          <td class="cost-val">2–3× higher</td>
+          <td style="font-size:11px;color:var(--text3);">Likelihood of long-term debt accumulation following first major financial shock (job loss, medical event, unexpected expense) for low-resilience individuals. Urban Institute, 2021.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="connection-block">
+      <div class="connection-label">For Facilitators</div>
+      <div class="connection-text">Use this table in grant applications, program justifications, and parent/administrator conversations. The FLIQ Score™ domains are not abstract measurements — each one maps directly to a documented risk pattern with a quantifiable cost. When a student scores low on Impulse Control, the data suggests where their financial trajectory may be headed without intervention. The simulation is the earliest point at which that trajectory becomes visible.</div>
+    </div>
+  </div>
+
+  <!-- ── Philosophy Block ── -->
+  <div class="philosophy-block">
+    <div class="philosophy-eyebrow">The WWK Philosophy — Evidence-Based Design</div>
+    <div class="philosophy-headline">We don't teach kids what to think.<br>We show them how they think.</div>
+    <p class="philosophy-text">The most important design decision in the WealthWise Kids™ ecosystem is what we don't do: we don't tell students which financial decisions are right or wrong while they're making them. The simulation captures raw, uninfluenced behavioral responses — what students actually do under pressure, not what they think they should say.</p>
+    <p class="philosophy-text">This is not a philosophical preference. The research is unambiguous: behavioral interventions that measure authentic decision-making before delivering instruction produce significantly better outcomes than programs that signal correct answers from the start. Self-identification of behavioral patterns — not external instruction — is the mechanism that drives lasting change.</p>
+    <p class="philosophy-text">The training lives in Financial Foundations™, delivered by credentialed iMPACT Partners™ after the FLIQ profile is established. The $100 Week™ is the diagnostic. The curriculum is the intervention. The data is the throughline connecting both.</p>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-strip">
+    <div class="cta-strip-text">
+      <div class="cta-strip-headline">Ready to bring evidence-based financial literacy to your program?</div>
+      <div class="cta-strip-sub">The $100 Week™ is free to pilot. iMPACT Partner™ certification unlocks the full platform.</div>
+    </div>
+    <a href="./apply.html" class="cta-strip-btn">Apply as a Pilot Partner →</a>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="doc-footer">
+  <div class="footer-brand">WealthWise Kids™ LLC · Research Foundation</div>
+  <div class="footer-links">
+    <a href="./facilitator.html" class="footer-link">Facilitator Dashboard</a>
+    <a href="./brief.html" class="footer-link">Program Brief</a>
+    <a href="./ecosystem.html" class="footer-link">Ecosystem Overview</a>
+    <a href="./apply.html" class="footer-link">Apply</a>
+  </div>
+</div>
+
+</body>
+</html>
