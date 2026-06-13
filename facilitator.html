@@ -160,7 +160,19 @@
       z-index: 1;
       pointer-events: none;
     }
-    .hero > * { position: relative; z-index: 2; }
+    .hero > *:not(.hero-milo-anchor) { position: relative; z-index: 2; }
+    .hero-milo-anchor {
+      position: absolute;
+      right: 5%;
+      bottom: 0;
+      height: min(300px, 78%);
+      width: auto;
+      z-index: 2;
+      opacity: 0.52;
+      filter: drop-shadow(0 8px 28px rgba(0,0,0,0.45));
+      pointer-events: none;
+    }
+    @media (max-width: 1200px) { .hero-milo-anchor { display: none; } }
     .hero-eyebrow {
       display: inline-flex;
       align-items: center;
@@ -1029,8 +1041,9 @@
 
   <!-- ── Hero ── -->
   <div class="hero">
+    <img src="./milo-hero.png" alt="" aria-hidden="true" class="hero-milo-anchor" />
     <div class="hero-eyebrow">The $100 Week™</div>
-    <h1>Your Class.<br>Their <em>Financial Mind</em>.</h1>
+    <h1>Five days. Five choices.<br><em>A complete behavioral picture.</em></h1>
     <p class="hero-sub">Set up a session, share the link, and watch your class reveal how they really make financial decisions.</p>
     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(244,178,35,0.08);border:1px solid rgba(244,178,35,0.22);border-radius:20px;padding:6px 16px;margin-top:16px;font-size:11px;font-weight:700;color:rgba(244,178,35,0.85);letter-spacing:1.5px;text-transform:uppercase;">
       <span style="width:6px;height:6px;border-radius:50%;background:#F4B223;display:inline-block;flex-shrink:0;"></span>
