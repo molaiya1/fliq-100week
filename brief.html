@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Brief — The $100 Week™ | WealthWise Kids</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #1F3C88;
+      --navy-d:  #0f1b35;
+      --navy-l:  #2E4FA3;
+      --gold:    #F4B223;
+      --gold-d:  #C9890A;
+      --gold-lt: #FFF8E7;
+      --text:    #1B2A4A;
+      --text2:   #4A5A7A;
+      --text3:   #7A8CAA;
+      --bg:      #F8F9FC;
+      --white:   #FFFFFF;
+      --border:  rgba(27,42,74,0.10);
+      --border-gold: rgba(244,178,35,0.30);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 16px rgba(27,42,74,0.07);
+      padding: 0 32px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 100;
+    }
+    .topbar-brand { display: flex; flex-direction: column; line-height: 1.2; }
+    .topbar-brand-main { font-size: 15px; font-weight: 800; color: var(--navy); }
+    .topbar-brand-sub  { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-d); }
+    .topbar-divider { width: 1px; height: 28px; background: var(--border); }
+    .topbar-doc { font-size: 12px; font-weight: 600; color: var(--text3); letter-spacing: 0.3px; }
+    .topbar-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+    .btn-print {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; background: var(--navy); border: none;
+      border-radius: 10px; color: white; font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: inherit; letter-spacing: 0.2px;
+      transition: background 0.18s;
+    }
+    .btn-print:hover { background: var(--navy-l); }
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 16px; background: transparent;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      color: var(--text2); font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit; text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-back:hover { border-color: var(--navy); color: var(--navy); }
+
+    /* ── Page wrapper ── */
+    .page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── Cover ── */
+    .cover {
+      background: var(--navy);
+      border-radius: 20px;
+      padding: 52px 56px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 90% 10%, rgba(244,178,35,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 10% 90%, rgba(244,178,35,0.07) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .cover-confidential {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(244,178,35,0.12);
+      border: 1px solid rgba(244,178,35,0.28);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(244,178,35,0.85);
+      margin-bottom: 24px;
+    }
+    .cover-confidential::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+    .cover-eyebrow {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 10px;
+    }
+    .cover-title {
+      font-size: clamp(30px, 5vw, 46px);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      margin-bottom: 8px;
+    }
+    .cover-title span { color: var(--gold); }
+    .cover-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .cover-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .cover-meta-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .cover-meta-value { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
+
+    /* ── Section ── */
+    .section { margin-bottom: 28px; }
+    .section-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 36px;
+      box-shadow: 0 2px 12px rgba(27,42,74,0.05);
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 18px;
+    }
+    .section-label::before {
+      content: '';
+      width: 3px; height: 14px;
+      background: var(--gold);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text); font-weight: 700; }
+
+    /* ── Executive summary ── */
+    .exec-summary {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.75;
+      font-weight: 400;
+      border-left: 4px solid var(--gold);
+      padding-left: 20px;
+      margin-bottom: 0;
+    }
+    .exec-summary strong { color: var(--navy); font-weight: 800; }
+
+    /* ── FLIQ domains grid ── */
+    .fliq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .fliq-tile {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .fliq-tile::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gold);
+    }
+    .fliq-tile-icon { font-size: 22px; margin-bottom: 8px; }
+    .fliq-tile-name { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .fliq-tile-abbr { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-d); margin-bottom: 8px; }
+    .fliq-tile-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+    /* ── How it works steps ── */
+    .steps { display: flex; flex-direction: column; gap: 0; margin-top: 16px; }
+    .step {
+      display: flex;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: white;
+      font-size: 14px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+    .step-desc { font-size: 13px; color: var(--text2); line-height: 1.65; margin: 0; }
+    .step-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 4px;
+      background: var(--gold-lt); color: var(--gold-d);
+      margin-bottom: 4px;
+    }
+
+    /* ── Age bands ── */
+    .bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+    .band-tile {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .band-tile-emoji { font-size: 28px; margin-bottom: 8px; }
+    .band-tile-name { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 2px; }
+    .band-tile-ages { font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 8px; }
+    .band-tile-budget {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--gold);
+      font-size: 13px; font-weight: 800;
+      padding: 4px 14px; border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .band-tile-desc { font-size: 11px; color: var(--text2); line-height: 1.6; margin: 0; }
+
+    /* ── Pilot callout ── */
+    .pilot-box {
+      background: linear-gradient(135deg, #1F3C88 0%, #0f1b35 100%);
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .pilot-stat { text-align: center; }
+    .pilot-stat-num { font-size: 36px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 4px; letter-spacing: -1px; }
+    .pilot-stat-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 1px; }
+    .pilot-divider { width: 1px; background: rgba(255,255,255,0.12); height: 100%; }
+    .pilot-finding {
+      border-left: 3px solid var(--gold);
+      padding-left: 16px;
+      margin-top: 20px;
+    }
+    .pilot-finding-label { font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-d); margin-bottom: 6px; }
+    .pilot-finding-text { font-size: 14px; color: var(--text); line-height: 1.65; font-weight: 500; }
+
+    /* ── Requirements table ── */
+    .req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .req-tile {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 16px;
+    }
+    .req-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .req-label { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .req-desc { font-size: 12px; color: var(--text2); line-height: 1.5; margin: 0; }
+
+    /* ── Ecosystem ── */
+    .ecosystem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .eco-tile {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 18px;
+    }
+    .eco-tile-name { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 2px; }
+    .eco-tile-tag { font-size: 10px; font-weight: 700; color: var(--gold-d); margin-bottom: 6px; letter-spacing: 0.3px; }
+    .eco-tile-desc { font-size: 12px; color: var(--text2); line-height: 1.55; margin: 0; }
+
+    /* ── Compliance strip ── */
+    .compliance-strip {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;
+    }
+    .comp-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #EFF6FF; border: 1px solid #BFDBFE;
+      border-radius: 6px; padding: 5px 12px;
+      font-size: 11px; font-weight: 700; color: #1D4ED8;
+    }
+    .comp-badge::before {
+      content: '✓';
+      font-size: 10px; font-weight: 900;
+      color: #1D4ED8;
+    }
+
+    /* ── CTA ── */
+    .cta-card {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 40px 44px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(244,178,35,0.1), transparent 60%);
+      pointer-events: none;
+    }
+    .cta-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+    .cta-headline { font-size: 26px; font-weight: 900; color: white; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+    .cta-sub { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 28px; max-width: 460px; margin-left: auto; margin-right: auto; }
+    .cta-email {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 15px; font-weight: 800;
+      padding: 15px 32px;
+      border-radius: 12px;
+      text-decoration: none;
+      letter-spacing: -0.2px;
+      transition: background 0.15s;
+      margin-bottom: 16px;
+    }
+    .cta-email:hover { background: #e0a010; }
+    .cta-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .cta-link { font-size: 12px; color: rgba(255,255,255,0.45); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── Footer ── */
+    .brief-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .brief-footer p {
+      font-size: 10.5px;
+      color: var(--text3);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── Print ── */
+    @media print {
+      @page { margin: 16mm 18mm; size: letter; }
+      .topbar { display: none; }
+      .page { padding: 0; max-width: 100%; }
+      .cover { border-radius: 0; padding: 36px; }
+      .section-card { box-shadow: none; border-color: #ddd; }
+      .cta-card { background: #1F3C88 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .pilot-box { background: #1F3C88 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .cover { background: #1F3C88 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section { break-inside: avoid; }
+      .fliq-grid, .bands, .req-grid, .ecosystem-grid { break-inside: avoid; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .cover { padding: 32px 24px; }
+      .section-card { padding: 24px 20px; }
+      .fliq-grid, .bands, .req-grid, .ecosystem-grid { grid-template-columns: 1fr; }
+      .pilot-box { grid-template-columns: 1fr; }
+      .cta-card { padding: 28px 20px; }
+      .topbar { padding: 0 16px; }
+      .topbar-doc { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<nav class="topbar">
+  <div class="topbar-brand">
+    <span class="topbar-brand-main">WealthWise Kids™</span>
+    <span class="topbar-brand-sub">FLIQ Score™ Platform</span>
+  </div>
+  <div class="topbar-divider"></div>
+  <span class="topbar-doc">Pilot Program Brief</span>
+  <div class="topbar-actions">
+    <a href="./facilitator.html" class="btn-back">← Facilitator Dashboard</a>
+    <button class="btn-print" onclick="window.print()">⬇ Download PDF</button>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="cover-confidential">Pilot Program Brief · Confidential</div>
+    <div class="cover-eyebrow">WealthWise Kids™ · Financial Behavior Assessment</div>
+    <div class="cover-title">The <span>$100 Week™</span></div>
+    <div class="cover-subtitle">A browser-based financial behavior simulation that generates real behavioral data — not quiz scores.</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Platform</span>
+        <span class="cover-meta-value">play.wealthwiselearning.com</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Status</span>
+        <span class="cover-meta-value">Live — Pilot Release</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Pilot Cohorts</span>
+        <span class="cover-meta-value">2 Schools · GA &amp; CA</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Contact</span>
+        <span class="cover-meta-value">info@wealthwisekids.org</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Executive Summary -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">Executive Summary</div>
+      <p class="exec-summary">
+        <strong>The $100 Week™</strong> is a 5-day, browser-based financial behavior simulation for students ages 8–18.
+        Each day, students receive a simulated weekly budget and face a real-world financial scenario — spend, save, invest, help a friend, navigate pressure.
+        Their choices generate a <strong>FLIQ Score™</strong> — a behavioral intelligence profile across four domains that tells educators not what students know about money, but <strong>how they actually behave with it under pressure.</strong>
+        No curriculum needed. No app to download. No student accounts. Just a browser and a join code.
+      </p>
+    </div>
+  </div>
+
+  <!-- The Problem -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">The Problem</div>
+      <h2>Financial literacy programs teach knowledge. They don't measure behavior.</h2>
+      <p>Most financial education delivers content — lessons, worksheets, videos. Students can pass a quiz about budgeting and still spend their first paycheck in 48 hours. The gap isn't knowledge. It's behavior.</p>
+      <p>There is no standardized tool that gives educators real behavioral data about how their students make financial decisions under pressure. The $100 Week™ was built to fill that gap — starting with a free, 5-day simulation and a behavioral profile every student can receive in under a week.</p>
+      <p><strong>The result is a dataset that no other program generates:</strong> observable, decision-level behavioral data that reveals the financial instincts students bring into every real-money situation they'll face for the rest of their lives.</p>
+    </div>
+  </div>
+
+  <!-- FLIQ Score Framework -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">The Assessment Framework</div>
+      <h2>The FLIQ Score™ — Four Behavioral Domains</h2>
+      <p>Every choice a student makes in the simulation is scored across four behavioral dimensions. The FLIQ Score™ is not a knowledge test — it's a behavioral fingerprint captured in real-time decision-making pressure.</p>
+      <div class="fliq-grid">
+        <div class="fliq-tile">
+          <div class="fliq-tile-icon">🛑</div>
+          <div class="fliq-tile-name">Impulse Control</div>
+          <div class="fliq-tile-abbr">IC · 0–2 pts</div>
+          <div class="fliq-tile-desc">Does the student pause before acting on financial pressure, or react immediately? Measured across social temptation, comparison spending, and urgency scenarios.</div>
+        </div>
+        <div class="fliq-tile">
+          <div class="fliq-tile-icon">📅</div>
+          <div class="fliq-tile-name">Planning Orientation</div>
+          <div class="fliq-tile-abbr">PO · 0–2 pts</div>
+          <div class="fliq-tile-desc">Does the student think past the immediate moment? Measured through goal commitment, earning trade-offs, and multi-day consequence awareness.</div>
+        </div>
+        <div class="fliq-tile">
+          <div class="fliq-tile-icon">👁️</div>
+          <div class="fliq-tile-name">Risk Awareness</div>
+          <div class="fliq-tile-abbr">RA · 0–2 pts</div>
+          <div class="fliq-tile-desc">Can the student identify asymmetric risk before committing? Measured through investment scenarios, urgency tactics, and high-pressure offers.</div>
+        </div>
+        <div class="fliq-tile">
+          <div class="fliq-tile-icon">💪</div>
+          <div class="fliq-tile-name">Resilience &amp; Bounce-Back</div>
+          <div class="fliq-tile-abbr">RB · 0–2 pts</div>
+          <div class="fliq-tile-desc">Does the student recover and adapt after a financial setback, or does disruption derail the rest of their decision-making? Measured through unexpected cost scenarios.</div>
+        </div>
+      </div>
+      <p style="margin-top:16px;font-size:12px;color:var(--text3);font-style:italic;">FLIQ Score™ ranges from 0–8. Students receive a behavioral profile label (Explorer → Exceptional) and a written description of their financial decision-making tendencies. Facilitators receive a class-level report with trait averages and a targeted facilitation insight.</p>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">How It Works</div>
+      <h2>Five days. One browser. No infrastructure required.</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <span class="step-tag">Facilitator · 2 min</span>
+            <div class="step-title">Create a session</div>
+            <div class="step-desc">The facilitator visits play.wealthwiselearning.com/facilitator.html, enters class details, selects an age band, and receives a unique 4-character join code. No technical setup. No IT involvement required.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <span class="step-tag">Students · 15–20 min/day · 5 days</span>
+            <div class="step-title">Students play the simulation</div>
+            <div class="step-desc">Each student visits the student URL, enters the join code, and begins the simulation. Each of the 5 days presents a new financial scenario. Students make a single choice — no right or wrong answers — and receive a reflection prompt. All participation is anonymous. No name, email, or login required.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <span class="step-tag">Daily · Facilitator-led · 20 min</span>
+            <div class="step-title">Facilitate the debrief</div>
+            <div class="step-desc">The facilitator dashboard includes a full Day Guide — scripted discussion prompts, warm-up activities, a "Knowing-Doing Gap" framework, and a behavioral answer key for each day. The program is self-contained and requires no prior training.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <span class="step-tag">After 5 completions · Unlocks automatically</span>
+            <div class="step-title">Access the class FLIQ Score™ report</div>
+            <div class="step-desc">Once 5 or more students complete the simulation, the facilitator's class report unlocks — showing aggregate FLIQ Score, trait averages by domain, score band distribution, behavioral profile breakdown, and a targeted facilitation insight. Exportable as CSV. Printable as a formal document.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Age Bands -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">Who It Serves</div>
+      <h2>Three age bands. One platform.</h2>
+      <p>The $100 Week™ automatically adjusts scenario complexity, language, and starting budget based on the age band selected by the facilitator. All three bands use the same underlying FLIQ Score™ framework — enabling longitudinal tracking as students grow.</p>
+      <div class="bands">
+        <div class="band-tile">
+          <div class="band-tile-emoji">🌱</div>
+          <div class="band-tile-name">Explorer</div>
+          <div class="band-tile-ages">Ages 8–11</div>
+          <div class="band-tile-budget">$20 Sim</div>
+          <div class="band-tile-desc">Simplified scenarios, accessible language. Designed for afterschool programs, elementary settings, and youth org environments.</div>
+        </div>
+        <div class="band-tile">
+          <div class="band-tile-emoji">🔨</div>
+          <div class="band-tile-name">Builder</div>
+          <div class="band-tile-ages">Ages 11–14</div>
+          <div class="band-tile-budget">$50 Sim</div>
+          <div class="band-tile-desc">Core FLIQ framework in full. Balanced social pressure, earning, and recovery scenarios. Designed for middle school and community programs.</div>
+        </div>
+        <div class="band-tile">
+          <div class="band-tile-emoji">🎯</div>
+          <div class="band-tile-name">Strategist</div>
+          <div class="band-tile-ages">Ages 14–18</div>
+          <div class="band-tile-budget">$100 Sim</div>
+          <div class="band-tile-desc">Full behavioral intelligence framing with adult-relevant financial language. Designed for high school, workforce prep, and college-readiness programs.</div>
+        </div>
+      </div>
+      <p style="margin-top:16px;font-size:13px;color:var(--text2);">Designed for: <strong>YMCAs, afterschool programs, community organizations, school districts, charter networks, workforce development programs, and youth-facing nonprofits.</strong></p>
+    </div>
+  </div>
+
+  <!-- Pilot Results -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">Pilot Results</div>
+      <h2>Early data. Clear signal.</h2>
+      <p>The $100 Week™ completed its initial pilot phase across two schools — one in Georgia, one in California — representing both Title I and charter school populations.</p>
+      <div class="pilot-box">
+        <div class="pilot-stat">
+          <div class="pilot-stat-num">2</div>
+          <div class="pilot-stat-label">Pilot Cohorts</div>
+        </div>
+        <div class="pilot-stat">
+          <div class="pilot-stat-num">2</div>
+          <div class="pilot-stat-label">States · GA &amp; CA</div>
+        </div>
+      </div>
+      <div class="pilot-finding">
+        <div class="pilot-finding-label">Key Finding</div>
+        <div class="pilot-finding-text">Majority of students improved their FLIQ Score™ across the program week and demonstrated measurable gains in financial decision-making confidence — without any prior financial education instruction.</div>
+      </div>
+      <p style="margin-top:16px;font-size:13px;color:var(--text2);">All pilot data was collected anonymously. No personally identifiable student information was stored at any point. Organizations interested in co-designing a larger pilot study are encouraged to reach out directly.</p>
+    </div>
+  </div>
+
+  <!-- Implementation -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">Implementation</div>
+      <h2>What it takes to run a cohort.</h2>
+      <div class="req-grid">
+        <div class="req-tile">
+          <div class="req-icon">🌐</div>
+          <div>
+            <div class="req-label">Any modern browser</div>
+            <div class="req-desc">Chrome, Firefox, Safari, Edge. Works on laptops, Chromebooks, tablets, and smartphones. No app download required.</div>
+          </div>
+        </div>
+        <div class="req-tile">
+          <div class="req-icon">⏱️</div>
+          <div>
+            <div class="req-label">15–20 min per session</div>
+            <div class="req-desc">5 sessions total, one per day. Designed to fit inside a standard class period or afterschool program block.</div>
+          </div>
+        </div>
+        <div class="req-tile">
+          <div class="req-icon">👤</div>
+          <div>
+            <div class="req-label">No student accounts</div>
+            <div class="req-desc">Students join with a 4-character code. No email, no login, no personal information collected at any point.</div>
+          </div>
+        </div>
+        <div class="req-tile">
+          <div class="req-icon">🎓</div>
+          <div>
+            <div class="req-label">No facilitator training required</div>
+            <div class="req-desc">The dashboard includes a full scripted Day Guide for each session. Facilitators are ready to run in under 5 minutes.</div>
+          </div>
+        </div>
+        <div class="req-tile">
+          <div class="req-icon">📊</div>
+          <div>
+            <div class="req-label">Minimum 5 students for class report</div>
+            <div class="req-desc">The aggregate class FLIQ Score™ report unlocks automatically once 5 or more students complete the simulation.</div>
+          </div>
+        </div>
+        <div class="req-tile">
+          <div class="req-icon">💻</div>
+          <div>
+            <div class="req-label">No IT setup or integrations</div>
+            <div class="req-desc">No LMS integration, no SSO, no firewall configuration. Share a URL and a code. That's the full setup.</div>
+          </div>
+        </div>
+      </div>
+      <div class="compliance-strip">
+        <span class="comp-badge">COPPA Compliant</span>
+        <span class="comp-badge">FERPA Aligned</span>
+        <span class="comp-badge">Zero PII Collected</span>
+        <span class="comp-badge">Anonymous by Design</span>
+        <span class="comp-badge">No Data Sold</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ecosystem -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-label">The Ecosystem</div>
+      <h2>The $100 Week™ is the entry point.</h2>
+      <p>The FLIQ Score™ generated in the simulation is not a one-time result — it is a longitudinal behavioral data layer that connects to every product in the WealthWise Kids™ platform. Organizations that partner on The $100 Week™ gain access to a complete financial literacy ecosystem built on the same behavioral science framework.</p>
+      <div class="ecosystem-grid">
+        <div class="eco-tile">
+          <div class="eco-tile-name">Financial Foundations™</div>
+          <div class="eco-tile-tag">5-Week Curriculum · Classroom-Ready</div>
+          <div class="eco-tile-desc">A structured 5-week in-class program that takes the behavioral pressure points from The $100 Week™ report and translates them into hands-on financial skill-building activities — designed for any classroom, no financial background required.</div>
+        </div>
+        <div class="eco-tile">
+          <div class="eco-tile-name">CoinQuest™</div>
+          <div class="eco-tile-tag">Student Fintech App · Simulated Banking</div>
+          <div class="eco-tile-desc">A simulated digital banking experience where students save, spend, budget, and invest — building real financial habits with zero real-world risk. Banking literacy before the stakes are real.</div>
+        </div>
+        <div class="eco-tile">
+          <div class="eco-tile-name">WWK Adventures™</div>
+          <div class="eco-tile-tag">Story-Driven · Character IP</div>
+          <div class="eco-tile-desc">Story-driven experiences following six diverse characters through real financial crossroads — where students see their own FLIQ behavioral patterns reflected in characters who look like them.</div>
+        </div>
+        <div class="eco-tile">
+          <div class="eco-tile-name">FLIQ Runner™</div>
+          <div class="eco-tile-tag">Game Assessment · Engagement Layer</div>
+          <div class="eco-tile-desc">An arcade-style assessment game set in the Vela City universe — the same four FLIQ behavioral domains measured through gameplay instead of scenarios. Built for high engagement environments.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="section">
+    <div class="cta-card">
+      <div class="cta-eyebrow">Next Steps</div>
+      <div class="cta-headline">Ready to run a pilot with your program?</div>
+      <div class="cta-sub">We'll walk you through setup, configure your cohort, and be available throughout your pilot week. The $100 Week™ is free to pilot — no contract, no commitment required.</div>
+      <a href="mailto:info@wealthwisekids.org?subject=The%20%24100%20Week%20Pilot%20Inquiry&body=Hi%2C%20I%20reviewed%20the%20WealthWise%20Kids%20Program%20Brief%20and%20would%20like%20to%20learn%20more%20about%20running%20a%20pilot%20with%20our%20organization." class="cta-email">Get in Touch → info@wealthwisekids.org</a>
+      <div class="cta-links">
+        <a href="https://play.wealthwiselearning.com" target="_blank" class="cta-link">Student Simulation</a>
+        <a href="https://play.wealthwiselearning.com/facilitator.html" target="_blank" class="cta-link">Facilitator Dashboard</a>
+        <a href="https://wealthwisekids.org" target="_blank" class="cta-link">wealthwisekids.org</a>
+        <a href="./legal.html" class="cta-link">Privacy &amp; Legal</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="brief-footer">
+    <p>
+      © 2026 WealthWise Kids™ LLC · All rights reserved<br>
+      The $100 Week™, FLIQ Score™, Financial Foundations™, CoinQuest™, WWK Adventures™, FLIQ Runner™, and Milo Peregrine™ are trademarks of WealthWise Kids LLC.<br>
+      This document is intended for authorized program partners and institutional contacts only. Not for public distribution.<br>
+      <a href="./legal.html" style="color:var(--text3);text-underline-offset:2px;">Privacy Policy &amp; Legal</a> &nbsp;·&nbsp; info@wealthwisekids.org &nbsp;·&nbsp; wealthwisekids.org
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
