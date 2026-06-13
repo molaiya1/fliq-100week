@@ -4,119 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apply to Be a Pilot Partner — The $100 Week™</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="./milo.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: #f7f8fa;
       color: #1a1a2e;
       min-height: 100vh;
     }
 
-    /* ── Header ── */
-    .header {
-      background: #0B1D3A;
-      padding: 28px 24px 32px;
-      text-align: center;
-    }
-
-    .logo-lockup {
-      display: inline-flex;
-      flex-direction: column;
+    /* ── Topbar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(27,42,74,0.10);
+      box-shadow: 0 2px 16px rgba(27,42,74,0.07);
+      display: flex;
       align-items: center;
-      gap: 2px;
-      margin-bottom: 16px;
+      padding: 0 28px;
+      height: 72px;
+      z-index: 100;
+      gap: 12px;
     }
-
-    .logo-the {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 4px;
-      color: #F4B942;
-      text-transform: uppercase;
+    .topbar img { width: 52px; height: 52px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(244,178,35,0.30)); }
+    .topbar-name { display: flex; flex-direction: column; line-height: 1.2; }
+    .topbar-brand-main { font-size: 14px; font-weight: 800; color: #1F3C88; letter-spacing: -0.2px; }
+    .topbar-brand-sub  { font-size: 10px; font-weight: 600; color: #F4B223; letter-spacing: 1.5px; text-transform: uppercase; }
+    .topbar-back {
+      margin-left: auto;
+      font-size: 12px; font-weight: 700;
+      color: #1F3C88; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1.5px solid rgba(27,42,74,0.10);
+      border-radius: 8px; padding: 7px 14px;
+      transition: border-color 0.15s, background 0.15s;
     }
+    .topbar-back:hover { border-color: #1F3C88; background: #F0F4FF; }
 
-    .logo-main {
-      font-size: 48px;
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1;
-      letter-spacing: -1px;
-    }
-
-    .logo-main span {
-      display: inline-block;
-      background: #F4B942;
-      color: #0B1D3A;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      line-height: 48px;
+    /* ── Hero ── */
+    .hero {
+      background: #1F3C88;
+      padding: 52px 24px 48px;
       text-align: center;
-      font-size: 28px;
-      vertical-align: middle;
-      margin-left: 2px;
     }
-
-    .logo-week {
-      font-size: 36px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 6px;
-      line-height: 1;
-    }
-
-    .logo-bar {
-      width: 160px;
-      height: 3px;
-      background: #F4B942;
-      position: relative;
-      margin-top: 6px;
-    }
-
-    .logo-bar::before {
-      content: '';
-      position: absolute;
-      top: -4px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .tick-row {
-      display: flex;
-      justify-content: space-between;
-      width: 160px;
-      margin-top: 2px;
-    }
-
-    .tick {
-      width: 2px;
-      height: 8px;
-      background: #F4B942;
-    }
-
-    .header-headline {
-      font-size: 20px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 6px;
-    }
-
-    .header-sub {
-      font-size: 13px;
-      color: rgba(255,255,255,0.7);
-      max-width: 480px;
-      margin: 0 auto;
-      line-height: 1.5;
-    }
+    .hero-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #F4B223; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(26px,4.5vw,40px); font-weight: 900; color: #ffffff; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 14px; }
+    .hero p { font-size: 15px; color: rgba(255,255,255,0.72); max-width: 520px; margin: 0 auto; line-height: 1.65; }
 
     /* ── Spots Banner ── */
     .spots-banner {
-      background: #F4B942;
+      background: #F4B223;
       padding: 10px 24px;
       text-align: center;
       font-size: 13px;
@@ -141,7 +84,7 @@
     }
 
     .benefits-card h3 {
-      color: #F4B942;
+      color: #F4B223;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 3px;
@@ -161,7 +104,7 @@
     .benefit-dot {
       width: 8px;
       height: 8px;
-      background: #F4B942;
+      background: #F4B223;
       border-radius: 50%;
       flex-shrink: 0;
       margin-top: 6px;
@@ -202,10 +145,10 @@
       font-weight: 700;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: #F4B942;
+      color: #F4B223;
       margin: 28px 0 16px;
       padding-bottom: 8px;
-      border-bottom: 2px solid #F4B942;
+      border-bottom: 2px solid #F4B223;
     }
 
     .field-row {
@@ -240,7 +183,7 @@
       padding: 11px 14px;
       border: 1.5px solid #dde2ea;
       border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 13px;
       color: #1a1a2e;
       background: #fafbfd;
@@ -300,9 +243,9 @@
     .submit-btn {
       width: 100%;
       padding: 15px;
-      background: #F4B942;
+      background: #F4B223;
       color: #0B1D3A;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 15px;
       font-weight: 700;
       border: none;
@@ -334,7 +277,7 @@
     .success-icon {
       width: 72px;
       height: 72px;
-      background: #F4B942;
+      background: #F4B223;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -363,7 +306,7 @@
       color: #0B1D3A;
       font-weight: 600;
       text-decoration: none;
-      border-bottom: 2px solid #F4B942;
+      border-bottom: 2px solid #F4B223;
       padding-bottom: 2px;
     }
 
@@ -381,7 +324,7 @@
     }
 
     .footer a {
-      color: #F4B942;
+      color: #F4B223;
       text-decoration: none;
       font-weight: 600;
     }
@@ -390,36 +333,32 @@
     @media (max-width: 520px) {
       .field-row { grid-template-columns: 1fr; }
       .form-card { padding: 24px 20px; }
-      .logo-main { font-size: 36px; }
-      .logo-main span { width: 36px; height: 36px; line-height: 36px; font-size: 22px; }
-      .logo-week { font-size: 28px; }
+      .topbar { padding: 0 16px; }
+      .topbar-back { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <div class="header">
-    <div class="logo-lockup">
-      <div class="logo-the">The</div>
-      <div class="logo-main">$10<span>$</span></div>
-      <div class="logo-week">WEEK<sup style="font-size:14px;vertical-align:super;">™</sup></div>
-      <div class="logo-bar"></div>
-      <div class="tick-row">
-        <div class="tick"></div>
-        <div class="tick"></div>
-        <div class="tick"></div>
-        <div class="tick"></div>
-        <div class="tick"></div>
-        <div class="tick"></div>
-      </div>
+  <!-- Topbar -->
+  <nav class="topbar">
+    <img src="./milo.png" alt="Milo" />
+    <div class="topbar-name">
+      <span class="topbar-brand-main">WealthWise Kids™</span>
+      <span class="topbar-brand-sub">The $100 Week™</span>
     </div>
-    <div class="header-headline">Apply to Be a Pilot Partner</div>
-    <div class="header-sub">Join a small group of educators running The $100 Week™ this spring. Free, supported, and done in one school week.</div>
+    <a href="/facilitator.html" class="topbar-back">← Facilitator Dashboard</a>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Pilot Partner Application</div>
+    <h1>Bring The $100 Week™<br>to Your Program</h1>
+    <p>Free to run. No training required. No IT setup. One school week — and your students walk away with a FLIQ Score™ behavioral profile.</p>
   </div>
 
   <!-- Spots Banner -->
-  <div class="spots-banner">⚡ 10 pilot spots available — Spring 2026</div>
+  <div class="spots-banner">⚡ 2026 pilot cohort — Summer & Fall placement available</div>
 
   <!-- Main -->
   <div class="container">
@@ -528,7 +467,11 @@
             <label class="checkbox-item"><input type="checkbox" name="grades" value="6th" /><span>6th</span></label>
             <label class="checkbox-item"><input type="checkbox" name="grades" value="7th" /><span>7th</span></label>
             <label class="checkbox-item"><input type="checkbox" name="grades" value="8th" /><span>8th</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="grades" value="Mixed" /><span>Mixed</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="9th" /><span>9th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="10th" /><span>10th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="11th" /><span>11th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="12th" /><span>12th</span></label>
+            <label class="checkbox-item"><input type="checkbox" name="grades" value="Mixed" /><span>Mixed / Other</span></label>
           </div>
         </div>
 
@@ -539,10 +482,10 @@
           <label for="timing">When Would You Like to Run the Pilot?</label>
           <select id="timing" name="timing" required>
             <option value="" disabled selected>Select a timeframe</option>
-            <option>Week of May 12, 2026</option>
-            <option>Week of May 19, 2026</option>
-            <option>Week of May 26, 2026</option>
-            <option>Week of June 2, 2026</option>
+            <option>Summer 2026 (June–July)</option>
+            <option>Fall 2026 (August–September)</option>
+            <option>Fall 2026 (October–November)</option>
+            <option>Winter 2026–2027 (December–January)</option>
             <option>Flexible — I'll confirm once selected</option>
           </select>
         </div>
