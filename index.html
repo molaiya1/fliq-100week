@@ -2625,6 +2625,28 @@ function balStatus(b){
 const app=document.getElementById('app');
 function render(){ updateNav(); ({home:renderHome,dayintro:renderDayIntro,sim:renderSim,reflect:renderReflect,score:renderScore,loading:renderLoading}[S.screen]||renderHome)(); }
 
+// ── SCREEN TRANSITION — fade out → swap content → fade in ────────
+function transitionScreen(fn) {
+  app.style.transition = 'opacity 0.18s ease';
+  app.style.opacity    = '0';
+  setTimeout(() => {
+    fn();
+    window.scrollTo({ top: 0 });
+    requestAnimationFrame(() => {
+      app.style.transition = 'opacity 0.3s ease';
+      app.style.opacity    = '1';
+    });
+  }, 185);
+}
+
+// ── PRELOAD next day's Milo image so it appears instantly ─────────
+function preloadNextDayAssets() {
+  if (S.day >= 5) return;
+  const nextMeta = getDaysMeta()[S.day];
+  if (!nextMeta?.miloImg) return;
+  (new Image()).src = nextMeta.miloImg;
+}
+
 // HOME
 function renderHome(){
   const saved=loadProgress();
@@ -2883,6 +2905,7 @@ function renderSim(){
   </div><!-- /sim-body -->
 </div>`;
   S._t0=Date.now();
+  preloadNextDayAssets();
 }
 
 // SCORE
@@ -3190,7 +3213,7 @@ async function boot(){
   saveProgress();
   S.screen='dayintro'; render();
 }
-function beginDay(){ S.screen='sim'; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+function beginDay(){ transitionScreen(() => { S.screen='sim'; render(); }); }
 
 async function makeChoice(ci){
   SFX.tap();
@@ -3312,9 +3335,7 @@ function submitReflect(i){
   S.reflections.push({ day: S.day, choice: i });
   S.day++;
   saveProgress();
-  S.screen = 'dayintro';
-  render();
-  window.scrollTo({top:0,behavior:'smooth'});
+  transitionScreen(() => { S.screen = 'dayintro'; render(); });
 }
 
 async function nextDay(){
@@ -3322,7 +3343,7 @@ async function nextDay(){
     SFX.win(); confetti(58); S.screen='loading'; render();
     S.profile=await completeSession()||computeLocalProfile();
     postToPortal(S.profile);
-    S.screen='score'; render();
+    transitionScreen(() => { S.screen='score'; render(); });
   } else {
     confetti(34);
     const flash=document.createElement('div');
@@ -3330,7 +3351,18 @@ async function nextDay(){
     flash.innerHTML=`<div class="flash-check">✓</div><div class="flash-day">Day ${S.day}</div><div class="flash-lbl">Complete</div>`;
     document.body.appendChild(flash);
     SFX.next();
-    setTimeout(()=>{ flash.remove(); S.screen='reflect'; render(); },2200);
+    // Render reflect screen BEHIND the flash while it's still visible
+    setTimeout(()=>{
+      S.screen='reflect';
+      render();
+      window.scrollTo({ top: 0 });
+    }, 1500);
+    // Fade flash out to reveal the new screen — cinematic wipe
+    setTimeout(()=>{
+      flash.style.transition = 'opacity 0.5s ease';
+      flash.style.opacity = '0';
+      setTimeout(() => flash.remove(), 520);
+    }, 1700);
   }
 }
 
