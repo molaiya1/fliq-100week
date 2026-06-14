@@ -1049,6 +1049,29 @@
         font-family: 'Inter', 'Segoe UI', sans-serif;
       }
     }
+
+    /* ══════════════════════════════════════
+       MOBILE NAV — Fortune 500 compact
+    ══════════════════════════════════════ */
+    @media (max-width: 600px) {
+      .topbar {
+        height: 60px;
+        padding: 0 16px;
+      }
+      .topbar-research-link { display: none; }
+      .topbar-badge { display: none; }
+      .topbar-wordmark .brand-sub { display: none; }
+      .topbar-wordmark .brand-main { font-size: 13px; }
+      .topbar-wordmark { padding-left: 10px; }
+      .topbar-right { gap: 8px; }
+      .topbar-sim-link {
+        font-size: 11px;
+        padding: 5px 10px;
+        letter-spacing: 0;
+      }
+      .sim-full { display: none; }
+      .sim-short { display: inline; }
+    }
   </style>
 </head>
 <body>
@@ -1064,7 +1087,7 @@
   <div class="topbar-right">
     <a href="./research.html" target="_blank" class="topbar-research-link">🔬 Research & Evidence</a>
     <span class="topbar-badge">Facilitator Dashboard</span>
-    <a href="/" class="topbar-sim-link">← Student Simulation</a>
+    <a href="/" class="topbar-sim-link">← <span class="sim-full">Student Simulation</span><span class="sim-short" style="display:none">Sim</span></a>
   </div>
 </nav>
 
