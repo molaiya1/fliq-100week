@@ -87,6 +87,9 @@
     .hero-bg-video.fade-out { opacity:0; pointer-events:none; }
     .hero-bg.fade-in { display:block !important; opacity:0; animation:heroBgFadeIn 0.9s ease forwards; }
     @keyframes heroBgFadeIn { from{opacity:0;} to{opacity:1;} }
+    .hero-milo-wrap.milo-hidden { opacity:0; pointer-events:none; }
+    .hero-milo-wrap.milo-pop-in { animation:miloPopIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+    @keyframes miloPopIn { from{ opacity:0; transform:scale(0.7) translateY(20px); } to{ opacity:1; transform:scale(1) translateY(0); } }
 
     /* No height:100% — grid is auto-height, hero flex-centers it vertically.
        align-items:start so both columns START at the same Y (matches reference). */
@@ -2685,7 +2688,7 @@ function renderHome(){
     <div class="hero-band-tint band-${S.band}"></div>
     <div class="hero-content">
       <div class="hero-left">
-        <div class="hero-milo-wrap">
+        <div class="hero-milo-wrap milo-hidden" id="heroMiloWrap">
           <div class="milo-col">
             <img src="./milo-hero.png" alt="Milo" class="hero-milo" />
             <div class="hero-hundred-badge">$${sb} 💰</div>
@@ -3411,8 +3414,12 @@ function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgres
 function onHeroIntroEnded(){
   const video=document.getElementById('heroIntroVideo');
   const staticBg=document.getElementById('heroBgStatic');
+  const miloWrap=document.getElementById('heroMiloWrap');
   if(staticBg){ staticBg.classList.add('fade-in'); }
   if(video){ video.classList.add('fade-out'); setTimeout(()=>video.remove(), 950); }
+  // Milo is already on-screen inside the animation, so he stays hidden in the
+  // static UI until the background has crossfaded in, then pops in on his own.
+  if(miloWrap){ setTimeout(()=>{ miloWrap.classList.remove('milo-hidden'); miloWrap.classList.add('milo-pop-in'); }, 500); }
 }
 
 // ── CONFETTI ─────────────────────────────────────────────────────
