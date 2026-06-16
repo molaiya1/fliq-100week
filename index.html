@@ -83,6 +83,10 @@
     .hero { flex:1; min-height:0; padding-top:72px; position:relative; display:flex; align-items:flex-end; justify-content:stretch; overflow:hidden; }
     .hero-bg { position:fixed; inset:0; z-index:0; background:url('./bg-home-mobile.png') center bottom/cover no-repeat; filter:brightness(1.2); }
     @media(min-width:600px){ .hero-bg { background-image:url('./bg-home-desktop.png'); background-position:center center; } }
+    .hero-bg-video { position:fixed; inset:0; z-index:0; width:100%; height:100%; object-fit:cover; filter:brightness(1.05); transition:opacity 0.9s ease; }
+    .hero-bg-video.fade-out { opacity:0; pointer-events:none; }
+    .hero-bg.fade-in { display:block !important; opacity:0; animation:heroBgFadeIn 0.9s ease forwards; }
+    @keyframes heroBgFadeIn { from{opacity:0;} to{opacity:1;} }
 
     /* No height:100% — grid is auto-height, hero flex-centers it vertically.
        align-items:start so both columns START at the same Y (matches reference). */
@@ -2674,7 +2678,11 @@ function renderHome(){
   app.innerHTML=`
 <div id="screen-home">
   <div class="hero">
-    <div class="hero-bg"></div>
+    ${sessionStorage.getItem('heroIntroPlayed') ? '' : `
+    <video class="hero-bg-video" id="heroIntroVideo" autoplay muted playsinline poster="./bg-home-desktop.png" onended="onHeroIntroEnded()">
+      <source src="./hero-sample-animation.mp4" type="video/mp4">
+    </video>`}
+    <div class="hero-bg" id="heroBgStatic" style="${sessionStorage.getItem('heroIntroPlayed') ? '' : 'display:none'}"></div>
     <div class="hero-band-tint band-${S.band}"></div>
     <div class="hero-content">
       <div class="hero-left">
@@ -3396,6 +3404,17 @@ function resumeSession(){
   render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,band,week,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
+
+// ── HERO COLD-OPEN ──────────────────────────────────────────────
+// Plays the intro animation once per browser session, then crossfades
+// into the static hero image so the rest of the experience stays still.
+function onHeroIntroEnded(){
+  sessionStorage.setItem('heroIntroPlayed','1');
+  const video=document.getElementById('heroIntroVideo');
+  const staticBg=document.getElementById('heroBgStatic');
+  if(staticBg){ staticBg.classList.add('fade-in'); }
+  if(video){ video.classList.add('fade-out'); setTimeout(()=>video.remove(), 950); }
+}
 
 // ── CONFETTI ─────────────────────────────────────────────────────
 function confetti(n=30){
