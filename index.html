@@ -2678,7 +2678,7 @@ function renderHome(){
   app.innerHTML=`
 <div id="screen-home">
   <div class="hero">
-    <video class="hero-bg-video" id="heroIntroVideo" autoplay muted playsinline poster="./bg-home-desktop.png" onended="onHeroIntroEnded()">
+    <video class="hero-bg-video" id="heroIntroVideo" autoplay muted playsinline preload="auto" poster="./hero-video-poster.png" onended="onHeroIntroEnded()">
       <source src="./hero-sample-animation.mp4" type="video/mp4">
     </video>
     <div class="hero-bg" id="heroBgStatic" style="display:none"></div>
