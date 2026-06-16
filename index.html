@@ -2678,11 +2678,10 @@ function renderHome(){
   app.innerHTML=`
 <div id="screen-home">
   <div class="hero">
-    ${sessionStorage.getItem('heroIntroPlayed') ? '' : `
     <video class="hero-bg-video" id="heroIntroVideo" autoplay muted playsinline poster="./bg-home-desktop.png" onended="onHeroIntroEnded()">
       <source src="./hero-sample-animation.mp4" type="video/mp4">
-    </video>`}
-    <div class="hero-bg" id="heroBgStatic" style="${sessionStorage.getItem('heroIntroPlayed') ? '' : 'display:none'}"></div>
+    </video>
+    <div class="hero-bg" id="heroBgStatic" style="display:none"></div>
     <div class="hero-band-tint band-${S.band}"></div>
     <div class="hero-content">
       <div class="hero-left">
@@ -3406,10 +3405,10 @@ function resumeSession(){
 function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,band,week,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
 
 // ── HERO COLD-OPEN ──────────────────────────────────────────────
-// Plays the intro animation once per browser session, then crossfades
-// into the static hero image so the rest of the experience stays still.
+// Plays the intro animation on every visit/refresh (temporary — until the
+// full animation set arrives, then revisit whether this should throttle
+// to once per session so repeat visits within a sitting stay still).
 function onHeroIntroEnded(){
-  sessionStorage.setItem('heroIntroPlayed','1');
   const video=document.getElementById('heroIntroVideo');
   const staticBg=document.getElementById('heroBgStatic');
   if(staticBg){ staticBg.classList.add('fade-in'); }
