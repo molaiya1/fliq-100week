@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The $100 Week™ — Cutscene Storyboard v1.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #F4F5F9;
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    padding: 40px 0 80px;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: #0B1D3A;
+    color: white;
+    padding: 56px 72px 48px;
+    max-width: 960px;
+    margin: 0 auto 48px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(244,178,35,0.12) 0%, transparent 60%);
+  }
+  .cover-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #F4B223;
+    margin-bottom: 16px;
+  }
+  .cover-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .cover-title em { color: #F4B223; font-style: italic; }
+  .cover-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .cover-meta-item label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .cover-meta-item span {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* ── THROUGHLINE EXPLAINER ── */
+  .throughline-banner {
+    max-width: 960px;
+    margin: 0 auto 48px;
+    background: white;
+    border-radius: 12px;
+    padding: 28px 36px;
+    border-left: 5px solid #F4B223;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+  .throughline-banner h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0B1D3A;
+    margin-bottom: 10px;
+  }
+  .throughline-banner p {
+    font-size: 14px;
+    color: #4A5568;
+    line-height: 1.75;
+    max-width: 820px;
+  }
+  .throughline-banner p strong { color: #0B1D3A; }
+  .bag-trail {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .bag-step {
+    background: #F4B223;
+    color: #0B1D3A;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .bag-arrow {
+    color: #CBD5E0;
+    font-size: 18px;
+    margin: 0 6px;
+  }
+
+  /* ── PANEL ── */
+  .panel-wrap {
+    max-width: 960px;
+    margin: 0 auto 40px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 28px;
+    border-bottom: 1px solid #F0F0F5;
+  }
+  .panel-num {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+  }
+  .panel-header-text {}
+  .panel-header-text .clip-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9AA5B4;
+    margin-bottom: 3px;
+  }
+  .panel-header-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0B1D3A;
+    line-height: 1.2;
+  }
+  .panel-specs {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+  .spec-pill {
+    background: #F4F5F9;
+    border-radius: 6px;
+    padding: 6px 12px;
+    text-align: center;
+  }
+  .spec-pill .spec-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #9AA5B4;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .spec-pill .spec-val {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0B1D3A;
+  }
+
+  .panel-body {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 0;
+  }
+
+  /* ── FRAME ── */
+  .frame-col {
+    padding: 24px 28px;
+    border-right: 1px solid #F0F0F5;
+  }
+  .frame-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #9AA5B4;
+    margin-bottom: 10px;
+  }
+  .frame-box {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(0,0,0,0.08);
+  }
+  .frame-bg {
+    position: absolute;
+    inset: 0;
+  }
+  /* Safe zone overlay */
+  .safe-zone {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 10%;
+    bottom: 10%;
+    border: 1.5px dashed rgba(255,255,255,0.25);
+    border-radius: 4px;
+  }
+  .safe-zone-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    white-space: nowrap;
+  }
+
+  /* Scene elements */
+  .el {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .el-box {
+    border-radius: 6px;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(2px);
+    padding: 4px 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+    text-align: center;
+  }
+  .el-bag {
+    border-color: #F4B223;
+    background: rgba(244,178,35,0.25);
+    color: #F4B223;
+    box-shadow: 0 0 12px rgba(244,178,35,0.4);
+  }
+  .el-milo {
+    border-color: rgba(167,139,250,0.8);
+    background: rgba(167,139,250,0.15);
+    color: rgba(167,139,250,0.95);
+  }
+  .el-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    flex-shrink: 0;
+  }
+  .el-dot-gold {
+    background: #F4B223;
+    box-shadow: 0 0 8px rgba(244,178,35,0.6);
+  }
+  /* Camera direction arrow */
+  .cam-arrow {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Transition markers */
+  .transition-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .t-pill {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: #1a1a1a;
+    color: white;
+  }
+  .t-arrow {
+    color: #CBD5E0;
+    font-size: 14px;
+  }
+  .t-screen {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: white;
+  }
+
+  /* ── NOTES COL ── */
+  .notes-col {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .note-block {}
+  .note-block .note-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #9AA5B4;
+    margin-bottom: 6px;
+  }
+  .note-block p, .note-block ul {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.65;
+  }
+  .note-block ul {
+    padding-left: 16px;
+  }
+  .note-block ul li {
+    margin-bottom: 3px;
+  }
+
+  .throughline-callout {
+    background: #FFFBEB;
+    border: 1.5px solid #F4B223;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .throughline-callout .tc-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #B7891A;
+    margin-bottom: 5px;
+  }
+  .throughline-callout p {
+    font-size: 12.5px;
+    color: #78350F;
+    line-height: 1.6;
+  }
+  .throughline-callout p strong { color: #92400E; }
+
+  .text-card-block {
+    background: #F8F8FC;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .text-card-block .tc-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #9AA5B4;
+    margin-bottom: 5px;
+  }
+  .text-card-none {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #DC2626;
+    letter-spacing: 0.05em;
+  }
+  .text-card-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #0B1D3A;
+    line-height: 1.5;
+  }
+  .text-card-note {
+    font-size: 11px;
+    color: #9AA5B4;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .milo-block {
+    border-top: 1px solid #F0F0F5;
+    padding-top: 14px;
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 0 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .doc-footer p {
+    font-size: 11px;
+    color: #9AA5B4;
+  }
+  .doc-footer strong { color: #4A5568; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .cover, .panel-wrap, .throughline-banner { box-shadow: none; border-radius: 0; }
+    .panel-wrap { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── COVER ── -->
+<div class="cover">
+  <div style="position:relative;z-index:1;">
+    <p class="cover-eyebrow">WealthWise Kids™ · Internal Production Document</p>
+    <h1 class="cover-title">The $100 Week™<br><em>Cutscene Storyboard</em></h1>
+    <p class="cover-sub">Pre-visualization for all 6 animated transitions. For use by animator before production begins.<br>Canvas: 1920×1080 landscape · Format: MP4 H.264 · Max 2MB per file</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><label>Version</label><span>v1.0 — Final</span></div>
+      <div class="cover-meta-item"><label>Date</label><span>June 2026</span></div>
+      <div class="cover-meta-item"><label>Prepared by</label><span>WealthWise Kids LLC</span></div>
+      <div class="cover-meta-item"><label>For</label><span>JhoMark (Animator)</span></div>
+      <div class="cover-meta-item"><label>Clips</label><span>6 total</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── THROUGHLINE ── -->
+<div class="throughline-banner">
+  <h2>The Visual Throughline — The Coin Bag</h2>
+  <p>Every clip in this series must feature <strong>the coin bag</strong> — the student's simulated wallet. This single object appears in all 6 clips and is the thread that makes the sequence feel like one story rather than six separate animations. It starts full of possibility in Clip 1, loses money in Clip 3, appears in both states at the finish in Clip 5, and is sealed with the FLIQ Score™ lock in Clip 6. The bag is how the student sees themselves across the whole week.</p>
+  <div class="bag-trail">
+    <div class="bag-step">C1 · Bag Arrives</div>
+    <span class="bag-arrow">→</span>
+    <div class="bag-step">C2 · Bag on Desk</div>
+    <span class="bag-arrow">→</span>
+    <div class="bag-step">C3 · Bag Loses a Bill</div>
+    <span class="bag-arrow">→</span>
+    <div class="bag-step">C4 · Bag at Risk</div>
+    <span class="bag-arrow">→</span>
+    <div class="bag-step">C5 · Two Bags, One Line</div>
+    <span class="bag-arrow">→</span>
+    <div class="bag-step">C6 · Bag Gets the Lock</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CLIP 1 — ARRIVAL
+════════════════════════════════════════ -->
+<div class="panel-wrap">
+  <div class="panel-header">
+    <div class="panel-num" style="background:#3B0E6E;">1</div>
+    <div class="panel-header-text">
+      <div class="clip-label">Clip 1 · day1-arrival.mp4</div>
+      <h3>THE ARRIVAL — World Opener</h3>
+    </div>
+    <div class="panel-specs">
+      <div class="spec-pill"><span class="spec-label">Duration</span><span class="spec-val">6–8s</span></div>
+      <div class="spec-pill"><span class="spec-label">Max Size</span><span class="spec-val">2MB</span></div>
+      <div class="spec-pill"><span class="spec-label">Audio</span><span class="spec-val">SFX only</span></div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="frame-col">
+      <p class="frame-label">Scene Composition — 1920×1080 Landscape</p>
+
+      <!-- FRAME -->
+      <div class="frame-box">
+        <div class="frame-bg" style="background:linear-gradient(135deg,#0B1D3A 0%,#3B0E6E 60%,#A78BFA 100%);"></div>
+        <div class="safe-zone"><span class="safe-zone-label">Safe Zone (keep all elements inside)</span></div>
+
+        <!-- Coin -->
+        <div class="el" style="top:18%;left:48%;transform:translateX(-50%);">
+          <div class="el-box el-bag" style="font-size:10px;">✦ GLOWING COIN (falling)</div>
+        </div>
+
+        <!-- Hand -->
+        <div class="el" style="top:42%;left:48%;transform:translateX(-50%);">
+          <div class="el-box">HAND reaching up</div>
+        </div>
+
+        <!-- Coin bag -->
+        <div class="el" style="top:60%;left:48%;transform:translateX(-50%);">
+          <div class="el-box el-bag">👜 COIN BAG — fills with gold light</div>
+        </div>
+
+        <!-- Camera zooms out to reveal street -->
+        <div class="el" style="bottom:18%;left:50%;transform:translateX(-50%);width:80%;">
+          <div class="el-box" style="width:100%;text-align:center;">VELA CITY STREET — revealed as camera zooms out</div>
+        </div>
+
+        <!-- Milo -->
+        <div class="el" style="top:22%;right:14%;">
+          <div class="el-box el-milo">🦉 MILO on lamppost<br>head tilt toward camera</div>
+        </div>
+
+        <div class="cam-arrow">CAMERA: zooms out ↗</div>
+      </div>
+
+      <!-- Transitions -->
+      <div class="transition-row">
+        <div class="t-pill">BLACK</div>
+        <span class="t-arrow">→</span>
+        <div style="font-size:11px;color:#4A5568;font-family:'Inter',sans-serif;">Clip opens</div>
+        <span class="t-arrow" style="margin-left:auto;">→</span>
+        <div class="t-screen" style="background:#3B0E6E;">DAY 1 SCREEN (deep purple)</div>
+        <span class="t-arrow">→</span>
+        <div class="t-pill">BLACK</div>
+      </div>
+    </div>
+
+    <div class="notes-col">
+      <div class="note-block">
+        <div class="note-label">Emotional Target</div>
+        <p>Wonder, anticipation. The world is opening up. This is the hook — make the student feel something real is beginning.</p>
+      </div>
+
+      <div class="throughline-callout">
+        <div class="tc-label">👜 Coin Bag Throughline</div>
+        <p><strong>This is where the bag is born.</strong> A coin falls into it — the bag glows gold. This is the student's wallet for the entire week. Establish it clearly here. The same bag must appear, modified, in every clip that follows.</p>
+      </div>
+
+      <div class="text-card-block">
+        <div class="tc-label">Text Rule</div>
+        <div class="text-card-quote">"The $100 Week™ begins."</div>
+        <p class="text-card-note">Playfair Display, italic, white, centered. Fades in at the freeze frame. Hold 1.5s, then fade to black. This is one of only two clips with any text.</p>
+      </div>
+
+      <div class="note-block milo-block">
+        <div class="note-label">Milo</div>
+        <ul>
+          <li>Perched on lamppost — upper right</li>
+          <li>Small relative to scene</li>
+          <li>Head tilts toward camera at freeze frame</li>
+          <li>Still, curious — this is his intro too</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CLIP 2 — PULL
+════════════════════════════════════════ -->
+<div class="panel-wrap">
+  <div class="panel-header">
+    <div class="panel-num" style="background:#4C1D95;">2</div>
+    <div class="panel-header-text">
+      <div class="clip-label">Clip 2 · day2-pull.mp4</div>
+      <h3>THE PULL — Social Pressure</h3>
+    </div>
+    <div class="panel-specs">
+      <div class="spec-pill"><span class="spec-label">Duration</span><span class="spec-val">5–6s</span></div>
+      <div class="spec-pill"><span class="spec-label">Max Size</span><span class="spec-val">2MB</span></div>
+      <div class="spec-pill"><span class="spec-label">Audio</span><span class="spec-val">Phone buzz SFX</span></div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="frame-col">
+      <p class="frame-label">Scene Composition — 1920×1080 Landscape</p>
+
+      <div class="frame-box">
+        <div class="frame-bg" style="background:linear-gradient(135deg,#1A1A2E 0%,#4C1D95 100%);"></div>
+        <div class="safe-zone"></div>
+
+        <!-- Desk surface -->
+        <div class="el" style="bottom:20%;left:0;right:0;">
+          <div class="el-box" style="width:80%;text-align:center;margin:0 auto;">DESK SURFACE</div>
+        </div>
+
+        <!-- Phone -->
+        <div class="el" style="bottom:28%;left:38%;">
+          <div class="el-box" style="background:rgba(167,139,250,0.3);border-color:rgba(167,139,250,0.7);color:white;">📱 PHONE<br><span style="font-size:7px;opacity:0.7;">group chat glowing</span></div>
+        </div>
+
+        <!-- Coin bag on desk — THROUGHLINE -->
+        <div class="el" style="bottom:28%;left:55%;">
+          <div class="el-box el-bag">👜 COIN BAG<br><span style="font-size:7px;">sitting on desk, visible</span></div>
+        </div>
+
+        <!-- Silhouettes in phone -->
+        <div class="el" style="bottom:42%;left:38%;">
+          <div class="el-box" style="font-size:7px;opacity:0.7;">character silhouettes waving in glow</div>
+        </div>
+
+        <!-- Hand hovering -->
+        <div class="el" style="bottom:36%;left:40%;">
+          <div class="el-box">HAND hovers → pulls back</div>
+        </div>
+
+        <!-- Milo -->
+        <div class="el" style="top:20%;right:12%;">
+          <div class="el-box el-milo">🦉 MILO<br>slow approving nod</div>
+        </div>
+
+        <div class="cam-arrow">CAMERA: static ·</div>
+      </div>
+
+      <div class="transition-row">
+        <div class="t-pill">BLACK</div>
+        <span class="t-arrow">→</span>
+        <div style="font-size:11px;color:#4A5568;font-family:'Inter',sans-serif;">Clip opens</div>
+        <span class="t-arrow" style="margin-left:auto;">→</span>
+        <div class="t-screen" style="background:#4C1D95;">DAY 2 SCREEN (dark purple-navy)</div>
+        <span class="t-arrow">→</span>
+        <div class="t-pill">BLACK</div>
+      </div>
+    </div>
+
+    <div class="notes-col">
+      <div class="note-block">
+        <div class="note-label">Emotional Target</div>
+        <p>Social temptation. Excitement mixed with quiet hesitation. The pull of the group — without describing who the group is or what they're doing.</p>
+      </div>
+
+      <div class="throughline-callout">
+        <div class="tc-label">👜 Coin Bag Throughline</div>
+        <p><strong>Bag sits on the desk next to the phone.</strong> The hand that hovers is also near the bag — the choice is implicitly about whether to spend it. The bag doesn't move. But the student sees it and feels the connection. Do not obscure the bag.</p>
+      </div>
+
+      <div class="text-card-block">
+        <div class="tc-label">Text Rule</div>
+        <div class="text-card-none">NO TEXT — zero words in this clip.</div>
+        <p class="text-card-note">The buzzing phone and the hand pulling back tell the full story. Adding any label or subtitle breaks the universality across age groups.</p>
+      </div>
+
+      <div class="note-block milo-block">
+        <div class="note-label">Milo</div>
+        <ul>
+          <li>Upper right corner — small</li>
+          <li>One slow, single approving nod as hand pulls back</li>
+          <li>No other movement — stillness is the approval</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CLIP 3 — OOPS
+════════════════════════════════════════ -->
+<div class="panel-wrap">
+  <div class="panel-header">
+    <div class="panel-num" style="background:#1E40AF;">3</div>
+    <div class="panel-header-text">
+      <div class="clip-label">Clip 3 · day3-oops.mp4</div>
+      <h3>THE OOPS — Unexpected Expense</h3>
+    </div>
+    <div class="panel-specs">
+      <div class="spec-pill"><span class="spec-label">Duration</span><span class="spec-val">5–6s</span></div>
+      <div class="spec-pill"><span class="spec-label">Max Size</span><span class="spec-val">2MB</span></div>
+      <div class="spec-pill"><span class="spec-label">Audio</span><span class="spec-val">Manhole pop + bill whoosh</span></div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="frame-col">
+      <p class="frame-label">Scene Composition — 1920×1080 Landscape</p>
+
+      <div class="frame-box">
+        <div class="frame-bg" style="background:linear-gradient(135deg,#0C1E3A 0%,#1E40AF 100%);"></div>
+        <div class="safe-zone"></div>
+
+        <!-- Street -->
+        <div class="el" style="bottom:15%;left:0;right:0;">
+          <div class="el-box" style="width:85%;margin:0 auto;text-align:center;">VELA CITY SIDEWALK</div>
+        </div>
+
+        <!-- Character walking -->
+        <div class="el" style="bottom:30%;left:30%;">
+          <div class="el-box">CHARACTER walking confidently →</div>
+        </div>
+
+        <!-- Coin bag on character — THROUGHLINE -->
+        <div class="el" style="bottom:36%;left:38%;">
+          <div class="el-box el-bag">👜 COIN BAG swinging<br><span style="font-size:7px;">visibly lighter after bill exits</span></div>
+        </div>
+
+        <!-- Manhole -->
+        <div class="el" style="bottom:22%;left:55%;">
+          <div class="el-box" style="border-color:rgba(239,68,68,0.7);background:rgba(239,68,68,0.15);color:#FCA5A5;">MANHOLE pops open ⚠</div>
+        </div>
+
+        <!-- Bill floating out -->
+        <div class="el" style="bottom:38%;left:58%;">
+          <div class="el-box el-bag" style="border-color:#FCA5A5;background:rgba(239,68,68,0.2);color:#FCA5A5;">💸 BILL floats out → into hole</div>
+        </div>
+
+        <!-- Milo -->
+        <div class="el" style="top:18%;right:14%;">
+          <div class="el-box el-milo">🦉 MILO on rooftop<br>calm, observing</div>
+        </div>
+
+        <div class="cam-arrow">CAMERA: follows character →</div>
+      </div>
+
+      <div class="transition-row">
+        <div class="t-pill">BLACK</div>
+        <span class="t-arrow">→</span>
+        <div style="font-size:11px;color:#4A5568;font-family:'Inter',sans-serif;">Clip opens</div>
+        <span class="t-arrow" style="margin-left:auto;">→</span>
+        <div class="t-screen" style="background:#1E40AF;">DAY 3 SCREEN (deep navy-blue)</div>
+        <span class="t-arrow">→</span>
+        <div class="t-pill">BLACK</div>
+      </div>
+    </div>
+
+    <div class="notes-col">
+      <div class="note-block">
+        <div class="note-label">Emotional Target</div>
+        <p>Mild alarm — then composure. Life threw something at them. The character straightens up and keeps walking. Resilience is the message, not fear.</p>
+      </div>
+
+      <div class="throughline-callout">
+        <div class="tc-label">👜 Coin Bag Throughline</div>
+        <p><strong>The bag must visibly get lighter after the bill leaves.</strong> This is the most important throughline moment in the series — the student sees the consequence physically represented in the bag they've been tracking since Clip 1. It should look noticeably less full after the bill exits.</p>
+      </div>
+
+      <div class="text-card-block">
+        <div class="tc-label">Text Rule</div>
+        <div class="text-card-none">NO TEXT — zero words in this clip.</div>
+        <p class="text-card-note">The bill leaving the bag and the character's posture recovery communicate alarm + resilience universally. Any text label would be redundant and age-specific.</p>
+      </div>
+
+      <div class="note-block milo-block">
+        <div class="note-label">Milo</div>
+        <ul>
+          <li>Rooftop — upper right area</li>
+          <li>Calm expression — observing, not alarmed</li>
+          <li>He is the steady presence against the chaos below</li>
+          <li>No wing movement — stillness signals this is survivable</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CLIP 4 — BET
+════════════════════════════════════════ -->
+<div class="panel-wrap">
+  <div class="panel-header">
+    <div class="panel-num" style="background:#059669;">4</div>
+    <div class="panel-header-text">
+      <div class="clip-label">Clip 4 · day4-bet.mp4</div>
+      <h3>THE BET — Risk &amp; Opportunity</h3>
+    </div>
+    <div class="panel-specs">
+      <div class="spec-pill"><span class="spec-label">Duration</span><span class="spec-val">5–6s</span></div>
+      <div class="spec-pill"><span class="spec-label">Max Size</span><span class="spec-val">2MB</span></div>
+      <div class="spec-pill"><span class="spec-label">Audio</span><span class="spec-val">Door creak + question mark pulse</span></div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="frame-col">
+      <p class="frame-label">Scene Composition — 1920×1080 Landscape</p>
+
+      <div class="frame-box">
+        <div class="frame-bg" style="background:linear-gradient(135deg,#064E3B 0%,#059669 100%);"></div>
+        <div class="safe-zone"></div>
+
+        <!-- Left door — gold coin -->
+        <div class="el" style="top:20%;left:22%;">
+          <div class="el-box el-bag">✦ SPINNING GOLD COIN<br><span style="font-size:7px;">above left door</span></div>
+        </div>
+        <div class="el" style="top:38%;left:22%;">
+          <div class="el-box" style="width:90px;height:80px;display:flex;align-items:center;justify-content:center;">DOOR A</div>
+        </div>
+
+        <!-- Right door — question mark -->
+        <div class="el" style="top:20%;right:22%;">
+          <div class="el-box" style="border-color:rgba(255,255,255,0.4);color:rgba(255,255,255,0.6);">❓ GLOWING QUESTION MARK<br><span style="font-size:7px;">pulsing — unresolved</span></div>
+        </div>
+        <div class="el" style="top:38%;right:22%;">
+          <div class="el-box" style="width:90px;height:80px;display:flex;align-items:center;justify-content:center;">DOOR B</div>
+        </div>
+
+        <!-- Coin bag between doors — THROUGHLINE -->
+        <div class="el" style="bottom:28%;left:50%;transform:translateX(-50%);">
+          <div class="el-box el-bag">👜 COIN BAG<br><span style="font-size:7px;">on floor between both doors — what both are asking for</span></div>
+        </div>
+
+        <!-- Hand reaching -->
+        <div class="el" style="top:48%;left:33%;">
+          <div class="el-box">HAND → reaches toward Door A → redirects to Door B</div>
+        </div>
+
+        <!-- Milo -->
+        <div class="el" style="bottom:22%;left:12%;">
+          <div class="el-box el-milo">🦉 MILO (background)<br>one wing half-covering eyes</div>
+        </div>
+
+        <div class="cam-arrow">CAMERA: static — doors fill frame ·</div>
+      </div>
+
+      <div class="transition-row">
+        <div class="t-pill">BLACK</div>
+        <span class="t-arrow">→</span>
+        <div style="font-size:11px;color:#4A5568;font-family:'Inter',sans-serif;">Clip opens</div>
+        <span class="t-arrow" style="margin-left:auto;">→</span>
+        <div class="t-screen" style="background:#059669;">DAY 4 SCREEN (deep teal-green)</div>
+        <span class="t-arrow">→</span>
+        <div class="t-pill">BLACK</div>
+      </div>
+    </div>
+
+    <div class="notes-col">
+      <div class="note-block">
+        <div class="note-label">Emotional Target</div>
+        <p>Temptation. The lure of "more." Exciting and uncertain. The clip ends unresolved — the door never opens. That tension carries the student into the scenario.</p>
+      </div>
+
+      <div class="throughline-callout">
+        <div class="tc-label">👜 Coin Bag Throughline</div>
+        <p><strong>The bag sits on the floor between the two doors</strong> — visually positioned as the thing both choices are asking for. This makes the risk/reward emotional without a single word. The bag has been getting lighter (Clip 3) — the student feels what's at stake.</p>
+      </div>
+
+      <div class="text-card-block">
+        <div class="tc-label">Text Rule</div>
+        <div class="text-card-none">NO TEXT — zero words in this clip.</div>
+        <p class="text-card-note">The unresolved question mark — and Milo peeking — is the entire emotional message. The door must not open. Clip ends before resolution.</p>
+      </div>
+
+      <div class="note-block milo-block">
+        <div class="note-label">Milo</div>
+        <ul>
+          <li>Background, lower left — small</li>
+          <li>One wing half-covering his eyes, peeking through</li>
+          <li>Uncertainty — not fear. He's seen this before</li>
+          <li>He does not move toward or away from either door</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CLIP 5 — FINISH
+════════════════════════════════════════ -->
+<div class="panel-wrap">
+  <div class="panel-header">
+    <div class="panel-num" style="background:#EA580C;">5</div>
+    <div class="panel-header-text">
+      <div class="clip-label">Clip 5 · day5-finish.mp4</div>
+      <h3>THE FINISH — Final Push</h3>
+    </div>
+    <div class="panel-specs">
+      <div class="spec-pill"><span class="spec-label">Duration</span><span class="spec-val">5–6s</span></div>
+      <div class="spec-pill"><span class="spec-label">Max Size</span><span class="spec-val">2MB</span></div>
+      <div class="spec-pill"><span class="spec-label">Audio</span><span class="spec-val">Countdown beeps + cheer</span></div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="frame-col">
+      <p class="frame-label">Scene Composition — 1920×1080 Landscape</p>
+
+      <div class="frame-box">
+        <div class="frame-bg" style="background:linear-gradient(135deg,#7C2D12 0%,#EA580C 100%);"></div>
+        <div class="safe-zone"></div>
+
+        <!-- Scoreboard -->
+        <div class="el" style="top:15%;left:50%;transform:translateX(-50%);">
+          <div class="el-box" style="font-size:14px;font-weight:800;padding:8px 20px;">SCOREBOARD · 5→4→3→2→1</div>
+        </div>
+
+        <!-- Character A — full bag -->
+        <div class="el" style="bottom:28%;left:28%;">
+          <div class="el-box">CHARACTER A →</div>
+        </div>
+        <div class="el" style="bottom:38%;left:28%;">
+          <div class="el-box el-bag">👜 FULL BAG</div>
+        </div>
+
+        <!-- Character B — lighter bag -->
+        <div class="el" style="bottom:28%;left:55%;">
+          <div class="el-box">CHARACTER B →</div>
+        </div>
+        <div class="el" style="bottom:38%;left:55%;">
+          <div class="el-box el-bag" style="opacity:0.7;">👜 LIGHTER BAG</div>
+        </div>
+
+        <!-- Finish line -->
+        <div class="el" style="bottom:15%;right:12%;top:20%;">
+          <div class="el-box" style="height:60%;border-color:rgba(244,178,35,0.9);background:rgba(244,178,35,0.15);color:#F4B223;writing-mode:vertical-rl;">✦ GLOWING FINISH LINE ✦</div>
+        </div>
+
+        <!-- Milo flying -->
+        <div class="el" style="top:22%;left:50%;transform:translateX(-50%);">
+          <div class="el-box el-milo">🦉 MILO flying above — wings outstretched, cheering</div>
+        </div>
+
+        <div class="cam-arrow">CAMERA: follows characters → finish line</div>
+      </div>
+
+      <div class="transition-row">
+        <div class="t-pill">BLACK</div>
+        <span class="t-arrow">→</span>
+        <div style="font-size:11px;color:#4A5568;font-family:'Inter',sans-serif;">Clip opens</div>
+        <span class="t-arrow" style="margin-left:auto;">→</span>
+        <div class="t-screen" style="background:#EA580C;">DAY 5 SCREEN (deep orange-red)</div>
+        <span class="t-arrow">→</span>
+        <div class="t-pill">BLACK</div>
+      </div>
+    </div>
+
+    <div class="notes-col">
+      <div class="note-block">
+        <div class="note-label">Emotional Target</div>
+        <p>Weight and momentum. Final lap energy — not coasting, sprinting. The two students walking side by side communicates: different paths, same commitment.</p>
+      </div>
+
+      <div class="throughline-callout">
+        <div class="tc-label">👜 Coin Bag Throughline</div>
+        <p><strong>Two bags, two weights, one finish line.</strong> This is the payoff of tracking the bag across the whole series. One is full, one is lighter — but both students are still in the game. Neither is disqualified. The message: how you finish is what matters, not how much you have. The bags must look visibly different from each other.</p>
+      </div>
+
+      <div class="text-card-block">
+        <div class="tc-label">Text Rule</div>
+        <div class="text-card-none">NO TEXT — zero words in this clip.</div>
+        <p class="text-card-note">The two bags and the shared finish line communicate the full message. No labels on the characters, no scoreboard text beyond the countdown numbers (1–5 only).</p>
+      </div>
+
+      <div class="note-block milo-block">
+        <div class="note-label">Milo</div>
+        <ul>
+          <li>Flying above both characters — wings fully outstretched</li>
+          <li>Most active moment for Milo outside of Clip 6</li>
+          <li>Cheering energy — not directing, celebrating</li>
+          <li>He is above and between them — neutral, not favoring either</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CLIP 6 — COMPLETE
+════════════════════════════════════════ -->
+<div class="panel-wrap">
+  <div class="panel-header">
+    <div class="panel-num" style="background:#F4B223;color:#0B1D3A;">6</div>
+    <div class="panel-header-text">
+      <div class="clip-label">Clip 6 · day6-complete.mp4</div>
+      <h3>WEEK COMPLETE — Score Reveal Bridge</h3>
+    </div>
+    <div class="panel-specs">
+      <div class="spec-pill"><span class="spec-label">Duration</span><span class="spec-val">8–10s</span></div>
+      <div class="spec-pill"><span class="spec-label">Max Size</span><span class="spec-val">2MB</span></div>
+      <div class="spec-pill"><span class="spec-label">Audio</span><span class="spec-val">Celebration SFX + lock click</span></div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="frame-col">
+      <p class="frame-label">Scene Composition — 1920×1080 Landscape</p>
+
+      <div class="frame-box">
+        <div class="frame-bg" style="background:linear-gradient(135deg,#0B1D3A 0%,#1F3C88 60%,#0B1D3A 100%);"></div>
+        <div class="safe-zone"></div>
+
+        <!-- Confetti -->
+        <div class="el" style="top:8%;left:50%;transform:translateX(-50%);">
+          <div class="el-box el-bag" style="font-size:9px;">✦ GOLD + NAVY CONFETTI falling from above</div>
+        </div>
+
+        <!-- Milo CENTERED — his big moment -->
+        <div class="el" style="top:28%;left:50%;transform:translateX(-50%);">
+          <div class="el-box el-milo" style="font-size:11px;padding:10px 18px;background:rgba(167,139,250,0.25);border-width:2px;">🦉 MILO — CENTER OF FRAME<br>FULL SPIN — his celebration moment<br><span style="font-size:8px;">(only clip where he is fully centered)</span></div>
+        </div>
+
+        <!-- Coin bag with FLIQ lock — THROUGHLINE CLOSE -->
+        <div class="el" style="bottom:22%;left:50%;transform:translateX(-50%);">
+          <div class="el-box el-bag" style="font-size:11px;padding:10px 18px;border-width:2px;">👜 COIN BAG from Clip 1 — returns<br>✦ FLIQ SCORE™ label + glowing lock<br><span style="font-size:7px;">lock clicks open → gold pulse radiates out</span></div>
+        </div>
+
+        <div class="cam-arrow">CAMERA: slow zoom in on bag + lock click ·</div>
+      </div>
+
+      <div class="transition-row">
+        <div class="t-pill">BLACK</div>
+        <span class="t-arrow">→</span>
+        <div style="font-size:11px;color:#4A5568;font-family:'Inter',sans-serif;">Clip opens</div>
+        <span class="t-arrow" style="margin-left:auto;">→</span>
+        <div class="t-screen" style="background:#0B1D3A;">SCORE REVEAL (dark navy)</div>
+        <span class="t-arrow">→</span>
+        <div class="t-pill">BLACK</div>
+      </div>
+    </div>
+
+    <div class="notes-col">
+      <div class="note-block">
+        <div class="note-label">Emotional Target</div>
+        <p>Celebration. Anticipation. Pride. The student earned this. The clip plays while their FLIQ Score™ is being calculated — it must build enough energy to make the result feel like a reveal.</p>
+      </div>
+
+      <div class="throughline-callout">
+        <div class="tc-label">👜 Coin Bag Throughline — CLOSE</div>
+        <p><strong>The same coin bag from Clip 1 returns here.</strong> It should be visually recognizable as the same object — but now it carries a glowing lock labeled "FLIQ Score™". The lock opens with a click. Gold light pulses outward. This is the payoff of the entire story — the bag the student has been tracking all week finally reveals what's inside. The story ends where it began.</p>
+      </div>
+
+      <div class="text-card-block">
+        <div class="tc-label">Text Rule</div>
+        <div class="text-card-quote">"Your results are ready."</div>
+        <p class="text-card-note">Playfair Display, italic, white, centered. Appears after the gold pulse. Hold 1.5s, then fade to black. This and Clip 1 are the only two clips with any text — and both are ceremonial, not instructional.</p>
+      </div>
+
+      <div class="note-block milo-block">
+        <div class="note-label">Milo</div>
+        <ul>
+          <li><strong>Center of frame — this is his earned moment</strong></li>
+          <li>Full celebratory spin — the only time he moves this much</li>
+          <li>Energy up — but still him. Not over-the-top</li>
+          <li>He carried the student through all 5 days. Let him celebrate</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<div class="doc-footer">
+  <p>
+    <strong>WealthWise Kids™ LLC</strong> · info@wealthwisekids.org · play.wealthwiselearning.com<br>
+    The $100 Week™ · FLIQ Score™ · Milo Peregrine™ are trademarks of WealthWise Kids IP Holdings LLC · Confidential — Internal Production Use Only
+  </p>
+  <p style="text-align:right;">Storyboard v1.0 · June 2026</p>
+</div>
+
+</body>
+</html>
