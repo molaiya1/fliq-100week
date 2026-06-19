@@ -2631,7 +2631,7 @@ function balStatus(b){
 
 // ── RENDER ───────────────────────────────────────────────────────
 const app=document.getElementById('app');
-function render(){ updateNav(); ({home:renderHome,dayintro:renderDayIntro,sim:renderSim,reflect:renderReflect,score:renderScore,loading:renderLoading}[S.screen]||renderHome)(); }
+function render(){ updateNav(); ({home:renderHome,dayintro:renderDayIntro,sim:renderSim,reflect:renderReflect,score:renderScore,loading:renderLoading,cutscene:renderCutscene}[S.screen]||renderHome)(); }
 
 // ── SCREEN TRANSITION — fade out → swap content → fade in ────────
 function transitionScreen(fn) {
@@ -3195,6 +3195,64 @@ function renderLoading(){
   app.innerHTML=`<div id="screen-loading"><div class="spinner"></div><div class="loading-txt">Calculating your results…</div><div style="font-size:12px;color:rgba(11,29,58,0.4);margin-top:8px;font-weight:500;">This takes just a moment.</div></div>`;
 }
 
+// ── CUTSCENE ─────────────────────────────────────────────────────────────────
+// Plays a short animation clip between game beats, then transitions to the
+// next screen. If the clip fails to load (404, not yet delivered), it skips
+// silently so gameplay is never blocked.
+//
+// File naming convention (place in ./cutscenes/):
+//   day1-arrival.mp4    — The Arrival     (Day 1 opener)
+//   day2-pull.mp4       — The Pull        (after Day 1 reflection)
+//   day3-oops.mp4       — The Oops        (after Day 2 reflection)
+//   day4-bet.mp4        — The Bet         (after Day 3 reflection)
+//   day5-finish.mp4     — The Finish      (after Day 4 reflection)
+//   day6-complete.mp4   — Week Complete   (before score reveal)
+
+const CUTSCENE_MAP = {
+  day1: './cutscenes/day1-arrival.mp4',
+  day2: './cutscenes/day2-pull.mp4',
+  day3: './cutscenes/day3-oops.mp4',
+  day4: './cutscenes/day4-bet.mp4',
+  day5: './cutscenes/day5-finish.mp4',
+  day6: './cutscenes/day6-complete.mp4',
+};
+
+function playCutscene(src, nextScreen){
+  S.cutscene = { src, next: nextScreen };
+  S.screen = 'cutscene';
+  render();
+}
+
+function renderCutscene(){
+  const { src, next } = S.cutscene || {};
+  function goNext(){ transitionScreen(() => { S.screen = next; render(); }); }
+
+  app.innerHTML = `
+<div id="screen-cutscene" style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:50;">
+  <video id="cutsceneVideo"
+    autoplay muted playsinline
+    style="width:100%;height:100%;object-fit:cover;"
+    onended="cutsceneEnded()"
+    onerror="cutsceneEnded()">
+    <source src="${src}" type="video/mp4">
+  </video>
+  <button onclick="cutsceneEnded()" style="position:absolute;bottom:28px;right:24px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.6);font-size:12px;font-family:sans-serif;padding:8px 16px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);">Skip →</button>
+</div>`;
+
+  // Fallback: if video hasn't started playing within 3s, skip it
+  const vid = document.getElementById('cutsceneVideo');
+  const fallbackTimer = setTimeout(() => goNext(), 3000);
+  if(vid){
+    vid.addEventListener('playing', () => clearTimeout(fallbackTimer));
+    vid.play().catch(() => goNext());
+  }
+  window._cutsceneNext = goNext;
+}
+
+function cutsceneEnded(){
+  if(window._cutsceneNext){ window._cutsceneNext(); window._cutsceneNext=null; }
+}
+
 // ── INTERACTIONS ─────────────────────────────────────────────────
 async function handleJoin(){
   const code=document.getElementById('codeInput')?.value?.trim().toUpperCase();
@@ -3222,7 +3280,7 @@ async function boot(){
   }
   Object.assign(S,{studentId:sid,sessionId:sess,band,balance:getStartBal(),day:1,impulsiveN:0,history:[],sessionStart:Date.now()});
   saveProgress();
-  S.screen='dayintro'; render();
+  playCutscene(CUTSCENE_MAP.day1, 'dayintro');
 }
 function beginDay(){ transitionScreen(() => { S.screen='sim'; render(); }); }
 
@@ -3346,7 +3404,7 @@ function submitReflect(i){
   S.reflections.push({ day: S.day, choice: i });
   S.day++;
   saveProgress();
-  transitionScreen(() => { S.screen = 'dayintro'; render(); });
+  playCutscene(CUTSCENE_MAP[`day${S.day}`], 'dayintro');
 }
 
 async function nextDay(){
@@ -3354,7 +3412,7 @@ async function nextDay(){
     SFX.win(); confetti(58); S.screen='loading'; render();
     S.profile=await completeSession()||computeLocalProfile();
     postToPortal(S.profile);
-    transitionScreen(() => { S.screen='score'; render(); });
+    playCutscene(CUTSCENE_MAP.day6, 'score');
   } else {
     confetti(34);
     const flash=document.createElement('div');
