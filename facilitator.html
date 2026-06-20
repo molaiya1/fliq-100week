@@ -1151,7 +1151,7 @@
           <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;background:rgba(245,166,35,0.15);border:1.5px solid rgba(245,166,35,0.4);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--gold);">2</div>
           <div>
             <div style="font-size:13px;font-weight:700;color:white;margin-bottom:4px;">Students play</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;">Each student visits the link, enters your code, and makes 5 financial decisions — 15–20 min per session, one session per day for 5 days.</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;">Each student visits the link, enters your code, picks a 4-digit Adventure Code to track their progress, and makes one financial decision per day — 15–20 min per session for 5 days.</div>
           </div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start;">
@@ -1163,7 +1163,7 @@
         </div>
       </div>
       <div style="padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:rgba(255,255,255,0.38);line-height:1.6;">
-        No student accounts or logins required. Students join anonymously with your code — all they need is a browser. No personal data is collected at any point.
+        No student accounts or logins required. Students join anonymously with your class code — all they need is a browser. No names, emails, or personal data collected at any point. Each student picks a private 4-digit Adventure Code on Day 1 that saves their individual progress.
       </div>
     </div>
 
@@ -1254,6 +1254,45 @@
       <div class="info-strip info-gold" style="margin-bottom:0">
         <span class="info-strip-icon">📋</span>
         <span>Direct students to the URL and have them enter the code when prompted. Each student completes the simulation on their own — <strong>15–20 minutes per day for 5 days.</strong></span>
+      </div>
+    </div>
+
+    <!-- Adventure Code Briefing -->
+    <div class="card" style="border-left:3px solid var(--gold);">
+      <div class="section-label gold" style="margin-bottom:14px;">🔑 Adventure Code — What You Need to Know</div>
+      <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.75;margin-bottom:16px;">When a student joins for the first time, the sim asks them to pick a <strong style="color:white;">4-digit Adventure Code</strong> — their private progress key. They'll enter that same code every day to pick up where they left off. No accounts, no names — just their number.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px;">
+        <div style="background:rgba(244,178,35,0.07);border:1px solid rgba(244,178,35,0.2);border-radius:10px;padding:14px;">
+          <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Day 1 — First Join</div>
+          <ol style="margin:0;padding-left:18px;font-size:12px;color:rgba(255,255,255,0.65);line-height:1.9;">
+            <li>Student enters your class code</li>
+            <li>Picks a 4-digit Adventure Code</li>
+            <li>Enters it a second time to confirm</li>
+            <li>Sim shows them their code — <strong style="color:white;">tell them to write it down</strong></li>
+            <li>They hit "I've got it" and start playing</li>
+          </ol>
+        </div>
+        <div style="background:rgba(0,180,216,0.07);border:1px solid rgba(0,180,216,0.2);border-radius:10px;padding:14px;">
+          <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;">Days 2–5 — Returning</div>
+          <ol style="margin:0;padding-left:18px;font-size:12px;color:rgba(255,255,255,0.65);line-height:1.9;">
+            <li>Student enters your class code</li>
+            <li>Enters their same 4-digit code</li>
+            <li>Sim resumes exactly where they left off</li>
+          </ol>
+          <p style="font-size:11.5px;color:rgba(255,255,255,0.4);margin:10px 0 0;line-height:1.6;">💡 Same device each day is ideal — saves loading time.</p>
+        </div>
+      </div>
+
+      <div style="background:rgba(248,113,113,0.07);border:1px solid rgba(248,113,113,0.2);border-radius:10px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#F87171;margin-bottom:8px;">🔒 If a Student Forgets Their Code</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,0.65);line-height:1.8;">
+          <strong style="color:white;">Step 1:</strong> Student taps "Forgot my Adventure Code" on the PIN screen.<br>
+          <strong style="color:white;">Step 2:</strong> Walk over and enter your <strong style="color:white;">class join code</strong> in the teacher field.<br>
+          <strong style="color:white;">Step 3:</strong> Confirm the reset on the "Are you sure?" screen.<br>
+          <strong style="color:white;">Step 4:</strong> Student picks a new code — their week restarts from Day 1.
+        </div>
+        <p style="font-size:11.5px;color:rgba(255,255,255,0.35);margin:10px 0 0;line-height:1.6;">⚠️ Reset means Day 1 restarts — previous choices can't be recovered. This is intentional and COPPA-compliant (no PII stored).</p>
       </div>
     </div>
 
@@ -1629,7 +1668,7 @@ const GUIDE_DATA = {
         instructions:'60 seconds, no wrong answers. Every student calls out or writes the first 3 things they\'d buy if someone handed them $100 right now.\n\nGo around the room fast — volume and energy over deliberation. After everyone shares:\n\n"Keep those in your head. No judgment on any of it. That was just the honest version."',
         facilitatorNote:'[FACILITATOR ONLY] Note: needs vs. wants vs. experiences vs. status items. This is revealed-preference pre-data before any financial choice is made. Do NOT categorize or label out loud.'
       },
-      submit:'Open devices, enter the session code, make Day 1 choice. No hints, no discussion. This window is individual decision time only.',
+      submit:'Open devices and go to play.wealthwiselearning.com. Enter the session code. First time: students pick a 4-digit Adventure Code, confirm it, write it down, then make their Day 1 choice. Remind them: "Write down your Adventure Code — you\'ll need it every day." No hints, no discussion during choice time.',
       reactionRound:[
         'What went through your head right before you hit submit? Describe the feeling — not the choice.',
         'Did anyone almost change their mind at the last second? What almost made you go the other way?',
@@ -1655,7 +1694,7 @@ const GUIDE_DATA = {
         instructions:'Fast show-of-hands — no setup, no framing. Just questions:\n\n"Raise your hand if you\'ve ever done something just because everyone else was doing it."\n"Keep it up if you were glad you did."\n\n[Pause.]\n\n"Now — raise your hand if you\'ve ever said no to something the whole group was doing."\n"Keep it up if you were glad you said no."\n\nNo debrief. Just let the room see itself. Move straight to the sim.',
         facilitatorNote:'[FACILITATOR ONLY] Watch faces on "glad I said no" — confidence vs. hesitation here is a live IC signal. Do not comment on what you observe.'
       },
-      submit:'Students open devices and make their Day 2 choice silently and independently.',
+      submit:'Remind students to have their Adventure Code ready. Open devices, enter class code + Adventure Code to resume. Make Day 2 choice silently and independently.',
       reactionRound:[
         'One word for what you felt when you saw today\'s scenario.',
         'Did today\'s choice feel different from yesterday\'s? How would you describe the difference?',
@@ -1681,7 +1720,7 @@ const GUIDE_DATA = {
         instructions:'Read each one out loud. Students rate 1-5 (fingers up) — how stressful is this if it happens to you RIGHT NOW:\n\n• "Your phone screen cracks. Just a crack — still works."\n• "You lose your lunch. It\'s just gone."\n• "Your earbuds die mid-song."\n• "Your shoes get soaked walking in."\n• "You forgot you owe someone $5."\n\nKeep it fast, keep it fun. No financial framing.',
         facilitatorNote:'[FACILITATOR ONLY] Students who rate minor disruptions 4-5 have lower financial disruption tolerance — predicts RB pattern. Calm 1-2 across the board shows resilience floor. Note — do not comment.'
       },
-      submit:'Students open devices and make their Day 3 choice silently.',
+      submit:'Remind students to have their Adventure Code ready. Open devices, enter class code + Adventure Code to resume. Make Day 3 choice silently.',
       reactionRound:[
         'What was your gut feeling the instant you saw today\'s scenario — before you touched anything?',
         'Did you feel stressed, calm, or somewhere in between? Be specific if you can.',
@@ -1707,7 +1746,7 @@ const GUIDE_DATA = {
         instructions:'Ask for 3 volunteers. Each one has 30 seconds to pitch a completely made-up business to the room — the sillier the better. Examples: "rent-a-goldfish delivery," "professional nap consulting."\n\nAfter each pitch, room votes: thumbs up = "I\'d put money in this" / thumbs down = "I wouldn\'t."\n\nKeep it fast, keep it fun. No financial framing.',
         facilitatorNote:'[FACILITATOR ONLY] Watch how students evaluate — logic/proof-based voting ("but HOW does it make money?") = RA orientation. Excitement/energy-based voting = speculative RA. Pre-signal before the choice. Do not name what you\'re observing.'
       },
-      submit:'Students open devices and make their Day 4 choice silently.',
+      submit:'Remind students to have their Adventure Code ready. Open devices, enter class code + Adventure Code to resume. Make Day 4 choice silently.',
       reactionRound:[
         'What was the very first thing you asked yourself when you saw today\'s scenario?',
         'Did you trust the situation right away, or did something feel off? What created that feeling?',
@@ -1733,7 +1772,7 @@ const GUIDE_DATA = {
         instructions:'Hand out a small card to every student. They write ONE sentence — privately, not shared:\n\n"One thing I\'d do differently about my Week 1 choices is _____"\n\nCollect the cards. Seal them in an envelope. Write "Open — Week 3, Day 5" on the outside. Place the envelope somewhere visible in the room.\n\nDo NOT discuss the cards. Do NOT read them. Seal the envelope and move on.',
         facilitatorNote:'[FACILITATOR ONLY] This is pre/post self-awareness data. The Week 3 reveal will show whether their stated intention matched actual behavior. Hold the envelope — you\'ll need it for Week 3 Day 5.'
       },
-      submit:'Students open devices and make their final Day 5 choice of Week 1.',
+      submit:'Remind students to have their Adventure Code ready. Open devices, enter class code + Adventure Code to resume. Final Day 5 choice of Week 1.',
       reactionRound:[
         'Was your final balance what you expected — more, less, or exactly right?',
         'One word for your entire Week 1.',
