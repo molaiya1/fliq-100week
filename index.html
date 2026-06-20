@@ -3471,105 +3471,150 @@ function resumeSession(){
 }
 function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,cohortCode:null,adventureCode:null,band,week,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
 
-// ── ADVENTURE CODE SCREEN ─────────────────────────────────────────
+// ── ADVENTURE CODE SCREENS ───────────────────────────────────────
+let _pendingPin=null; // holds first PIN entry during confirm flow
+
+function _acBg(){ return `<div style="display:block;position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#0B1D3A 0%,#1a0a3e 60%,#0B1D3A 100%);"></div><div class="hero-band-tint band-${S.band}"></div>`; }
+function _acWrap(content){ return `<div id="screen-ac"><div class="hero">${_acBg()}<div class="hero-content" style="align-items:center;justify-content:center;min-height:100vh;padding:32px 16px;"><div class="hero-card" style="max-width:360px;width:100%;margin:0 auto;">${content}</div></div></div></div>`; }
+function _pinRow(prefix,oninput,onkey){
+  return `<div style="display:flex;gap:10px;justify-content:center;" id="${prefix}Boxes">`+[0,1,2,3].map(i=>`<input id="${prefix}${i}" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:60px;height:68px;border-radius:14px;border:2px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.07);color:white;font-size:30px;font-weight:800;text-align:center;font-family:'Poppins',sans-serif;outline:none;caret-color:var(--gold);transition:border-color 0.15s;" oninput="${oninput}(this,${i})" onkeydown="${onkey}(event,${i})" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" />`).join('')+`</div>`;
+}
+
+// Step 1 — Pick your code
 function renderAdventureCode(){
-  const bc=BAND_CONFIG[S.band]||BAND_CONFIG.builder;
-  app.innerHTML=`
-<div id="screen-adventurecode">
-  <div class="hero">
-    <div class="hero-bg" id="heroBgStatic" style="display:block;position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#0B1D3A 0%,#1a0a3e 60%,#0B1D3A 100%);"></div>
-    <div class="hero-band-tint band-${S.band}"></div>
-    <div class="hero-content" style="align-items:center;justify-content:center;min-height:100vh;padding:32px 16px;">
-      <div class="hero-card" style="max-width:360px;width:100%;margin:0 auto;">
-        <div style="text-align:center;margin-bottom:20px;">
-          <div style="font-size:36px;margin-bottom:8px;">🔑</div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Your Adventure Code</div>
-          <h2 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;line-height:1.2;margin-bottom:8px;">Pick 4 numbers<br>you'll remember.</h2>
-          <p style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;">You'll enter this same code every day this week to pick up where you left off.</p>
-        </div>
-        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:8px;" id="pinBoxes">
-          ${[0,1,2,3].map(i=>`<input id="apin${i}" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]"
-            style="width:60px;height:68px;border-radius:14px;border:2px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.07);
-            color:white;font-size:30px;font-weight:800;text-align:center;font-family:'Poppins',sans-serif;outline:none;
-            caret-color:var(--gold);transition:border-color 0.15s;"
-            oninput="apinInput(this,${i})" onkeydown="apinKey(event,${i})"
-            onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" />`).join('')}
-        </div>
-        <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:18px;">Example: 1234 &nbsp;·&nbsp; Use any 4 digits</p>
-        <button class="join-btn-full" id="apinSubmit" onclick="submitAdventureCode()" disabled style="opacity:0.35;cursor:not-allowed;">
-          Start My Adventure →
-        </button>
-        <button onclick="backToHome()" style="display:block;width:100%;margin-top:10px;background:none;border:none;cursor:pointer;
-          font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">
-          ← Back to home
-        </button>
-        <button onclick="renderForgotCode()" style="display:block;width:100%;margin-top:2px;background:none;border:none;cursor:pointer;
-          font-size:12px;color:rgba(244,178,35,0.5);text-decoration:underline;padding:4px 0;font-family:'Inter',sans-serif;">
-          Forgot my Adventure Code
-        </button>
-        <div class="privacy-note" style="margin-top:18px;">🔒 <div>No name or personal info needed — your code stays on your device.</div></div>
-      </div>
+  app.innerHTML=_acWrap(`
+    ${S._acResetApproved?`<div style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:rgba(52,211,153,0.9);line-height:1.6;text-align:center;font-family:'Inter',sans-serif;">✅ <strong>Reset approved.</strong> Pick a new Adventure Code to start fresh.</div>`:''}
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:36px;margin-bottom:8px;">🔑</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Your Adventure Code</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;line-height:1.2;margin-bottom:8px;">Pick 4 numbers<br>you'll remember.</h2>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;">You'll enter this same code every day this week to pick up where you left off.</p>
     </div>
-  </div>
-</div>`;
+    ${_pinRow('apin','apinInput','apinKey')}
+    <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.3);margin:8px 0 4px;">Example: 1234 · Use any 4 digits</p>
+    <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.25);margin-bottom:18px;">💡 Use the same device every day so your progress saves correctly.</p>
+    <button class="join-btn-full" id="apinSubmit" onclick="apinNext()" disabled style="opacity:0.35;cursor:not-allowed;">Next →</button>
+    <button onclick="backToHome()" style="display:block;width:100%;margin-top:10px;background:none;border:none;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">← Back to home</button>
+    <button onclick="renderForgotCode()" style="display:block;width:100%;margin-top:2px;background:none;border:none;cursor:pointer;font-size:12px;color:rgba(244,178,35,0.45);text-decoration:underline;padding:4px 0;font-family:'Inter',sans-serif;">Forgot my Adventure Code</button>
+    <div class="privacy-note" style="margin-top:18px;">🔒 <div>No name or personal info needed — your code stays on your device.</div></div>
+  `);
+  S._acResetApproved=false;
   document.getElementById('apin0')?.focus();
 }
+function apinInput(el,i){
+  el.value=el.value.replace(/[^0-9]/g,'').slice(-1);
+  _pinCheckReady('apin','apinSubmit');
+  if(el.value&&i<3) document.getElementById(`apin${i+1}`)?.focus();
+}
+function apinKey(e,i){
+  if(e.key==='Backspace'&&!document.getElementById(`apin${i}`)?.value&&i>0) document.getElementById(`apin${i-1}`)?.focus();
+}
+function apinNext(){
+  const pin=[0,1,2,3].map(i=>document.getElementById(`apin${i}`)?.value||'').join('');
+  if(pin.length!==4) return;
+  _pendingPin=pin;
+  renderConfirmCode();
+}
+
+// Step 2 — Confirm your code
+function renderConfirmCode(){
+  app.innerHTML=_acWrap(`
+    <style>@keyframes acShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}</style>
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:36px;margin-bottom:8px;">🔁</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Confirm Your Code</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;line-height:1.2;margin-bottom:8px;">Enter it one more time.</h2>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;">Just to make sure you've got it!</p>
+    </div>
+    ${_pinRow('cpin','cpinInput','cpinKey')}
+    <div id="cpinErr" style="display:none;text-align:center;font-size:12px;color:#F87171;margin-top:10px;line-height:1.5;">Those didn't match — try again!</div>
+    <button class="join-btn-full" id="cpinSubmit" onclick="cpinConfirm()" disabled style="opacity:0.35;cursor:not-allowed;margin-top:16px;">Confirm →</button>
+    <button onclick="_pendingPin=null;renderAdventureCode();" style="display:block;width:100%;margin-top:10px;background:none;border:none;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">← Pick a different code</button>
+  `);
+  document.getElementById('cpin0')?.focus();
+}
+function cpinInput(el,i){
+  el.value=el.value.replace(/[^0-9]/g,'').slice(-1);
+  _pinCheckReady('cpin','cpinSubmit');
+  const err=document.getElementById('cpinErr'); if(err) err.style.display='none';
+  [0,1,2,3].forEach(j=>{const b=document.getElementById(`cpin${j}`);if(b) b.style.borderColor='rgba(255,255,255,0.12)';});
+  if(el.value&&i<3) document.getElementById(`cpin${i+1}`)?.focus();
+}
+function cpinKey(e,i){
+  if(e.key==='Backspace'&&!document.getElementById(`cpin${i}`)?.value&&i>0) document.getElementById(`cpin${i-1}`)?.focus();
+}
+function cpinConfirm(){
+  const pin=[0,1,2,3].map(i=>document.getElementById(`cpin${i}`)?.value||'').join('');
+  if(pin!==_pendingPin){
+    const err=document.getElementById('cpinErr'); if(err) err.style.display='block';
+    const boxes=document.getElementById('cpinBoxes');
+    if(boxes){boxes.style.animation='none';void boxes.offsetWidth;boxes.style.animation='acShake 0.4s ease';}
+    [0,1,2,3].forEach(i=>{const el=document.getElementById(`cpin${i}`);if(el){el.value='';el.style.borderColor='rgba(248,113,113,0.6)';}});
+    const btn=document.getElementById('cpinSubmit');if(btn){btn.disabled=true;btn.style.opacity='0.35';}
+    document.getElementById('cpin0')?.focus();
+    return;
+  }
+  S.adventureCode=pin; _pendingPin=null;
+  renderWriteItDown(pin);
+}
+
+// Step 3 — Write it down
+function renderWriteItDown(pin){
+  const digits=pin.split('');
+  app.innerHTML=_acWrap(`
+    <div style="text-align:center;margin-bottom:20px;">
+      <img src="./milo-happy.png" alt="Milo" style="width:72px;height:72px;object-fit:contain;margin-bottom:8px;" onerror="this.style.display='none'">
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Your Adventure Code</div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:14px;">
+        ${digits.map(d=>`<div style="width:60px;height:68px;border-radius:14px;border:2px solid var(--gold);background:rgba(244,178,35,0.12);color:var(--gold);font-size:30px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;">${d}</div>`).join('')}
+      </div>
+      <h2 style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:white;line-height:1.3;margin-bottom:8px;">Write this down<br>or tell a grown-up!</h2>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.7;">You'll need this every day this week. If you forget it, your teacher can reset it for you.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 14px;margin-bottom:18px;">
+      <p style="font-size:11.5px;color:rgba(255,255,255,0.35);line-height:1.6;margin:0;text-align:center;">💡 Use the same device every day so your progress saves correctly.</p>
+    </div>
+    <button class="join-btn-full" onclick="proceedWithCode()">I've got it — Start My Adventure →</button>
+  `);
+}
+async function proceedWithCode(){
+  const saved=loadProgress();
+  if(saved){ resumeSession(); } else { await boot(); }
+}
+function _pinCheckReady(prefix,btnId){
+  const filled=[0,1,2,3].every(i=>document.getElementById(`${prefix}${i}`)?.value?.length===1);
+  const btn=document.getElementById(btnId);
+  if(btn){btn.disabled=!filled;btn.style.opacity=filled?'1':'0.35';btn.style.cursor=filled?'pointer':'not-allowed';}
+}
+function backToHome(){ S.cohortId=null;S.cohortCode=null;S.adventureCode=null;_pendingPin=null;S.screen='home';render(); }
 
 // ── FORGOT ADVENTURE CODE ─────────────────────────────────────────
 function renderForgotCode(){
-  app.innerHTML=`
-<div id="screen-forgotcode">
-  <div class="hero">
-    <div class="hero-bg" style="display:block;position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#0B1D3A 0%,#1a0a3e 60%,#0B1D3A 100%);"></div>
-    <div class="hero-band-tint band-${S.band}"></div>
-    <div class="hero-content" style="align-items:center;justify-content:center;min-height:100vh;padding:32px 16px;">
-      <div class="hero-card" style="max-width:360px;width:100%;margin:0 auto;">
-
-        <div style="text-align:center;margin-bottom:20px;">
-          <div style="font-size:36px;margin-bottom:8px;">🔒</div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;">Need a Reset?</div>
-          <h2 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;line-height:1.25;margin-bottom:10px;">Ask your teacher<br>for help.</h2>
-          <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;">Your teacher can unlock a reset by entering the class code below. You'll be able to pick a new Adventure Code and start fresh from Day 1.</p>
-        </div>
-
-        <div style="background:rgba(244,178,35,0.08);border:1px solid rgba(244,178,35,0.25);border-radius:10px;padding:12px 14px;margin-bottom:18px;">
-          <p style="font-size:11.5px;color:rgba(244,178,35,0.8);line-height:1.6;margin:0;">
-            ⚠️ <strong style="color:rgba(244,178,35,0.95);">Heads up:</strong> Resetting will start your week over from Day 1. Your previous choices won't be saved.
-          </p>
-        </div>
-
-        <div style="margin-bottom:6px;">
-          <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;">Teacher enters class code:</div>
-          <input id="resetCodeInput" type="text" maxlength="8" placeholder="Class code" autocomplete="off" spellcheck="false"
-            oninput="this.value=this.value.toUpperCase();resetCodeCheck()"
-            style="width:100%;padding:13px 16px;border-radius:12px;border:2px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.07);
-            color:white;font-size:16px;font-weight:700;font-family:'Poppins',sans-serif;outline:none;letter-spacing:0.1em;
-            caret-color:var(--gold);box-sizing:border-box;" />
-          <div id="resetErr" style="display:none;font-size:11.5px;color:#F87171;margin-top:6px;padding-left:2px;">That code doesn't match. Check with your teacher.</div>
-        </div>
-
-        <button id="resetSubmit" onclick="submitForgotReset()" disabled
-          style="width:100%;padding:14px;margin-top:12px;border-radius:12px;border:none;cursor:not-allowed;
-          background:linear-gradient(135deg,#F4B223,#e09e10);color:#0B1D3A;
-          font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.05em;
-          opacity:0.35;transition:opacity 0.2s;">
-          Reset &amp; Pick New Code →
-        </button>
-
-        <button onclick="S.screen='adventurecode';render();" style="display:block;width:100%;margin-top:10px;background:none;border:none;cursor:pointer;
-          font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">
-          ← I'll try my code again
-        </button>
-
-      </div>
+  app.innerHTML=_acWrap(`
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:36px;margin-bottom:8px;">🔒</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;">Need a Reset?</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;line-height:1.25;margin-bottom:10px;">Ask your teacher<br>for help.</h2>
+      <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;">Your teacher can unlock a reset by entering the class code below. You'll pick a new Adventure Code and start over from Day 1.</p>
     </div>
-  </div>
-</div>`;
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;">Teacher enters class code:</div>
+      <input id="resetCodeInput" type="text" maxlength="8" placeholder="Class code" autocomplete="off" spellcheck="false"
+        oninput="this.value=this.value.toUpperCase();resetCodeCheck()"
+        style="width:100%;padding:13px 16px;border-radius:12px;border:2px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.07);color:white;font-size:16px;font-weight:700;font-family:'Poppins',sans-serif;outline:none;letter-spacing:0.1em;caret-color:var(--gold);box-sizing:border-box;" />
+      <div id="resetErr" style="display:none;font-size:11.5px;color:#F87171;margin-top:6px;padding-left:2px;">That code doesn't match. Check with your teacher.</div>
+    </div>
+    <button id="resetSubmit" onclick="submitForgotReset()" disabled
+      style="width:100%;padding:14px;border-radius:12px;border:none;cursor:not-allowed;background:linear-gradient(135deg,#F4B223,#e09e10);color:#0B1D3A;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.05em;opacity:0.35;transition:opacity 0.2s;">
+      Unlock Reset →
+    </button>
+    <button onclick="S.screen='adventurecode';render();" style="display:block;width:100%;margin-top:10px;background:none;border:none;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">← I'll try my code again</button>
+  `);
   document.getElementById('resetCodeInput')?.focus();
 }
 function resetCodeCheck(){
   const val=(document.getElementById('resetCodeInput')?.value||'').trim();
-  const match = S.cohortCode && val===S.cohortCode;
+  const match=S.cohortCode&&val===S.cohortCode;
   const btn=document.getElementById('resetSubmit');
   const err=document.getElementById('resetErr');
   if(btn){btn.disabled=!match;btn.style.opacity=match?'1':'0.35';btn.style.cursor=match?'pointer':'not-allowed';}
@@ -3578,46 +3623,31 @@ function resetCodeCheck(){
 function submitForgotReset(){
   const val=(document.getElementById('resetCodeInput')?.value||'').trim();
   if(val!==S.cohortCode) return;
-  // Clear any existing adventure code state, return to PIN picker for a fresh code
-  S.adventureCode=null;
-  S.screen='adventurecode';
-  render();
-  // Show a gentle confirmation message at the top of the PIN screen
-  const card=document.querySelector('#screen-adventurecode .hero-card');
-  if(card){
-    const msg=document.createElement('div');
-    msg.style.cssText='background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:rgba(52,211,153,0.9);line-height:1.6;text-align:center;font-family:"Inter",sans-serif;';
-    msg.innerHTML='✅ <strong>Reset approved.</strong> Pick a new Adventure Code to start fresh.';
-    card.insertBefore(msg,card.firstChild);
-  }
+  renderResetConfirm();
 }
-function apinInput(el,i){
-  el.value=el.value.replace(/[^0-9]/g,'').slice(-1);
-  apinCheckReady();
-  if(el.value&&i<3) document.getElementById(`apin${i+1}`)?.focus();
+function renderResetConfirm(){
+  app.innerHTML=_acWrap(`
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:36px;margin-bottom:8px;">⚠️</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#F87171;margin-bottom:8px;">Are You Sure?</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;line-height:1.25;margin-bottom:12px;">This will start<br>your week over.</h2>
+    </div>
+    <div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);border-radius:10px;padding:14px 16px;margin-bottom:20px;">
+      <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;color:rgba(255,255,255,0.6);line-height:1.9;">
+        <li>❌ &nbsp;Your week starts over from Day 1</li>
+        <li>❌ &nbsp;Your previous choices won't be saved</li>
+        <li>❌ &nbsp;This cannot be undone</li>
+      </ul>
+    </div>
+    <button onclick="executeReset()"
+      style="width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#EF4444,#DC2626);color:white;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.05em;margin-bottom:10px;">
+      Yes, start my week over →
+    </button>
+    <button onclick="renderForgotCode()" style="display:block;width:100%;background:none;border:none;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">← Cancel — go back</button>
+  `);
 }
-function apinKey(e,i){
-  if(e.key==='Backspace'&&!document.getElementById(`apin${i}`)?.value&&i>0){
-    document.getElementById(`apin${i-1}`)?.focus();
-  }
-}
-function apinCheckReady(){
-  const filled=[0,1,2,3].every(i=>document.getElementById(`apin${i}`)?.value?.length===1);
-  const btn=document.getElementById('apinSubmit');
-  if(btn){btn.disabled=!filled;btn.style.opacity=filled?'1':'0.35';btn.style.cursor=filled?'pointer':'not-allowed';}
-}
-async function submitAdventureCode(){
-  const pin=[0,1,2,3].map(i=>document.getElementById(`apin${i}`)?.value||'').join('');
-  if(pin.length!==4) return;
-  S.adventureCode=pin;
-  const saved=loadProgress();
-  if(saved){
-    resumeSession();
-  } else {
-    await boot();
-  }
-}
-function backToHome(){ S.cohortId=null;S.adventureCode=null;S.screen='home';render(); }
+function executeReset(){ S.adventureCode=null;_pendingPin=null;S._acResetApproved=true;S.screen='adventurecode';render(); }
+
 
 // ── HERO COLD-OPEN ──────────────────────────────────────────────
 // Plays the intro animation on every visit/refresh (temporary — until the
