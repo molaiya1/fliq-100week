@@ -1015,7 +1015,7 @@ function getStartBal(){ return BAND_CONFIG[S.band]?.startBal || 100; }
 
 // ── STATE ────────────────────────────────────────────────────────
 let S = {
-  screen:'home', studentId:null, sessionId:null, cohortId:null, adventureCode:null, band:'builder', week:1,
+  screen:'home', studentId:null, sessionId:null, cohortId:null, cohortCode:null, adventureCode:null, band:'builder', week:1,
   balance:50, day:1, impulsiveN:0,
   history:[], profile:null, sessionStart:null, _t0:null,
 };
@@ -2631,7 +2631,7 @@ function balStatus(b){
 
 // ── RENDER ───────────────────────────────────────────────────────
 const app=document.getElementById('app');
-function render(){ updateNav(); ({home:renderHome,adventurecode:renderAdventureCode,dayintro:renderDayIntro,sim:renderSim,reflect:renderReflect,score:renderScore,loading:renderLoading,cutscene:renderCutscene}[S.screen]||renderHome)(); }
+function render(){ updateNav(); ({home:renderHome,adventurecode:renderAdventureCode,forgotcode:renderForgotCode,dayintro:renderDayIntro,sim:renderSim,reflect:renderReflect,score:renderScore,loading:renderLoading,cutscene:renderCutscene}[S.screen]||renderHome)(); }
 
 // ── SCREEN TRANSITION — fade out → swap content → fade in ────────
 function transitionScreen(fn) {
@@ -3261,7 +3261,7 @@ async function handleJoin(){
   if(errEl) errEl.classList.remove('show');
   try{
     const r=await fetch(`${API_BASE}/cohorts/by-code/${code}`);
-    if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;S.week=d.week_number||1;if(['explorer','builder','strategist'].includes(d.grade_band)) S.band=d.grade_band;}
+    if(r.ok){const d=await r.json();S.cohortId=d.cohort_id;S.cohortCode=code;S.week=d.week_number||1;if(['explorer','builder','strategist'].includes(d.grade_band)) S.band=d.grade_band;}
     else{if(errEl){errEl.textContent='That code doesn\'t match a session. Check with your teacher.';errEl.classList.add('show');}return;}
   }catch(e){
     if(errEl){errEl.textContent='Can\'t connect right now. Try again or play on your own.';errEl.classList.add('show');}return;
@@ -3469,7 +3469,7 @@ function resumeSession(){
   Object.assign(S,{studentId:p.studentId,sessionId:p.sessionId,cohortId:p.cohortId,adventureCode:p.adventureCode||S.adventureCode,balance:p.balance,day:p.day,impulsiveN:p.impulsiveN,history:p.history,sessionStart:p.sessionStart,band:p.band||'builder',week:p.week||1,screen:'dayintro'});
   render(); window.scrollTo({top:0,behavior:'smooth'});
 }
-function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,adventureCode:null,band,week,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
+function startFresh(){ const band=S.band||'builder',week=S.week||1; clearProgress(); S={screen:'home',studentId:null,sessionId:null,cohortId:null,cohortCode:null,adventureCode:null,band,week,balance:getStartBal(),day:1,impulsiveN:0,history:[],profile:null,sessionStart:null,_t0:null}; render(); }
 
 // ── ADVENTURE CODE SCREEN ─────────────────────────────────────────
 function renderAdventureCode(){
@@ -3503,12 +3503,93 @@ function renderAdventureCode(){
           font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">
           ← Back to home
         </button>
+        <button onclick="renderForgotCode()" style="display:block;width:100%;margin-top:2px;background:none;border:none;cursor:pointer;
+          font-size:12px;color:rgba(244,178,35,0.5);text-decoration:underline;padding:4px 0;font-family:'Inter',sans-serif;">
+          Forgot my Adventure Code
+        </button>
         <div class="privacy-note" style="margin-top:18px;">🔒 <div>No name or personal info needed — your code stays on your device.</div></div>
       </div>
     </div>
   </div>
 </div>`;
   document.getElementById('apin0')?.focus();
+}
+
+// ── FORGOT ADVENTURE CODE ─────────────────────────────────────────
+function renderForgotCode(){
+  app.innerHTML=`
+<div id="screen-forgotcode">
+  <div class="hero">
+    <div class="hero-bg" style="display:block;position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#0B1D3A 0%,#1a0a3e 60%,#0B1D3A 100%);"></div>
+    <div class="hero-band-tint band-${S.band}"></div>
+    <div class="hero-content" style="align-items:center;justify-content:center;min-height:100vh;padding:32px 16px;">
+      <div class="hero-card" style="max-width:360px;width:100%;margin:0 auto;">
+
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:36px;margin-bottom:8px;">🔒</div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;">Need a Reset?</div>
+          <h2 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;line-height:1.25;margin-bottom:10px;">Ask your teacher<br>for help.</h2>
+          <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;">Your teacher can unlock a reset by entering the class code below. You'll be able to pick a new Adventure Code and start fresh from Day 1.</p>
+        </div>
+
+        <div style="background:rgba(244,178,35,0.08);border:1px solid rgba(244,178,35,0.25);border-radius:10px;padding:12px 14px;margin-bottom:18px;">
+          <p style="font-size:11.5px;color:rgba(244,178,35,0.8);line-height:1.6;margin:0;">
+            ⚠️ <strong style="color:rgba(244,178,35,0.95);">Heads up:</strong> Resetting will start your week over from Day 1. Your previous choices won't be saved.
+          </p>
+        </div>
+
+        <div style="margin-bottom:6px;">
+          <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;">Teacher enters class code:</div>
+          <input id="resetCodeInput" type="text" maxlength="8" placeholder="Class code" autocomplete="off" spellcheck="false"
+            oninput="this.value=this.value.toUpperCase();resetCodeCheck()"
+            style="width:100%;padding:13px 16px;border-radius:12px;border:2px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.07);
+            color:white;font-size:16px;font-weight:700;font-family:'Poppins',sans-serif;outline:none;letter-spacing:0.1em;
+            caret-color:var(--gold);box-sizing:border-box;" />
+          <div id="resetErr" style="display:none;font-size:11.5px;color:#F87171;margin-top:6px;padding-left:2px;">That code doesn't match. Check with your teacher.</div>
+        </div>
+
+        <button id="resetSubmit" onclick="submitForgotReset()" disabled
+          style="width:100%;padding:14px;margin-top:12px;border-radius:12px;border:none;cursor:not-allowed;
+          background:linear-gradient(135deg,#F4B223,#e09e10);color:#0B1D3A;
+          font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.05em;
+          opacity:0.35;transition:opacity 0.2s;">
+          Reset &amp; Pick New Code →
+        </button>
+
+        <button onclick="S.screen='adventurecode';render();" style="display:block;width:100%;margin-top:10px;background:none;border:none;cursor:pointer;
+          font-size:12px;color:rgba(255,255,255,0.35);text-decoration:underline;padding:6px 0;font-family:'Inter',sans-serif;">
+          ← I'll try my code again
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>`;
+  document.getElementById('resetCodeInput')?.focus();
+}
+function resetCodeCheck(){
+  const val=(document.getElementById('resetCodeInput')?.value||'').trim();
+  const match = S.cohortCode && val===S.cohortCode;
+  const btn=document.getElementById('resetSubmit');
+  const err=document.getElementById('resetErr');
+  if(btn){btn.disabled=!match;btn.style.opacity=match?'1':'0.35';btn.style.cursor=match?'pointer':'not-allowed';}
+  if(err) err.style.display=(val.length>=4&&!match)?'block':'none';
+}
+function submitForgotReset(){
+  const val=(document.getElementById('resetCodeInput')?.value||'').trim();
+  if(val!==S.cohortCode) return;
+  // Clear any existing adventure code state, return to PIN picker for a fresh code
+  S.adventureCode=null;
+  S.screen='adventurecode';
+  render();
+  // Show a gentle confirmation message at the top of the PIN screen
+  const card=document.querySelector('#screen-adventurecode .hero-card');
+  if(card){
+    const msg=document.createElement('div');
+    msg.style.cssText='background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:rgba(52,211,153,0.9);line-height:1.6;text-align:center;font-family:"Inter",sans-serif;';
+    msg.innerHTML='✅ <strong>Reset approved.</strong> Pick a new Adventure Code to start fresh.';
+    card.insertBefore(msg,card.firstChild);
+  }
 }
 function apinInput(el,i){
   el.value=el.value.replace(/[^0-9]/g,'').slice(-1);
