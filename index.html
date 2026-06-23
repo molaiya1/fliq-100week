@@ -29,7 +29,7 @@
       --text3:   #8A9EC0;
     }
 
-    body { font-family:'Inter',system-ui,sans-serif; background:var(--cream); min-height:100vh; color:var(--text); overflow-x:hidden; }
+    body { font-family:'Inter',system-ui,sans-serif; background:#0B1D3A; min-height:100vh; color:var(--text); overflow-x:hidden; }
 
     /* ══════════════════════════════════════
        NAV
@@ -2640,10 +2640,10 @@ function transitionScreen(fn) {
   setTimeout(() => {
     fn();
     window.scrollTo({ top: 0 });
-    requestAnimationFrame(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       app.style.transition = 'opacity 0.3s ease';
       app.style.opacity    = '1';
-    });
+    }));
   }, 185);
 }
 
@@ -3217,15 +3217,41 @@ const CUTSCENE_MAP = {
   day6: './cutscenes/day6-complete.mp4',
 };
 
+// Preload cache — keeps video elements alive so the browser buffers them
+const _csPreloadCache = new Set();
+const _csPreloadRefs = [];
+function _preloadCutscene(src){
+  if(!src || _csPreloadCache.has(src)) return;
+  _csPreloadCache.add(src);
+  const v = document.createElement('video');
+  v.preload = 'auto'; v.muted = true; v.src = src; v.load();
+  _csPreloadRefs.push(v);
+}
+
 function playCutscene(src, nextScreen){
   S.cutscene = { src, next: nextScreen };
   S.screen = 'cutscene';
+  // Preload the next clip in the sequence while this one plays
+  const keys = Object.keys(CUTSCENE_MAP);
+  const idx = keys.findIndex(k => CUTSCENE_MAP[k] === src);
+  if(idx >= 0 && idx + 1 < keys.length) _preloadCutscene(CUTSCENE_MAP[keys[idx + 1]]);
   render();
 }
 
 function renderCutscene(){
   const { src, next } = S.cutscene || {};
-  function goNext(){ transitionScreen(() => { S.screen = next; render(); }); }
+
+  // Skip transitionScreen — video already ends on black, so fade IN only
+  function goNext(){
+    app.style.opacity = '0';
+    app.style.transition = 'none';
+    S.screen = next; render();
+    window.scrollTo({ top: 0 });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      app.style.transition = 'opacity 0.35s ease';
+      app.style.opacity = '1';
+    }));
+  }
 
   app.innerHTML = `
 <div id="screen-cutscene" style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:50;">
@@ -3239,9 +3265,9 @@ function renderCutscene(){
   <button onclick="cutsceneEnded()" style="position:absolute;bottom:28px;right:24px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.6);font-size:12px;font-family:sans-serif;padding:8px 16px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);">Skip →</button>
 </div>`;
 
-  // Fallback: if video hasn't started playing within 3s, skip it
   const vid = document.getElementById('cutsceneVideo');
-  const fallbackTimer = setTimeout(() => goNext(), 3000);
+  // Give larger files up to 8s to start before skipping
+  const fallbackTimer = setTimeout(() => goNext(), 8000);
   if(vid){
     vid.addEventListener('playing', () => clearTimeout(fallbackTimer));
     vid.play().catch(() => goNext());
