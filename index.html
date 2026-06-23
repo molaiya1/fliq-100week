@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -3015,6 +3016,7 @@ function renderScore(){
 
   if(!p){
     app.innerHTML=`<div id="screen-score">${scoreBgVideo}<div class="score-card"><div class="sc-eyebrow">${cfg.eyebrow}</div><div class="sc-headline">You Did It!</div><div class="milo-circle"><img src="./milo-celebrating.png" alt="Milo"/></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button></div></div>`;
+    saveFliqScore();
     clearProgress(); confetti(48); return;
   }
 
@@ -3075,6 +3077,7 @@ function renderScore(){
     </div>
   </div>
 </div>`;
+  saveFliqScore();
   clearProgress();
   confetti(72); SFX.win();
   requestAnimationFrame(()=>{
@@ -3482,6 +3485,46 @@ function getProgressKey(){
     ? `fliq_${S.cohortId}_${S.adventureCode}`
     : 'fliq_100week_v1';
 }
+// ── SUPABASE — FLIQ Score persistence ────────────────────────────────────────
+const _SB_URL  = 'https://fikdyraqugzstigmzufz.supabase.co';
+const _SB_KEY  = 'sb_publishable_Ck7nc2we1Wg8BtNEJyrFjg_PdLwTNUT';
+let   _sb      = null;
+try { _sb = window.supabase?.createClient(_SB_URL, _SB_KEY) || null; } catch(e) {}
+
+async function saveFliqScore() {
+  if (!_sb) return;
+  const p = S.profile;
+  const scoreMap = {'Financial Starter':24,'Emerging':32,'Explorer':42,'Developing':48,'Thinker':60,'Advancing':65,'Builder':74,'Leading':85,'Exceptional':95};
+  const fliqScore = p ? (p.fliq_score || p.overall_score || p.score || scoreMap[p.profile_label] || 50) : null;
+  const row = {
+    cohort_id:      S.cohortId      || null,
+    adventure_code: S.adventureCode || null,
+    session_id:     S.sessionId     || null,
+    band:           S.band          || 'builder',
+    profile_label:  p?.profile_label || null,
+    fliq_score:     fliqScore,
+    balance_final:  typeof S.balance === 'number' ? S.balance : null,
+    balance_start:  getStartBal(),
+    trait_ic:       p?.traits?.ic?.label || null,
+    trait_ic_score: p?.traits?.ic?.score ?? null,
+    trait_po:       p?.traits?.po?.label || null,
+    trait_po_score: p?.traits?.po?.score ?? null,
+    trait_ra:       p?.traits?.ra?.label || null,
+    trait_ra_score: p?.traits?.ra?.score ?? null,
+    trait_rb:       p?.traits?.rb?.label || null,
+    trait_rb_score: p?.traits?.rb?.score ?? null,
+    history:        S.history || [],
+    sim_version:    '1.0',
+  };
+  try {
+    if (row.cohort_id && row.adventure_code) {
+      await _sb.from('fliq_scores').upsert(row, { onConflict: 'cohort_id,adventure_code' });
+    } else {
+      await _sb.from('fliq_scores').insert(row);
+    }
+  } catch(e) { /* silent fail — localStorage still holds state */ }
+}
+
 function saveProgress(){
   if(!S.studentId) return;
   try{ localStorage.setItem(getProgressKey(),JSON.stringify({studentId:S.studentId,sessionId:S.sessionId,cohortId:S.cohortId,adventureCode:S.adventureCode,balance:S.balance,day:S.day,impulsiveN:S.impulsiveN,history:S.history,sessionStart:S.sessionStart,band:S.band||'builder',week:S.week||1,savedAt:Date.now()})); }catch(e){}

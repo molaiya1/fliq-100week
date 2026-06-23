@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1430,6 +1431,13 @@
       <ul class="label-list" id="labelList"></ul>
     </div>
 
+    <!-- Individual Student Profiles — pulled live from Supabase -->
+    <div class="card" id="studentProfilesCard" style="display:none;">
+      <div class="section-label">Individual Student Profiles</div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0 0 16px;line-height:1.5;">Each row is one student. Adventure Codes are the private 4-digit numbers students chose — no names or personal information collected.</p>
+      <div id="studentProfilesTable"></div>
+    </div>
+
     <!-- CTA -->
     <div class="card" style="background:linear-gradient(135deg,rgba(27,60,136,0.55) 0%,rgba(15,27,53,0.7) 100%);border-color:rgba(244,178,35,0.35);padding:28px 24px;">
       <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;text-align:center;">This Was Just the Beginning</div>
@@ -2210,6 +2218,87 @@ function toggleKey(btn) {
 
 let lastReportData = null;
 
+// ── Supabase — live student profiles ──────────────────────────────────────
+const _SB_URL = 'https://fikdyraqugzstigmzufz.supabase.co';
+const _SB_KEY = 'sb_publishable_Ck7nc2we1Wg8BtNEJyrFjg_PdLwTNUT';
+let _sb = null;
+try { _sb = window.supabase?.createClient(_SB_URL, _SB_KEY) || null; } catch(e) {}
+
+const TRAIT_LABELS = { ic:'Impulse Control', po:'Planning', ra:'Risk Awareness', rb:'Recovery' };
+const PROFILE_ORDER = ['Financial Starter','Emerging','Explorer','Developing','Builder','Thinker','Advancing','Leading','Exceptional'];
+
+async function loadLiveScores() {
+  if (!_sb || !cohortId) return;
+  try {
+    const { data, error } = await _sb
+      .from('fliq_scores')
+      .select('adventure_code,band,profile_label,fliq_score,balance_final,balance_start,trait_ic,trait_ic_score,trait_po,trait_po_score,trait_ra,trait_ra_score,trait_rb,trait_rb_score,created_at')
+      .eq('cohort_id', cohortId)
+      .order('created_at', { ascending: true });
+    if (error || !data || data.length === 0) return;
+    renderStudentProfiles(data);
+    document.getElementById('studentProfilesCard').style.display = 'block';
+  } catch(e) {}
+}
+
+function renderStudentProfiles(rows) {
+  const traitDot = (score) => {
+    const filled = score ?? 0;
+    return [0,1,2].map(i => `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:2px;background:${i < filled ? '#F4B223' : 'rgba(255,255,255,0.15)'}"></span>`).join('');
+  };
+  const profileColor = (label) => {
+    const idx = PROFILE_ORDER.indexOf(label);
+    if (idx >= 7) return '#F4B223';
+    if (idx >= 5) return '#22C55E';
+    if (idx >= 3) return '#60A5FA';
+    return 'rgba(255,255,255,0.5)';
+  };
+  const rows_html = rows.map((r, i) => {
+    const net = (r.balance_final != null && r.balance_start != null) ? (r.balance_final - r.balance_start) : null;
+    const netStr = net != null ? `${net >= 0 ? '+' : ''}$${net}` : '—';
+    const netColor = net == null ? 'rgba(255,255,255,0.4)' : net >= 0 ? '#22C55E' : '#EF4444';
+    return `
+    <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+      <td style="padding:10px 8px;font-size:12px;color:rgba(255,255,255,0.4);font-weight:600;">#${String(i+1).padStart(2,'0')}</td>
+      <td style="padding:10px 8px;font-size:13px;font-weight:700;color:white;letter-spacing:1px;">${r.adventure_code || '—'}</td>
+      <td style="padding:10px 8px;">
+        <span style="font-size:11px;font-weight:700;color:${profileColor(r.profile_label)}">${r.profile_label || '—'}</span>
+      </td>
+      <td style="padding:10px 8px;text-align:center;">
+        <span style="font-size:14px;font-weight:900;color:#F4B223">${r.fliq_score ?? '—'}</span>
+        <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span>
+      </td>
+      <td style="padding:10px 8px;text-align:center;font-size:12px;font-weight:700;color:${netColor}">${netStr}</td>
+      <td style="padding:10px 8px;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <span title="Impulse Control">${traitDot(r.trait_ic_score)}</span>
+          <span title="Planning">${traitDot(r.trait_po_score)}</span>
+          <span title="Risk Awareness">${traitDot(r.trait_ra_score)}</span>
+          <span title="Recovery">${traitDot(r.trait_rb_score)}</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('studentProfilesTable').innerHTML = `
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.15);">
+          <th style="padding:8px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;">#</th>
+          <th style="padding:8px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;">Code</th>
+          <th style="padding:8px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;">Profile</th>
+          <th style="padding:8px;text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;">FLIQ</th>
+          <th style="padding:8px;text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;">Net $</th>
+          <th style="padding:8px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;">IC · PL · RA · RB</th>
+        </tr>
+      </thead>
+      <tbody>${rows_html}</tbody>
+    </table>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,0.25);margin:12px 0 0;text-align:right;">IC = Impulse Control · PL = Planning · RA = Risk Awareness · RB = Recovery · ● = earned · ○ = not yet</p>`;
+}
+
 async function loadReport() {
   const btn = document.getElementById('btnReport');
   btn.disabled = true;
@@ -2221,6 +2310,7 @@ async function loadReport() {
     lastReportData = data;
     renderReport(data);
     goToScreen('report');
+    loadLiveScores(); // pull individual profiles from Supabase in parallel
   } catch (err) {
     toast('Error: ' + err.message);
     btn.disabled = false;
