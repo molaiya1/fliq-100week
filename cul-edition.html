@@ -2989,7 +2989,7 @@ function renderDayIntro(){
   <div class="di-bg bg-d${S.day}"></div>
   <div class="band-di-overlay"></div>
   <div class="di-content">
-    <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Week ${S.week||1} &nbsp;·&nbsp; Day ${S.day} of 5</div>
+    <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Week ${S.week||1} &nbsp;·&nbsp; Day ${S.day} of ${CUL_MAX_DAYS}</div>
     <div class="di-day-name">${d.name}</div>
     <div class="di-subtitle">${d.sub}</div>
     <div class="di-tease">${d.tease}</div>
@@ -3075,7 +3075,7 @@ function renderSim(){
         <div class="bal-divider"></div>
         <div class="bal-col-day" style="text-align:center;padding:0 16px;">
           <div class="bal-lbl">Day</div>
-          <div class="bal-day-num">${S.day}<span style="opacity:.4;font-size:.65em;"> / 5</span></div>
+          <div class="bal-day-num">${S.day}<span style="opacity:.4;font-size:.65em;"> / ${CUL_MAX_DAYS}</span></div>
           <div class="bal-day-of">${dayNames[S.day-1]}</div>
         </div>
         <div class="bal-emoji" id="balEmoji">${bs.emoji}</div>
@@ -3122,7 +3122,7 @@ function renderSim(){
 
       <!-- Next button -->
       <button class="next-btn" id="nextBtn" onclick="nextDay()">
-        ${S.day<5?`Day ${S.day} Complete — Next →`:'🎉 See My Results!'}
+        ${S.day<CUL_MAX_DAYS?`Day ${S.day} Complete — Next →`:'🎉 See My Results!'}
       </button>
 
     </div><!-- /sim-main -->
@@ -3326,7 +3326,7 @@ function buildProfileStory(history, band, profile, finalBal, startBal) {
   let sentence = '';
 
   if (saved >= 3 && pct >= 50)
-    sentence = `You protected your money on ${saved} of 5 days and finished with ${pct}% of your balance — that's the pattern behind your profile.`;
+    sentence = `You protected your money on ${saved} of 4 days and finished with ${pct}% of your balance — that's the pattern behind your profile.`;
   else if (spent >= 2 && recovered)
     sentence = `You spent early in the week but adjusted and recovered — that bounce-back move is exactly what defines your profile.`;
   else if (creative >= 2)
@@ -3338,7 +3338,7 @@ function buildProfileStory(history, band, profile, finalBal, startBal) {
   else if (d1Save && pct >= 40)
     sentence = `Saving on Day 1 when the temptation was right there set the tone for your whole week — that first call shaped your profile.`;
   else
-    sentence = `Your five decisions across the week — every save, spend, and risk — are what generated this profile.`;
+    sentence = `Your four decisions across the week — every save, spend, and risk — are what generated this profile.`;
 
   const wrapper = band === 'explorer'
     ? `style="font-size:13px;color:rgba(255,255,255,0.6);font-style:italic;margin:4px 0 14px;line-height:1.5;"`
@@ -3348,7 +3348,7 @@ function buildProfileStory(history, band, profile, finalBal, startBal) {
 
 function buildDefiningMoments(history, band) {
   if (!history || history.length < 2) return '';
-  const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  const DAYS = ['Friday','Sunday','Monday','Thursday'];
   const OM = {
     spend_impulse:     {label:'Impulse Buy',           tone:'watch',  note:'Acting on want, not need.'},
     spend_nonessential:{label:'Non-Essential Spend',   tone:'watch',  note:'Spent beyond what was necessary.'},
