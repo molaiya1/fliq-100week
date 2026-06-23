@@ -599,10 +599,11 @@
       display:flex; flex-direction:column; align-items:center;
       position:relative;
     }
-    /* Same illustrated world as home — bookend the experience */
-    #screen-score::before {
-      content:''; position:fixed; inset:0; z-index:0;
-      background:url('./bg-home-desktop.png') center center/cover no-repeat;
+    /* Animated video background — bookend the experience */
+    #score-bg-video {
+      position:fixed; inset:0; z-index:0;
+      width:100%; height:100%; object-fit:cover;
+      pointer-events:none;
     }
     /* Dark overlay so card text stays readable */
     #screen-score::after {
@@ -3010,8 +3011,10 @@ function renderScore(){
   };
   const cfg=bandCfg[band]||bandCfg.builder;
 
+  const scoreBgVideo = `<video id="score-bg-video" autoplay muted loop playsinline preload="auto"><source src="./score-bg.mp4" type="video/mp4"></video>`;
+
   if(!p){
-    app.innerHTML=`<div id="screen-score"><div class="score-card"><div class="sc-eyebrow">${cfg.eyebrow}</div><div class="sc-headline">You Did It!</div><div class="milo-circle"><img src="./milo-celebrating.png" alt="Milo"/></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button></div></div>`;
+    app.innerHTML=`<div id="screen-score">${scoreBgVideo}<div class="score-card"><div class="sc-eyebrow">${cfg.eyebrow}</div><div class="sc-headline">You Did It!</div><div class="milo-circle"><img src="./milo-celebrating.png" alt="Milo"/></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button></div></div>`;
     clearProgress(); confetti(48); return;
   }
 
@@ -3027,6 +3030,7 @@ function renderScore(){
 
   app.innerHTML=`
 <div id="screen-score">
+  ${scoreBgVideo}
   <div class="score-card">
     <div class="sc-eyebrow">${cfg.eyebrow}</div>
     <div class="sc-headline">${cfg.headline}</div>
@@ -3235,6 +3239,8 @@ function playCutscene(src, nextScreen){
   const keys = Object.keys(CUTSCENE_MAP);
   const idx = keys.findIndex(k => CUTSCENE_MAP[k] === src);
   if(idx >= 0 && idx + 1 < keys.length) _preloadCutscene(CUTSCENE_MAP[keys[idx + 1]]);
+  // When the final cutscene plays, start buffering the score background
+  if(nextScreen === 'score') _preloadCutscene('./score-bg.mp4');
   render();
 }
 
