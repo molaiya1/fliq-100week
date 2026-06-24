@@ -428,20 +428,19 @@
         <tr>
           <th>Profile Label</th>
           <th>Raw Score</th>
-          <th>FLIQ Score™</th>
           <th>Behavioral Description</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td class="label-col">Financial Starter</td><td class="range-col">0</td><td class="range-col">15</td><td class="desc-col">Behavioral patterns are still forming. First-session scores here are developmentally appropriate and expected.</td></tr>
-        <tr><td class="label-col">Emerging</td><td class="range-col">1</td><td class="range-col">25</td><td class="desc-col">Early awareness present. Impulse patterns are visible, particularly in social pressure scenarios.</td></tr>
-        <tr><td class="label-col">Explorer</td><td class="range-col">2</td><td class="range-col">35</td><td class="desc-col">Building awareness. Student recognizes patterns in retrospect — the next development step is catching them in the moment.</td></tr>
-        <tr><td class="label-col">Developing</td><td class="range-col">3</td><td class="range-col">45</td><td class="desc-col">Solid behavioral foundation. More intentional choices with increasing consistency across the week.</td></tr>
-        <tr><td class="label-col">Builder</td><td class="range-col">4</td><td class="range-col">55</td><td class="desc-col">Deliberate, risk-calibrated decision-making. Balances risk, patience, and recovery well.</td></tr>
-        <tr><td class="label-col">Thinker</td><td class="range-col">5</td><td class="range-col">62</td><td class="desc-col">Makes intentional, context-aware financial decisions. Rare for any age group.</td></tr>
-        <tr><td class="label-col">Advancing</td><td class="range-col">6</td><td class="range-col">70</td><td class="desc-col">High-signal behavioral profile. Applies context, reads risk, and recovers from pressure with discipline.</td></tr>
-        <tr><td class="label-col">Leading</td><td class="range-col">7</td><td class="range-col">82</td><td class="desc-col">Elite behavioral patterns. Processed scenarios systematically and executed with discipline across the full week.</td></tr>
-        <tr><td class="label-col">Exceptional</td><td class="range-col">8</td><td class="range-col">95</td><td class="desc-col">Exceptional across all four domains. Flagged every behavioral trap and finished stronger than started.</td></tr>
+        <tr><td class="label-col">Financial Starter</td><td class="range-col">0</td><td class="desc-col">Behavioral patterns are still forming. First-session scores here are developmentally appropriate and expected.</td></tr>
+        <tr><td class="label-col">Emerging</td><td class="range-col">1</td><td class="desc-col">Early awareness present. Impulse patterns are visible, particularly in social pressure scenarios.</td></tr>
+        <tr><td class="label-col">Explorer</td><td class="range-col">2</td><td class="desc-col">Building awareness. Student recognizes patterns in retrospect — the next development step is catching them in the moment.</td></tr>
+        <tr><td class="label-col">Developing</td><td class="range-col">3</td><td class="desc-col">Solid behavioral foundation. More intentional choices with increasing consistency across the week.</td></tr>
+        <tr><td class="label-col">Builder</td><td class="range-col">4</td><td class="desc-col">Deliberate, risk-calibrated decision-making. Balances risk, patience, and recovery well.</td></tr>
+        <tr><td class="label-col">Thinker</td><td class="range-col">5</td><td class="desc-col">Makes intentional, context-aware financial decisions. Requires consistent deliberate behavior across all five scenarios.</td></tr>
+        <tr><td class="label-col">Advancing</td><td class="range-col">6</td><td class="desc-col">High-signal behavioral profile. Applies context, reads risk, and recovers from pressure with discipline.</td></tr>
+        <tr><td class="label-col">Leading</td><td class="range-col">7</td><td class="desc-col">Elite behavioral patterns. Processed scenarios systematically and executed with discipline across the full week.</td></tr>
+        <tr><td class="label-col">Exceptional</td><td class="range-col">8</td><td class="desc-col">Exceptional across all four domains. Flagged every behavioral trap and finished stronger than started.</td></tr>
       </tbody>
     </table>
 
@@ -623,7 +622,7 @@
       <div class="mechanic-icon">🗄️</div>
       <div class="mechanic-body">
         <div class="mechanic-title">Data Infrastructure</div>
-        <div class="mechanic-text">Session data is stored in a Supabase (PostgreSQL) database with row-level security policies. Facilitator class reports are accessible only by the creating facilitator using the session PIN they set at setup. Student data is accessible in aggregate only — individual Adventure Codes are not exposed in any external-facing report.</div>
+        <div class="mechanic-text">Session data is stored in a Supabase (PostgreSQL) database with row-level security enabled. Data is scoped to cohort ID — facilitators access their class results using the unique cohort code generated at setup. Individual Adventure Codes are not exposed in any external-facing report; facilitator-visible data shows domain breakdowns and profile labels, not raw choice sequences.</div>
       </div>
     </div>
 
