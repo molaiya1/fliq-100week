@@ -1125,6 +1125,7 @@ function getScenarios(){
 // Carry-forward helpers — read prior day choices from history
 function priorChoice(day){ return S.history.find(x=>x.day===day)?.choice??null; }
 function priorSpent(day){ const h=S.history.find(x=>x.day===day); return h?h.balBefore-h.balAfter:0; }
+function spendCount(){ return S.history.filter(h=>h.balBefore-h.balAfter>0).length; }
 
 function getExplorerScenarios(){
   const b = S.balance;
@@ -1186,7 +1187,11 @@ function getExplorerScenarios(){
     },
     // DAY 3 — THE OOPS
     { day:3, scTitle:'The Lost Library Book',
-      scBody:`You lost a library book — and the librarian says you owe $5 for a replacement copy. You have $${b}.`,
+      scBody: (priorChoice(1)===0&&priorChoice(2)===0)
+        ? `You lost a library book. The librarian says you owe $5. After the pencils AND ice cream, you're down to $${b} — and now this.`
+        : (priorChoice(1)===0||priorChoice(2)===0)
+        ? `A library book you lost has a $5 replacement fee. After spending earlier this week, you've got $${b} left.`
+        : `You lost a library book — $5 replacement fee from the librarian. You've been careful this week — you've got $${b}.`,
       visEmoji:'📚', visCls:'vis-d3', visBadge:'$5\nOWED',
       preChat: (priorChoice(1)===0||priorChoice(2)===0)
         ? `You've been spending. Now this. <strong>Can you still cover it?</strong> 📚`
@@ -1216,7 +1221,11 @@ function getExplorerScenarios(){
     { day:4, scTitle:'The Candy Deal',
       scBody:`Your classmate leans over: <em>"Give me $4 — I'm selling candy at lunch and I'll pay you back $8 by Friday."</em> 50/50 shot. You have $${b}.`,
       visEmoji:'🍬', visCls:'vis-d4', visBadge:'50/50',
-      preChat:"Sounds tempting! <strong>But is it a sure thing?</strong> Think it through. ⚖️",
+      preChat: priorChoice(3)===0
+        ? `You just paid the library fee — down to $${b}. <strong>Think twice before risking more.</strong> ⚖️`
+        : priorChoice(3)===1
+        ? `You still owe the library $5. <strong>Is right now the time to gamble?</strong> ⚖️`
+        : `You bought yourself time on the library fee. <strong>But is a 50/50 bet the right next move?</strong> ⚖️`,
       choices:[
         { l:'A', title:'Give them $4 — let\'s go!', detail: b>10?'You can afford to try it. Could pay off!':'You\'re running low. This is a real gamble.', cost:4, opt:'invest',
           costLbl:'−$4 (maybe +$8)', costCls:'risk', moodLbl:'RISK MOVE', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
@@ -1243,9 +1252,17 @@ function getExplorerScenarios(){
     },
     // DAY 5 — THE FINISH
     { day:5, scTitle:'Last Day of the Week',
-      scBody:`Friday! You pass the school store on the way out. There's a cool notebook on sale for $5. You have $${b} left.`,
+      scBody: spendCount()>=3
+        ? `Friday! You spent on most days this week — $${b} left heading out. School store on the way. Cool notebook, $5.`
+        : spendCount()===0
+        ? `Friday! You held your money every single day — $${b} still intact. School store on the way out. Cool notebook, $5.`
+        : `Friday! $${b} left after a week of choices. You pass the school store. Cool notebook on sale for $5.`,
       visEmoji:'📓', visCls:'vis-d5', visBadge:null,
-      preChat:"Last day! Last call. <strong>How do you want to finish?</strong> 🏁",
+      preChat: spendCount()>=3
+        ? `You've spent on most days this week. <strong>How do you want to end it?</strong> 🏁`
+        : spendCount()===0
+        ? `You held your money every day this week. <strong>How do you close it out?</strong> 🏁`
+        : `Last day! Last call. <strong>How do you want to finish?</strong> 🏁`,
       choices:[
         { l:'A', title: b<6?'Spend a little more':'Get the notebook!', detail: b<6?'One more spend after a tough week.':'You did great. Treat yourself a little!', cost:5, opt:'spend_nonessential',
           costLbl:'−$5', costCls:'spend', moodLbl: b<6?'RISKY MOVE':'TREAT MOVE', moodEmoji: b<6?'⚠️':'🎁', moodCls: b<6?'mood-risky':'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'📓' },
@@ -1332,7 +1349,11 @@ function getBuilderScenarios(){
     },
     // DAY 3 — THE MESS
     { day:3, scTitle:'You Cracked Their Screen',
-      scBody:`<em>Crack.</em> You dropped your friend's phone by accident. Screen is shattered. $20 to fix it. You have $${b}.`,
+      scBody: (priorChoice(1)===0&&priorChoice(2)===0)
+        ? `<em>Crack.</em> You dropped your friend's phone. Screen shattered. $20 to fix it. After the hoodie AND pizza this week, you're down to $${b}.`
+        : (priorChoice(1)===0||priorChoice(2)===0)
+        ? `<em>Crack.</em> You dropped your friend's phone. Screen shattered. $20 to fix it. After your spending earlier this week, you've got $${b}.`
+        : `<em>Crack.</em> You dropped your friend's phone. Screen shattered. $20 to fix it. You've been holding your money — you've got $${b}.`,
       visEmoji:'📱', visCls:'vis-d3', visBadge:'$20\nFIX',
       preChat: (priorChoice(1)===0||priorChoice(2)===0)
         ? `You've spent a lot this week already. Now someone needs $20 from you. <strong>Character costs money sometimes.</strong> 📱`
@@ -1362,7 +1383,11 @@ function getBuilderScenarios(){
     { day:4, scTitle:'The Bracelet Hustle',
       scBody:`Your friend: <em>"Give me $15 — I'm selling custom bracelets online and I'll cut you in for $30 by the weekend."</em> 50/50. You have $${b}.`,
       visEmoji:'💎', visCls:'vis-d4', visBadge:'50/50',
-      preChat:"Sounds like easy money. <strong>But is it?</strong> Think before you move. ⚖️",
+      preChat: priorChoice(3)===0
+        ? `You just paid $20 to fix that screen — $${b} left. <strong>Think twice before putting more on the line.</strong> ⚖️`
+        : priorChoice(3)===1
+        ? `You ghosted the phone situation. It's still unresolved. <strong>Is a 50/50 bet the right next move?</strong> ⚖️`
+        : `You handled the screen with integrity. <strong>Now someone wants a chunk of what you protected.</strong> ⚖️`,
       choices:[
         { l:'A', title:'Invest $15 — I\'m in!',    detail: b>30?'You can afford the risk. Could double up!':'Running low. This is a real gamble.', cost:15, opt:'invest',
           costLbl:'−$15 (maybe +$30)', costCls:'risk', moodLbl:'HIGH RISK', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
@@ -1389,9 +1414,17 @@ function getBuilderScenarios(){
     },
     // DAY 5 — THE FINISH
     { day:5, scTitle:'New Drop, Last Day',
-      scBody:`Friday. New game just dropped — $20 on the app store. You've got $${b} and the weekend starts soon.`,
+      scBody: spendCount()>=3
+        ? `Friday. You spent on most days this week — $${b} left heading into the weekend. New game just dropped — $20.`
+        : spendCount()===0
+        ? `Friday. You held every dollar all week — $${b} still intact. New game just dropped — $20.`
+        : `Friday. $${b} left after a week of calls. New game just dropped — $20 on the app store.`,
       visEmoji:'🎮', visCls:'vis-d5', visBadge:null,
-      preChat:"Last day. Last call. <strong>How you finish is who you are with money.</strong> 🏁",
+      preChat: spendCount()>=3
+        ? `Most of your week went to spending. <strong>How you finish is who you are with money.</strong> 🏁`
+        : spendCount()===0
+        ? `You haven't spent a dollar all week. <strong>Last call — how do you close it?</strong> 🏁`
+        : `Last day. Last call. <strong>How you finish is who you are with money.</strong> 🏁`,
       choices:[
         { l:'A', title: b<20?'Spend a little more':'Download it!', detail: b<20?'One more spend after a hard week.':'Weekend has no plans. Treat yourself.', cost:20, opt:'spend_nonessential',
           costLbl:'−$20', costCls:'spend', moodLbl: b<20?'RISKY MOVE':'REWARD MOVE', moodEmoji: b<20?'⚠️':'🎁', moodCls: b<20?'mood-risky':'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🎮' },
@@ -1478,7 +1511,11 @@ function getStrategistScenarios() {
     },
     // ── DAY 3 ──
     { day:3, scTitle:'Your Bike Tire Just Popped.',
-      scBody:`<em>POP.</em> Flat tire on the way to practice. $25 to fix it. You have $${b}.`,
+      scBody: (priorChoice(1)===0&&priorChoice(2)===0)
+        ? `<em>POP.</em> Flat tire on the way to practice. $25 to fix it. After the shoes AND the movies this week, you're down to $${b}. This is what emergency funds exist for.`
+        : (priorChoice(1)===0||priorChoice(2)===0)
+        ? `<em>POP.</em> Flat tire. $25 to fix it. Your spending earlier this week has you at $${b}. Now the unexpected cost arrives.`
+        : `<em>POP.</em> Flat tire on the way to practice. $25 to fix it. You've been disciplined — you've got $${b}. Here's where that pays off.`,
       visEmoji:'🚲', visCls:'vis-d3', visBadge:'$25\nFIX',
       preChat: (priorChoice(1)===0||priorChoice(2)===0)
         ? `You've already spent heavily this week. Now a $25 problem just showed up. <strong>This is why we hold reserves.</strong> 🔧`
@@ -1508,7 +1545,11 @@ function getStrategistScenarios() {
     { day:4, scTitle:'A Chance to Make More',
       scBody:`Your friend: <em>"Give me $20 now — I'll flip it to $40 by next week."</em> 50/50 shot. You have $${b}.`,
       visEmoji:'💎', visCls:'vis-d4', visBadge:'50/50',
-      preChat:"High risk, high reward. <strong>Or just... high risk.</strong> What's your read? ⚖️",
+      preChat: priorChoice(3)===0
+        ? `You just fixed the tire — $${b} left. <strong>Is now the right time to put more money at risk?</strong> ⚖️`
+        : priorChoice(3)===1
+        ? `You left the tire flat. That situation isn't resolved. <strong>Adding a 50/50 bet on top — what's your read?</strong> ⚖️`
+        : `You negotiated the tire payment down. <strong>Now someone wants part of what you saved.</strong> ⚖️`,
       choices:[
         { l:'A', title:"Give them $20 — let's go", detail: b>60?'You can afford the risk. If it works, great!':'You\'re running low. This is a real gamble.', cost:20, opt:'invest',
           costLbl:'−$20 (maybe +$40)', costCls:'risk', moodLbl:'HIGH RISK', moodEmoji:'⚠️', moodCls:'mood-risk', cardCls:'type-purple', badgeCls:'badge-purple', emoji:'🎲' },
@@ -1535,9 +1576,17 @@ function getStrategistScenarios() {
     },
     // ── DAY 5 ──
     { day:5, scTitle:'Last Day of the Week.',
-      scBody:`Friday. $${b} left. You pass a store with a sale on the way home.`,
+      scBody: spendCount()>=3
+        ? `Friday. You've committed money on most days this week — $${b} left. There's a sale on the way home.`
+        : spendCount()===0
+        ? `Friday. You held every dollar all week — $${b} still intact. There's a sale on the way home.`
+        : `Friday. $${b} left after a week of decisions. You pass a store with a sale on the way home.`,
       visEmoji:'🏁', visCls:'vis-d5', visBadge:null,
-      preChat:"Last day. Last call. <strong>How you finish is who you are.</strong> 🏁",
+      preChat: spendCount()>=3
+        ? `Most of your week went to spending. <strong>The last decision reveals the pattern.</strong> 🏁`
+        : spendCount()===0
+        ? `You haven't spent a dollar all week. <strong>What does that tell you about your relationship with money?</strong> 🏁`
+        : `Last day. Last call. <strong>How you finish is who you are.</strong> 🏁`,
       choices:[
         { l:'A', title: b<30?'Spend a little more':'Treat yourself!', detail: b<30?'One more spend after a hard week.':'You did well. Take a little reward.', cost:20, opt:'spend_nonessential',
           costLbl:'−$20', costCls:'spend', moodLbl: b<30?'RISKY MOVE':'REWARD MOVE', moodEmoji: b<30?'⚠️':'🎁', moodCls: b<30?'mood-risky':'mood-social', cardCls:'type-orange', badgeCls:'badge-orange', emoji:'🛍️' },
