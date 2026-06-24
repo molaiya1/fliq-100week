@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CUL Financial Intelligence Program — Facilitator Brief</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cul-red: #C41230;
+    --cul-red-dk: #9B0E26;
+    --charcoal: #1E1E1E;
+    --mid: #4A4A4A;
+    --light: #6B6B6B;
+    --rule: #DCDCDC;
+    --bg-light: #F7F7F7;
+    --bg-red: #FDF2F4;
+    --white: #FFFFFF;
+  }
+
+  @page {
+    size: letter;
+    margin: 0.65in 0.75in 0.65in 0.75in;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: var(--charcoal);
+    background: var(--white);
+    font-size: 9.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── HEADER ── */
+  .header-bar {
+    background: var(--cul-red);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 4px 4px 0 0;
+    margin-bottom: 0;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cul-logo-wrap {
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+  }
+
+  .cul-logo-wrap img {
+    height: 22px;
+    display: block;
+  }
+
+  .header-org {
+    font-size: 12pt;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.02em;
+  }
+
+  .header-program {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .header-doc-type {
+    font-size: 7pt;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .header-doc-name {
+    font-size: 10pt;
+    font-weight: 800;
+    color: white;
+    margin-top: 2px;
+  }
+
+  .header-date {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+  }
+
+  /* ── RED SUBTITLE BAND ── */
+  .sub-band {
+    background: var(--cul-red-dk);
+    color: rgba(255,255,255,0.85);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 18px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 0 0 4px 4px;
+    margin-bottom: 14px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 7pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--cul-red);
+    margin-bottom: 5px;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid var(--cul-red);
+  }
+
+  /* ── THREE-COLUMN GRID ── */
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .col-card {
+    background: var(--bg-light);
+    border-radius: 4px;
+    padding: 10px 11px;
+    border-top: 3px solid var(--cul-red);
+  }
+
+  .col-card .section-label {
+    border-bottom-color: var(--rule);
+    color: var(--cul-red);
+  }
+
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-bottom: 5px;
+  }
+
+  .step-num {
+    background: var(--cul-red);
+    color: white;
+    font-size: 7pt;
+    font-weight: 800;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text {
+    font-size: 8.5pt;
+    color: var(--charcoal);
+    line-height: 1.4;
+  }
+
+  .step-text strong {
+    color: var(--charcoal);
+    font-weight: 700;
+  }
+
+  .step-text .note {
+    font-size: 7.5pt;
+    color: var(--light);
+    display: block;
+    margin-top: 1px;
+  }
+
+  .url-chip {
+    background: var(--cul-red);
+    color: white;
+    font-size: 7.5pt;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 4px 0;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── FLIQ SCORE DECODER ── */
+  .fliq-section {
+    margin-bottom: 12px;
+  }
+
+  .fliq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .fliq-card {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 8px 10px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .fliq-initial {
+    font-size: 16pt;
+    font-weight: 900;
+    color: var(--cul-red);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  .fliq-body {}
+
+  .fliq-dim {
+    font-size: 8pt;
+    font-weight: 800;
+    color: var(--charcoal);
+    margin-bottom: 2px;
+  }
+
+  .fliq-meaning {
+    font-size: 7.5pt;
+    color: var(--mid);
+    line-height: 1.38;
+    margin-bottom: 3px;
+  }
+
+  .fliq-workforce {
+    font-size: 7pt;
+    color: var(--cul-red);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .fliq-workforce span {
+    font-weight: 400;
+    color: var(--light);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* ── DEBRIEF SECTION ── */
+  .debrief-section {
+    margin-bottom: 12px;
+  }
+
+  .debrief-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 10px;
+  }
+
+  .debrief-questions {}
+
+  .q-row {
+    border-left: 2.5px solid var(--cul-red);
+    padding: 5px 0 5px 8px;
+    margin-bottom: 5px;
+  }
+
+  .q-text {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 2px;
+  }
+
+  .q-why {
+    font-size: 7.5pt;
+    color: var(--light);
+    line-height: 1.35;
+  }
+
+  /* ── COORDINATOR SCRIPTS ── */
+  .script-card {
+    background: var(--bg-red);
+    border-radius: 4px;
+    padding: 9px 10px;
+    margin-bottom: 6px;
+    border-left: 3px solid var(--cul-red);
+  }
+
+  .script-q {
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: var(--cul-red);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+  }
+
+  .script-a {
+    font-size: 8pt;
+    color: var(--charcoal);
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  /* ── SESSION CODE BOX ── */
+  .session-box {
+    background: var(--charcoal);
+    border-radius: 4px;
+    padding: 9px 11px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .session-label {
+    font-size: 7pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .session-code {
+    font-size: 16pt;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 0.14em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .session-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+
+  .session-inst {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.45;
+  }
+
+  .session-inst strong {
+    color: white;
+    font-weight: 700;
+  }
+
+  /* ── FOOTER ── */
+  .brief-footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-size: 7pt;
+    color: var(--light);
+  }
+
+  .footer-left strong {
+    color: var(--mid);
+  }
+
+  .footer-right {
+    font-size: 7pt;
+    color: var(--light);
+    text-align: right;
+  }
+
+  .footer-right .powered {
+    font-size: 6.5pt;
+    color: var(--rule);
+    margin-top: 2px;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { font-size: 9.5pt; }
+    .header-bar, .sub-band, .step-num, .url-chip, .fliq-initial,
+    .session-box, .script-card, .col-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .col-card { break-inside: avoid; }
+    .fliq-card { break-inside: avoid; }
+    .q-row { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header-bar">
+  <div class="header-left">
+    <div class="cul-logo-wrap">
+      <img src="./cul-logo.png" alt="Chicago Urban League"
+        onerror="this.style.display='none'">
+    </div>
+    <div>
+      <div class="header-org">Chicago Urban League</div>
+      <div class="header-program">Financial Intelligence Program &nbsp;·&nbsp; Summer 2026</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-doc-type">Program Resource</div>
+    <div class="header-doc-name">Facilitator Brief</div>
+    <div class="header-date">June 29 – July 2, 2026</div>
+  </div>
+</div>
+<div class="sub-band">
+  <span>The $100 Week™ — Behavioral Financial Intelligence Simulation</span>
+  <span>Strategist Track &nbsp;·&nbsp; Ages 16–18 &nbsp;·&nbsp; Chicago Edition</span>
+</div>
+
+<!-- SESSION CODE -->
+<div class="session-box">
+  <div>
+    <div class="session-label">Student URL</div>
+    <div class="session-code">play.wealthwiselearning.com/cul-edition.html</div>
+  </div>
+  <div class="session-divider"></div>
+  <div class="session-inst">
+    Students open this URL on any device — phone, tablet, laptop.<br>
+    <strong>No login. No download. No account required.</strong><br>
+    They enter their name when the sim starts.
+  </div>
+</div>
+
+<!-- THREE COLUMNS: SETUP / WHAT HAPPENS / TIMING -->
+<div class="three-col">
+
+  <div class="col-card">
+    <div class="section-label">Before You Start</div>
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Test the URL on one device</strong> before students arrive. The sim opens immediately — no wait screen.<span class="note">Works on Chrome, Safari, Firefox. No app install.</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Read students in with one sentence:</strong> <em>"This is a 4-day money simulation built around real Chicago situations. No grades. No wrong answers. Just what you actually choose."</em></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Set the tone:</strong> Milo will guide them. Let students read every word. Don't rush.<span class="note">Average completion: 20–25 minutes.</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-text"><strong>After completion,</strong> students see their FLIQ Score. Hold debrief for the full group — don't skip it.</div>
+    </div>
+  </div>
+
+  <div class="col-card">
+    <div class="section-label">What Students Experience</div>
+    <div class="step-row">
+      <div class="step-num" style="background:#6B6B6B">F</div>
+      <div class="step-text"><strong>Day 1 — Friday:</strong> The crew wants to go downtown. $100 budget. Social pressure vs. financial discipline.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="background:#6B6B6B">S</div>
+      <div class="step-text"><strong>Day 2 — Sunday:</strong> Family obligation. Cousin needs $20 for school. Cash, compromise, or an alternative?</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="background:#6B6B6B">M</div>
+      <div class="step-text"><strong>Day 3 — Monday:</strong> Callback interview downtown. Transit card is empty. How do you make sure you get there?</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="background:#6B6B6B">T</div>
+      <div class="step-text"><strong>Day 4 — Thursday:</strong> Side hustle paid. You're holding more cash than usual. What's the ratio — spend, reinvest, or save?</div>
+    </div>
+    <div style="margin-top:7px;padding:6px 8px;background:white;border-radius:3px;border:1px solid var(--rule);">
+      <div style="font-size:7.5pt;color:var(--light);line-height:1.4;">Each choice generates a behavioral data point. <strong style="color:var(--charcoal)">No choice is "wrong."</strong> The FLIQ Score at the end is a pattern — not a grade.</div>
+    </div>
+  </div>
+
+  <div class="col-card">
+    <div class="section-label">Session Timing</div>
+    <div style="margin-bottom:8px;">
+      <div style="font-size:7.5pt;color:var(--light);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;">Recommended Flow</div>
+      <div class="step-row">
+        <div style="width:38px;font-size:7.5pt;font-weight:800;color:var(--cul-red);flex-shrink:0;">0–2 min</div>
+        <div class="step-text">Frame the sim. Read students in.</div>
+      </div>
+      <div class="step-row">
+        <div style="width:38px;font-size:7.5pt;font-weight:800;color:var(--cul-red);flex-shrink:0;">2–25 min</div>
+        <div class="step-text">Students complete the simulation independently.</div>
+      </div>
+      <div class="step-row">
+        <div style="width:38px;font-size:7.5pt;font-weight:800;color:var(--cul-red);flex-shrink:0;">25–45 min</div>
+        <div class="step-text">Full group debrief. Use the questions below.</div>
+      </div>
+    </div>
+    <div style="background:white;border-radius:3px;border:1px solid var(--rule);padding:6px 8px;">
+      <div style="font-size:7.5pt;font-weight:700;color:var(--charcoal);margin-bottom:2px;">Facilitator Dashboard</div>
+      <div style="font-size:7pt;color:var(--light);line-height:1.4;">View all student FLIQ Scores in real time at:<br>
+      <strong style="color:var(--charcoal)">play.wealthwiselearning.com/facilitator.html</strong></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FLIQ SCORE DECODER -->
+<div class="fliq-section">
+  <div class="section-label" style="margin-bottom:7px;">FLIQ Score — What Each Dimension Means in a Career Context</div>
+  <div class="fliq-grid">
+
+    <div class="fliq-card">
+      <div class="fliq-initial">I</div>
+      <div class="fliq-body">
+        <div class="fliq-dim">Impulse Control</div>
+        <div class="fliq-meaning">How often a student chooses the immediate reward over the longer-term benefit when both options are present.</div>
+        <div class="fliq-workforce">Career signal: <span>Do they hold out for a better offer, or take the first one? Can they resist lifestyle inflation when a first real paycheck arrives?</span></div>
+      </div>
+    </div>
+
+    <div class="fliq-card">
+      <div class="fliq-initial">P</div>
+      <div class="fliq-body">
+        <div class="fliq-dim">Planning</div>
+        <div class="fliq-meaning">Whether a student thinks ahead about competing priorities — transit, timing, tradeoffs — before committing to a choice.</div>
+        <div class="fliq-workforce">Career signal: <span>Do they show up prepared? Handle a conflict between class, practice, and an interview? Think before they act?</span></div>
+      </div>
+    </div>
+
+    <div class="fliq-card">
+      <div class="fliq-initial">R</div>
+      <div class="fliq-body">
+        <div class="fliq-dim">Risk Awareness</div>
+        <div class="fliq-meaning">How accurately a student evaluates uncertainty — whether they account for what could go wrong before acting.</div>
+        <div class="fliq-workforce">Career signal: <span>Do they understand that "I'll pay you back" has a track record? Do they read the situation before committing?</span></div>
+      </div>
+    </div>
+
+    <div class="fliq-card">
+      <div class="fliq-initial">R</div>
+      <div class="fliq-body">
+        <div class="fliq-dim">Resilience</div>
+        <div class="fliq-meaning">Whether a student adapts when a plan falls apart — finding an alternative rather than shutting down or spending impulsively.</div>
+        <div class="fliq-workforce">Career signal: <span>When something doesn't go as expected on the job — do they problem-solve or freeze? This is the trait employers can't teach.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DEBRIEF + COORDINATOR SCRIPTS -->
+<div class="debrief-section">
+  <div class="section-label" style="margin-bottom:7px;">Debrief Guide — Full Group (20 minutes)</div>
+  <div class="debrief-grid">
+
+    <div class="debrief-questions">
+      <div class="q-row">
+        <div class="q-text">"Which decision was the hardest for you? Why?"</div>
+        <div class="q-why">Opens the room. Most students will say Day 3 (interview). Let them name the real pressure — transit, money, not wanting to ask for help.</div>
+      </div>
+      <div class="q-row">
+        <div class="q-text">"Did anyone change their mind before hitting confirm? What made you go back?"</div>
+        <div class="q-why">Surfaces planning vs. impulse live. The ones who changed their mind have high Planning scores — they just don't know it yet.</div>
+      </div>
+      <div class="q-row">
+        <div class="q-text">"Day 4 — side hustle money. What did you choose, and what was your logic?"</div>
+        <div class="q-why">The reinvest/reserve/reward ratio is a business concept most adults get wrong. Celebrate whoever saw the reinvest option as the smart play.</div>
+      </div>
+      <div class="q-row">
+        <div class="q-text">"If you had $400 instead of $100, would you have made the same choices?"</div>
+        <div class="q-why">This is the most important question. Most say no — which reveals that their behavior is a function of scarcity, not character. That reframe matters.</div>
+      </div>
+      <div class="q-row">
+        <div class="q-text">"Look at your FLIQ Score. Which dimension surprised you most?"</div>
+        <div class="q-why">Connects data to self-awareness. Follow with: "What would you want to change about that score before you start a job?"</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:7pt;font-weight:800;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">When Students Ask...</div>
+
+      <div class="script-card">
+        <div class="script-q">"Is a higher score better?"</div>
+        <div class="script-a">"The score is a pattern, not a grade. High Impulse Control means you hold back. Low means you act fast. Both matter — it just depends on the situation. Today you got data. Most adults never do."</div>
+      </div>
+
+      <div class="script-card">
+        <div class="script-q">"What does this mean for my career?"</div>
+        <div class="script-a">"It means you now have data on how you make decisions under pressure. That's what every employer is trying to figure out in an interview. You figured it out first — before you walked into one."</div>
+      </div>
+
+      <div class="script-card">
+        <div class="script-q">"Can I retake it to get a better score?"</div>
+        <div class="script-a">"You can — but the score will just reflect whatever you choose. The point isn't to score high. The point is to understand how you actually think, not how you think you should think."</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="brief-footer">
+  <div class="footer-left">
+    <strong>Chicago Urban League Financial Intelligence Program</strong> &nbsp;·&nbsp; Summer 2026 &nbsp;·&nbsp; Facilitator Brief<br>
+    Questions? Contact your program coordinator or email <strong>info@wealthwisekids.org</strong>
+  </div>
+  <div class="footer-right">
+    Powered by <strong>WealthWise™</strong> FLIQ Score™ Technology<br>
+    <span class="powered">© 2026 WealthWise Kids LLC. All rights reserved.</span>
+  </div>
+</div>
+
+</body>
+</html>
