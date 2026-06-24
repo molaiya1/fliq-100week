@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   <meta property="og:title" content="The $100 Week™ — Chicago Urban League Financial Intelligence Program" />
   <meta property="og:description" content="A 4-day behavioral finance simulation for the Chicago Urban League Financial Intelligence Program, Summer 2026. Powered by FLIQ Score™." />
-  <meta property="og:image" content="https://play.wealthwiselearning.com/milo.png" />
+  <meta property="og:image" content="https://play.wealthwiselearning.com/cul-home.jpg" />
   <meta property="og:url" content="https://play.wealthwiselearning.com" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -351,7 +351,7 @@
     #screen-sim.band-strategist .sim-scene.sc-d2 { background-image:url('./cul-day2.jpg'); }
     #screen-sim.band-strategist .sim-scene.sc-d3 { background-image:url('./cul-day3.jpg'); }
     #screen-sim.band-strategist .sim-scene.sc-d4 { background-image:url('./cul-day4.jpg'); }
-    #screen-sim.band-strategist .sim-scene.sc-d5 { background-image:url('./cul-day5.jpg'); }
+    /* CUL edition is 4 days — no sc-d5 background needed */
 
     /* Builder band — illustrated backgrounds */
     #screen-sim.band-builder .sim-scene.sc-d1 { background-image:url('./bg-builder-day1.jpg'); }
@@ -1120,10 +1120,17 @@
   /* Day dot done state — keep gold as completion signal; active stays red */
   .d-dot.done { background:rgba(255,255,255,0.22) !important; color:white !important; box-shadow:none !important; }
 
+  /* ── CUL EDITION: HERO + H1 COLOR OVERRIDES ── */
+  .hero-speech strong { color:white !important; }
+  .hero-h1 .gld,
+  .hero-h1-mobile .gld { color:var(--cul-red) !important; text-shadow:0 2px 20px rgba(196,18,48,0.35) !important; }
+
   /* ── CUL EDITION: REMOVE MILO IMAGE FROM DAY INTROS ── */
-  /* Commentary text stays; owl avatar removed for 16-18 workforce audience */
   .di-milo img { display:none !important; }
-  .di-milo { gap:0 !important; }
+  .di-milo { gap:0 !important; padding:10px 14px !important; }
+
+  /* ── CUL EDITION: COMPLETED DAY DOT ── */
+  .d-dot.done { background:rgba(255,255,255,0.40) !important; color:rgba(255,255,255,0.85) !important; box-shadow:none !important; }
 
   </style>
 </head>
@@ -3036,7 +3043,7 @@ function renderHome(){
             <img src="./milo-hero.png" alt="Milo" class="hero-milo" />
             <div class="hero-hundred-badge">$${sb} 💰</div>
           </div>
-          <div class="hero-speech">I'm <strong>Milo.</strong> 4 real decisions. Real Chicago pressure. <strong>No grades. No judgment. Just what you actually do.</strong></div>
+          <div class="hero-speech">4 real decisions. Real Chicago pressure. <strong>No grades. No judgment. Just what you actually do.</strong></div>
         </div>
         <div class="hero-text">
           <h1 class="hero-h1">How do <strong>YOU</strong> think<br>with <span class="gld">money?</span></h1>
@@ -3060,7 +3067,7 @@ function renderHome(){
             </div>
           </div>
           <div style="background:rgba(255,255,255,0.06);padding:10px 14px;">
-            <div style="font-size:10.5px;color:rgba(255,255,255,0.65);line-height:1.55;">You're about to face 4 financial situations real Chicago teens navigate every week. There are no right or wrong answers — only <em>your</em> answers. Your choices generate a <strong style="color:#F4B942;">FLIQ Score™</strong>: a behavioral profile your program coordinator can use to support your next steps.</div>
+            <div style="font-size:10.5px;color:rgba(255,255,255,0.65);line-height:1.55;">You're about to face 4 financial situations real Chicago teens navigate every week. There are no right or wrong answers — only <em>your</em> answers. Your choices generate a <strong style="color:#C41230;">FLIQ Score™</strong>: a behavioral profile your program coordinator can use to support your next steps.</div>
           </div>
         </div>
         ${resumeBlock}
@@ -3423,7 +3430,7 @@ function renderScore(){
         <div class="teacher-moment-head">${cfg.teacherHead}</div>
       </div>
       <div class="teacher-moment-sub">${cfg.teacherSub}</div>
-      <a href="/brief.html" target="_blank" rel="noopener" class="teacher-moment-btn">${cfg.teacherBtnLabel}</a>
+      <a href="./cul-facilitator-brief.html" target="_blank" rel="noopener" class="teacher-moment-btn">${cfg.teacherBtnLabel}</a>
     </div>
     <button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button>
 
