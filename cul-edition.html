@@ -8,7 +8,7 @@
   <meta property="og:title" content="The $100 Week™ — Chicago Urban League Financial Intelligence Program" />
   <meta property="og:description" content="A 4-day behavioral finance simulation for the Chicago Urban League Financial Intelligence Program, Summer 2026. Powered by FLIQ Score™." />
   <meta property="og:image" content="https://play.wealthwiselearning.com/cul-home.jpg" />
-  <meta property="og:url" content="https://play.wealthwiselearning.com" />
+  <meta property="og:url" content="https://play.wealthwiselearning.com/cul-edition.html" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1120,16 +1120,46 @@
   /* Day dot done state — keep gold as completion signal; active stays red */
   .d-dot.done { background:rgba(255,255,255,0.22) !important; color:white !important; box-shadow:none !important; }
 
-  /* ── CUL EDITION: HERO + H1 COLOR OVERRIDES ── */
+  /* ── CUL: HERO + H1 ── */
   .hero-speech strong { color:white !important; }
   .hero-h1 .gld,
   .hero-h1-mobile .gld { color:var(--cul-red) !important; text-shadow:0 2px 20px rgba(196,18,48,0.35) !important; }
+  .hero-card { border-color:var(--cul-red) !important; box-shadow:0 0 0 1px rgba(196,18,48,0.12),0 24px 64px rgba(0,0,0,0.38),0 0 40px rgba(196,18,48,0.06) inset !important; }
+  .join-input:focus { border-color:var(--cul-red) !important; }
+  .privacy-note strong { color:rgba(255,255,255,0.88) !important; }
+  .nav-brand-s { color:rgba(11,29,58,0.50) !important; }
 
-  /* ── CUL EDITION: REMOVE MILO IMAGE FROM DAY INTROS ── */
+  /* ── CUL: DAY INTRO ── */
+  .di-subtitle { color:white !important; }
   .di-milo img { display:none !important; }
   .di-milo { gap:0 !important; padding:10px 14px !important; }
 
-  /* ── CUL EDITION: COMPLETED DAY DOT ── */
+  /* ── CUL: IN-SIM BUTTONS + FEEDBACK ── */
+  .next-btn { background:linear-gradient(135deg,var(--cul-red) 0%,var(--cul-red-dk) 100%) !important; color:white !important; box-shadow:0 6px 24px rgba(196,18,48,0.40) !important; }
+  .flash-check { color:white !important; }
+  .spinner { border-top-color:var(--cul-red) !important; }
+
+  /* ── CUL: MILO COMMENTARY ── */
+  .milo-speech-bubble strong,
+  .milo-float-bubble strong,
+  .milo-chat-bubble strong,
+  .milo-strip-speech strong { color:rgba(255,255,255,0.95) !important; }
+  .milo-tip-hdr { color:rgba(255,255,255,0.65) !important; }
+
+  /* ── CUL: SCORE REVEAL ── */
+  .fliq-ring-fill { stroke:var(--cul-red) !important; }
+  .sc-fliq { background:rgba(196,18,48,0.12) !important; border-color:rgba(196,18,48,0.35) !important; color:var(--cul-red) !important; }
+  .prof-name { color:white !important; }
+  .prof-badge-dot { background:var(--cul-red) !important; }
+  .bal-result { background:rgba(196,18,48,0.10) !important; border-color:rgba(196,18,48,0.28) !important; color:rgba(255,255,255,0.85) !important; }
+  .fliq-loop-closed { background:rgba(255,255,255,0.07) !important; border-color:rgba(255,255,255,0.18) !important; color:rgba(255,255,255,0.70) !important; }
+  .teacher-moment-head { color:white !important; }
+  .teacher-moment-btn { background:var(--cul-red) !important; color:white !important; box-shadow:0 4px 14px rgba(196,18,48,0.38) !important; }
+  .edu-note strong { color:rgba(255,255,255,0.85) !important; }
+  .replay-btn { background:linear-gradient(135deg,var(--cul-red) 0%,var(--cul-red-dk) 100%) !important; color:white !important; box-shadow:0 4px 20px rgba(196,18,48,0.38) !important; }
+  .sc-tag-day { background:rgba(196,18,48,0.15) !important; color:rgba(255,180,190,0.95) !important; border-color:rgba(196,18,48,0.28) !important; }
+
+  /* ── CUL: COMPLETED DAY DOT ── */
   .d-dot.done { background:rgba(255,255,255,0.40) !important; color:rgba(255,255,255,0.85) !important; box-shadow:none !important; }
 
   </style>
@@ -3699,7 +3729,7 @@ async function makeChoice(ci){
     if(i===ci){
       // Selection pop: spring punch before gold ring settles
       b.style.animation='selectionPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both';
-      setTimeout(()=>{ b.style.animation='none'; b.style.boxShadow='0 0 0 3px var(--gold), 0 14px 40px rgba(11,29,58,0.2)'; b.style.transform='scale(1.02)'; }, 400);
+      setTimeout(()=>{ b.style.animation='none'; b.style.boxShadow='0 0 0 3px #C41230, 0 14px 40px rgba(11,29,58,0.2)'; b.style.transform='scale(1.02)'; }, 400);
     }
     else { b.style.opacity='0.38'; b.style.transform='scale(0.98)'; }
   });
@@ -3767,15 +3797,15 @@ async function makeChoice(ci){
 
 // ── Reflection prompts per day ────────────────────────────────────
 const REFLECT_PROMPTS = [
-  { q:"Day 1 done. What happened when you made that call?",
-    opts:["I already had a plan going in", "I made the call in the moment", "I looked for another way first"] },
-  { q:"Something else pulled at your decision today. How did it play out?",
-    opts:["I went with what I had in mind", "What was happening around me changed my direction", "I tried to find something that worked for everyone"] },
-  { q:"An unexpected cost came up. Walk through what happened.",
-    opts:["I handled it right away and kept moving", "I slowed down before deciding what to do", "I adjusted my approach and moved on"] },
-  { q:"You took a position on risk today. What was behind that?",
-    opts:["Holding my position felt more important", "The potential reward drove the decision", "I wanted to know more before committing"] },
-  { q:"Five days done. How would you describe the pattern across your choices?",
+  { q:"The crew was going downtown and you had $100 for the week. What did your decision actually say about how you move?",
+    opts:["I knew what I could spend before I even left the house", "I felt the pull in the moment and made the call", "I found a way to show up without overextending"] },
+  { q:"Family needed something and you had a decision to make. What was really driving your choice?",
+    opts:["I led with what I had available — not what I felt", "The relationship came first. I figured the rest out after.", "I found a way to help that kept me in control of where the money went"] },
+  { q:"A real opportunity was on the line — interview, transit, limited cash. How did you protect what mattered?",
+    opts:["I locked it down immediately. No risk worth taking.", "I worked the network first and kept the card as a fallback", "I protected the moment that mattered and stretched everything else"] },
+  { q:"Your side hustle came through. More cash than usual — what does the ratio you chose say about you?",
+    opts:["Reinvest first. Reward later. That's the discipline.", "I split it — something back in, something saved, something spent", "I spent it. I earned it. That's the point."] },
+  { q:"Four days done. How would you describe the pattern across your choices?",
     opts:["I had a consistent approach from day one", "I felt things out and adjusted as I went", "My approach shifted depending on the situation"] },
 ];
 
@@ -3788,12 +3818,11 @@ function renderReflect(){
   <div style="position:fixed;inset:0;z-index:0;background:url('./cul-home.jpg') center 40%/cover no-repeat;filter:brightness(0.85);"></div>
   <div style="position:fixed;inset:0;z-index:1;background:linear-gradient(160deg,rgba(11,29,58,0.88) 0%,rgba(6,16,38,0.92) 100%);"></div>
   <div style="position:relative;z-index:2;max-width:480px;width:100%;text-align:center;animation:cBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) both;">
-    <img src="${dm.miloImg}" alt="Milo" style="width:80px;height:80px;object-fit:contain;margin-bottom:14px;filter:drop-shadow(0 4px 22px rgba(244,178,35,0.35));">
-    <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;color:rgba(244,178,35,0.65);text-transform:uppercase;margin-bottom:10px;">Day ${S.day} of ${CUL_MAX_DAYS} &nbsp;·&nbsp; Quick Reflection</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:10px;">Day ${S.day} of ${CUL_MAX_DAYS} &nbsp;·&nbsp; Quick Reflection</div>
     <p style="font-size:18px;font-weight:800;color:white;line-height:1.45;margin:0 0 22px;letter-spacing:-0.3px;">${pr.q}</p>
     <div style="display:flex;flex-direction:column;gap:9px;">
       ${pr.opts.map((o,i)=>`
-        <button onclick="submitReflect(${i})" style="width:100%;padding:15px 18px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.14);border-radius:14px;color:rgba(255,255,255,0.9);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:all 0.15s;font-family:inherit;backdrop-filter:blur(8px);" onmouseover="this.style.background='rgba(244,178,35,0.12)';this.style.borderColor='rgba(244,178,35,0.45)';" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.14)';">
+        <button onclick="submitReflect(${i})" style="width:100%;padding:15px 18px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.14);border-radius:14px;color:rgba(255,255,255,0.9);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:all 0.15s;font-family:inherit;backdrop-filter:blur(8px);" onmouseover="this.style.background='rgba(196,18,48,0.12)';this.style.borderColor='rgba(196,18,48,0.45)';" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.14)';">
           ${o}
         </button>`).join('')}
     </div>
