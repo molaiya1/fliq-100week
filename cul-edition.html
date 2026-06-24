@@ -1206,6 +1206,20 @@
     .week-selector { display:none !important; }
   }
 
+  /* ── Milo removal — remaining visible surfaces ── */
+  .milo-col { display:none !important; }
+  .milo-float-fig { display:none !important; }
+  .milo-strip-img { display:none !important; }
+  /* ── Home — remove emoji icon from Join Session block ── */
+  .join-block-icon { display:none !important; }
+  /* ── Score reveal — fix gold bleed ── */
+  .sc-eyebrow { color:rgba(255,255,255,0.48) !important; }
+  .prof-badge { background:rgba(196,18,48,0.10) !important; border-color:rgba(196,18,48,0.28) !important; color:rgba(255,255,255,0.55) !important; }
+  /* ── CoinQuest CTA — replace CoinQuest blue with CUL brand ── */
+  .coinquest-cta { background:linear-gradient(135deg,rgba(196,18,48,0.09),rgba(156,14,38,0.05)) !important; border-color:rgba(196,18,48,0.28) !important; }
+  .coinquest-cta-label { color:rgba(196,18,48,0.70) !important; }
+  .coinquest-cta-btn { background:linear-gradient(135deg,var(--cul-red),var(--cul-red-dk)) !important; }
+
   </style>
 </head>
 <body>
@@ -3210,7 +3224,7 @@ function renderDayIntro(){
   <div class="band-di-overlay"></div>
   <div class="di-content">
     <div class="di-cul-band">Chicago Urban League &nbsp;·&nbsp; Financial Intelligence Program</div>
-    <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Week ${S.week||1} &nbsp;·&nbsp; Day ${S.day} of ${CUL_MAX_DAYS}</div>
+    <div class="di-week-lbl">The $100 Week™ &nbsp;·&nbsp; Day ${S.day} of ${CUL_MAX_DAYS}</div>
     <div class="di-day-name">${d.name}</div>
     <div class="di-subtitle">${d.sub}</div>
     <div class="di-tease">${d.tease}</div>
@@ -3447,7 +3461,7 @@ function renderScore(){
   const scoreBgVideo = `<video id="score-bg-video" autoplay muted loop playsinline preload="auto"><source src="./score-bg.mp4" type="video/mp4"></video>`;
 
   if(!p){
-    app.innerHTML=`<div id="screen-score">${scoreBgVideo}<div class="score-card"><div class="sc-eyebrow">${cfg.eyebrow}</div><div class="sc-headline">You Did It!</div><div class="milo-circle"><img src="./milo-celebrating.png" alt="Milo"/></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button></div></div>`;
+    app.innerHTML=`<div id="screen-score">${scoreBgVideo}<div class="score-card"><div class="sc-eyebrow">${cfg.eyebrow}</div><div class="sc-headline">You Did It!</div><div class="milo-circle"><div style="font-size:34px;font-weight:900;color:white;letter-spacing:-1px;line-height:1;text-shadow:0 2px 16px rgba(0,0,0,0.4);">✓</div></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button></div></div>`;
     clearProgress(); return;
   }
 
@@ -3485,7 +3499,7 @@ function renderScore(){
         <circle class="fliq-ring-fill" id="fliqRingFill" cx="80" cy="80" r="${R}"
           stroke-dasharray="${C}" stroke-dashoffset="${C}"/>
       </svg>
-      <div class="milo-circle"><img src="${miloMap[p.profile_label]||'./milo.png'}" alt="Milo"/></div>
+      <div class="milo-circle">${band==='strategist'?`<div style="font-size:34px;font-weight:900;color:white;letter-spacing:-1px;line-height:1;text-shadow:0 2px 16px rgba(0,0,0,0.4);">${fliqScore}</div>`:`<img src="${miloMap[p.profile_label]||'./milo.png'}" alt="Milo"/>`}</div>
     </div>
 
     <div class="fliq-loop-closed">✓ &nbsp;Your FLIQ Score™ has been recorded</div>
@@ -3500,7 +3514,7 @@ function renderScore(){
 
     <div class="teacher-moment">
       <div class="teacher-moment-top">
-        <div class="teacher-moment-icon">📋</div>
+        <div class="teacher-moment-icon" style="display:none"></div>
         <div class="teacher-moment-head">${cfg.teacherHead}</div>
       </div>
       <div class="teacher-moment-sub">${cfg.teacherSub}</div>
