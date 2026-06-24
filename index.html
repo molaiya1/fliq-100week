@@ -678,6 +678,8 @@
     .edu-note strong { color:var(--gold); }
     .replay-btn { background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dk) 100%); border:none; border-radius:14px; padding:14px 40px; font-size:15px; font-weight:800; color:var(--navy); cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; box-shadow:0 4px 20px rgba(244,178,35,0.4); }
     .replay-btn:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(244,178,35,0.6); }
+    .fliq-method-link { display:block; text-align:center; font-size:12px; font-weight:600; color:rgba(255,255,255,0.4); text-decoration:none; margin-top:10px; letter-spacing:0.3px; transition:color 0.2s; }
+    .fliq-method-link:hover { color:var(--gold); }
     .coinquest-cta { margin-top:16px; background:linear-gradient(135deg,rgba(25,125,255,0.12),rgba(0,200,195,0.08)); border:1.5px solid rgba(25,125,255,0.3); border-radius:18px; padding:16px; text-align:center; animation:fadeUp 0.5s 1.2s both; }
     .coinquest-cta-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(79,179,232,0.7); margin-bottom:4px; }
     .coinquest-cta-title { font-size:16px; font-weight:900; color:white; margin-bottom:4px; }
@@ -3129,6 +3131,7 @@ function renderScore(){
       <a href="/brief.html" target="_blank" rel="noopener" class="teacher-moment-btn">${cfg.teacherBtnLabel}</a>
     </div>
     <button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button>
+    <a href="./fliq-methodology.html" target="_blank" rel="noopener" class="fliq-method-link">About the FLIQ Score™ →</a>
 
     <!-- CoinQuest CTA -->
     <div class="coinquest-cta">
