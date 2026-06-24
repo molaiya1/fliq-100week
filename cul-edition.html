@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The $100 Week™ — Chicago Urban League Edition | WealthWise Kids</title>
+  <title>The $100 Week™ — Chicago Urban League Edition | WealthWise™</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-  <meta property="og:title" content="The $100 Week™ — WealthWise Kids" />
-  <meta property="og:description" content="A 4-day behavioral finance simulation — Chicago Urban League × WealthWise Kids™, Summer 2026. Powered by FLIQ Score™." />
+  <meta property="og:title" content="The $100 Week™ — Chicago Urban League Financial Intelligence Program" />
+  <meta property="og:description" content="A 4-day behavioral finance simulation for the Chicago Urban League Financial Intelligence Program, Summer 2026. Powered by FLIQ Score™." />
   <meta property="og:image" content="https://play.wealthwiselearning.com/milo.png" />
   <meta property="og:url" content="https://play.wealthwiselearning.com" />
   <meta property="og:type" content="website" />
@@ -1098,7 +1098,7 @@
 <nav class="nav" id="mainNav">
   <div class="nav-lockup" id="navBrand">
     <div class="nav-brand">
-      <span class="nav-brand-m">WealthWise Kids™</span>
+      <span class="nav-brand-m">WealthWise™</span>
       <span class="nav-brand-s">The $100 Week™</span>
     </div>
   </div>
@@ -3012,7 +3012,7 @@ function renderHome(){
       <div class="hero-card">
         <div class="pilot-card-badge">
           <span class="pilot-card-dot"></span>
-          Chicago Urban League × WealthWise Kids™ — High School Financial Intelligence Pilot · Summer 2026
+          Chicago Urban League — Financial Intelligence Program · Summer 2026
         </div>
         <div style="border-radius:14px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(196,18,48,0.35);">
           <div style="background:#C41230;padding:11px 14px;display:flex;align-items:center;gap:10px;">
@@ -3061,8 +3061,8 @@ function renderHome(){
     </div>
   </div>
   <footer class="site-footer">
-    <div class="footer-copy">Chicago Urban League × WealthWise Kids™ &nbsp;·&nbsp; Powered by FLIQ Score™ &nbsp;·&nbsp; © 2026 WealthWise Kids™ LLC</div>
-    <div class="footer-min">© 2026 WealthWise Kids™ LLC &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Safety</a></div>
+    <div class="footer-copy">Chicago Urban League Financial Intelligence Program &nbsp;·&nbsp; Powered by FLIQ Score™ &nbsp;·&nbsp; © 2026 WealthWise™</div>
+    <div class="footer-min">© 2026 WealthWise™ &nbsp;·&nbsp; <a href="/legal.html" class="footer-link">Privacy &amp; Safety</a></div>
   </footer>
 </div>`;
   const code=new URLSearchParams(window.location.search).get('code');
@@ -3332,7 +3332,7 @@ function renderScore(){
 
   if(!p){
     app.innerHTML=`<div id="screen-score">${scoreBgVideo}<div class="score-card"><div class="sc-eyebrow">${cfg.eyebrow}</div><div class="sc-headline">You Did It!</div><div class="milo-circle"><img src="./milo-celebrating.png" alt="Milo"/></div><p class="prof-desc">Your session has been recorded. Your educator will share your full results.</p><button class="replay-btn" onclick="resetToHome()">${cfg.replayLabel}</button></div></div>`;
-    clearProgress(); confetti(48); return;
+    clearProgress(); return;
   }
 
   const miloMap={'Financial Starter':'./milo-calm.png','Emerging':'./milo-calm.png','Explorer':'./milo-smile.png','Developing':'./milo-smile.png','Thinker':'./milo-happy.png','Advancing':'./milo-happy.png','Builder':'./milo-encouraging.png','Leading':'./milo-celebrating.png','Exceptional':'./milo-celebrating.png'};
@@ -3406,7 +3406,7 @@ function renderScore(){
   </div>
 </div>`;
   clearProgress();
-  confetti(72); SFX.win();
+  SFX.win();
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       const ring=document.getElementById('fliqRingFill');
@@ -3716,7 +3716,7 @@ async function makeChoice(ci){
   const floatBubble=document.getElementById('miloFloatBubble');
   if(floatImg&&rxn){ floatImg.src=rxn.img; }
   if(floatBubble&&rxn){ floatBubble.innerHTML=rxn.txt; }
-  if(out?.cls==='pos'){ confetti(28); SFX.good(); }
+  if(out?.cls==='pos'){ SFX.good(); }
   else if(out?.cls==='neg') SFX.bad();
   else SFX.neu();
 
@@ -3771,12 +3771,12 @@ function submitReflect(i){
 
 async function nextDay(){
   if(S.day>=CUL_MAX_DAYS){
-    SFX.win(); confetti(58); S.screen='loading'; render();
+    SFX.win(); S.screen='loading'; render();
     S.profile=await completeSession()||computeLocalProfile();
     postToPortal(S.profile);
     playCutscene(CUTSCENE_MAP.day6, 'score');
   } else {
-    confetti(34);
+
     const flash=document.createElement('div');
     flash.className='day-flash';
     flash.innerHTML=`<div class="flash-check">✓</div><div class="flash-day">Day ${S.day}</div><div class="flash-lbl">Complete</div>`;
@@ -4087,8 +4087,7 @@ function renderSplash(){
   <div class="splash-program">Financial Intelligence Program &nbsp;·&nbsp; Summer 2026</div>
   <div class="splash-rule"></div>
   <div class="splash-powered">Powered by</div>
-  <div class="splash-wwk">WealthWise Kids™</div>
-  <img src="./milo-celebrating.png" alt="Milo" class="splash-milo">
+  <div class="splash-wwk">WealthWise™</div>
   <div class="splash-hint">Tap to continue</div>
 </div>`;
   setTimeout(exitSplash, 3000);
