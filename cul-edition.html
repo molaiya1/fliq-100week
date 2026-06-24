@@ -1103,8 +1103,10 @@
     </div>
   </div>
   <div class="nav-cul-brand">
-    <img src="./cul-logo.png" class="cul-logo-img" alt="Chicago Urban League"
-      onerror="this.style.display='none';document.getElementById('culNavPlaceholder').style.display='flex'">
+    <div style="background:#C41230;border-radius:6px;padding:4px 8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <img src="./cul-logo.png" class="cul-logo-img" alt="Chicago Urban League" style="height:20px;"
+        onerror="this.parentElement.style.display='none';document.getElementById('culNavPlaceholder').style.display='flex'">
+    </div>
     <div class="cul-logo-placeholder" id="culNavPlaceholder" style="display:none">CUL<br>LOGO</div>
     <div class="nav-cul-text">
       <strong>Chicago Urban League</strong>
