@@ -559,6 +559,15 @@
     .milo-float-img { width:152px; filter:drop-shadow(0 10px 32px rgba(0,0,0,0.42)); animation:miloFloat 4s ease-in-out infinite; }
 
     /* Outcome panel */
+    /* ── Pressure Timer ── */
+    #pressureTimer { display:flex; align-items:center; gap:12px; padding:10px 16px; background:rgba(11,29,58,0.7); border:1px solid rgba(244,178,35,0.35); border-radius:12px; margin-bottom:12px; flex-shrink:0; }
+    #timerCount { font-size:14px; font-weight:800; color:var(--gold); min-width:110px; white-space:nowrap; }
+    #timerBar { flex:1; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; }
+    #timerFill { height:100%; background:var(--gold); border-radius:3px; transition:width 1s linear; }
+    #pressureTimer.urgent #timerCount { color:#EF4444; animation:timerPulse 0.6s ease infinite; }
+    #pressureTimer.urgent #timerFill  { background:#EF4444; }
+    @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
     .outcome-panel { border-radius:18px; padding:14px 18px; display:none; flex-shrink:0; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
     .outcome-panel.show { display:block; animation:cBounce 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
     .outcome-panel.pos { background:rgba(30,20,5,0.6); border:1.5px solid rgba(244,178,35,0.45); }
@@ -2943,6 +2952,9 @@ function renderSim(){
         <div class="choice-prompt-sub">Choose the option that feels right for <strong>YOU</strong>.</div>
       </div>
 
+      <!-- Pressure timer (Days 2 & 4 only) -->
+      ${[2,4].includes(S.day)?`<div id="pressureTimer"><span id="timerCount">⏱ 20s to decide</span><div id="timerBar"><div id="timerFill" style="width:100%"></div></div></div>`:''}
+
       <!-- Choices -->
       <div class="choice-grid${sc.choices.length===3?' choices-3':''}" id="choiceGrid">${choicesHtml}</div>
 
@@ -2967,6 +2979,7 @@ function renderSim(){
   </div><!-- /sim-body -->
 </div>`;
   S._t0=Date.now();
+  if([2,4].includes(S.day)) startPressureTimer();
   preloadNextDayAssets();
 }
 
@@ -3368,7 +3381,31 @@ async function boot(){
 }
 function beginDay(){ transitionScreen(() => { S.screen='sim'; render(); }); }
 
+// ── Pressure Timer ───────────────────────────────────────────────────────────
+let _pTimer=null, _pSecs=0;
+function startPressureTimer(){
+  clearPressureTimer();
+  _pSecs=20;
+  _updateTimerUI(_pSecs);
+  _pTimer=setInterval(()=>{
+    _pSecs--;
+    _updateTimerUI(_pSecs);
+    if(_pSecs<=0){ clearPressureTimer(); S._timerExpired=true; makeChoice(1); }
+  },1000);
+}
+function clearPressureTimer(){ if(_pTimer){clearInterval(_pTimer);_pTimer=null;} }
+function _updateTimerUI(s){
+  const el=document.getElementById('pressureTimer');
+  const fill=document.getElementById('timerFill');
+  const count=document.getElementById('timerCount');
+  if(!el) return;
+  if(fill) fill.style.width=(s/20*100)+'%';
+  if(count) count.textContent=`⏱ ${s}s to decide`;
+  if(s<=5) el.classList.add('urgent'); else el.classList.remove('urgent');
+}
+
 async function makeChoice(ci){
+  clearPressureTimer();
   SFX.tap();
   const sc=getScenarios()[S.day-1];
   // Lock grid
@@ -3390,7 +3427,8 @@ async function makeChoice(ci){
 
   const cost=sc.choices[ci].cost, newBal=Math.max(0,S.balance-cost);
   await recordEvent(ci,sc);
-  S.history.push({day:S.day,choice:ci,opt,week:S.week||1,balBefore:S.balance,balAfter:newBal});
+  S.history.push({day:S.day,choice:ci,opt,week:S.week||1,balBefore:S.balance,balAfter:newBal,timerExpired:S._timerExpired||false,decisionMs:S._t0?Date.now()-S._t0:null});
+  S._timerExpired=false;
   S.balance=newBal;
   saveProgress();
 
@@ -3411,8 +3449,11 @@ async function makeChoice(ci){
     if(balEmoji) balEmoji.textContent=bs2.emoji;
   }
 
-  // Outcome
-  const out=sc.outcome(ci);
+  // Outcome — override if timer expired
+  const _expiredOut = S.history[S.history.length-1]?.timerExpired;
+  const out = _expiredOut
+    ? { cls:'pos', title:"Time's up — you held.", text:"The clock ran out and the moment passed. You didn't jump. That's exactly what impulse control looks like under real pressure." }
+    : sc.outcome(ci);
   const panel=document.getElementById('outPanel');
   if(panel&&out){
     panel.className=`outcome-panel show ${out.cls}`;
@@ -3421,8 +3462,11 @@ async function makeChoice(ci){
     setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),120);
   }
 
-  // Milo reaction
-  const rxn=sc.milo(ci);
+  // Milo reaction — override with timer-expired message if clock ran out
+  const _expired = S.history[S.history.length-1]?.timerExpired;
+  const rxn = _expired
+    ? { img:'./milo-encouraging.png', txt:"Time's up — the moment passed and you held. <strong>Patience under pressure is real impulse control.</strong> 🕐" }
+    : sc.milo(ci);
   const chatBubble=document.getElementById('miloChatBubble');
   const chatImg=document.getElementById('miloChatImg');
   if(chatBubble&&rxn){
