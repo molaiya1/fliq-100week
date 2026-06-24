@@ -1186,10 +1186,22 @@
       justify-content:flex-end !important;
       padding-bottom:4px !important;
     }
-    /* 4. Nav co-brand: hide text on mobile, keep only the CUL red logo pill */
+    /* 4. Nav: remove overflow:hidden (was clipping bottom shadow + text descenders)
+          Use min-height so content never clips; let align-items:center handle layout */
+    .nav {
+      overflow:visible !important;
+      height:auto !important;
+      min-height:60px !important;
+      padding-top:0 !important;
+      padding-bottom:0 !important;
+    }
+    /* 5. Nav co-brand: hide text label, keep only CUL red logo pill */
     .nav-cul-text { display:none !important; }
-    .nav-cul-brand { padding:4px 8px 4px 10px !important; }
-    /* 5. Hide band/week selectors — CUL edition is single-track, no picker needed */
+    .nav-cul-brand { padding:0 8px 0 10px !important; }
+    /* 6. Nav lockup: reduce padding so it sits cleanly inside min-height nav */
+    .nav-lockup { padding:5px 10px !important; border-radius:10px !important; }
+    .nav-brand-m { font-size:14px !important; }
+    /* 7. Hide band/week selectors — CUL edition is single-track, no picker needed */
     .band-selector { display:none !important; }
     .week-selector { display:none !important; }
   }
