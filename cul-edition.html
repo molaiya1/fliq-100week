@@ -1090,6 +1090,41 @@
   }
   .sc-cul-name { font-size:13px; font-weight:800; color:white; letter-spacing:0.2px; }
 
+  /* ── CUL EDITION: RED PRIMARY BUTTONS ── */
+  /* Replaces gold CTAs with CUL red — appropriate for 16-18 workforce audience */
+  .solo-btn {
+    background:linear-gradient(135deg,var(--cul-red) 0%,var(--cul-red-dk) 100%) !important;
+    color:white !important;
+    box-shadow:0 4px 20px rgba(196,18,48,0.40) !important;
+    animation:none !important;
+  }
+  .solo-btn:hover {
+    box-shadow:0 8px 28px rgba(196,18,48,0.58) !important;
+  }
+  .di-go {
+    background:var(--cul-red) !important;
+    color:white !important;
+    box-shadow:0 6px 28px rgba(196,18,48,0.42) !important;
+  }
+  .di-go:hover {
+    box-shadow:0 12px 36px rgba(196,18,48,0.58) !important;
+  }
+  .join-btn-full {
+    background:linear-gradient(135deg,var(--cul-red) 0%,var(--cul-red-dk) 100%) !important;
+    color:white !important;
+    box-shadow:0 4px 16px rgba(196,18,48,0.38) !important;
+  }
+  .join-btn-full:hover {
+    box-shadow:0 8px 24px rgba(196,18,48,0.55) !important;
+  }
+  /* Day dot done state — keep gold as completion signal; active stays red */
+  .d-dot.done { background:rgba(255,255,255,0.22) !important; color:white !important; box-shadow:none !important; }
+
+  /* ── CUL EDITION: REMOVE MILO IMAGE FROM DAY INTROS ── */
+  /* Commentary text stays; owl avatar removed for 16-18 workforce audience */
+  .di-milo img { display:none !important; }
+  .di-milo { gap:0 !important; }
+
   </style>
 </head>
 <body>
