@@ -1162,6 +1162,38 @@
   /* ── CUL: COMPLETED DAY DOT ── */
   .d-dot.done { background:rgba(255,255,255,0.40) !important; color:rgba(255,255,255,0.85) !important; box-shadow:none !important; }
 
+  /* ── CUL MOBILE OVERRIDES ── */
+  @media(max-width:768px){
+    /* 1. Fix: base mobile block re-applies gold to .solo-btn — CUL red wins */
+    .solo-btn {
+      background:linear-gradient(135deg,var(--cul-red) 0%,var(--cul-red-dk) 100%) !important;
+      color:white !important;
+      box-shadow:0 4px 22px rgba(196,18,48,0.50) !important;
+      animation:none !important;
+    }
+    /* 2. Join session button: CUL-tinted ghost instead of plain white */
+    .join-btn-full {
+      background:rgba(196,18,48,0.14) !important;
+      color:rgba(255,255,255,0.82) !important;
+      border:1px solid rgba(196,18,48,0.32) !important;
+    }
+    /* 3. Remove Milo owl from mobile home — was clipping on shorter screens;
+          Chicago photo carries the visual weight for 16-18 audience */
+    .hero-milo-wrap { display:none !important; }
+    .hero-left {
+      height:auto !important;
+      min-height:0 !important;
+      justify-content:flex-end !important;
+      padding-bottom:4px !important;
+    }
+    /* 4. Nav co-brand: hide text on mobile, keep only the CUL red logo pill */
+    .nav-cul-text { display:none !important; }
+    .nav-cul-brand { padding:4px 8px 4px 10px !important; }
+    /* 5. Hide band/week selectors — CUL edition is single-track, no picker needed */
+    .band-selector { display:none !important; }
+    .week-selector { display:none !important; }
+  }
+
   </style>
 </head>
 <body>
