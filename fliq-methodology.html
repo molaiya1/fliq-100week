@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLIQ Score™ Methodology — WealthWise Kids™</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0B1D3A;
+      --navy2:   #1F3C88;
+      --gold:    #F4B223;
+      --gold-dk: #D4931A;
+      --white:   #FFFFFF;
+      --text:    rgba(255,255,255,0.88);
+      --mid:     rgba(255,255,255,0.55);
+      --dim:     rgba(255,255,255,0.3);
+      --card:    rgba(255,255,255,0.05);
+      --border:  rgba(255,255,255,0.1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+
+    /* ── Nav ── */
+    .top-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(11,29,58,0.96); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand img { height: 32px; }
+    .nav-brand-text { font-size: 13px; font-weight: 700; color: var(--white); }
+    .nav-back { font-size: 13px; font-weight: 600; color: var(--gold); text-decoration: none; }
+    .nav-back:hover { opacity: 0.8; }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 860px; margin: 0 auto;
+      padding: 72px 24px 48px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold);
+      background: rgba(244,178,35,0.12); border: 1px solid rgba(244,178,35,0.3);
+      border-radius: 100px; padding: 5px 16px; margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 900; letter-spacing: -1px;
+      color: var(--white); line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero-sub {
+      font-size: 17px; color: var(--mid);
+      max-width: 640px; margin: 0 auto 32px;
+      line-height: 1.75;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+      font-size: 12px; color: var(--dim);
+    }
+    .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* ── TOC ── */
+    .toc-card {
+      max-width: 860px; margin: 0 auto 48px;
+      padding: 0 24px;
+    }
+    .toc-inner {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 32px;
+    }
+    .toc-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin-bottom: 16px; }
+    .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+    .toc-item { font-size: 14px; font-weight: 600; color: var(--gold); text-decoration: none; opacity: 0.85; }
+    .toc-item:hover { opacity: 1; }
+    .toc-num { color: var(--dim); font-weight: 400; margin-right: 6px; }
+
+    /* ── Body layout ── */
+    .content { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Section ── */
+    .section { margin-bottom: 56px; }
+    .section-anchor { display: block; height: 80px; margin-top: -80px; }
+    .section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+    }
+    .section h2 {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 800; color: var(--white);
+      letter-spacing: -0.5px; margin-bottom: 20px;
+      border-bottom: 1px solid var(--border); padding-bottom: 16px;
+    }
+    .section p { font-size: 15px; color: var(--mid); margin-bottom: 16px; line-height: 1.8; }
+    .section p strong { color: var(--white); }
+    .section p:last-child { margin-bottom: 0; }
+
+    /* ── Callout ── */
+    .callout {
+      background: rgba(244,178,35,0.08); border: 1px solid rgba(244,178,35,0.25);
+      border-radius: 14px; padding: 20px 24px; margin: 24px 0;
+    }
+    .callout p { color: rgba(255,255,255,0.75); margin: 0; }
+    .callout strong { color: var(--gold); }
+
+    .callout-blue {
+      background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.25);
+    }
+    .callout-blue p { color: rgba(255,255,255,0.7); }
+    .callout-blue strong { color: #93C5FD; }
+
+    /* ── Domain cards ── */
+    .domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+    .domain-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px 22px 20px;
+    }
+    .domain-icon { font-size: 24px; margin-bottom: 10px; }
+    .domain-name { font-size: 14px; font-weight: 800; color: var(--white); margin-bottom: 4px; }
+    .domain-abbr { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .domain-desc { font-size: 13px; color: var(--mid); line-height: 1.65; margin-bottom: 14px; }
+    .domain-scores { display: flex; flex-direction: column; gap: 6px; }
+    .score-row { display: flex; align-items: flex-start; gap: 10px; }
+    .score-badge {
+      font-size: 11px; font-weight: 800; color: var(--navy);
+      background: var(--gold); border-radius: 6px; padding: 2px 8px;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .score-badge.s0 { background: rgba(255,255,255,0.2); color: var(--white); }
+    .score-badge.s1 { background: #60A5FA; color: var(--navy); }
+    .score-badge.s2 { background: var(--gold); color: var(--navy); }
+    .score-text { font-size: 12px; color: var(--mid); line-height: 1.55; }
+
+    /* ── Scoring table ── */
+    .score-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .score-table th {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--dim); padding: 10px 16px; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .score-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .score-table tr:last-child td { border-bottom: none; }
+    .score-table .label-col { font-weight: 700; color: var(--white); }
+    .score-table .range-col { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .score-table .desc-col { color: var(--mid); font-size: 13px; }
+    .score-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── Timeline / mechanic ── */
+    .mechanic-row {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .mechanic-row:last-child { border-bottom: none; }
+    .mechanic-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .mechanic-body { flex: 1; }
+    .mechanic-title { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+    .mechanic-text { font-size: 13px; color: var(--mid); line-height: 1.65; }
+
+    /* ── Validity table ── */
+    .validity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; }
+    .validity-card {
+      border-radius: 14px; padding: 18px 20px;
+    }
+    .validity-card.validated { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); }
+    .validity-card.pending   { background: rgba(244,178,35,0.07); border: 1px solid rgba(244,178,35,0.2); }
+    .validity-head { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .validity-card.validated .validity-head { color: #4ADE80; }
+    .validity-card.pending   .validity-head { color: var(--gold); }
+    .validity-list { list-style: none; }
+    .validity-list li { font-size: 13px; color: var(--mid); padding: 4px 0; display: flex; gap: 8px; }
+    .validity-list li::before { flex-shrink: 0; margin-top: 2px; }
+    .validity-card.validated .validity-list li::before { content: '✓'; color: #4ADE80; }
+    .validity-card.pending   .validity-list li::before { content: '○'; color: var(--gold); }
+
+    /* ── Footer ── */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px; text-align: center;
+      font-size: 12px; color: var(--dim); max-width: 860px; margin: 0 auto;
+    }
+    .page-footer a { color: var(--gold); text-decoration: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 620px) {
+      .domain-grid { grid-template-columns: 1fr; }
+      .toc-grid { grid-template-columns: 1fr; }
+      .validity-grid { grid-template-columns: 1fr; }
+      .hero { padding: 48px 20px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="nav-brand" href="https://play.wealthwiselearning.com">
+    <img src="./milo.png" alt="Milo" />
+    <span class="nav-brand-text">WealthWise Kids™</span>
+  </a>
+  <a class="nav-back" href="https://play.wealthwiselearning.com">← Back to Sim</a>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">Technical Reference Document</div>
+  <h1>The <span>FLIQ Score™</span><br>Methodology</h1>
+  <p class="hero-sub">
+    A framework for measuring financial behavioral intelligence in young learners
+    through scenario-based, timed simulation — not knowledge testing.
+  </p>
+  <div class="hero-meta">
+    <span>📄 WealthWise Kids™ · 2026</span>
+    <span>🎯 Ages 10–18</span>
+    <span>⏱ 5-Day Simulation</span>
+    <span>📊 4 Behavioral Domains</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc-card">
+  <div class="toc-inner">
+    <div class="toc-title">Contents</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#overview"><span class="toc-num">01</span>Overview & Purpose</a>
+      <a class="toc-item" href="#framework"><span class="toc-num">02</span>Theoretical Framework</a>
+      <a class="toc-item" href="#domains"><span class="toc-num">03</span>The Four FLIQ Domains</a>
+      <a class="toc-item" href="#scoring"><span class="toc-num">04</span>Scoring Algorithm</a>
+      <a class="toc-item" href="#timed"><span class="toc-num">05</span>Time Pressure Mechanic</a>
+      <a class="toc-item" href="#profiles"><span class="toc-num">06</span>Profile Labels</a>
+      <a class="toc-item" href="#validity"><span class="toc-num">07</span>Validity & Limitations</a>
+      <a class="toc-item" href="#data"><span class="toc-num">08</span>Data & Privacy</a>
+    </div>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="content">
+
+  <!-- 01 Overview -->
+  <div class="section">
+    <span class="section-anchor" id="overview"></span>
+    <div class="section-label">01 — Overview</div>
+    <h2>What the FLIQ Score™ Measures</h2>
+    <p>
+      The <strong>Financial Learning Intelligence Quotient (FLIQ) Score™</strong> is a behavioral assessment
+      instrument embedded in a 5-day simulation. It does not measure financial knowledge. It measures
+      <strong>financial decision-making behavior</strong> — specifically, how a student responds to financial
+      pressure, social influence, unexpected costs, and risk across five sequential scenarios.
+    </p>
+    <p>
+      The distinction is intentional. Research consistently shows that financial knowledge alone does not
+      predict financial behavior. Adults with high financial literacy routinely make poor financial decisions
+      under social pressure, emotional states, and time constraints. The FLIQ Score™ is designed to assess
+      the behavioral dimensions that knowledge-based instruments miss.
+    </p>
+    <div class="callout">
+      <p><strong>What this is:</strong> A behavioral baseline. The FLIQ Score™ captures a student's
+      natural decision-making tendencies before instruction — not what they know, but how they act when
+      the stakes feel real and the clock is running.</p>
+    </div>
+    <p>
+      The score ranges from <strong>0 to 100</strong> and is derived from four behavioral domains,
+      each assessed across the simulation's five days. Students are not graded. There is no "correct"
+      answer to any scenario. The instrument is designed to surface behavioral patterns, not rank students.
+    </p>
+  </div>
+
+  <!-- 02 Framework -->
+  <div class="section">
+    <span class="section-anchor" id="framework"></span>
+    <div class="section-label">02 — Theoretical Framework</div>
+    <h2>What This Draws From</h2>
+    <p>
+      The FLIQ Score™ framework is grounded in three converging bodies of behavioral and cognitive science research:
+    </p>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🧠</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Dual-Process Theory (Kahneman, 2011)</div>
+        <div class="mechanic-text">Financial decisions are processed through two systems: fast/intuitive (System 1) and slow/deliberate (System 2). The FLIQ simulation is designed to engage System 1 by creating emotional salience, social pressure, and time constraints — the same conditions under which real financial mistakes occur. Knowledge-based assessments primarily engage System 2.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🎯</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Self-Regulation Theory (Baumeister &amp; Tierney, 2011)</div>
+        <div class="mechanic-text">Impulse control and delayed gratification are measurable, trainable behavioral capacities. The simulation's sequential structure — five scenarios across five days — is designed to observe whether self-regulation holds, deteriorates, or strengthens as the week progresses and balance decreases.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">📐</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Ecological Validity in Assessment (Neisser, 1978)</div>
+        <div class="mechanic-text">Assessments that closely resemble real-world conditions produce more behaviorally predictive results than abstract tests. The FLIQ simulation uses age-appropriate scenarios (book fairs, ice cream runs, peer lending, social media purchases) that mirror the actual financial decisions students face — increasing ecological validity relative to traditional financial literacy testing.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">⚡</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Behavioral Economics &amp; Adolescent Decision-Making</div>
+        <div class="mechanic-text">Research in adolescent behavioral economics (Steinberg, 2010; Pechman et al., 2011) shows that peer presence and social context dramatically amplify impulsive financial behavior in ages 10–18. The simulation's social pressure scenarios (Days 2 and 4) are specifically calibrated to activate these documented behavioral patterns.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-blue">
+      <p><strong>Important note:</strong> The FLIQ Score™ draws from these established frameworks
+      in its design logic. The instrument itself has not yet been through independent psychometric
+      validation. See Section 07 for the current validation roadmap.</p>
+    </div>
+  </div>
+
+  <!-- 03 Domains -->
+  <div class="section">
+    <span class="section-anchor" id="domains"></span>
+    <div class="section-label">03 — The Four Domains</div>
+    <h2>What Gets Measured and How</h2>
+    <p>
+      Each of the four FLIQ domains is assessed across the five-day simulation. No single day is
+      solely responsible for any domain score. Behavioral patterns across the full week — not
+      individual responses — determine the result.
+    </p>
+
+    <div class="domain-grid">
+
+      <div class="domain-card">
+        <div class="domain-icon">🛑</div>
+        <div class="domain-name">Impulse Control</div>
+        <div class="domain-abbr">IC</div>
+        <div class="domain-desc">
+          The capacity to pause before acting on a financial want. Measured by spending behavior on non-essential options — particularly under social pressure and time constraints.
+        </div>
+        <div class="domain-scores">
+          <div class="score-row"><span class="score-badge s2">2</span><span class="score-text">Consistently paused. Chose save/defer on impulse-triggering scenarios, especially under time pressure.</span></div>
+          <div class="score-row"><span class="score-badge s1">1</span><span class="score-text">Mixed. Controlled impulse in some scenarios, acted on it in others — often correlated with balance level.</span></div>
+          <div class="score-row"><span class="score-badge s0">0</span><span class="score-text">Acted on impulse consistently, including when balance was critically low.</span></div>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-icon">📅</div>
+        <div class="domain-name">Planning Orientation</div>
+        <div class="domain-abbr">PO</div>
+        <div class="domain-desc">
+          The tendency to weigh future consequences when making present decisions. Measured by whether students account for remaining days and balance trajectory across the week.
+        </div>
+        <div class="domain-scores">
+          <div class="score-row"><span class="score-badge s2">2</span><span class="score-text">Demonstrated consistent forward-thinking — protected balance with awareness of what's coming next.</span></div>
+          <div class="score-row"><span class="score-badge s1">1</span><span class="score-text">Showed planning awareness in some scenarios; responded to immediate context in others.</span></div>
+          <div class="score-row"><span class="score-badge s0">0</span><span class="score-text">Decisions were primarily present-focused regardless of balance trajectory.</span></div>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-icon">👀</div>
+        <div class="domain-name">Risk Awareness</div>
+        <div class="domain-abbr">RA</div>
+        <div class="domain-desc">
+          The ability to identify asymmetric risk before acting. Measured by responses to the investment/lending scenarios on Day 4 — particularly the relationship between current balance and willingness to gamble.
+        </div>
+        <div class="domain-scores">
+          <div class="score-row"><span class="score-badge s2">2</span><span class="score-text">Demonstrated calibrated risk evaluation — willingness to risk correlated appropriately with available reserves.</span></div>
+          <div class="score-row"><span class="score-badge s1">1</span><span class="score-text">Showed some risk awareness; decision did not fully account for balance position or downside scenario.</span></div>
+          <div class="score-row"><span class="score-badge s0">0</span><span class="score-text">Accepted or rejected risk without apparent evaluation of position or consequences.</span></div>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <div class="domain-icon">💪</div>
+        <div class="domain-name">Resilience &amp; Recovery</div>
+        <div class="domain-abbr">RB</div>
+        <div class="domain-desc">
+          Behavioral discipline after a setback. Measured by how students respond to the Day 3 unexpected cost scenario — specifically whether prior spending creates a cascading effect on subsequent decisions.
+        </div>
+        <div class="domain-scores">
+          <div class="score-row"><span class="score-badge s2">2</span><span class="score-text">Absorbed the setback and recalibrated — decision quality held or improved in Days 4 and 5.</span></div>
+          <div class="score-row"><span class="score-badge s1">1</span><span class="score-text">Some recovery — showed awareness of the setback but not full recalibration.</span></div>
+          <div class="score-row"><span class="score-badge s0">0</span><span class="score-text">Setback on Day 3 triggered escalating patterns — continued or increased impulsive choices in Days 4–5.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 04 Scoring -->
+  <div class="section">
+    <span class="section-anchor" id="scoring"></span>
+    <div class="section-label">04 — Scoring Algorithm</div>
+    <h2>How the Score Is Computed</h2>
+    <p>
+      Each domain is scored 0, 1, or 2 based on behavioral patterns across the simulation.
+      Domain scores are summed to produce a raw score (0–8), which is then mapped to a
+      normalized FLIQ Score™ (0–100) and a profile label.
+    </p>
+    <div class="callout">
+      <p>
+        <strong>Raw score formula:</strong> IC (0–2) + PO (0–2) + RA (0–2) + RB (0–2) = Raw FLIQ (0–8)<br>
+        <strong>Normalized score:</strong> FLIQ™ = 15 + (Raw / 8) × 80 — floors at 15, ceilings at 95<br>
+        <strong>Why normalized:</strong> The 15-point floor ensures no student receives a 0, which is not
+        behaviorally meaningful. The ceiling reflects that a perfect week in simulation does not
+        guarantee perfect financial behavior in the real world.
+      </p>
+    </div>
+
+    <table class="score-table">
+      <thead>
+        <tr>
+          <th>Profile Label</th>
+          <th>Raw Score</th>
+          <th>FLIQ Score™</th>
+          <th>Behavioral Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="label-col">Financial Starter</td><td class="range-col">0</td><td class="range-col">15</td><td class="desc-col">Behavioral patterns are still forming. First-session scores here are developmentally appropriate and expected.</td></tr>
+        <tr><td class="label-col">Emerging</td><td class="range-col">1</td><td class="range-col">25</td><td class="desc-col">Early awareness present. Impulse patterns are visible, particularly in social pressure scenarios.</td></tr>
+        <tr><td class="label-col">Explorer</td><td class="range-col">2</td><td class="range-col">35</td><td class="desc-col">Building awareness. Student recognizes patterns in retrospect — the next development step is catching them in the moment.</td></tr>
+        <tr><td class="label-col">Developing</td><td class="range-col">3</td><td class="range-col">45</td><td class="desc-col">Solid behavioral foundation. More intentional choices with increasing consistency across the week.</td></tr>
+        <tr><td class="label-col">Builder</td><td class="range-col">4</td><td class="range-col">55</td><td class="desc-col">Deliberate, risk-calibrated decision-making. Balances risk, patience, and recovery well.</td></tr>
+        <tr><td class="label-col">Thinker</td><td class="range-col">5</td><td class="range-col">62</td><td class="desc-col">Makes intentional, context-aware financial decisions. Rare for any age group.</td></tr>
+        <tr><td class="label-col">Advancing</td><td class="range-col">6</td><td class="range-col">70</td><td class="desc-col">High-signal behavioral profile. Applies context, reads risk, and recovers from pressure with discipline.</td></tr>
+        <tr><td class="label-col">Leading</td><td class="range-col">7</td><td class="range-col">82</td><td class="desc-col">Elite behavioral patterns. Processed scenarios systematically and executed with discipline across the full week.</td></tr>
+        <tr><td class="label-col">Exceptional</td><td class="range-col">8</td><td class="range-col">95</td><td class="desc-col">Exceptional across all four domains. Flagged every behavioral trap and finished stronger than started.</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      Domain scores are computed from a weighted analysis of option types selected across the week.
+      The simulation tracks each choice's behavioral category (e.g., <em>spend_nonessential</em>,
+      <em>decline_social</em>, <em>negotiate_payment</em>, <em>invest</em>) and maps these to domain
+      scoring rubrics in combination with balance position, prior-day spending patterns, and
+      time-to-decision data.
+    </p>
+  </div>
+
+  <!-- 05 Timed -->
+  <div class="section">
+    <span class="section-anchor" id="timed"></span>
+    <div class="section-label">05 — Time Pressure Mechanic</div>
+    <h2>Why Two Scenarios Have a Countdown</h2>
+    <p>
+      Days 2 and 4 of the simulation introduce a <strong>20-second countdown timer</strong>.
+      This is not a game mechanic — it is a methodological decision rooted in behavioral economics research.
+    </p>
+    <p>
+      Untimed multiple-choice assessments engage deliberate reasoning (System 2). Real financial
+      decisions — particularly those involving social pressure or perceived opportunity — occur under
+      time pressure, emotional activation, and incomplete information. The countdown is designed to
+      replicate the actual conditions under which impulse control failures occur.
+    </p>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">⏱</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Day 2 — Social Pressure Scenario</div>
+        <div class="mechanic-text">The group is waiting for an answer. The countdown simulates the social urgency of a real peer spending moment — "Are you coming or not?" Students who choose quickly on a spending option show a different impulse control profile than students who wait or let the clock expire.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">💎</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Day 4 — Investment Risk Scenario</div>
+        <div class="mechanic-text">A peer presents a limited-time investment opportunity. The countdown simulates the urgency framing used in real financial scams and impulsive investment decisions. Risk awareness measured under time pressure is a qualitatively different data point than risk awareness in an untimed reflection.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🕐</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Timer Expiry as a Behavioral Signal</div>
+        <div class="mechanic-text">When the 20-second timer expires without a choice, the simulation automatically records Option B (the save/decline choice) with a <em>timer_expired: true</em> flag. This is treated as a high impulse-control signal — the student held through the full pressure window without acting. Decision time in milliseconds is also recorded for all timed scenarios.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>
+        <strong>What gets recorded on timed days:</strong> choice made, option type, time to decision (ms),
+        timer expired (true/false), balance at time of decision, prior impulsive choice count.
+        This produces a richer behavioral signature than any single-choice response.
+      </p>
+    </div>
+  </div>
+
+  <!-- 06 Profiles -->
+  <div class="section">
+    <span class="section-anchor" id="profiles"></span>
+    <div class="section-label">06 — Profile Labels</div>
+    <h2>What Each Profile Means for Facilitators</h2>
+    <p>
+      Profile labels are designed as <strong>facilitation entry points</strong>, not permanent
+      characterizations. The goal is to give educators a behaviorally grounded starting point
+      for conversation — not to classify students.
+    </p>
+    <p>
+      The nine labels form a behavioral spectrum anchored by four observable tendencies: how
+      quickly a student acts, how much they weigh consequences, how they respond to social
+      pressure, and whether they recover after a setback. Each label has a corresponding
+      facilitation insight in the class report that identifies the specific domain weakness
+      most common in that profile — and suggests a targeted classroom activity.
+    </p>
+    <div class="callout callout-blue">
+      <p>
+        <strong>First-session baseline note:</strong> The FLIQ Score™ is explicitly designed
+        as a <em>baseline instrument</em>. A student scoring Financial Starter or Emerging
+        on their first session is not being diagnosed. They are establishing a behavioral
+        starting point against which future sessions can be compared. The diagnostic value
+        of the instrument increases with repeated measurement over time.
+      </p>
+    </div>
+  </div>
+
+  <!-- 07 Validity -->
+  <div class="section">
+    <span class="section-anchor" id="validity"></span>
+    <div class="section-label">07 — Validity &amp; Limitations</div>
+    <h2>What's Established and What Isn't</h2>
+    <p>
+      We are committed to transparency about the current validation state of the FLIQ Score™.
+      The instrument is in active field use and the data generated from pilot deployments
+      is being used to build toward formal psychometric validation.
+    </p>
+
+    <div class="validity-grid">
+      <div class="validity-card validated">
+        <div class="validity-head">Established</div>
+        <ul class="validity-list">
+          <li>Grounded in peer-reviewed behavioral economics frameworks</li>
+          <li>Age-appropriate scenario design (validated with 10–18 cohorts)</li>
+          <li>Four-domain structure aligns with self-regulation research literature</li>
+          <li>Timed mechanic design supported by dual-process theory</li>
+          <li>COPPA/FERPA/SOPIPA compliant — zero PII collected</li>
+          <li>Sequential scenario structure observes pattern consistency</li>
+        </ul>
+      </div>
+      <div class="validity-card pending">
+        <div class="validity-head">In Progress</div>
+        <ul class="validity-list">
+          <li>Independent psychometric validation study</li>
+          <li>Test-retest reliability across repeated sessions</li>
+          <li>Correlation with external behavioral outcomes</li>
+          <li>Inter-rater equivalence for domain scoring rubrics</li>
+          <li>Norm-referenced scoring by age band and demographic</li>
+          <li>Longitudinal predictive validity (behavior → outcome)</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>
+      The current scoring algorithm was designed with internal consistency as the primary
+      goal: domain scores should reflect behavioral patterns that are logically and
+      theoretically coherent, even before external validation is complete. This is the
+      standard approach for early-stage behavioral instruments deployed alongside
+      curriculum in educational settings.
+    </p>
+    <p>
+      Institutions that partner with WealthWise Kids™ contribute anonymized cohort data
+      to the validation dataset. The long-term goal is a normed, externally validated
+      behavioral assessment instrument — the FLIQ Score™ — backed by the largest
+      dataset of adolescent financial decision behavior in a controlled simulation
+      environment.
+    </p>
+  </div>
+
+  <!-- 08 Data -->
+  <div class="section">
+    <span class="section-anchor" id="data"></span>
+    <div class="section-label">08 — Data &amp; Privacy</div>
+    <h2>What Data the Simulation Collects</h2>
+    <p>
+      The $100 Week™ simulation is designed from the ground up for deployment in
+      educational settings with minors. It collects <strong>no personally identifiable information</strong>
+      of any kind.
+    </p>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🔒</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Student Identity — Adventure Code Only</div>
+        <div class="mechanic-text">Students are identified only by a 4-digit PIN they choose themselves (the Adventure Code). No name, email, age, grade, school, or demographic data is collected from students at any point. The Adventure Code exists only to allow progress continuity on shared devices.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">📊</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">What Is Stored</div>
+        <div class="mechanic-text">Per session: cohort ID (the teacher's class code), Adventure Code, band level, choice sequence (option types, not text), balance trajectory, time-to-decision on timed scenarios, timer expiry flags, and the computed FLIQ profile. No free-text, no biometric, no device identifiers.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🏫</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Compliance</div>
+        <div class="mechanic-text">The simulation is designed to comply with COPPA (Children's Online Privacy Protection Act), FERPA (Family Educational Rights and Privacy Act), and SOPIPA (Student Online Personal Information Protection Act). No student data is sold, shared with third parties, or used for advertising purposes.</div>
+      </div>
+    </div>
+
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🗄️</div>
+      <div class="mechanic-body">
+        <div class="mechanic-title">Data Infrastructure</div>
+        <div class="mechanic-text">Session data is stored in a Supabase (PostgreSQL) database with row-level security policies. Facilitator class reports are accessible only by the creating facilitator using the session PIN they set at setup. Student data is accessible in aggregate only — individual Adventure Codes are not exposed in any external-facing report.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /content -->
+
+<div class="page-footer">
+  <p>FLIQ Score™ and WealthWise Kids™ are trademarks of WealthWise Kids IP Holdings LLC.</p>
+  <p style="margin-top:8px;">
+    Questions about methodology: <a href="mailto:info@wealthwisekids.org">info@wealthwisekids.org</a>
+    &nbsp;·&nbsp;
+    <a href="https://play.wealthwiselearning.com">Back to The $100 Week™</a>
+    &nbsp;·&nbsp;
+    <a href="https://wwk-portal.vercel.app">iMPACT Partner Portal</a>
+  </p>
+  <p style="margin-top:12px; font-size:11px; color:rgba(255,255,255,0.2);">
+    This document is provided for institutional partner review. Content reflects the current build state
+    of the FLIQ Score™ instrument as of June 2026. Validation roadmap is subject to update.
+  </p>
+</div>
+
+</body>
+</html>
