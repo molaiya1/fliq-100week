@@ -566,7 +566,7 @@
       padding: 12px 16px;
       margin-bottom: 20px;
     }
-    .url-icon { font-size: 14px; flex-shrink: 0; }
+    .url-icon { display: none; }
     .url-text {
       flex: 1;
       font-size: 12px;
@@ -605,7 +605,7 @@
       font-weight: 500;
       margin-bottom: 16px;
     }
-    .info-strip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .info-strip-icon { display: none; }
     .info-blue {
       background: rgba(0,180,216,0.08);
       border: 1px solid rgba(0,180,216,0.18);
@@ -1086,7 +1086,7 @@
     </div>
   </div>
   <div class="topbar-right">
-    <a href="./research.html" target="_blank" class="topbar-research-link">🔬 Research & Evidence</a>
+    <a href="./research.html" target="_blank" class="topbar-research-link">Research &amp; Evidence</a>
     <span class="topbar-badge">Facilitator Dashboard</span>
     <a href="/" class="topbar-sim-link">← <span class="sim-full">Student Simulation</span><span class="sim-short" style="display:none">Sim</span></a>
   </div>
@@ -1098,7 +1098,7 @@
   <div class="hero">
     <img src="./milo-hero.png" alt="" aria-hidden="true" class="hero-milo-anchor" />
     <div class="hero-eyebrow">The $100 Week™</div>
-    <h1>Five days. Five choices.<br><em>A complete behavioral picture.</em></h1>
+    <h1>Real choices. Real pressure.<br><em>A complete behavioral picture.</em></h1>
     <p class="hero-sub">Set up a session, share the link, and watch your class reveal how they really make financial decisions.</p>
     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(244,178,35,0.08);border:1px solid rgba(244,178,35,0.22);border-radius:20px;padding:6px 16px;margin-top:16px;font-size:11px;font-weight:700;color:rgba(244,178,35,0.85);letter-spacing:1.5px;text-transform:uppercase;">
       <span style="width:6px;height:6px;border-radius:50%;background:#F4B223;display:inline-block;flex-shrink:0;"></span>
@@ -1260,7 +1260,7 @@
 
     <!-- Adventure Code Briefing -->
     <div class="card" style="border-left:3px solid var(--gold);">
-      <div class="section-label gold" style="margin-bottom:14px;">🔑 Adventure Code — What You Need to Know</div>
+      <div class="section-label gold" style="margin-bottom:14px;">Adventure Code — What You Need to Know</div>
       <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.75;margin-bottom:16px;">When a student joins for the first time, the sim asks them to pick a <strong style="color:white;">4-digit Adventure Code</strong> — their private progress key. They'll enter that same code every day to pick up where they left off. No accounts, no names — just their number.</p>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px;">
@@ -1281,19 +1281,19 @@
             <li>Enters their same 4-digit code</li>
             <li>Sim resumes exactly where they left off</li>
           </ol>
-          <p style="font-size:11.5px;color:rgba(255,255,255,0.4);margin:10px 0 0;line-height:1.6;">💡 Same device each day is ideal — saves loading time.</p>
+          <p style="font-size:11.5px;color:rgba(255,255,255,0.4);margin:10px 0 0;line-height:1.6;">Same device each day is ideal — saves loading time.</p>
         </div>
       </div>
 
       <div style="background:rgba(248,113,113,0.07);border:1px solid rgba(248,113,113,0.2);border-radius:10px;padding:14px;">
-        <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#F87171;margin-bottom:8px;">🔒 If a Student Forgets Their Code</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#F87171;margin-bottom:8px;">If a Student Forgets Their Code</div>
         <div style="font-size:12.5px;color:rgba(255,255,255,0.65);line-height:1.8;">
           <strong style="color:white;">Step 1:</strong> Student taps "Forgot my Adventure Code" on the PIN screen.<br>
           <strong style="color:white;">Step 2:</strong> Walk over and enter your <strong style="color:white;">class join code</strong> in the teacher field.<br>
           <strong style="color:white;">Step 3:</strong> Confirm the reset on the "Are you sure?" screen.<br>
           <strong style="color:white;">Step 4:</strong> Student picks a new code — their week restarts from Day 1.
         </div>
-        <p style="font-size:11.5px;color:rgba(255,255,255,0.35);margin:10px 0 0;line-height:1.6;">⚠️ Reset means Day 1 restarts — previous choices can't be recovered. This is intentional and COPPA-compliant (no PII stored).</p>
+        <p style="font-size:11.5px;color:rgba(255,255,255,0.35);margin:10px 0 0;line-height:1.6;">Reset means Day 1 restarts — previous choices can't be recovered. This is intentional and COPPA-compliant (no PII stored).</p>
       </div>
     </div>
 
@@ -1340,9 +1340,11 @@
     <div class="card" id="dayGuideCard" style="display:none;border-top:2px solid rgba(139,92,246,0.5);">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;">
         <div style="display:flex;align-items:center;gap:14px;">
-          <img src="./milo-hero.png" alt="Milo" style="height:56px;width:auto;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.4));flex-shrink:0;" />
+          <div style="flex-shrink:0;width:44px;height:44px;border-radius:12px;background:rgba(139,92,246,0.15);border:1.5px solid rgba(139,92,246,0.35);display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
           <div>
-            <div class="section-label" style="color:#A78BFA;margin-bottom:2px;">📖 Daily Session Guide</div>
+            <div class="section-label" style="color:#A78BFA;margin-bottom:2px;">Daily Session Guide</div>
             <div style="font-size:12px;color:rgba(255,255,255,0.4);">Use this to run each 20-minute block — before, during, and after the choice.</div>
           </div>
         </div>
@@ -1398,7 +1400,7 @@
 
     <!-- Insight callout -->
     <div class="insight-card" id="insightCard">
-      <div class="insight-title">⚡ Facilitation Insight</div>
+      <div class="insight-title">Facilitation Insight</div>
       <div class="insight-text" id="insightText"></div>
     </div>
 
@@ -1443,31 +1445,31 @@
 
     <!-- CTA -->
     <div class="card" style="background:linear-gradient(135deg,rgba(27,60,136,0.55) 0%,rgba(15,27,53,0.7) 100%);border-color:rgba(244,178,35,0.35);padding:28px 24px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;text-align:center;">This Was Just the Beginning</div>
-      <div style="font-size:19px;font-weight:800;color:white;margin-bottom:8px;line-height:1.3;text-align:center;">Your students just showed you who they are financially. Now imagine building on that.</div>
-      <p style="font-size:13px;color:var(--text-mid);margin:0 0 24px;text-align:center;">WealthWise Kids™ is a full learning ecosystem — every product below connects to the behavioral data your class just generated.</p>
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;text-align:center;">The Full WealthWise Kids™ Platform</div>
+      <div style="font-size:19px;font-weight:800;color:white;margin-bottom:8px;line-height:1.3;text-align:center;">Your students generated behavioral data. Every product below builds on it.</div>
+      <p style="font-size:13px;color:var(--text-mid);margin:0 0 24px;text-align:center;">WealthWise Kids™ is a complete behavioral learning ecosystem — each tool connects directly to the FLIQ Score™ data your cohort just produced.</p>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
-          <div style="font-size:18px;margin-bottom:8px;">📚</div>
+          
           <div style="font-size:13px;font-weight:800;color:white;margin-bottom:3px;">Financial Foundations™</div>
           <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px;letter-spacing:0.2px;">The curriculum their data unlocked.</div>
           <div style="font-size:11px;color:var(--text-mid);line-height:1.6;">A 5-week in-class program that takes the exact pressure points from this report and turns them into hands-on, engaging financial skill-building — built for the classroom, not around it.</div>
         </div>
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
-          <div style="font-size:18px;margin-bottom:8px;">🏦</div>
+          
           <div style="font-size:13px;font-weight:800;color:white;margin-bottom:3px;">CoinQuest™</div>
           <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px;letter-spacing:0.2px;">Their first bank account. Kind of.</div>
           <div style="font-size:11px;color:var(--text-mid);line-height:1.6;">A simulated digital banking app where students save, spend, budget, and invest — building real financial habits with zero real-world risk. Banking literacy before the stakes are real.</div>
         </div>
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
-          <div style="font-size:18px;margin-bottom:8px;">🎮</div>
+          
           <div style="font-size:13px;font-weight:800;color:white;margin-bottom:3px;">WWK PlayLabs™</div>
           <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px;letter-spacing:0.2px;">Financial pressure. Game format.</div>
           <div style="font-size:11px;color:var(--text-mid);line-height:1.6;">Scenario-based simulations and arcade-style games that put students inside real financial decisions — the same FLIQ behaviors, in a format they actually want to play.</div>
         </div>
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;">
-          <div style="font-size:18px;margin-bottom:8px;">📖</div>
+          
           <div style="font-size:13px;font-weight:800;color:white;margin-bottom:3px;">WWK Adventures™</div>
           <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px;letter-spacing:0.2px;">Six kids. Six money personalities.</div>
           <div style="font-size:11px;color:var(--text-mid);line-height:1.6;">Story-driven experiences following six characters through real financial crossroads — where students see their own choices, instincts, and blind spots reflected back in characters who look like them.</div>
@@ -1512,7 +1514,6 @@
 <!-- PIN prompt overlay (new device resume) -->
 <div id="pinOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,18,40,0.92);z-index:999;display:none;align-items:center;justify-content:center;">
   <div style="background:#1a2748;border:1px solid rgba(244,178,35,0.3);border-radius:20px;padding:36px 32px;max-width:340px;width:90%;text-align:center;">
-    <div style="font-size:28px;margin-bottom:12px;">🔒</div>
     <div style="font-size:17px;font-weight:800;color:white;margin-bottom:8px;">Enter Your Session PIN</div>
     <p style="font-size:13px;color:rgba(255,255,255,0.55);margin:0 0 20px;">You set this PIN when you created the session. It keeps students out of this dashboard.</p>
     <input id="pinInput" type="password" inputmode="numeric" maxlength="4" placeholder="4-digit PIN"
@@ -2132,7 +2133,7 @@ function renderGuide() {
       </div>
 
       <div class="guide-panel" style="border:1px solid rgba(139,92,246,0.15);background:rgba(139,92,246,0.04);">
-        <div class="guide-panel-label" style="color:rgba(139,92,246,0.7);">🔒 Behavioral Answer Key — Facilitator Only</div>
+        <div class="guide-panel-label" style="color:rgba(139,92,246,0.7);">Behavioral Answer Key — Facilitator Only</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px;">Not shared with students. Used for your private observation during the session.</div>
         <button class="guide-key-toggle" onclick="toggleKey(this)">▸ Show Answer Key</button>
         <div class="guide-key" style="display:none;">${keyRows}</div>
@@ -2695,8 +2696,25 @@ async function submitPin() {
     } catch (e) {}
   }
 
-  // 3. URL has code only — show PIN prompt
+  // 3. URL has code only — try silent auth first (cohorts with no PIN), fall back to overlay
   pendingCode = code;
+  try {
+    const r = await fetch(`${API}/cohorts/facilitator/${code}?pin=`);
+    if (r.ok) {
+      const data = await r.json();
+      cohortId     = data.cohort_id;
+      joinCode     = code;
+      facilitorPin = null;
+      saveSession();
+      document.getElementById('displayCode').textContent = joinCode;
+      document.getElementById('displayUrl').textContent = STUDENT_URL + '?code=' + joinCode;
+      updateResumeLink();
+      initGuide(data.week_number || 1);
+      goToScreen('launch');
+      startPolling();
+      return;
+    }
+  } catch(e) {}
   showPinOverlay();
 })();
 </script>
