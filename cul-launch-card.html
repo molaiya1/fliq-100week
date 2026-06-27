@@ -4,17 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>The $100 Week™ — Student Launch · Chicago Urban League</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --red:      #C41230;
     --red-dk:   #9B0E26;
-    --red-glow: rgba(196,18,48,0.35);
+    --red-glow: rgba(196,18,48,0.32);
+    --red-dim:  rgba(196,18,48,0.14);
+    --red-border: rgba(196,18,48,0.30);
     --navy:     #0B1D3A;
-    --navy-mid: #0f2447;
-    --gold:     #F4B223;
     --white:    #FFFFFF;
   }
 
@@ -27,7 +27,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ─── Outer wrapper — fills viewport for projector ─── */
   .stage {
     min-height: 100vh;
     display: flex;
@@ -37,7 +36,7 @@
   /* ─── Top identity bar ─── */
   .topbar {
     background: var(--red);
-    padding: 14px 52px;
+    padding: 16px 52px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -57,97 +56,65 @@
   .topbar-divider {
     width: 1.5px;
     height: 28px;
-    background: rgba(255,255,255,0.30);
+    background: rgba(255,255,255,0.28);
     flex-shrink: 0;
   }
-  .topbar-org {
-    font-size: 15px;
-    font-weight: 800;
-    color: white;
-    letter-spacing: -0.2px;
-  }
-  .topbar-prog {
-    font-size: 10px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.65);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.75;
-  }
-  .topbar-right-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.70);
-    text-align: right;
-    line-height: 1.5;
-  }
+  .topbar-org   { font-size: 15px; font-weight: 800; color: white; letter-spacing: -0.2px; }
+  .topbar-prog  { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.62); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
 
-  /* ─── Hero headline ─── */
+  /* ─── Hero ─── */
   .hero {
     text-align: center;
-    padding: 48px 52px 36px;
+    padding: 46px 52px 32px;
     flex-shrink: 0;
   }
   .hero-eyebrow {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.30);
     margin-bottom: 14px;
   }
   .hero-headline {
-    font-size: clamp(32px, 4.5vw, 56px);
+    font-size: clamp(34px, 4.8vw, 58px);
     font-weight: 900;
     color: white;
     letter-spacing: -1.5px;
     line-height: 1.05;
     margin-bottom: 14px;
   }
+  /* No gold — use white for the emphasis word */
   .hero-headline em {
     font-style: italic;
-    color: var(--gold);
+    color: white;
   }
   .hero-sub {
     font-size: clamp(14px, 1.6vw, 18px);
     font-weight: 500;
-    color: rgba(255,255,255,0.50);
-    letter-spacing: -0.2px;
+    color: rgba(255,255,255,0.42);
   }
 
-  /* ─── Divider line ─── */
-  .rule {
-    height: 1px;
-    background: rgba(255,255,255,0.08);
-    margin: 0 52px;
-  }
+  .rule { height: 1px; background: rgba(255,255,255,0.07); margin: 0 52px; }
 
-  /* ─── Steps + QR layout ─── */
+  /* ─── Body grid ─── */
   .body {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 220px;
-    gap: 0;
+    grid-template-columns: 1fr 210px;
     align-items: stretch;
   }
 
   /* Steps column */
   .steps {
-    padding: 44px 52px 44px;
+    padding: 40px 52px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 36px;
+    gap: 28px;
   }
 
+  /* Generic step */
   .step {
     display: grid;
     grid-template-columns: 52px 1fr;
@@ -158,48 +125,65 @@
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    border: 2px solid rgba(196,18,48,0.60);
-    background: rgba(196,18,48,0.12);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     font-weight: 900;
-    color: rgba(196,18,48,0.90);
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 3px;
+    /* default — steps 1 & 3 */
+    border: 2px solid var(--red-border);
+    background: var(--red-dim);
+    color: rgba(196,18,48,0.80);
   }
-  .step-content {}
+  /* Step 2 badge — fully red, filled */
+  .step-badge.primary {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+    box-shadow: 0 4px 18px var(--red-glow);
+  }
   .step-meta {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.26);
     margin-bottom: 8px;
   }
   .step-action {
-    font-size: clamp(14px, 1.5vw, 17px);
+    font-size: clamp(15px, 1.6vw, 19px);
     font-weight: 700;
-    color: rgba(255,255,255,0.80);
-    line-height: 1.3;
-    margin-bottom: 12px;
+    color: rgba(255,255,255,0.78);
+    line-height: 1.35;
+    margin-bottom: 13px;
   }
 
-  /* Step 1 — URL pill */
+  /* Step 2 elevated panel */
+  .step-elevated {
+    background: rgba(196,18,48,0.07);
+    border: 1px solid var(--red-border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* URL pill */
   .url-pill {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     background: rgba(255,255,255,0.06);
-    border: 1.5px solid rgba(255,255,255,0.14);
+    border: 1.5px solid rgba(255,255,255,0.13);
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: 11px 20px;
   }
-  .url-pill-icon {
-    color: rgba(255,255,255,0.35);
-    flex-shrink: 0;
-  }
+  .url-pill-icon { color: rgba(255,255,255,0.32); flex-shrink: 0; }
   .url-pill-text {
     font-size: clamp(16px, 2vw, 22px);
     font-weight: 800;
@@ -208,66 +192,57 @@
     letter-spacing: -0.5px;
   }
 
-  /* Step 2 — Code badge */
-  .code-wrap {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
+  /* Code badge */
+  .code-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
   .code-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--red), var(--red-dk));
     border-radius: 14px;
-    padding: 16px 32px;
-    font-size: clamp(44px, 6.5vw, 80px);
+    padding: 16px 34px;
+    font-size: clamp(48px, 7vw, 84px);
     font-weight: 900;
     color: white;
     letter-spacing: 10px;
     font-family: 'Courier New', monospace;
     text-indent: 10px;
-    box-shadow: 0 10px 48px var(--red-glow), 0 0 0 1px rgba(196,18,48,0.25);
+    box-shadow: 0 12px 52px var(--red-glow), 0 0 0 1px rgba(196,18,48,0.22);
     line-height: 1;
     flex-shrink: 0;
   }
-  .code-copy-note {
-    font-size: 12px;
+  .code-note {
+    font-size: 13px;
     font-weight: 600;
     color: rgba(255,255,255,0.30);
-    line-height: 1.5;
-    max-width: 140px;
+    line-height: 1.6;
+    max-width: 130px;
   }
 
-  /* Step 3 — adventure code note */
+  /* Step 3 callout */
   .adventure-note {
     display: flex;
     align-items: flex-start;
     gap: 12px;
     background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-left: 3px solid rgba(196,18,48,0.50);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-left: 3px solid var(--red-border);
     border-radius: 0 8px 8px 0;
-    padding: 12px 16px;
-    max-width: 520px;
+    padding: 13px 16px;
+    max-width: 540px;
   }
-  .adventure-note-icon {
-    flex-shrink: 0;
-    margin-top: 1px;
-    color: rgba(196,18,48,0.60);
-  }
+  .adventure-note-icon { flex-shrink: 0; margin-top: 1px; color: rgba(196,18,48,0.55); }
   .adventure-note-text {
-    font-size: clamp(12px, 1.2vw, 14px);
-    color: rgba(255,255,255,0.55);
+    font-size: clamp(13px, 1.25vw, 15px);
+    color: rgba(255,255,255,0.52);
     line-height: 1.6;
   }
-  .adventure-note-text strong { color: rgba(255,255,255,0.85); }
+  .adventure-note-text strong { color: rgba(255,255,255,0.88); font-weight: 700; }
 
   /* QR column */
   .qr-col {
     border-left: 1px solid rgba(255,255,255,0.07);
-    background: rgba(0,0,0,0.15);
+    background: rgba(0,0,0,0.14);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -275,40 +250,51 @@
     gap: 14px;
     padding: 36px 24px;
   }
-  .qr-eyebrow {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.25);
-    text-align: center;
-  }
+  .qr-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.22); text-align: center; }
   .qr-frame {
     background: white;
     border-radius: 12px;
     padding: 10px;
-    width: 148px;
-    height: 148px;
+    width: 152px;
+    height: 152px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .qr-frame img {
-    width: 128px;
-    height: 128px;
-    display: block;
+  .qr-frame img { width: 132px; height: 132px; display: block; }
+  .qr-caption { font-size: 10px; color: rgba(255,255,255,0.22); text-align: center; line-height: 1.5; }
+
+  /* ─── FLIQ hook band ─── */
+  .hook-band {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.035);
+    padding: 18px 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
   }
-  .qr-caption {
-    font-size: 10px;
-    color: rgba(255,255,255,0.25);
-    text-align: center;
+  .hook-icon { flex-shrink: 0; color: var(--red); opacity: 0.70; }
+  .hook-text {
+    font-size: clamp(13px, 1.4vw, 16px);
+    font-style: italic;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
     line-height: 1.5;
+    text-align: center;
+  }
+  /* No gold — FLIQ Score™ in white */
+  .hook-text strong {
+    font-style: normal;
+    font-weight: 800;
+    color: white;
   }
 
   /* ─── Footer ─── */
   .footer {
-    border-top: 1px solid rgba(255,255,255,0.07);
-    padding: 20px 52px;
+    padding: 14px 52px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -316,66 +302,56 @@
     flex-shrink: 0;
     background: rgba(0,0,0,0.12);
   }
-  .footer-hook {
-    font-size: clamp(12px, 1.2vw, 14px);
-    font-style: italic;
-    color: rgba(255,255,255,0.45);
-    line-height: 1.5;
-    max-width: 640px;
-  }
-  .footer-hook strong {
-    font-style: normal;
-    font-weight: 700;
-    color: var(--gold);
-  }
-  .footer-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-  .footer-badge {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.22);
-  }
-  .footer-sep {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.18);
-  }
+  .footer-left  { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.22); letter-spacing: 0.3px; }
+  .footer-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .footer-badge { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.22); }
+  .footer-sep   { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.16); flex-shrink: 0; }
 
   /* ─── PRINT ─── */
   @media print {
-    @page { size: landscape; margin: 0.5in; }
+    @page { size: landscape; margin: 0.4in; }
     html, body { background: white; color: #111; }
-    .topbar { background: #C41230 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .stage { min-height: 0; }
-    .hero { padding: 28px 40px 20px; }
+
+    .topbar { background: #C41230 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .hero { padding: 24px 40px 16px; }
     .hero-headline { color: #111; letter-spacing: -1px; }
-    .hero-headline em { color: #C41230; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero-headline em { color: #111; }
     .hero-eyebrow, .hero-sub { color: #888; }
-    .rule { background: #e5e5e5; margin: 0 40px; }
+
+    .rule { background: #e0e0e0; margin: 0 40px; }
     .body { background: white; }
-    .steps { padding: 28px 40px; }
-    .step-badge { border-color: #C41230; background: rgba(196,18,48,0.08); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .steps { padding: 24px 40px; gap: 22px; }
+
+    .step-badge { background: rgba(196,18,48,0.08) !important; border-color: #C41230 !important; color: #C41230 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .step-badge.primary { background: #C41230 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .step-elevated { background: rgba(196,18,48,0.04) !important; border-color: rgba(196,18,48,0.25) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
     .step-meta { color: #aaa; }
     .step-action { color: #333; }
-    .url-pill { background: #f5f5f5; border-color: #ddd; }
-    .url-pill-text { color: #111; }
+
+    .url-pill { background: #f5f5f5 !important; border-color: #ddd !important; }
+    .url-pill-text { color: #111 !important; }
+
     .code-badge { background: linear-gradient(135deg,#C41230,#9B0E26) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .adventure-note { background: #fafafa; border-color: #ddd; border-left-color: #C41230; }
+    .code-note { color: #999; }
+
+    .adventure-note { background: #fafafa !important; border-color: #e0e0e0 !important; border-left-color: #C41230 !important; }
     .adventure-note-text { color: #555; }
     .adventure-note-text strong { color: #111; }
-    .qr-col { background: #fafafa; border-color: #e5e5e5; }
+
+    .qr-col { background: #fafafa !important; border-color: #e0e0e0 !important; }
     .qr-eyebrow, .qr-caption { color: #bbb; }
-    .footer { background: #fafafa; border-top-color: #e5e5e5; }
-    .footer-hook { color: #666; }
-    .footer-badge, .footer-sep { color: #bbb; background: #ccc; }
-    .code-copy-note { color: #999; }
+
+    .hook-band { background: #f5f5f5 !important; border-color: #e0e0e0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hook-icon { color: #C41230 !important; }
+    .hook-text { color: #555; }
+    .hook-text strong { color: #111; }
+
+    .footer { background: #fafafa !important; }
+    .footer-left, .footer-badge { color: #bbb; }
+    .footer-sep { background: #ccc; }
   }
 </style>
 </head>
@@ -392,15 +368,12 @@
         <div class="topbar-prog">Financial Intelligence Program &nbsp;·&nbsp; Summer 2026</div>
       </div>
     </div>
-    <div class="topbar-right">
-      <div class="topbar-right-label">The $100 Week™<br>Student Launch</div>
-    </div>
   </div>
 
   <!-- Hero -->
   <div class="hero">
     <div class="hero-eyebrow">Welcome — You're in the right place</div>
-    <div class="hero-headline">This week, you manage <em>$100.</em><br>For real.</div>
+    <div class="hero-headline">This week, you manage <em>$100.</em> For real.</div>
     <div class="hero-sub">Three steps and you're in. Takes less than 60 seconds.</div>
   </div>
 
@@ -408,7 +381,6 @@
 
   <!-- Steps + QR -->
   <div class="body">
-
     <div class="steps">
 
       <!-- Step 1 -->
@@ -416,7 +388,7 @@
         <div class="step-badge">1</div>
         <div class="step-content">
           <div class="step-meta">Step 1 — Open Your Browser</div>
-          <div class="step-action">On any device, go to this address:</div>
+          <div class="step-action">On any device — phone, tablet, or laptop — go to:</div>
           <div class="url-pill">
             <svg class="url-pill-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             <span class="url-pill-text">play.wealthwiselearning.com/cul-edition.html</span>
@@ -424,15 +396,15 @@
         </div>
       </div>
 
-      <!-- Step 2 -->
-      <div class="step">
-        <div class="step-badge">2</div>
+      <!-- Step 2 — elevated -->
+      <div class="step-elevated">
+        <div class="step-badge primary">2</div>
         <div class="step-content">
           <div class="step-meta">Step 2 — Enter the Session Code</div>
           <div class="step-action">Type this code on the home screen, then tap <strong style="color:white;">Join →</strong></div>
           <div class="code-wrap">
             <div class="code-badge">1254EE47</div>
-            <div class="code-copy-note">Type it exactly as shown — letters and numbers.</div>
+            <div class="code-note">Type it exactly as shown. Letters and numbers.</div>
           </div>
         </div>
       </div>
@@ -445,7 +417,7 @@
           <div class="step-action">Choose any 4-digit number as your personal key.</div>
           <div class="adventure-note">
             <svg class="adventure-note-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <div class="adventure-note-text"><strong>Write it down right now.</strong> You'll use the same code every day to pick up exactly where you left off. No names. No accounts. Just your number.</div>
+            <div class="adventure-note-text"><strong>Write it down right now.</strong> You'll enter the same code every day to pick up exactly where you left off. No names. No accounts. Just your number.</div>
           </div>
         </div>
       </div>
@@ -457,27 +429,31 @@
       <div class="qr-eyebrow">Or scan to open</div>
       <div class="qr-frame">
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https%3A%2F%2Fplay.wealthwiselearning.com%2Fcul-edition.html&bgcolor=ffffff&color=0B1D3A&margin=0"
-          alt="QR code — play.wealthwiselearning.com/cul-edition.html"
+          src="https://api.qrserver.com/v1/create-qr-code/?size=264x264&data=https%3A%2F%2Fplay.wealthwiselearning.com%2Fcul-edition.html&bgcolor=ffffff&color=0B1D3A&margin=0"
+          alt="QR code"
           onerror="this.parentElement.innerHTML='<div style=\'font-size:10px;color:#bbb;text-align:center;padding:16px;line-height:1.6;\'>QR code requires<br>internet connection</div>'"
         />
       </div>
-      <div class="qr-caption">Goes directly<br>to the CUL sim</div>
+      <div class="qr-caption">Points directly<br>to the CUL sim</div>
     </div>
+  </div>
 
+  <!-- FLIQ hook band -->
+  <div class="hook-band">
+    <svg class="hook-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <div class="hook-text">
+      By the end of the week, you'll earn your <strong>FLIQ Score™</strong> — a behavioral map of how you make decisions when money is on the line.
+    </div>
+    <svg class="hook-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </div>
 
   <!-- Footer -->
   <div class="footer">
-    <div class="footer-hook">
-      By the end of the week, you'll earn your <strong>FLIQ Score™</strong> — a behavioral map of how you make decisions when money is on the line.
-    </div>
+    <div class="footer-left">No login &nbsp;·&nbsp; No download &nbsp;·&nbsp; Works on any device</div>
     <div class="footer-right">
       <span class="footer-badge">WealthWise Kids™</span>
       <span class="footer-sep"></span>
       <span class="footer-badge">FLIQ Score™ Platform</span>
-      <span class="footer-sep"></span>
-      <span class="footer-badge">No login &nbsp;·&nbsp; Works on any device</span>
     </div>
   </div>
 
