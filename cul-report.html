@@ -514,6 +514,8 @@
 </div>
 
 <script>
+const SB_URL    = 'https://fikdyraqugzstigmzufz.supabase.co';
+const SB_KEY    = 'sb_publishable_Ck7nc2we1Wg8BtNEJyrFjg_PdLwTNUT';
 const API       = 'https://fliq-api-production.up.railway.app';
 const COHORT_ID = '1254ee47-e7a3-4ad1-ad5c-b5c833b3e08c';
 
@@ -531,13 +533,6 @@ const TRAIT_CONTEXT = {
   rb: 'Resilience & Bounce-Back was the class\'s lowest-scoring trait. Students here may struggle to recover and recalibrate after a financial setback within the simulation. Scenarios that emphasize adaptive responses, reframing loss, and rebuilding momentum are most beneficial.',
 };
 
-function band(score) {
-  if (score <= 2) return 'low';
-  if (score <= 4) return 'dev';
-  if (score <= 6) return 'prof';
-  return 'adv';
-}
-
 function bandLabel(score) {
   if (score <= 2) return 'Low';
   if (score <= 4) return 'Developing';
@@ -545,107 +540,175 @@ function bandLabel(score) {
   return 'Advanced';
 }
 
+function renderReport(d) {
+  document.getElementById('loadingState').style.display = 'none';
+
+  // ── Stats ──
+  document.getElementById('statEnrolled').textContent = d.enrolled || '—';
+  document.getElementById('statCompleted').textContent = d.completed_count;
+  const pct = d.enrolled ? Math.round((d.completed_count / d.enrolled) * 100) : 0;
+  document.getElementById('statCompletionRate').textContent = `${pct}% completion rate`;
+  const fliq = (d.class_fliq_score || 0).toFixed(1);
+  document.getElementById('statFliq').innerHTML = `${fliq}<span class="stat-unit">/ 8</span>`;
+  document.getElementById('statFliqLabel').textContent =
+    `Class average · ${bandLabel(parseFloat(fliq))} range`;
+
+  // ── Traits ──
+  const weakestKey = d.weakest_trait?.key;
+  const traitSection = document.getElementById('traitSection');
+  traitSection.innerHTML = TRAITS.map(t => {
+    const score = (d.trait_averages[t.key] || 0).toFixed(2);
+    const barPct = Math.min((parseFloat(score) / 2) * 100, 100).toFixed(1);
+    const isWeak = t.key === weakestKey;
+    return `
+      <div class="trait-row">
+        <div>
+          <div class="trait-name">${t.label}${isWeak ? ' <span style="font-size:10px;color:var(--red);font-weight:700;">↓ LOWEST</span>' : ''}</div>
+          <div class="trait-context">${t.context}</div>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill${isWeak ? ' weakest' : ''}" style="width:${barPct}%"></div>
+        </div>
+        <div class="trait-score">${score}<div class="max">/ 2.0</div></div>
+      </div>`;
+  }).join('');
+
+  // ── Bands ──
+  const bands = d.score_bands || {};
+  const bandTotal = d.completed_count || 1;
+  const bandDefs = [
+    { key: 'Low (0–2)',        cls: 'low',  label: 'Low',        range: '0 – 2' },
+    { key: 'Developing (3–4)', cls: 'dev',  label: 'Developing', range: '3 – 4' },
+    { key: 'Proficient (5–6)', cls: 'prof', label: 'Proficient', range: '5 – 6' },
+    { key: 'Advanced (7–8)',   cls: 'adv',  label: 'Advanced',   range: '7 – 8' },
+  ];
+  document.getElementById('bandRow').innerHTML = bandDefs.map(b => {
+    const count = bands[b.key] || 0;
+    const bPct  = Math.round((count / bandTotal) * 100);
+    return `
+      <div class="band-card">
+        <div class="band-label ${b.cls}">${b.label}</div>
+        <div class="band-count">${count}</div>
+        <div class="band-range">Score ${b.range}</div>
+        <div class="band-bar-wrap"><div class="band-bar ${b.cls}" style="width:${bPct}%"></div></div>
+      </div>`;
+  }).join('');
+
+  // ── Attention box ──
+  if (weakestKey && TRAIT_CONTEXT[weakestKey]) {
+    const box = document.getElementById('attentionBox');
+    box.style.display = 'flex';
+    document.getElementById('attentionBody').textContent = TRAIT_CONTEXT[weakestKey];
+  }
+
+  // ── Profile pills ──
+  const dist = d.label_distribution || {};
+  document.getElementById('profilePills').innerHTML =
+    Object.entries(dist).sort((a,b) => b[1]-a[1]).map(([name, count]) => `
+      <div class="profile-pill">
+        <div class="pill-count">${count}</div>
+        <div class="pill-name">${name}</div>
+      </div>`).join('') || '<div style="color:var(--slate);font-size:13px;">No profiles yet.</div>';
+
+  // ── Individual table ──
+  const rows = (d.individual_profiles || []).map(p => `
+    <tr>
+      <td style="font-weight:700;">Student ${String(p.student_num).padStart(2,'0')}</td>
+      <td class="score-cell" style="text-align:center;">${(p.fliq_score||0).toFixed(1)}</td>
+      <td style="text-align:center;"><span class="profile-tag">${p.profile_label||'—'}</span></td>
+      <td>${(p.ic||0).toFixed(1)}</td>
+      <td>${(p.po||0).toFixed(1)}</td>
+      <td>${(p.ra||0).toFixed(1)}</td>
+      <td>${(p.rb||0).toFixed(1)}</td>
+    </tr>`).join('');
+  document.getElementById('profilesTable').innerHTML =
+    rows || '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--slate);">No individual profiles yet.</td></tr>';
+
+  document.getElementById('reportBody').style.display = 'block';
+}
+
 async function loadReport() {
   document.getElementById('reportDate').textContent =
     'Generated ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   try {
-    const res = await fetch(`${API}/cohorts/${COHORT_ID}/report`);
-    if (!res.ok) throw new Error(`API returned ${res.status}`);
-    const d = await res.json();
+    // Pull completed scores directly from Supabase (bypasses broken Railway /report endpoint)
+    const sbRes = await fetch(
+      `${SB_URL}/rest/v1/fliq_scores?cohort_id=eq.${COHORT_ID}&select=*`,
+      { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` } }
+    );
+    if (!sbRes.ok) throw new Error(`Data fetch failed (${sbRes.status})`);
+    const sbRows = await sbRes.json();
+
+    // Get enrolled count from Railway status (still works)
+    let enrolled = sbRows.length;
+    try {
+      const sr = await fetch(`${API}/cohorts/${COHORT_ID}/status`);
+      const sd = await sr.json();
+      if (sd.enrolled) enrolled = sd.enrolled;
+    } catch(e) {}
 
     document.getElementById('loadingState').style.display = 'none';
 
-    if (!d.completed_count || d.completed_count === 0) {
+    if (!sbRows.length) {
       document.getElementById('errorState').style.display = 'block';
       document.getElementById('errorMsg').textContent =
-        d.message || 'No completed sessions yet. Check back after students finish the simulation.';
+        'No completed sessions yet. Check back after students finish the simulation on Thursday.';
       return;
     }
 
-    // ── Stats ──
-    document.getElementById('statEnrolled').textContent = d.enrolled || '—';
-    document.getElementById('statCompleted').textContent = d.completed_count;
-    const pct = d.enrolled ? Math.round((d.completed_count / d.enrolled) * 100) : 0;
-    document.getElementById('statCompletionRate').textContent = `${pct}% completion rate`;
-    const fliq = (d.class_fliq_score || d.trait_averages?.total || 0).toFixed(1);
-    document.getElementById('statFliq').innerHTML =
-      `${fliq}<span class="stat-unit">/ 8</span>`;
-    document.getElementById('statFliqLabel').textContent =
-      `Class average · ${bandLabel(parseFloat(fliq))} range`;
+    const n = sbRows.length;
 
-    // ── Traits ──
-    const weakestKey = d.weakest_trait?.key;
-    const traitSection = document.getElementById('traitSection');
-    traitSection.innerHTML = TRAITS.map(t => {
-      const score = (d.trait_averages[t.key] || 0).toFixed(2);
-      const pct   = Math.min((parseFloat(score) / 2) * 100, 100).toFixed(1);
-      const isWeak = t.key === weakestKey;
-      return `
-        <div class="trait-row">
-          <div>
-            <div class="trait-name">${t.label}${isWeak ? ' <span style="font-size:10px;color:var(--red);font-weight:700;">↓ LOWEST</span>' : ''}</div>
-            <div class="trait-context">${t.context}</div>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill${isWeak ? ' weakest' : ''}" style="width:${pct}%"></div>
-          </div>
-          <div class="trait-score">${score}<div class="max">/ 2.0</div></div>
-        </div>`;
-    }).join('');
+    // Compute trait averages (each 0–2)
+    const avgIC = sbRows.reduce((s,r) => s + (r.trait_ic_score||0), 0) / n;
+    const avgPO = sbRows.reduce((s,r) => s + (r.trait_po_score||0), 0) / n;
+    const avgRA = sbRows.reduce((s,r) => s + (r.trait_ra_score||0), 0) / n;
+    const avgRB = sbRows.reduce((s,r) => s + (r.trait_rb_score||0), 0) / n;
+    const avgTotal = avgIC + avgPO + avgRA + avgRB; // 0–8
 
-    // ── Bands ──
-    const bands = d.score_bands || {};
-    const total = d.completed_count || 1;
-    const bandDefs = [
-      { key: 'Low (0–2)',        cls: 'low',  label: 'Low',        range: '0 – 2' },
-      { key: 'Developing (3–4)', cls: 'dev',  label: 'Developing', range: '3 – 4' },
-      { key: 'Proficient (5–6)', cls: 'prof', label: 'Proficient', range: '5 – 6' },
-      { key: 'Advanced (7–8)',   cls: 'adv',  label: 'Advanced',   range: '7 – 8' },
-    ];
-    document.getElementById('bandRow').innerHTML = bandDefs.map(b => {
-      const count = bands[b.key] || 0;
-      const pct   = Math.round((count / total) * 100);
-      return `
-        <div class="band-card">
-          <div class="band-label ${b.cls}">${b.label}</div>
-          <div class="band-count">${count}</div>
-          <div class="band-range">Score ${b.range}</div>
-          <div class="band-bar-wrap"><div class="band-bar ${b.cls}" style="width:${pct}%"></div></div>
-        </div>`;
-    }).join('');
+    // Weakest trait by average score
+    const traitAvgs = { ic: avgIC, po: avgPO, ra: avgRA, rb: avgRB };
+    const weakestKey = Object.entries(traitAvgs).sort((a,b) => a[1]-b[1])[0][0];
 
-    // ── Attention box ──
-    if (weakestKey && TRAIT_CONTEXT[weakestKey]) {
-      const box = document.getElementById('attentionBox');
-      box.style.display = 'flex';
-      document.getElementById('attentionBody').textContent = TRAIT_CONTEXT[weakestKey];
-    }
+    // Score bands (0–8 total per student)
+    const scoreBands = { 'Low (0–2)': 0, 'Developing (3–4)': 0, 'Proficient (5–6)': 0, 'Advanced (7–8)': 0 };
+    sbRows.forEach(r => {
+      const t = (r.trait_ic_score||0) + (r.trait_po_score||0) + (r.trait_ra_score||0) + (r.trait_rb_score||0);
+      if      (t <= 2) scoreBands['Low (0–2)']++;
+      else if (t <= 4) scoreBands['Developing (3–4)']++;
+      else if (t <= 6) scoreBands['Proficient (5–6)']++;
+      else             scoreBands['Advanced (7–8)']++;
+    });
 
-    // ── Profile pills ──
-    const dist = d.label_distribution || {};
-    document.getElementById('profilePills').innerHTML =
-      Object.entries(dist).sort((a,b) => b[1]-a[1]).map(([name, count]) => `
-        <div class="profile-pill">
-          <div class="pill-count">${count}</div>
-          <div class="pill-name">${name}</div>
-        </div>`).join('') || '<div style="color:var(--slate);font-size:13px;">No profiles yet.</div>';
+    // Profile label distribution
+    const labelDist = {};
+    sbRows.forEach(r => {
+      if (r.profile_label) labelDist[r.profile_label] = (labelDist[r.profile_label]||0) + 1;
+    });
 
-    // ── Individual table ──
-    const rows = (d.individual_profiles || []).map(p => `
-      <tr>
-        <td style="font-weight:700;">Student ${String(p.student_num).padStart(2,'0')}</td>
-        <td class="score-cell" style="text-align:center;">${(p.fliq_score||0).toFixed(1)}</td>
-        <td style="text-align:center;"><span class="profile-tag">${p.profile_label||'—'}</span></td>
-        <td>${(p.ic||0).toFixed(1)}</td>
-        <td>${(p.po||0).toFixed(1)}</td>
-        <td>${(p.ra||0).toFixed(1)}</td>
-        <td>${(p.rb||0).toFixed(1)}</td>
-      </tr>`).join('');
-    document.getElementById('profilesTable').innerHTML =
-      rows || '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--slate);">No individual profiles yet.</td></tr>';
+    // Individual profiles — sorted by total score desc, fully anonymized
+    const individuals = sbRows
+      .map(r => ({
+        total: (r.trait_ic_score||0)+(r.trait_po_score||0)+(r.trait_ra_score||0)+(r.trait_rb_score||0),
+        profile_label: r.profile_label,
+        ic: r.trait_ic_score||0,
+        po: r.trait_po_score||0,
+        ra: r.trait_ra_score||0,
+        rb: r.trait_rb_score||0,
+      }))
+      .sort((a,b) => b.total - a.total)
+      .map((r,i) => ({ student_num: i+1, fliq_score: r.total, ...r }));
 
-    document.getElementById('reportBody').style.display = 'block';
+    renderReport({
+      enrolled,
+      completed_count:  n,
+      class_fliq_score: avgTotal,
+      trait_averages:   { ic: avgIC, po: avgPO, ra: avgRA, rb: avgRB },
+      weakest_trait:    { key: weakestKey },
+      score_bands:      scoreBands,
+      label_distribution: labelDist,
+      individual_profiles: individuals,
+    });
 
   } catch (err) {
     document.getElementById('loadingState').style.display = 'none';
