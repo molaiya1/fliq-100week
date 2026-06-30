@@ -1631,11 +1631,24 @@ function forceRefresh() { fetchStatus(); toast('Refreshed'); }
 
 async function fetchStatus() {
   if (!cohortId) return;
+  let enrolled = 0, completed = 0, in_progress = 0;
   try {
     const res  = await fetch(`${API}/cohorts/${cohortId}/status`);
     const data = await res.json();
-    updateStatusUI(data);
+    enrolled = data.enrolled || 0;
+    in_progress = data.in_progress || 0;
   } catch (e) {}
+  // Railway's completed counter relies on a backend table that's currently broken,
+  // so completion is verified directly against the FLIQ scores table instead.
+  try {
+    const sbRes = await fetch(
+      `${_SB_URL}/rest/v1/fliq_scores?cohort_id=eq.${cohortId}&select=id`,
+      { headers: { apikey: _SB_KEY, Authorization: `Bearer ${_SB_KEY}` } }
+    );
+    const sbRows = await sbRes.json();
+    if (Array.isArray(sbRows)) completed = sbRows.length;
+  } catch (e) {}
+  updateStatusUI({ enrolled, completed, in_progress });
 }
 
 function updateStatusUI({ enrolled = 0, completed = 0, in_progress = 0 }) {
@@ -1648,15 +1661,18 @@ function updateStatusUI({ enrolled = 0, completed = 0, in_progress = 0 }) {
   const offset = circumference - (circumference * (completed / total));
   document.getElementById('ringFill').style.strokeDashoffset = offset;
 
-  if (completed === 0 && in_progress === 0) {
+  if (completed === 0 && enrolled === 0) {
     document.getElementById('progressHeadline').textContent = 'Waiting for students to join…';
     document.getElementById('progressDetail').textContent  = 'Share the join code or link above.';
+  } else if (completed === 0) {
+    document.getElementById('progressHeadline').textContent = `${enrolled} student${enrolled !== 1 ? 's' : ''} enrolled`;
+    document.getElementById('progressDetail').textContent  = `Still working through the program. FLIQ Scores appear here as each student finishes the final day.`;
   } else if (completed < 5) {
     document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} finished`;
-    document.getElementById('progressDetail').textContent  = `${in_progress} in progress. Report unlocks at 5 completions.`;
+    document.getElementById('progressDetail').textContent  = `Report unlocks at 5 completions.`;
   } else {
     document.getElementById('progressHeadline').textContent = `${completed} student${completed !== 1 ? 's' : ''} completed`;
-    document.getElementById('progressDetail').textContent  = `${in_progress} still in progress. Your class report is ready.`;
+    document.getElementById('progressDetail').textContent  = `Your class report is ready.`;
     document.getElementById('btnReport').disabled = false;
   }
 }
