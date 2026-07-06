@@ -3904,6 +3904,7 @@ async function nextDay(){
     SFX.win(); S.screen='loading'; render();
     S.profile=await completeSession()||computeLocalProfile();
     postToPortal(S.profile);
+    await saveFliqScore(); // write completed FLIQ score to Supabase
     playCutscene(CUTSCENE_MAP.day6, 'score');
   } else {
 
@@ -4151,9 +4152,16 @@ async function proceedWithCode(){
           impulsiveN:  0,
           reflections: [],
           sessionStart:Date.now(),
-          screen:      'dayintro',
         });
-        saveProgress(); // re-anchor to localStorage on this device
+        // Create a new student+session so saveProgress() guard (requires studentId) passes
+        // and event logging works for the resumed portion
+        if(S.cohortId){
+          const sid=await createStudent(S.cohortId);
+          const sess=sid?await startSession(sid):null;
+          S.studentId=sid; S.sessionId=sess;
+        }
+        S.screen='dayintro';
+        saveProgress(); // anchor to localStorage on this device
         render();
         window.scrollTo({top:0,behavior:'smooth'});
         return;
