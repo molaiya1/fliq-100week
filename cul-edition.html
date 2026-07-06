@@ -3895,6 +3895,7 @@ function submitReflect(i){
   S.reflections.push({ day: S.day, choice: i });
   S.day++;
   saveProgress();
+  saveProgressToCloud(); // checkpoint to Supabase so progress survives device switches
   playCutscene(CUTSCENE_MAP[`day${S.day}`], 'dayintro');
 }
 
@@ -3940,6 +3941,25 @@ function getProgressKey(){
   return (S.cohortId && S.adventureCode)
     ? `fliq_${S.cohortId}_${S.adventureCode}`
     : 'fliq_100week_v1';
+}
+// Cloud checkpoint — called after each day completes so progress survives device switches.
+// Uses the same fliq_scores upsert key (cohort_id + adventure_code).
+// profile_label left null to mark as in-progress vs completed.
+async function saveProgressToCloud(){
+  if(!_sb||!S.cohortId||!S.adventureCode) return;
+  try{
+    await _sb.from('fliq_scores').upsert({
+      cohort_id:      S.cohortId,
+      adventure_code: S.adventureCode,
+      session_id:     S.sessionId||null,
+      band:           S.band||'builder',
+      balance_final:  S.balance,
+      balance_start:  getStartBal(),
+      history:        S.history||[],
+      sim_version:    '1.0',
+      profile_label:  null,
+    },{ onConflict:'cohort_id,adventure_code' });
+  }catch(e){}
 }
 // ── SUPABASE — FLIQ Score persistence ────────────────────────────────────────
 const _SB_URL  = 'https://fikdyraqugzstigmzufz.supabase.co';
@@ -4110,7 +4130,38 @@ function renderWriteItDown(pin){
 }
 async function proceedWithCode(){
   const saved=loadProgress();
-  if(saved){ resumeSession(); } else { await boot(); }
+  if(saved){ resumeSession(); return; }
+
+  // localStorage empty — check Supabase for a cross-device checkpoint before starting over
+  if(_sb&&S.cohortId&&S.adventureCode){
+    try{
+      const {data}=await _sb
+        .from('fliq_scores')
+        .select('history,balance_final,band,session_id,profile_label')
+        .eq('cohort_id',S.cohortId)
+        .eq('adventure_code',S.adventureCode)
+        .maybeSingle();
+      if(data&&!data.profile_label&&Array.isArray(data.history)&&data.history.length>0){
+        const restoredDay=Math.min(data.history.length+1,CUL_MAX_DAYS);
+        Object.assign(S,{
+          band:        data.band||'builder',
+          balance:     typeof data.balance_final==='number'?data.balance_final:getStartBal(),
+          day:         restoredDay,
+          history:     data.history,
+          impulsiveN:  0,
+          reflections: [],
+          sessionStart:Date.now(),
+          screen:      'dayintro',
+        });
+        saveProgress(); // re-anchor to localStorage on this device
+        render();
+        window.scrollTo({top:0,behavior:'smooth'});
+        return;
+      }
+    }catch(e){}
+  }
+
+  await boot();
 }
 function _pinCheckReady(prefix,btnId){
   const filled=[0,1,2,3].every(i=>document.getElementById(`${prefix}${i}`)?.value?.length===1);
